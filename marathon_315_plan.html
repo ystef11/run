@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>План подготовки · Марафон 3:15 · 27.09.2026</title>
+<style>
+  :root{
+    --ink:#1b1e22;
+    --paper:#f5f4f0;
+    --card:#ffffff;
+    --muted:#6b6f76;
+    --line:#e2ded5;
+    --accent:#df4a2e;
+    --z-rec:#7f95a3;
+    --z-easy:#5b8c5a;
+    --z-mp:#df4a2e;
+    --z-thr:#d98a1f;
+    --z-vo2:#7d5bd6;
+    --z-rep:#1f9b8e;
+    --z-long:#2f5d8f;
+    --z-race:#c0392b;
+    --z-rest:#9aa0a6;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;line-height:1.5;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 80px;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+
+  /* Header */
+  header{border-bottom:3px solid var(--ink);padding-bottom:22px;margin-bottom:30px;}
+  .eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(30px,6vw,52px);line-height:.98;margin:8px 0 4px;font-weight:800;letter-spacing:-.02em;}
+  h1 .tgt{color:var(--accent);}
+  .sub{font-size:16px;color:var(--muted);margin:6px 0 18px;}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);}
+  .fact{background:var(--card);padding:12px 14px;}
+  .fact .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .fact .v{font-size:18px;font-weight:700;margin-top:2px;}
+  .fact .v small{font-weight:500;color:var(--muted);font-size:13px;}
+
+  h2{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);
+     border-bottom:1px solid var(--ink);padding-bottom:7px;margin:42px 0 18px;font-weight:800;}
+
+  /* Pace legend */
+  .zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;}
+  .zone{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--zc);padding:9px 12px;border-radius:3px;}
+  .zone .name{font-weight:700;font-size:13px;}
+  .zone .pace{font-size:13px;color:var(--ink);}
+  .zone .note{font-size:11.5px;color:var(--muted);}
+
+  /* Volume chart */
+  .vchart{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:18px 16px 12px;}
+  .bars{display:flex;align-items:flex-end;gap:6px;height:150px;}
+  .barcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .bar{width:100%;background:var(--z-long);border-radius:3px 3px 0 0;position:relative;min-height:3px;}
+  .bar.down{background:var(--z-rec);}
+  .bar.peak{background:var(--accent);}
+  .bar .val{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:10px;color:var(--muted);}
+  .barcol .wk{font-size:10px;color:var(--muted);margin-top:5px;}
+  .vlegend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:14px;}
+  .vlegend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
+
+  /* Strength */
+  .strgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .strcard{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:16px 18px;}
+  .strcard h3{margin:0 0 2px;font-size:16px;}
+  .strcard .when{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+  .strcard ul{margin:12px 0 10px;padding-left:18px;}
+  .strcard li{margin:5px 0;font-size:13.5px;}
+  .strcard .prog{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:9px;}
+
+  /* Week cards */
+  .week{background:var(--card);border:1px solid var(--line);border-radius:5px;margin-bottom:16px;overflow:hidden;}
+  .week.down{background:#faf7f0;}
+  .whead{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .bib{font-family:ui-monospace,monospace;font-weight:800;font-size:22px;background:var(--ink);color:#fff;
+       width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:5px;flex:none;}
+  .week.peak .bib{background:var(--accent);}
+  .week.down .bib{background:var(--z-rec);}
+  .wmeta{flex:1;min-width:160px;}
+  .wmeta .dates{font-weight:700;font-size:15px;}
+  .wmeta .phase{font-size:12px;color:var(--muted);}
+  .badge{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:20px;border:1px solid var(--line);color:var(--muted);}
+  .badge.down{background:var(--z-rec);color:#fff;border-color:transparent;}
+  .badge.peak{background:var(--accent);color:#fff;border-color:transparent;}
+  .vol{text-align:right;}
+  .vol .num{font-family:ui-monospace,monospace;font-size:20px;font-weight:800;}
+  .vol .lbl{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+
+  table{width:100%;border-collapse:collapse;}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13.5px;}
+  tr:last-child td{border-bottom:none;}
+  .day{width:40px;font-weight:700;color:var(--ink);}
+  .chip-cell{width:118px;}
+  .chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+        padding:3px 8px;border-radius:3px;color:#fff;white-space:nowrap;}
+  .ses{color:var(--ink);}
+  .ses b{color:var(--accent);}
+  tr.qual td{background:rgba(0,0,0,.015);}
+
+  /* Notes */
+  .notes{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:4px;padding:18px 20px;}
+  .notes h3{margin:0 0 8px;font-size:15px;}
+  .notes p{margin:8px 0;font-size:13.5px;}
+  .notes p b{color:var(--ink);}
+  footer{margin-top:36px;font-size:12px;color:var(--muted);text-align:center;}
+
+  @media (max-width:680px){
+    .strgrid{grid-template-columns:1fr;}
+    .chip-cell{width:auto;}
+    td{font-size:13px;}
+    .bars{height:110px;}
+  }
+  @media print{
+    body{background:#fff;}
+    .wrap{max-width:none;padding:0;}
+    .week,.strcard,.vchart,.notes,.zone{break-inside:avoid;}
+    h2{break-after:avoid;}
+    .bar{ -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    *{ -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">План подготовки · 14 недель</div>
+    <h1>Марафон <span class="tgt">3:15</span></h1>
+    <div class="sub">Старт 27 сентября 2026 · вторичная цель — 10 км быстрее 40:00</div>
+    <div class="facts">
+      <div class="fact"><div class="k">Старт</div><div class="v">27.09.2026 <small>вс</small></div></div>
+      <div class="fact"><div class="k">Объём</div><div class="v">7 <small>тренировок/нед</small></div></div>
+      <div class="fact"><div class="k">Марафон</div><div class="v">3:36 <small>→ 3:15</small></div></div>
+      <div class="fact"><div class="k">10 км</div><div class="v">42:00 <small>→ &lt;40:00</small></div></div>
+      <div class="fact"><div class="k">Пик объёма</div><div class="v">95 <small>км · нед. 10</small></div></div>
+      <div class="fact"><div class="k">Макс. длинная</div><div class="v">35 <small>км · нед. 10</small></div></div>
+    </div>
+  </header>
+
+  <h2>Темпы тренировок</h2>
+  <div class="zones" id="zones"></div>
+
+  <h2>Профиль объёма</h2>
+  <div class="vchart">
+    <div class="bars" id="bars"></div>
+    <div class="vlegend">
+      <span><i style="background:var(--z-long)"></i>рабочая неделя</span>
+      <span><i style="background:var(--z-rec)"></i>разгрузка</span>
+      <span><i style="background:var(--accent)"></i>пик</span>
+      <span style="margin-left:auto">км/нед</span>
+    </div>
+  </div>
+
+  <h2>Силовая и ОФП</h2>
+  <div class="strgrid">
+    <div class="strcard">
+      <div class="when">Понедельник · 25–30 мин</div>
+      <h3>Силовая A — «Сила»</h3>
+      <ul>
+        <li>Приседания (штанга/гоблет) — 3×8 <span style="color:var(--muted)">(2 повтора в запасе)</span></li>
+        <li>Румынская тяга — 3×8</li>
+        <li>Болгарские сплит-приседания — 3×8 на ногу</li>
+        <li>Подъёмы на носки стоя — 3×15</li>
+        <li>Планка 3×45 с + боковая планка 3×30 с/сторона</li>
+      </ul>
+      <div class="prog">Прогрессия: нед. 1–7 — 3 подхода, рабочие веса; нед. 8–12 — 2 подхода (поддержка); нед. 13–14 — снять, оставить лёгкий кор.</div>
+    </div>
+    <div class="strcard">
+      <div class="when">Среда · 20 мин</div>
+      <h3>Силовая B — «Мощность + кор»</h3>
+      <ul>
+        <li>Беговые дрилы: A-skip, B-skip, захлёст — 2×20 м каждое</li>
+        <li>Выпрыгивания из приседа — 3×6</li>
+        <li>Запрыгивания на тумбу 30–40 см — 3×5</li>
+        <li>Ягодичный мостик на одной ноге — 3×10/ногу</li>
+        <li>Кор: «мёртвый жук» 3×10, боковая планка с подъёмом ноги 3×8/сторона, «супермен» 3×12</li>
+      </ul>
+      <div class="prog">Прогрессия: прыжки — до нед. 10 включительно; в тейпере (нед. 11–13) без прыжков, только дрилы + кор; нед. 14 — снять.</div>
+    </div>
+  </div>
+
+  <h2>Недельный план</h2>
+  <div id="weeks"></div>
+
+  <h2>Как пользоваться</h2>
+  <div class="notes">
+    <h3>Ключевые принципы</h3>
+    <p><b>Честно о цели.</b> 3:36 → 3:15 — это +10% за один цикл, амбициозно. Реалистичный сильный коридор по итогу — 3:15–3:22. Главные контрольные точки: <b>контрольные 10 км (нед. 8)</b> и длинные с марафонским темпом. Если на 10 км выходит ~39:30 и МР-отрезки идут ровно по 4:37 — цель 3:15 подтверждена; если тяжелее — стартуем по 4:42–4:45 (≈3:18–3:20), это всё равно отличный результат.</p>
+    <p><b>Две цели — один уровень.</b> 3:15 на марафоне и «10 км из 40» соответствуют близкой форме (VDOT ≈ 50), поэтому МПК-работа и темп 10 км по вторникам прокачивают обе цели сразу.</p>
+    <p><b>Отдых между отрезками</b> — трусцой в восстановительном темпе, указан в каждой сессии. Между длинными темповыми блоками (порог, МР) — лёгкая трусца, не шаг.</p>
+    <p><b>Восстановление важнее объёма.</b> Если накопилась усталость — лёгкие дни делайте медленнее, а качественную сессию при необходимости сократите или сдвиньте на день. Разгрузочные недели (2, 6, 8, 11) не «догоняем».</p>
+    <p><b>Гибкость по дням.</b> Длинная — всегда воскресенье. Контрольные 10 км стоят на субботу нед. 8; если забег в воскресенье — поменяйте местами с длинной той недели.</p>
+    <p><b>Перед стартом.</b> Отработайте марафонское питание на длинных нед. 9–10 (гель/изотоник каждые 5 км). На гонке держите 4:37/км первые 25–30 км, не быстрее.</p>
+  </div>
+
+  <footer>Подготовка к марафону · цель 3:15 · 22.06 – 27.09.2026 · 7 тренировок в неделю</footer>
+</div>
+
+<script>
+const ZONES=[
+ {k:'easy',name:'Лёгкий (Z2)',pace:'5:15–5:45 /км',note:'базовый объём'},
+ {k:'rec',name:'Восстановительный',pace:'5:50–6:15 /км',note:'трусца, заминки'},
+ {k:'mp',name:'Марафонский (MP)',pace:'4:35–4:40 /км',note:'цель 4:37'},
+ {k:'thr',name:'Пороговый (T)',pace:'4:12–4:20 /км',note:'лактатный порог'},
+ {k:'vo2',name:'МПК / темп 10 км',pace:'3:52–4:02 /км',note:'поддержка цели 10 км'},
+ {k:'rep',name:'Повторы / ускорения',pace:'3:40–3:48 /км',note:'экономичность'},
+];
+const ZC={rec:'--z-rec',easy:'--z-easy',mp:'--z-mp',thr:'--z-thr',vo2:'--z-vo2',rep:'--z-rep',long:'--z-long',race:'--z-race',rest:'--z-rest'};
+const ZLAB={rec:'Восст.',easy:'Лёгкий',mp:'Марафон. темп',thr:'Порог',vo2:'МПК/10к',rep:'Повторы',long:'Длинная',race:'Гонка',rest:'Отдых'};
+const Q=new Set(['mp','thr','vo2','race']);
+
+const WEEKS=[
+ {n:1,dates:'22 – 28 июня',phase:'Пиковая неделя (текущая)',vol:84,type:'peak',
+  days:[
+   ['Пн','rec','Восстановительный 8 км · <b>+ Силовая A</b>'],
+   ['Вт','vo2','МПК: разм. 3 км + <b>6×1000 м @3:55</b> (трусца 90 с) + заминка 2 км · ≈14 км'],
+   ['Ср','easy','Лёгкий 10 км + 6×100 м ускорения · <b>+ Силовая B</b>'],
+   ['Чт','thr','Порог: разм. 3 км + <b>2×15 мин @4:15</b> (трусца 3 мин) + заминка 2 км · ≈13 км'],
+   ['Пт','rec','Восстановительный 7 км'],
+   ['Сб','easy','Лёгкий 7 км + 5×100 м ускорения'],
+   ['Вс','long','Длинная 28 км: 22 лёгкий + <b>последние 6 км @MP</b>']
+  ]},
+ {n:2,dates:'29 июня – 5 июля',phase:'Разгрузка (после пика)',vol:70,type:'down',
+  days:[
+   ['Пн','rec','Восстановительный 7 км · <b>+ Силовая A</b>'],
+   ['Вт','rep','Освежающие: разм. 2 км + <b>6×400 м @3:48</b> (трусца 200 м, ~90 с) + заминка 2 км · ≈8 км'],
+   ['Ср','easy','Лёгкий 8 км + 5×100 м · <b>+ Силовая B</b>'],
+   ['Чт','thr','Порог: разм. 2 км + <b>2×10 мин @4:15</b> (трусца 2 мин) + заминка 2 км · ≈10 км'],
+   ['Пт','rec','Восстановительный 6 км'],
+   ['Сб','easy','Лёгкий 7 км + 4×100 м'],
+   ['Вс','long','Длинная 20 км лёгкий (5:25–5:50)']
+  ]},
+ {n:3,dates:'6 – 12 июля',phase:'База +',vol:86,type:'',
+  days:[
+   ['Пн','rec','Восстановительный 9 км · <b>+ Силовая A</b>'],
+   ['Вт','vo2','Темп 10 км: разм. 3 км + <b>5×1200 м @4:00</b> (трусца 90 с) + заминка 2 км · ≈13 км'],
+   ['Ср','easy','Лёгкий 11 км + 6×100 м · <b>+ Силовая B</b>'],
+   ['Чт','thr','Порог: разм. 3 км + <b>2×20 мин @4:15</b> (трусца 3 мин) + заминка 2 км · ≈15 км'],
+   ['Пт','rec','Восстановительный 7 км'],
+   ['Сб','easy','Лёгкий 8 км + 5×100 м'],
+   ['Вс','long','Длинная 30 км лёгкий']
+  ]},
+ {n:4,dates:'13 – 19 июля',phase:'Специфика',vol:90,type:'',
+  days:[
+   ['Пн','rec','Восстановительный 9 км · <b>+ Силовая A</b>'],
+   ['Вт','vo2','Темп 10 км: разм. 3 км + <b>6×1200 м @4:00</b> (трусца 90 с) + заминка 2 км · ≈15 км'],
+   ['Ср','easy','Лёгкий 11 км + 6×100 м · <b>+ Силовая B</b>'],
+   ['Чт','thr','Порог: разм. 3 км + <b>3×12 мин @4:15</b> (трусца 2 мин) + заминка 2 км · ≈14 км'],
+   ['Пт','rec','Восстановительный 7 км'],
+   ['Сб','easy','Лёгкий 7 км + 5×100 м'],
+   ['Вс','long','Длинная 30 км: 22 лёгкий + <b>последние 8 км @MP</b>']
+  ]},
+ {n:5,dates:'20 – 26 июля',phase:'Специфика',vol:92,type:'',
+  days:[
+   ['Пн','rec','Восстановительный 9 км · <b>+ Силовая A</b>'],
+   ['Вт','vo2','МПК: разм. 3 км + <b>5×1200 м @3:55</b> (трусца 2 мин) + заминка 2 км · ≈14 км'],
+   ['Ср','easy','Лёгкий 11 км + 6×100 м · <b>+ Силовая B</b>'],
+   ['Чт','mp','МР: разм. 3 км + <b>10 км @4:37</b> + заминка 2 км · ≈15 км'],
+   ['Пт','rec','Восстановительный 8 км'],
+   ['Сб','easy','Лёгкий 7 км + 5×100 м'],
+   ['Вс','long','Длинная 32 км ровный (5:20–5:40)']
+  ]},
+ {n:6,dates:'27 июля – 2 авг.',phase:'Разгрузка',vol:76,type:'down',
+  days:[
+   ['Пн','rec','Восстановительный 7 км · <b>+ Силовая A (2 подхода)</b>'],
+   ['Вт','rep','Короткие: разм. 2 км + <b>8×400 м @3:45</b> (трусца 200 м) + заминка 2 км · ≈9 км'],
+   ['Ср','easy','Лёгкий 9 км + 5×100 м · <b>+ Силовая B</b>'],
+   ['Чт','thr','Порог: разм. 2 км + <b>2×12 мин @4:15</b> (трусца 2 мин) + заминка 2 км · ≈11 км'],
+   ['Пт','rec','Восстановительный 6 км'],
+   ['Сб','easy','Лёгкий 7 км + 4×100 м'],
+   ['Вс','long','Длинная 24 км лёгкий']
+  ]},
+ {n:7,dates:'3 – 9 авг.',phase:'Специфика',vol:94,type:'',
+  days:[
+   ['Пн','rec','Восстановительный 9 км · <b>+ Силовая A</b>'],
+   ['Вт','vo2','МПК: разм. 3 км + <b>5×1200 м @3:55</b> (трусца 2 мин) + заминка 2 км · ≈14 км'],
+   ['Ср','easy','Лёгкий 11 км + 6×100 м · <b>+ Силовая B</b>'],
+   ['Чт','mp','МР: разм. 3 км + <b>2×6 км @4:37</b> (трусца 3 мин) + заминка 2 км · ≈17 км'],
+   ['Пт','rec','Восстановительный 8 км'],
+   ['Сб','easy','Лёгкий 6 км + 5×100 м'],
+   ['Вс','long','Длинная 32 км: <b>середина 16 км @MP</b> (по ~8 км разм./заминка лёгкий)']
+  ]},
+ {n:8,dates:'10 – 16 авг.',phase:'Разгрузка · контрольные 10 км',vol:78,type:'down',
+  days:[
+   ['Пн','rec','Восстановительный 7 км · <b>+ Силовая A (2 подхода)</b>'],
+   ['Вт','easy','Лёгкий 9 км + 4×100 м'],
+   ['Ср','easy','Лёгкий 10 км · <b>+ Силовая B</b>'],
+   ['Чт','vo2','Заострение: разм. 3 км + <b>3×1000 м @3:58</b> (темп 10 км, трусца 2 мин) + заминка 2 км · ≈9 км'],
+   ['Пт','rec','Восстановительный 6 км + 4×100 м (или отдых)'],
+   ['Сб','race','<b>КОНТРОЛЬНЫЕ 10 КМ</b> (тест «из 40»): разм. 3 км + гонка 10 км + заминка 2 км · ≈15 км'],
+   ['Вс','long','Лёгкие 16 км — восстановление (5:30–6:00)']
+  ]},
+ {n:9,dates:'17 – 23 авг.',phase:'Специфика',vol:92,type:'',
+  days:[
+   ['Пн','rec','Восстановительный 8 км · <b>+ Силовая A (2 подхода)</b>'],
+   ['Вт','vo2','МПК: разм. 3 км + <b>6×1000 м @3:55</b> (трусца 90 с) + заминка 2 км · ≈13 км'],
+   ['Ср','easy','Лёгкий 11 км + 6×100 м · <b>+ Силовая B</b>'],
+   ['Чт','mp','МР: разм. 3 км + <b>16 км @4:37</b> + заминка 2 км · ≈21 км'],
+   ['Пт','rec','Восстановительный 8 км'],
+   ['Сб','easy','Лёгкий 6 км + 5×100 м'],
+   ['Вс','long','Длинная 34 км: 24 лёгкий + <b>последние 10 км @MP</b>']
+  ]},
+ {n:10,dates:'24 – 30 авг.',phase:'Пик нагрузки',vol:95,type:'peak',
+  days:[
+   ['Пн','rec','Восстановительный 9 км · <b>+ Силовая A (2 подхода)</b>'],
+   ['Вт','vo2','Темп 10 км: разм. 3 км + <b>5×1600 м @4:00</b> (трусца 2,5 мин) + заминка 2 км · ≈15 км'],
+   ['Ср','easy','Лёгкий 11 км + 6×100 м · <b>+ Силовая B (последняя с прыжками)</b>'],
+   ['Чт','mp','МР: разм. 3 км + <b>2×8 км @4:37</b> (трусца 2 мин) + заминка 2 км · ≈19 км'],
+   ['Пт','rec','Восстановительный 7 км'],
+   ['Сб','easy','Лёгкий 6 км + 5×100 м'],
+   ['Вс','long','<b>Длинная 35 км (макс.)</b>: во 2-й половине <b>3×5 км @MP</b> (трусца 1 км между)']
+  ]},
+ {n:11,dates:'31 авг. – 6 сент.',phase:'Подводка',vol:82,type:'down',
+  days:[
+   ['Пн','rec','Восстановительный 8 км · <b>+ Силовая A (2 подхода)</b>'],
+   ['Вт','vo2','МПК: разм. 3 км + <b>5×1000 м @3:55</b> (трусца 90 с) + заминка 2 км · ≈12 км'],
+   ['Ср','easy','Лёгкий 9 км + 6×100 м · <b>+ Силовая B (без прыжков)</b>'],
+   ['Чт','thr','Порог: разм. 3 км + <b>3×10 мин @4:15</b> (трусца 2 мин) + заминка 2 км · ≈13 км'],
+   ['Пт','rec','Восстановительный 7 км'],
+   ['Сб','easy','Лёгкий 7 км + 5×100 м'],
+   ['Вс','long','Длинная 28 км: 20 лёгкий + <b>последние 8 км @MP</b>']
+  ]},
+ {n:12,dates:'7 – 13 сент.',phase:'Подводка',vol:70,type:'',
+  days:[
+   ['Пн','rec','Восстановительный 7 км · <b>+ Силовая A (лёгко, 2 подхода без отказа)</b>'],
+   ['Вт','vo2','Темп 10 км: разм. 3 км + <b>4×1200 м @4:00</b> (трусца 90 с) + заминка 2 км · ≈11 км'],
+   ['Ср','easy','Лёгкий 9 км + 6×100 м · <b>+ кор (без прыжков)</b>'],
+   ['Чт','mp','МР: разм. 3 км + <b>12 км @4:37</b> + заминка 2 км · ≈17 км'],
+   ['Пт','rec','Восстановительный 6 км'],
+   ['Сб','easy','Лёгкий 7 км + 5×100 м'],
+   ['Вс','long','Длинная 24 км: 18 лёгкий + <b>последние 6 км @MP</b>']
+  ]},
+ {n:13,dates:'14 – 20 сент.',phase:'Подводка',vol:54,type:'',
+  days:[
+   ['Пн','rec','Восстановительный 6 км · <b>+ лёгкий кор</b>'],
+   ['Вт','vo2','Острая, но не до отказа: разм. 2 км + <b>5×1000 м @4:05→4:00</b> (трусца 90 с) + заминка 2 км · ≈9 км'],
+   ['Ср','easy','Лёгкий 8 км + 6×100 м'],
+   ['Чт','thr','Порог: разм. 2 км + <b>4×800 м @4:15</b> (трусца 90 с) + заминка 2 км · ≈8 км'],
+   ['Пт','rec','Восстановительный 5 км'],
+   ['Сб','easy','Лёгкий 6 км + 5×100 м'],
+   ['Вс','long','Длинная 18 км: 13 лёгкий + <b>последние 5 км @MP</b>']
+  ]},
+ {n:14,dates:'21 – 27 сент.',phase:'Неделя гонки',vol:40,type:'',
+  days:[
+   ['Пн','rec','Восстановительный 6 км · <b>+ лёгкий кор</b>'],
+   ['Вт','mp','Настройка: разм. 2 км + <b>3×1000 м @4:37</b> (трусца 90 с) + 4×100 м + заминка 2 км · ≈8 км'],
+   ['Ср','easy','Лёгкий 6 км'],
+   ['Чт','easy','Лёгкий 6 км + 4×100 м'],
+   ['Пт','rest','Отдых (или трусца 4 км)'],
+   ['Сб','rec','Разминочный 5 км + 3×100 м (выходной выезд)'],
+   ['Вс','race','<b>МАРАФОН · 27.09</b> — старт по 4:37/км (3:15). Питание каждые 5 км; первые 25–30 км не быстрее плана']
+  ]},
+];
+
+// render zones
+document.getElementById('zones').innerHTML=ZONES.map(z=>
+ `<div class="zone" style="--zc:var(${ZC[z.k]})">
+    <div class="name">${z.name}</div>
+    <div class="pace mono">${z.pace}</div>
+    <div class="note">${z.note}</div>
+  </div>`).join('');
+
+// render volume bars
+const maxV=Math.max(...WEEKS.map(w=>w.vol));
+document.getElementById('bars').innerHTML=WEEKS.map(w=>{
+  const h=Math.round(w.vol/maxV*100);
+  const cls=w.type==='down'?'down':(w.type==='peak'?'peak':'');
+  return `<div class="barcol">
+     <div class="bar ${cls}" style="height:${h}%"><span class="val mono">${w.vol}</span></div>
+     <div class="wk">${w.n}</div>
+   </div>`;
+}).join('');
+
+// render weeks
+document.getElementById('weeks').innerHTML=WEEKS.map(w=>{
+  const badge = w.type==='down'?'<span class="badge down">Разгрузка</span>'
+              : w.type==='peak'?'<span class="badge peak">Пик</span>'
+              : `<span class="badge">${w.phase}</span>`;
+  const rows=w.days.map(d=>{
+    const [day,zone,ses]=d;
+    const q=Q.has(zone)?' class="qual"':'';
+    return `<tr${q}>
+       <td class="day">${day}</td>
+       <td class="chip-cell"><span class="chip" style="background:var(${ZC[zone]})">${ZLAB[zone]}</span></td>
+       <td class="ses">${ses}</td>
+     </tr>`;
+  }).join('');
+  return `<div class="week ${w.type}">
+    <div class="whead">
+      <div class="bib mono">${w.n}</div>
+      <div class="wmeta"><div class="dates">${w.dates}</div><div class="phase">${w.phase}</div></div>
+      ${badge}
+      <div class="vol"><div class="num mono">${w.vol}</div><div class="lbl">км/нед</div></div>
+    </div>
+    <table><tbody>${rows}</tbody></table>
+  </div>`;
+}).join('');
+</script>
+</body>
+</html>

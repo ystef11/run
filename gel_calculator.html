@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор гоночного геля</title>
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --glu:#7d5bd6;--fru:#1f9b8e;--blue:#2f5d8f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:640px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:24px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+
+  .stepper{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content;}
+  .stepper button{border:none;background:#f0eee9;color:var(--ink);font-size:26px;font-weight:700;width:54px;height:58px;cursor:pointer;line-height:1;transition:background .12s;}
+  .stepper button:hover{background:#e7e4dd;}
+  .stepper button:active{background:var(--accent);color:#fff;}
+  .stepper input{border:none;width:96px;height:58px;text-align:center;font-size:30px;font-weight:800;background:#fff;color:var(--ink);
+    font-family:ui-monospace,monospace;-moz-appearance:textfield;}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .stepper .unit{font-size:13px;color:var(--muted);padding:0 14px;white-space:nowrap;}
+
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .quick button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--ink);transition:all .12s;}
+  .quick button:hover{border-color:var(--accent);color:var(--accent);}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .out{background:var(--card);padding:16px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:30px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:14px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  th.r,td.r{text-align:right;}
+  td{padding:9px 8px;border-bottom:1px solid var(--line);font-size:14px;}
+  tr:last-child td{border-bottom:none;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:8px;vertical-align:0;}
+  td .amt{font-weight:800;font-size:15px;}
+  .grp{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 8px 4px;font-weight:700;}
+  .opt{color:var(--muted);font-size:12px;}
+
+  .ratio{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:13px;color:var(--muted);}
+  .ratiobar{flex:1;height:10px;border-radius:5px;overflow:hidden;display:flex;}
+  .ratiobar i{height:100%;}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Гоночный гель · глюкоза : фруктоза ≈ 2:1</div>
+    <h1>Калькулятор геля</h1>
+    <div class="sub">Мальтодекстрин + декстроза + фруктоза · усвоение до 80–90 г/ч</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Количество порций</div>
+    <div class="stepper">
+      <button onclick="bump(-1)" aria-label="меньше">−</button>
+      <input id="serv" class="mono" type="number" min="1" max="60" value="10" inputmode="numeric">
+      <button onclick="bump(1)" aria-label="больше">+</button>
+      <span class="unit">порций<br>× 25 г углеводов</span>
+    </div>
+    <div class="quick">
+      <button onclick="setServ(5)">1 батч (5)</button>
+      <button onclick="setServ(10)">2 батча (10)</button>
+      <button onclick="setServ(11)">Марафон 3:15 (~11)</button>
+    </div>
+  </div>
+
+  <div class="outs">
+    <div class="out hl"><div class="k">Углеводов в порции</div><div class="v"><span id="o_carbserv">25</span><small> г</small></div></div>
+    <div class="out hl"><div class="k">Общий объём геля</div><div class="v"><span id="o_vol">335</span><small> мл</small></div></div>
+    <div class="out"><div class="k">Всего углеводов</div><div class="v"><span id="o_carbtot">250</span><small> г</small></div></div>
+    <div class="out"><div class="k">Объём порции</div><div class="v"><span id="o_volserv">33</span><small> мл</small></div></div>
+    <div class="out"><div class="k">Натрий в порции</div><div class="v"><span id="o_naserv">155</span><small> мг</small></div></div>
+    <div class="out"><div class="k">Натрий всего</div><div class="v"><span id="o_natot">1550</span><small> мг</small></div></div>
+  </div>
+
+  <div class="panel" style="margin-top:16px;">
+    <div class="label">Состав на <span id="lbl_serv">10</span> порций</div>
+    <table>
+      <thead><tr><th>Ингредиент</th><th class="r">Количество</th></tr></thead>
+      <tbody>
+        <tr><td class="grp" colspan="2">Сухое</td></tr>
+        <tr><td><span class="dot" style="background:var(--glu)"></span>Мальтодекстрин</td><td class="r mono"><span class="amt" id="i_malto">100</span> г</td></tr>
+        <tr><td><span class="dot" style="background:var(--glu)"></span>Декстроза (глюкоза)</td><td class="r mono"><span class="amt" id="i_dex">70</span> г</td></tr>
+        <tr><td><span class="dot" style="background:var(--fru)"></span>Фруктоза</td><td class="r mono"><span class="amt" id="i_fru">80</span> г</td></tr>
+        <tr><td>Соль поваренная</td><td class="r mono"><span class="amt" id="i_salt">4.0</span> г</td></tr>
+        <tr><td>Лимонная кислота <span class="opt">(по желанию)</span></td><td class="r mono"><span class="amt" id="i_citric">2.0</span> г</td></tr>
+        <tr><td class="grp" colspan="2">Жидкое</td></tr>
+        <tr><td><span class="dot" style="background:var(--blue)"></span>Вода (горячая, 70–80 °C)</td><td class="r mono"><span class="amt" id="i_water">180</span> мл</td></tr>
+        <tr><td>Лимонный сок / ароматизатор <span class="opt">(по желанию)</span></td><td class="r mono"><span class="amt" id="i_flavor">2</span> ч. л.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="ratio">
+      <span>Глюкоза : фруктоза</span>
+      <div class="ratiobar"><i style="background:var(--glu);width:68%"></i><i style="background:var(--fru);width:32%"></i></div>
+      <span class="mono" id="i_ratio">2.1 : 1</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><b>Объём — расчётный</b> (вода + растворённые углеводы, ≈0,62 мл/г). Если сироп слишком густой — добавь воды по 1 ч. л.; общий объём вырастет, углеводы в порции не изменятся.</p>
+    <p><b>Режим на марафоне:</b> 1 порция каждые ~20 мин (≈4,5 км), первый гель на 30–40-й минуте, всегда запивай водой. Под 3:15 при ~75 г/ч нужно примерно 10–11 порций.</p>
+    <p><b>Перед стартом обкатай</b> на длинных тренировках (нед. 7, 9, 10). Если фруктоза вызывает дискомфорт — временно сдвинь к 3:1 и наращивай постепенно.</p>
+  </div>
+
+  <footer>Базис: 1 порция = 25 г углеводов (мальтодекстрин 10 · декстроза 7 · фруктоза 8) · ~155 мг натрия</footer>
+</div>
+
+<script>
+  // на 1 порцию
+  const P={malto:10, dex:7, fru:8, salt:0.4, citric:0.2, water:18, flavor:0.2, carb:25, na:155};
+  const VOL_FACTOR=0.62; // мл прироста объёма на грамм растворённого углевода
+
+  const $=id=>document.getElementById(id);
+  const r1=x=>Math.round(x*10)/10;          // 1 знак
+  const r0=x=>Math.round(x);                 // целое
+
+  function calc(){
+    let n=parseInt($('serv').value,10);
+    if(isNaN(n)||n<1) n=1;
+    if(n>60) n=60;
+    $('serv').value=n;
+    $('lbl_serv').textContent=n;
+
+    // ингредиенты
+    $('i_malto').textContent=r1(P.malto*n);
+    $('i_dex').textContent=r1(P.dex*n);
+    $('i_fru').textContent=r1(P.fru*n);
+    $('i_salt').textContent=r1(P.salt*n).toFixed(1);
+    $('i_citric').textContent=r1(P.citric*n).toFixed(1);
+    $('i_water').textContent=r0(P.water*n);
+    $('i_flavor').textContent=r1(P.flavor*n);
+
+    // выходные показатели
+    const carbServ=P.carb;
+    const carbTot=carbServ*n;
+    const volServ=P.water + carbServ*VOL_FACTOR;   // ≈33.5
+    const volTot=volServ*n;
+
+    $('o_carbserv').textContent=carbServ;
+    $('o_carbtot').textContent=r0(carbTot);
+    $('o_volserv').textContent=r0(volServ);
+    $('o_vol').textContent=r0(volTot);
+    $('o_naserv').textContent=P.na;
+    $('o_natot').textContent=r0(P.na*n);
+
+    $('i_ratio').textContent=(((P.malto+P.dex)/P.fru).toFixed(1))+' : 1';
+  }
+  function bump(d){ $('serv').value=(parseInt($('serv').value,10)||0)+d; calc(); }
+  function setServ(v){ $('serv').value=v; calc(); }
+  $('serv').addEventListener('input',calc);
+  calc();
+</script>
+</body>
+</html>

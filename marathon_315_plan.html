@@ -96,12 +96,14 @@
   .vol .num{font-family:ui-monospace,monospace;font-size:19px;font-weight:800;}
   .vol .num small{font-size:12px;font-weight:600;color:var(--muted);}
   .kmref{color:var(--muted);font-size:12px;font-family:ui-monospace,monospace;}
+  .fuel{color:#0f8a6e;font-size:12px;font-weight:700;white-space:nowrap;}
   .vol .lbl{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
 
-  table{width:100%;border-collapse:collapse;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;}
   td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13.5px;}
   tr:last-child td{border-bottom:none;}
-  .day{width:62px;font-weight:700;line-height:1.25;}
+  .day{width:62px;font-weight:700;line-height:1.25;overflow-wrap:break-word;}
+  .ses{overflow-wrap:break-word;}
   .day .dt{display:block;font-family:ui-monospace,monospace;font-size:11px;font-weight:600;color:var(--muted);}
   .chip-cell{width:120px;white-space:nowrap;}
   .chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
@@ -121,8 +123,17 @@
   footer{margin-top:36px;font-size:12px;color:var(--muted);text-align:center;}
 
   @media (max-width:680px){
-    .strgrid{grid-template-columns:1fr;}.chip-cell{width:auto;}td{font-size:13px;}.bars{height:120px;}
+    .wrap{padding-left:12px;padding-right:12px;}
+    .strgrid{grid-template-columns:1fr;}
+    td{font-size:12.5px;padding:7px 7px;}
+    .day{width:56px;}
+    .day .dt{font-size:10.5px;}
+    .chip-cell{width:84px;white-space:normal;}
+    .chip{white-space:normal;font-size:9.5px;line-height:1.2;}
+    .todaytag{font-size:8px;letter-spacing:.02em;padding:1px 4px;}
+    .bars{height:120px;}
     .hrv{display:block;margin-top:2px;}
+    .ses{overflow-wrap:break-word;}
   }
   @media print{
     body{background:#fff;}.wrap{max-width:none;padding:0;}
@@ -240,7 +251,8 @@
     <p><b>Длинная — по времени.</b> Пик 2:45 (нед. 10). Не превышай ~2:50, даже если «чувствуешь силы»: выигрыш минимален, а цена восстановления высока. Специфику добавляют отрезки МР, а не лишние минуты трусцой.</p>
     <p><b>Два старта на 10 км.</b> 15.08 (сб, нед. 8) — контрольная прикидка и калибровка цели. 06.09 (вс, нед. 11) — основной старт на «из 40» и заострение за 3 недели до марафона.</p>
     <p><b>Калибровка 3:15.</b> Твой ПАНО 4:10/км чуть лучше «среднего» под 3:15 — хороший знак. Подтверждение — на МР: если 75 мин @4:37 (нед. 9) идут на пульсе 156–164 ровно и не на пределе — цель реальна. Если тяжелее — стартуй по 4:42–4:45 (~3:18–3:20).</p>
-    <p><b>Объём.</b> С тремя утренними пробежками выходит ~6–9,5 ч бега в неделю (≈67–106 км). Километраж в карточках недель и у длинных — <b>справочный</b>: зависит от реального темпа и рельефа, веди тренировку по времени и пульсу. Если не успеваешь восстанавливаться — первым делом режь утренние. Питание (гель 2:1) отрабатывай на длинных нед. 7, 9, 10.</p>
+    <p><b>Питание на длинных.</b> У каждой длинной указана рекомендуемая доза углеводов (г/ч, всего и ≈ число гелей по 25 г). Это «тренировка кишечника»: норма растёт от ~45 г/ч на ранних длинных до ~85 г/ч на пиковой (нед. 10) и на марафоне. Используй гель 2:1 (глюкоза:фруктоза) — расчёт в калькуляторе. Запивай водой; короткие/восстановительные — по самочувствию.</p>
+    <p><b>Объём.</b> С тремя утренними пробежками выходит ~6–9,5 ч бега в неделю (≈67–106 км). Километраж в карточках недель и у длинных — <b>справочный</b>: зависит от реального темпа и рельефа, веди тренировку по времени и пульсу. Если не успеваешь восстанавливаться — первым делом режь утренние.</p>
   </div>
 
   <footer>Подготовка к марафону · цель 3:15 · 22.06 – 27.09.2026 · по времени и пульсу · ПАНО 178</footer>
@@ -257,6 +269,7 @@ const START=new Date(2026,5,22); // 22 июня 2026, понедельник
 const KM  =[96,75,96,98,92,79,98,76,102,106,70,87,67,72];   // прим. км/нед
 const LRKM=[25,18,26,27,27,19,30,15,30,32,null,24,17,null];  // прим. км длинной (null — старт)
 const TIME=[540,430,540,545,520,420,530,420,555,565,375,475,360,370]; // прим. мин/нед
+const CARBH=[60,45,55,60,60,45,70,30,75,85,null,65,45,80]; // углеводы на длинной, г/ч (null — старт 10к, не нужно)
 const TODAY=new Date(); TODAY.setHours(0,0,0,0);
 const DAYOFF=Math.round((TODAY-START)/86400000); // смещение «сегодня» от старта плана в днях
 
@@ -440,17 +453,24 @@ $('weeks').innerHTML=WEEKS.map((w,wi)=>{
     const todayTag=isToday?`<span class="todaytag">сегодня</span>`:'';
     const dlabel=`${DOW[di]}<span class="dt">${dateFor(wi,di)}</span>${todayTag}`;
     return day.s.map((s,i)=>{
-      const q=Q.has(s.zone)?' qual':'';
+      const q=Q.has(s.z)?' qual':'';
       const sub=i>0?' subrow':'';
       const dayCell=i===0?`<td class="day${isToday?' today':''}" rowspan="${day.s.length}">${dlabel}</td>`:'';
       const tag=s.t?`<span class="tt">${s.t}</span>`:'';
-      const hrv=`<span class="hrv">${s.hr||HR[s.zone]}</span>`;
-      const kmHint=(di===6 && s.zone==='long' && LRKM[wi]!=null)?` <span class="kmref">≈${LRKM[wi]} км</span>`:'';
+      const hrv=`<span class="hrv">${s.hr||HR[s.z]}</span>`;
+      const kmHint=(di===6 && s.z==='long' && LRKM[wi]!=null)?` <span class="kmref">≈${LRKM[wi]} км</span>`:'';
+      let fuelHint='';
+      if(di===6 && (s.z==='long' || s.z==='race')){
+        const r=CARBH[wi];
+        if(r==null){ fuelHint=` <span class="fuel">питание не требуется</span>`; }
+        else { const tot=Math.round(r*w.lr/60), g=Math.round(tot/25);
+               fuelHint=` <span class="fuel">Питание ~${r} г/ч · ~${tot} г · ≈${g} гел.</span>`; }
+      }
       const trId=(isToday&&i===0)?' id="todayRow"':'';
       return `<tr class="${q}${sub}${isToday?' today':''}"${trId}>
         ${dayCell}
-        <td class="chip-cell"><span class="chip" style="background:var(${ZC[s.zone]})">${ZLAB[s.zone]}</span></td>
-        <td class="ses">${tag}${s.x}${kmHint} &nbsp;${hrv}</td>
+        <td class="chip-cell"><span class="chip" style="background:var(${ZC[s.z]})">${ZLAB[s.z]}</span></td>
+        <td class="ses">${tag}${s.x}${kmHint}${fuelHint} &nbsp;${hrv}</td>
       </tr>`;
     }).join('');
   }).join('');

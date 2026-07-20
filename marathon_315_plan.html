@@ -121,6 +121,8 @@
   .notes p{margin:8px 0;font-size:13.5px;}
   .notes p b{color:var(--ink);}
   footer{margin-top:36px;font-size:12px;color:var(--muted);text-align:center;}
+  .jsonlink{margin-top:10px;background:none;border:none;color:var(--muted);font-size:11.5px;text-decoration:underline;text-underline-offset:2px;cursor:pointer;opacity:.7;}
+  .jsonlink:hover{opacity:1;color:var(--ink);}
 
   @media (max-width:680px){
     .wrap{padding-left:12px;padding-right:12px;}
@@ -144,7 +146,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button id="jumpBtn" class="jumpbtn" type="button">↓ К текущему дню</button><button id="jsonBtn" class="jumpbtn" type="button">⇩ JSON</button></div>
+  <div class="topbar"><button id="jumpBtn" class="jumpbtn" type="button">↓ К текущему дню</button></div>
   <header>
     <div class="eyebrow">План подготовки · 14 недель · по времени и пульсу</div>
     <h1>Марафон <span class="tgt">3:15</span></h1>
@@ -256,7 +258,7 @@
     <p><b>Объём.</b> С тремя утренними пробежками выходит ~6–9,5 ч бега в неделю (≈67–106 км). Километраж в карточках недель и у длинных — <b>справочный</b>: зависит от реального темпа и рельефа, веди тренировку по времени и пульсу. Если не успеваешь восстанавливаться — первым делом режь утренние.</p>
   </div>
 
-  <footer>Подготовка к марафону · цель 3:15 · 22.06 – 27.09.2026 · по времени и пульсу · ПАНО 178</footer>
+  <footer>Подготовка к марафону · цель 3:15 · 22.06 – 27.09.2026 · по времени и пульсу · ПАНО 178<br><button id="jsonBtn" type="button" class="jsonlink">экспорт plan_m315.json для Garmin</button></footer>
 </div>
 
 <script>

@@ -322,7 +322,10 @@
     <div class="fgrid">
       <div class="fld" style="grid-column:1/-1;background:#fff8ec;border:1px solid var(--accent);border-radius:8px;padding:10px 12px">
         <label style="font-size:13px">🎯 Целевое время на дистанции</label>
-        <input type="text" id="tgtGoal" value="3:15" placeholder="ч:мм[:сс] или мм:сс" style="font-size:16px;font-weight:700">
+        <div style="display:flex;gap:8px;align-items:stretch">
+          <input type="text" id="tgtGoal" value="3:15" placeholder="ч:мм[:сс] или мм:сс" style="font-size:16px;font-weight:700;flex:1">
+          <button type="button" class="btn sec" id="tgtAutoBtn" style="padding:8px 14px;font-size:13px;white-space:nowrap" title="Подставить реалистичную цель и снять ручной ввод">↻ Авто</button>
+        </div>
         <div class="hint" id="tgtRange">рекомендуемый диапазон появится после ввода результатов</div>
         <div id="goalEstimate" style="font-size:12.5px;line-height:1.4;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--accent)">—</div></div>
       <div class="fld"><label>Беговых тренировок/нед</label>
@@ -1416,6 +1419,7 @@ let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false,
   // живой пересчёт по «сырым» данным
   ['goalDist','age','curVol','volUnit','weight','lthr','curLong','sex','exp','maxVolEver','maxLongCap','elevGain','altitude','heat'].forEach(id=>{const e=$(id);if(e){e.addEventListener('input',recalcEstimate);e.addEventListener('change',recalcEstimate);}});
   $('tgtGoal').addEventListener('input',()=>{tgtTouched=true;recalcEstimate();});
+  { const ab=$('tgtAutoBtn'); if(ab)ab.addEventListener('click',()=>{tgtTouched=false;recalcEstimate();}); } // «Авто»: снять ручной ввод и подставить реалистичную цель
   // связь длительность ↔ даты
   $('planWeeks').addEventListener('change',syncFromDuration);
   $('goalD').addEventListener('change',syncFromGoalDate);

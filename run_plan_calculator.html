@@ -311,9 +311,9 @@
             <div class="fld" style="margin:0"><label>Велосипед — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;align-items:center"><label style="font-weight:600;font-size:12px;white-space:nowrap;color:var(--accent)"><input type="checkbox" id="bike-auto"> Авто</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-6"> Вс</label></div></div>
             <div class="fld" style="margin:0"><label>Фитнес — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;align-items:center"><label style="font-weight:600;font-size:12px;white-space:nowrap;color:var(--accent)"><input type="checkbox" id="fitness-auto"> Авто</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-6"> Вс</label></div></div>
           </div>
-          <div class="hint" style="padding-bottom:12px">«Авто» — план сам подберёт оптимальный день (отдых/лёгкий, не рядом с длинной и качественной). Кросс — аэробная поддержка (Z2): добавляет часть аэробной нагрузки (учитывается в прогнозе, объёме и восстановлении) при низкой ударной нагрузке; в неделю гонки и подводку не ставится.</div>
+          <div class="hint" style="padding-bottom:12px">«Авто» — план сам подберёт оптимальный день (отдых/лёгкий, не рядом с длинной и качественной). Кросс — аэробная поддержка (Z2): добавляет часть аэробной нагрузки (учитывается в прогнозе, объёме и восстановлении) при низкой ударной нагрузке; в неделю гонки и подводку не ставится. «Авто» и дни недели можно комбинировать</div>
         </details></div>
-      <div class="fld"><label>День длинной</label><select id="longDow"><option value="">— (авто = день старта)</option><option value="0">Пн</option><option value="1">Вт</option><option value="2">Ср</option><option value="3">Чт</option><option value="4">Пт</option><option value="5">Сб</option><option value="6" selected>Вс</option></select><div class="hint">по умолчанию — воскресенье</div></div>
+      <div class="fld"><label>День длинной</label><select id="longDow"><option value="">(Авто) = день старта</option><option value="0">Пн</option><option value="1">Вт</option><option value="2">Ср</option><option value="3">Чт</option><option value="4">Пт</option><option value="5">Сб</option><option value="6" selected>Вс</option></select><div class="hint">по умолчанию — воскресенье</div></div>
     </div>
   </section>
 
@@ -1551,7 +1551,14 @@ function recalcEstimate(){
     const rampMax=curVol?Math.round(curVol*rampMult):Infinity;    // безопасный максимум от текущего за цикл
     const safeMax=Math.min(rampMax,everCap,corr[1]||Infinity);    // + не выше макс.ранее×1.1 и верха целевого коридора
     const safeMin=curVol||Math.round(corr[0]*0.8);
-    const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(accV,0,1)*0.6); // ориентир в коридоре, сдвиг по акценту
+    // амбициозность цели: насколько целевой VDOT выше текущего (~6% VDOT ≈ потолок за цикл)
+    let ambition=0;
+    const tgtSecNow=parseT(($('tgtGoal').value||'').trim());
+    if(tgtSecNow&&anchor0){
+      const vdTgt=gd>42195?vdot(42195,riegelInv(tgtSecNow,gd)):vdot(gd,tgtSecNow);
+      ambition=clamp((vdTgt-anchor0)/(anchor0*0.06),0,1);
+    }
+    const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(0.6*clamp(accV,0,1)+0.4*ambition,0,1)); // ориентир в коридоре: акцент + амбициозность цели
     const goalFloor=corr[0];
     let recPeak;
     if(volUnit==='h'){ recPeak=rampRec||null; }

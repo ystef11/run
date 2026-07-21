@@ -1126,7 +1126,7 @@ function editRowHtml(w,cfgRef){
     <td><input type="date" value="${w.date}" onchange="editField(${w._idx},'date',this.value)" class="ed-date"></td>
     <td><span class="chip" style="background:var(${w.kind==='str'?'--z-rep':'--z-easy'})">${w.kind==='str'?'Силовая':'Бег'}</span></td>
     <td><input type="text" value="${esc(w.name)}" onchange="editField(${w._idx},'name',this.value)" class="ed-name"></td>
-    <td class="ed-desc">${esc(desc)}${km?` <span class="kmref">≈${km.toFixed(km<10?1:0)} км</span>`:''}${min?` <span class="kmref">${hm(min)}</span>`:''}${fuel?` <span class="fuel">~${fuel.gph} г/ч · ≈${fuel.gels} гел.</span>`:''} <span class="hrv">${esc(tgt)}</span></td>
+    <td class="ed-desc">${esc(desc)}${km?` <span class="kmref">≈${km.toFixed(km<10?1:0)} км</span>`:''}${min?` <span class="kmref">${hm(min)}</span>`:''}${fuel?` <span class="fuel">~${fuel.gph} г/ч · всего ~${fuel.total} г ≈ ${fuel.gels} гел.</span>`:''} <span class="hrv">${esc(tgt)}</span></td>
     <td class="ed-actions"><button class="edbtn" onclick="openEditModal(${w._idx})" title="Править">✎</button><button class="edbtn del" onclick="deleteWorkout(${w._idx})" title="Удалить">🗑</button></td>
   </tr>`;
 }
@@ -1391,7 +1391,7 @@ function renderStaticFromEdit(cfgRef){
       const fuel=isRun?fuelForWorkout(w,cfgRef):null;
       return `<tr class="${q}" data-date="${w.date}"><td class="day">${DOW[(w._date.getDay()+6)%7]}<span class="dt">${pad2(w._date.getDate())}.${pad2(w._date.getMonth()+1)}</span></td>
         <td class="chip-cell"><span class="chip" style="background:var(${ZC[z]})">${ZLAB[z]}</span></td>
-        <td class="ses"><b>${esc(w.name)}</b> — ${esc(desc)}${km?` <span class="kmref">≈${km.toFixed(km<10?1:0)} км · ${hm(min)}</span>`:(min?` <span class="kmref">${hm(min)}</span>`:'')}${fuel?` <span class="fuel">~${fuel.gph} г/ч · ≈${fuel.gels} гел.</span>`:''} &nbsp;<span class="hrv">${esc(tgt)}</span></td>
+        <td class="ses"><b>${esc(w.name)}</b> — ${esc(desc)}${km?` <span class="kmref">≈${km.toFixed(km<10?1:0)} км · ${hm(min)}</span>`:(min?` <span class="kmref">${hm(min)}</span>`:'')}${fuel?` <span class="fuel">~${fuel.gph} г/ч · всего ~${fuel.total} г ≈ ${fuel.gels} гел.</span>`:''} &nbsp;<span class="hrv">${esc(tgt)}</span></td>
         <td class="rowact"><button class="edbtn" onclick="event.stopPropagation();openEditModal(${w._idx})" title="Изменить">✎</button><button class="edbtn del" onclick="event.stopPropagation();deleteWorkout(${w._idx})" title="Удалить">🗑</button></td></tr>`;
     }).join('');
     return `<div class="week"><div class="whead"><div class="wmeta"><div class="dates">Неделя от ${fmtDM(dParse(g.mon))}</div></div>
@@ -1715,7 +1715,7 @@ function render(p){
         const body=x.kind==='rest'?esc(x.label):(x.kind==='str'||x.kind==='cross')?`<b>${esc(x.name)}</b> · ${x.mins} мин`
           :`<b>${esc(x.name)}</b> — ${esc(x.label)}`;
         const km=x.kind==='run'?` <span class="kmref">≈${x.km.toFixed(x.km<10?1:0)} км · ${hm(x.min)}</span>`:'';
-        const fuel=x.fuel?` <span class="fuel">~${x.fuel.gph} г/ч · ≈${x.fuel.gels} гел.</span>`:'';
+        const fuel=x.fuel?` <span class="fuel">~${x.fuel.gph} г/ч · всего ~${x.fuel.total} г ≈ ${x.fuel.gels} гел.</span>`:'';
         const tgt=itemTarget(x,w.R,a.zbpm);
         return `<tr class="${q}${i>0?' subrow':''}${isT?' today':''}"${isT&&i===0?' data-today="1"':''} data-date="${dISO(d.date)}">
           ${dayCell}<td class="chip-cell"><span class="chip" style="background:var(${ZC[z]})">${ZLAB[z]}</span></td>

@@ -292,7 +292,7 @@
       <div class="fld" style="grid-column:1/-1">
         <details style="border:1px dashed var(--line);border-radius:8px;padding:0 12px">
           <summary style="cursor:pointer;font-weight:700;padding:10px 0">Дополнительно (необязательно): пол, опыт, рельеф, климат, лимиты</summary>
-          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;padding-bottom:12px">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;padding-bottom:12px">
             <div class="fld" style="margin:0"><label>Пол</label><select id="sex"><option value="m" selected>М</option><option value="f">Ж</option></select></div>
             <div class="fld" style="margin:0"><label>Опыт</label><select id="exp"><option value="novice">Новичок</option><option value="inter" selected>Средний</option><option value="adv">Опытный</option></select><div class="hint" style="max-width:230px">новичок — до ~2 лет бега / первый старт на дистанции; средний — бегает регулярно 2–4 года; опытный — многолетний стаж, высокая переносимость объёма. Влияет на темп роста формы и число тренировок.</div></div>
             <div class="fld" style="margin:0"><label>Макс. объём ранее</label><input type="number" id="maxVolEver" placeholder="км/нед" style="width:120px"><div class="hint">потолок пика</div></div>
@@ -304,15 +304,16 @@
         </details></div>
       <div class="fld" style="grid-column:1/-1">
         <details style="border:1px dashed var(--line);border-radius:8px;padding:0 12px">
-          <summary style="cursor:pointer;font-weight:700;padding:10px 0">Расписание и кросс-тренировки (необязательно)</summary>
-          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;padding-bottom:6px">
-            <div class="fld" style="margin:0"><label>День длинной</label><select id="longDow"><option value="">— (авто)</option><option value="0">Пн</option><option value="1">Вт</option><option value="2">Ср</option><option value="3">Чт</option><option value="4">Пт</option><option value="5">Сб</option><option value="6">Вс</option></select><div class="hint" style="max-width:160px">по умолчанию — день недели старта</div></div>
-            <div class="fld" style="margin:0"><label>Лыжи — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px"><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-6"> Вс</label></div></div>
-            <div class="fld" style="margin:0"><label>Бассейн — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px"><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-6"> Вс</label></div></div>
-            <div class="fld" style="margin:0"><label>Велосипед — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px"><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-6"> Вс</label></div></div>
+          <summary style="cursor:pointer;font-weight:700;padding:10px 0">Кросс-тренировки (необязательно)</summary>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;padding-bottom:6px">
+            <div class="fld" style="margin:0"><label>Лыжи — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;align-items:center"><label style="font-weight:600;font-size:12px;white-space:nowrap;color:var(--accent)"><input type="checkbox" id="ski-auto"> Авто</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-6"> Вс</label></div></div>
+            <div class="fld" style="margin:0"><label>Бассейн — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;align-items:center"><label style="font-weight:600;font-size:12px;white-space:nowrap;color:var(--accent)"><input type="checkbox" id="pool-auto"> Авто</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-6"> Вс</label></div></div>
+            <div class="fld" style="margin:0"><label>Велосипед — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;align-items:center"><label style="font-weight:600;font-size:12px;white-space:nowrap;color:var(--accent)"><input type="checkbox" id="bike-auto"> Авто</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-6"> Вс</label></div></div>
+            <div class="fld" style="margin:0"><label>Фитнес — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;align-items:center"><label style="font-weight:600;font-size:12px;white-space:nowrap;color:var(--accent)"><input type="checkbox" id="fitness-auto"> Авто</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="fitness-6"> Вс</label></div></div>
           </div>
-          <div class="hint" style="padding-bottom:12px">Кросс ставится на выбранный день как аэробная поддержка (Z2), беговой объём не меняет; в неделю гонки и подводку не добавляется.</div>
+          <div class="hint" style="padding-bottom:12px">«Авто» — план сам подберёт оптимальный день (отдых/лёгкий, не рядом с длинной и качественной). Кросс — аэробная поддержка (Z2): добавляет часть аэробной нагрузки (учитывается в прогнозе, объёме и восстановлении) при низкой ударной нагрузке; в неделю гонки и подводку не ставится.</div>
         </details></div>
+      <div class="fld"><label>День длинной</label><select id="longDow"><option value="">— (авто)</option><option value="0">Пн</option><option value="1">Вт</option><option value="2">Ср</option><option value="3">Чт</option><option value="4">Пт</option><option value="5">Сб</option><option value="6">Вс</option></select><div class="hint">по умолчанию — день недели старта</div></div>
     </div>
   </section>
 
@@ -331,7 +332,7 @@
         <input type="number" id="peakVol" value="95" min="25" max="260" step="1">
         <div class="hint" id="peakRec">в тех же единицах, что текущий объём</div></div>
       <div class="fld"><label>Силовых / ОФП в нед.</label>
-        <select id="strength"><option value="0">0 — без силовых</option><option value="1">1</option><option value="2" selected>2</option></select>
+        <select id="strength"><option value="0">0 — без силовых</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select>
         <div class="hint" id="strRec"></div></div>
       <div class="fld wide"><label>Акцент подготовки</label>
         <div class="sliderbox"><span class="sl">Скорость</span>
@@ -357,7 +358,7 @@
     <details id="recoveryDetails" style="margin-top:14px;border:1px dashed var(--line);border-radius:8px;background:#fff;padding:0 14px">
       <summary style="cursor:pointer;font-weight:700;padding:12px 0">Адаптация под восстановление (после травмы/болезни)</summary>
       <div class="hint" style="margin-bottom:10px">Берёт текущий план (импортированный или построенный) и переписывает недели с даты возврата: только лёгкий бег без интенсивности, объём с нуля, длинные укорочены, силовые → кор. После окна возврата исходный план продолжается; тренировки до даты возврата не меняются.</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding-bottom:14px">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;padding-bottom:14px">
         <div class="fld" style="margin:0"><label>Возврат с даты</label><input type="date" id="recFrom"></div>
         <div class="fld" style="margin:0"><label>Недель возврата</label><input type="number" id="recWeeks" value="3" min="1" max="8" style="width:90px"></div>
         <div class="fld" style="margin:0"><label>Причина</label><select id="recReason">
@@ -521,9 +522,21 @@ function projectFitness(cfg){
   const t10cur=timeFor(10000,anchorVd), curMarEq=timeFor(42195,anchorVd);
   let peakKm0=cfg.volUnit==='h'?cfg.peakVol*3600/mid(paceSet(curMarEq,t10cur).easy):(cfg.peakVol||cfg.peakKm||80);
   if(cfg.maxVolEver>0)peakKm0=Math.min(peakKm0,cfg.maxVolEver*1.1);   // потолок ранее достигнутого объёма
+  const crossF={ski:0.7,bike:0.55,pool:0.45,fitness:0.3};                                   // доля аэробного стимула кросса (специфичность/удар)
+  const crossDays=(cfg.cross||[]).reduce(function(a,c){return a+((c.days&&c.days.length)||(c.auto?1:0));},0);
+  const strSess=Math.max(0,Math.min(3,+cfg.strength||0));
+  const strWeighted=strSess>=3?2.6:(strSess>=2?1.8:(strSess>=1?1.0:0)); // A(1.0)+B(0.8)+C(0.8); «Кор» — в подводке, для роста не важен
+  const strAge=1+Math.max(0,(cfg.age||35)-40)*0.02;           // возрастным силовые тяжелее для восстановления
+  const strLoad=strWeighted*strAge;                           // силовые всегда дают нагрузку на восстановление
+  const crossMinWk=(cfg.cross||[]).reduce(function(a,c){var n=(c.days&&c.days.length)||(c.auto?1:0);return a+n*(c.mins||0);},0);
+  const easyMinKm=mid(paceSet(curMarEq,t10cur).easy)/60;
+  const crossEq=(cfg.cross||[]).reduce(function(a,c){var n=(c.days&&c.days.length)||(c.auto?1:0);return a+n*(c.mins||0)*(crossF[c.sport]||0.5);},0)/easyMinKm;
+  if(crossEq>0){ peakKm0+=Math.min(0.5*crossEq,0.30*peakKm0);                    // аэробная база растёт (с ограничением)
+    notes.push('Кросс ~'+Math.round(crossMinWk)+' мин/нед учтён как ~'+Math.round(crossEq)+' км аэробного эквивалента (влияет на прогноз и восстановление).'); }
+  if(strSess>0)notes.push('Силовые '+strSess+'/нед учтены в восстановлении: A/B/C — полновесно, «Кор» (подводка) — легче'+(strAge>1?'; для твоего возраста нагрузка усилена ×'+strAge.toFixed(2):'')+'. Аэробную форму не повышают.');
   const volF=clamp(peakKm0/90,0.7,1.15);
   const expF={novice:0.82,inter:1.0,adv:1.12}[cfg.exp]||1;            // опыт влияет на скорость прогресса
-  const gain=weeklyGain(anchorVd)*trainWeeks*volF*expF/Math.sqrt(recF);
+  const gain=weeklyGain(anchorVd)*trainWeeks*volF*expF/Math.sqrt(recF*(1+0.02*crossDays+0.012*strLoad)); // кросс + силовые (по весу и возрасту) = доп. общая нагрузка
   const achGoalVd=anchorVd+gain*GM.gainF;
   const verdict=(t,a,c)=>{const need=t-c;if(need<=0)return 'поддержание';const r=need/(a-c);return r<=0.75?'реалистично':(r<=1.05?'амбициозно':'нереалистично');};
   let curGoalTime,vdTarget,vG,endGoal;
@@ -577,6 +590,7 @@ const describe=steps=>steps.map(_prose).join(' · ');
 const STR_A={name:'Силовая A',mins:25,desc:'Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.'};
 const STR_B={name:'Силовая B',mins:20,desc:'Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Выпрыгивания 3×6; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.'};
 const STR_COR={name:'Кор',mins:15,desc:'Кор. Планка 3×45с; боковая 3×30с/сторона; мёртвый жук 3×10; супермен 3×12.'};
+const STR_C={name:'Силовая C',mins:20,desc:'Силовая C. Становая на одной ноге 3×8/ногу; Зашагивания на опору 3×8/ногу; Подъёмы таза на одной ноге 3×10/ногу; Скакалка 3×40; Кор: боковая планка 3×30с/сторона, антиротация 3×10/сторона.'};
 
 // ---- питание на длинных: г/ч углеводов от длительности и веса, гель ≈ 25 г ----
 function fuelFor(min,weight,isRace){
@@ -641,13 +655,21 @@ function buildPlan(cfg){
   const postRaceEasy=Math.ceil(3*recF);
   const peakIdx=Math.max(0,N-2-taperW);
   const runs=clamp(cfg.runs||5,4,12);
-  const baseRuns=Math.min(runs,7); const dbl=Math.max(0,runs-7);   // 8–12 → вторые пробежки
+  const baseRuns=Math.min(runs,7);
+  const crossDaysPre=(cfg.cross||[]).reduce(function(a,c){return a+((c.days&&c.days.length)||(c.auto?1:0));},0);
+  const dbl=Math.max(0,runs-7-Math.round(crossDaysPre/2));   // 8–12 → вторые пробежки; кросс замещает ~половину двойных
   const TPL={4:['-','Q1','-','Q2','-','E','L'],5:['-','Q1','E','Q2','-','E','L'],
              6:['R','Q1','E','Q2','-','E','L'],7:['R','Q1','E','Q2','R','E','L']}[baseRuns];
   const longDow=(cfg.longDow==null||cfg.longDow==='')?((marD.getDay()+6)%7):clamp(+cfg.longDow,0,6); // авто = день недели старта
   const TPLr=longDow===6?TPL:TPL.map((_,i)=>TPL[(i-longDow+6+7)%7]);               // шаблон повёрнут под день длинной
   const strDays=TPLr.map((v,idx)=>({v:v,idx:idx})).filter(o=>o.v==='E'||o.v==='R'||o.v==='-').map(o=>o.idx); if(!strDays.length)strDays.push((longDow+1)%7);
   const sparkDow=(longDow+6)%7;                                                    // день перед длинной (спарка ультры)
+  (function(){ if(!cfg.cross)return; var used=new Set([longDow,sparkDow]);          // авто-подбор дней кросса
+    cfg.cross.forEach(function(c){c._days=(c.days||[]).slice(); c._days.forEach(function(i){used.add(i);});});
+    cfg.cross.forEach(function(c){ if(!c.auto)return; var rest=[],easy=[];
+      for(var i=0;i<7;i++){ if(used.has(i))continue; if(TPLr[i]==='R'||TPLr[i]==='-')rest.push(i); else if(TPLr[i]==='E')easy.push(i); }
+      var pick=rest.length?rest[0]:(easy.length?easy[0]:null);
+      if(pick!=null){c._days.push(pick);used.add(pick);} }); })();
 
   // ---- недельные объёмы: старт ~72% пика, рост ≤10%/нед, разгрузки, тейпер ----
   const tune=(cfg.tuneRaces||(cfg.tuneISO||[]).map(x=>({iso:x,dist:10000})))
@@ -888,17 +910,18 @@ function buildPlan(cfg){
     }
 
     // --- силовые ---
-    const strN=Math.max(0,Math.min(2,+cfg.strength||0));
-    const sdA=strDays[0], sdB=(strDays[1]!=null?strDays[1]:strDays[0]);
+    const strN=Math.max(0,Math.min(3,+cfg.strength||0));
+    const sdA=strDays[0], sdB=(strDays[1]!=null?strDays[1]:strDays[0]), sdC=(strDays[2]!=null?strDays[2]:sdB);
     if(strN>0&&!raceHere&&phase!=='taper'){
       if(tuneDow<0){
         days[sdA].items.push({kind:'str',...STR_A});
         if(strN>=2&&phase!=='down')days[sdB].items.push({kind:'str',...STR_B});
+        if(strN>=3&&phase!=='down')days[sdC].items.push({kind:'str',...STR_C});
       } else if(tuneDow>=4){days[sdA].items.push({kind:'str',...STR_A});}
     } else if(strN>0&&phase==='taper'){days[sdA].items.push({kind:'str',...STR_COR});}
     // --- кросс-тренировки (лыжи/бассейн/велосипед) ---
     if(cfg.cross&&cfg.cross.length&&!raceHere&&phase!=='taper'){
-      cfg.cross.forEach(function(c){ var dd=c.days||(c.dow!=null?[c.dow]:[]); dd.forEach(function(dj0){ var dj=clamp(+dj0,0,6); var d=days[dj]; if(!d)return;
+      cfg.cross.forEach(function(c){ var dd=c._days||c.days||[]; dd.forEach(function(dj0){ var dj=clamp(+dj0,0,6); var d=days[dj]; if(!d)return;
         var item={kind:'cross',sport:c.sport,gtype:c.gtype,name:c.name,mins:c.mins,desc:c.desc};
         if(d.items.length===1&&d.items[0].kind==='rest')d.items=[item]; else d.items.push(item); }); });
     }
@@ -1278,8 +1301,8 @@ function fillForm(cfg){
   if($('maxVolEver'))$('maxVolEver').value=cfg.maxVolEver||''; if($('maxLongCap'))$('maxLongCap').value=cfg.maxLongCap?String(cfg.maxLongCap):'';
   if($('elevGain'))$('elevGain').value=cfg.elevGain||''; if($('altitude'))$('altitude').value=cfg.altitude||''; if($('heat'))$('heat').checked=!!cfg.heat;
   if($('longDow'))$('longDow').value=(cfg.longDow==null?'':String(cfg.longDow));
-  ['ski','pool','bike'].forEach(function(sp){for(var i=0;i<7;i++){var c=$(sp+'-'+i);if(c)c.checked=false;}});
-  (cfg.cross||[]).forEach(function(cx){(cx.days||(cx.dow!=null?[cx.dow]:[])).forEach(function(dj){var c=$(cx.sport+'-'+dj);if(c)c.checked=true;});});
+  ['ski','pool','bike','fitness'].forEach(function(sp){for(var i=0;i<7;i++){var c=$(sp+'-'+i);if(c)c.checked=false;} var a=$(sp+'-auto');if(a)a.checked=false;});
+  (cfg.cross||[]).forEach(function(cx){(cx.days||(cx.dow!=null?[cx.dow]:[])).forEach(function(dj){var c=$(cx.sport+'-'+dj);if(c)c.checked=true;}); if(cx.auto&&$(cx.sport+'-auto'))$(cx.sport+'-auto').checked=true;});
   if(cfg.startISO&&$('goalD').value){setPlanWeeks(Math.max(1,Math.round(dDiff(dParse($('goalD').value),dParse(cfg.startISO))/7)));$('planWeeks').dataset.touched='1';}
   setTuneRows(cfg.tuneRaces||[]);
   $('peakVol').value=cfg.peakVol; $('volUnit').value=cfg.volUnit; $('runs').value=cfg.runs; peakTouched=true; runsTouched=true; strTouched=true;
@@ -1431,7 +1454,12 @@ function recommendVolume(curVol,goalDist,weeks,recF){ if(!curVol)return null;
 function recommendRuns(volKm,goalDist,recF){
   let r=4+volKm/18+(goalDist>=42195?1:0)+(goalDist>42195?1:0)-(recF>1.2?1:0);
   return clamp(Math.round(r),4,12); }
-function recommendStrength(goalDist,volKm,recF){ if(recF>1.28)return 2; if(goalDist>42195||volKm>120)return 1; return 2; }
+function recommendStrength(goalDist,volKm,recF,exp){
+  let r=2;                                              // база: 2/нед полезны бегунам всех дистанций
+  if(goalDist>42195||volKm>120) r=1;                    // ультра / очень большой объём → беречь восстановление (в т.ч. у возрастных)
+  if(exp==='novice'&&(goalDist>=42195||volKm>80)) r=Math.min(r,1); // новичку не стекать силовые с высокой беговой нагрузкой
+  return Math.max(1,r);                                 // возрастным силовые важны — не ниже 1
+}
 function recommendDuration(goalDist){ return {10000:10,21097:12,42195:16,60000:18,80000:20,100000:22,120000:24,160000:24}[goalDist]||16; }
 function genTag(goalDist,tgtSec){                         // 3–4 символа: дистанция + время
   if(goalDist>42195) return 'U'+Math.round(goalDist/10000);        // U6 U8 U10 U12 U16
@@ -1506,24 +1534,25 @@ function recalcEstimate(){
     if($('peakRec'))$('peakRec').textContent=recPeak?('рекомендовано ≈'+recPeak+' '+(volUnit==='h'?'ч':'км')+'/нед'+(peakTouched?' · задано вручную':'')):'в тех же единицах, что текущий объём';
     let recRuns=recommendRuns(volKm,gd,recF); if(exp==='novice')recRuns=Math.max(4,recRuns-1); if(!runsTouched)$('runs').value=recRuns;
     if($('runsRec'))$('runsRec').textContent='рекомендовано '+recRuns+(runsTouched?' · задано вручную':'');
-    const recStr=recommendStrength(gd,volKm,recF); if(!strTouched)$('strength').value=recStr;
+    const recStr=recommendStrength(gd,volKm,recF,exp); if(!strTouched)$('strength').value=recStr;
     if($('strRec'))$('strRec').textContent='рекомендовано '+recStr+(strTouched?' · задано вручную':'');
     // прогноз
     const ltp=(()=>{const v=($('ltpace').value||'').trim();if(!v)return null;const q=v.split(':').map(Number);return q.length===2&&!q.some(isNaN)?q[0]*60+q[1]:null;})();
     const cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,
       age:+$('age').value||35,peakVol:+$('peakVol').value||recPeak||80,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp,
-      exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m'};
+      exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m',
+      strength:+$('strength').value,cross:readCross()};
     const prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
     if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
     const realistic=prR.endGoal, ambitious=Math.round(prR.endGoal*0.975), midT=Math.round((realistic+ambitious)/2);
-    if(!tgtTouched)$('tgtGoal').value=fmtT(midT);                             // цель = середина рекомендуемого диапазона
-    const tgtSec=parseT($('tgtGoal').value)||midT;
+    if(!tgtTouched)$('tgtGoal').value=fmtT(realistic);                        // цель = реалистичное из диапазона
+    const tgtSec=parseT($('tgtGoal').value)||realistic;
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';
     const pr=projectFitness(Object.assign({},cfg,{tgtGoal:tgtSec}));          // с целью — для вердикта
     if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`;
     const vtxt={'реалистично':'реалистично','амбициозно':'амбициозно','нереалистично':'вне досягаемости к дате','поддержание':'поддержание'}[pr.vG]||'';
     let html='';
-    html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(середина диапазона)</span>'}</div>`;
+    html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(реалистичная цель)</span>'}</div>`;
     html+=`<div style="margin-top:2px">Прогноз к старту: <b>≈${fmtT(realistic)}</b>${vtxt?' — '+vtxt:''}</div>`;
     if(prR.eq.length)html+=`<div style="margin-top:4px">Эквивалент формы:</div><ul style="margin:3px 0 0 18px;padding:0">${prR.eq.map(e=>`<li>${distName(e.dist)} — ${fmtT(e.sec)}</li>`).join('')}</ul>`;
     const rec=recommendAccent(results,gd); const acc=rec.val>0.6?'выносливость':rec.val<0.4?'скорость':'баланс';
@@ -1532,14 +1561,17 @@ function recalcEstimate(){
     if(!sliderTouched){$('slider').value=Math.round(rec.val*100); if($('slider').oninput)$('slider').oninput();}
   }catch(e){el.innerHTML='—';}
 }
+function readCross(){
+  var defs=[['ski','Лыжи',70,'Аэробный кросс на лыжах, Z2 по самочувствию.','other'],['pool','Бассейн',45,'Плавание / аквабег, аэробно, восстановление.','lap_swimming'],['bike','Велосипед',75,'Вело-кросс, Z2 по самочувствию.','cycling'],['fitness','Фитнес',60,'Фитнес/игровая активность, лёгкая смешанная нагрузка (как настольный теннис).','other']];
+  return defs.map(function(d){var days=[];for(var i=0;i<7;i++){var c=$(d[0]+'-'+i);if(c&&c.checked)days.push(i);} var au=!!($(d[0]+'-auto')&&$(d[0]+'-auto').checked); return (days.length||au)?{sport:d[0],name:d[1],mins:d[2],desc:d[3],gtype:d[4],days:days,auto:au}:null;}).filter(Boolean);
+}
 function readCfg(){
   const req=(id,nm)=>{const v=parseT($(id).value);if(v==null)throw `Не разобрал «${nm}» — формат м:сс или ч:мм:сс.`;return v;};
   if(!$('goalD').value)throw 'Укажите дату главного старта.';
   if(!$('startD').value)throw 'Укажите дату начала плана.';
   const results=readResRows();
   if(!results.length)throw 'Добавьте хотя бы один текущий результат (дистанция + время).';
-  const cross=(function(){var defs=[['ski','Лыжи',70,'Аэробный кросс на лыжах, Z2 по самочувствию.','cardio_training'],['pool','Бассейн',45,'Плавание / аквабег, аэробно, восстановление.','lap_swimming'],['bike','Велосипед',75,'Вело-кросс, Z2 по самочувствию.','cycling']];
-    return defs.map(function(d){var days=[];for(var i=0;i<7;i++){var c=$(d[0]+'-'+i);if(c&&c.checked)days.push(i);} return days.length?{sport:d[0],name:d[1],mins:d[2],desc:d[3],gtype:d[4],days:days}:null;}).filter(Boolean);})();
+  const cross=readCross();
   const cfg={startISO:$('startD').value,goalISO:$('goalD').value,goalDist:+$('goalDist').value,
     tuneRaces:readTuneRows(),results,
     tgtGoal:req('tgtGoal','цель'),
@@ -1664,9 +1696,10 @@ function render(p){
   const strSec=cfg.strength>0?(()=>{
     const card=(s,when)=>`<div class="strcard"><div class="when">${when}</div><h3>${esc(s.name)} · ${s.mins} мин</h3>
       <ul>${esc(s.desc).split('. ').slice(1).join('. ').split(';').map(x=>x.trim()).filter(Boolean).map(x=>`<li>${x.replace(/\.$/,'')}</li>`).join('')}</ul></div>`;
-    let h=`<h2>Силовые тренировки</h2><div class="h2note">${cfg.strength} в неделю: понедельник${cfg.strength>=2?' и среда':''}; в разгрузку — только A, в подводку и неделю гонки — короткий «Кор».</div><div class="strgrid">`;
-    h+=card(STR_A,'Понедельник');
-    if(cfg.strength>=2)h+=card(STR_B,'Среда');
+    let h=`<h2>Силовые тренировки</h2><div class="h2note">${cfg.strength} в неделю в дни отдыха/лёгкие (не рядом с длинной и качественной); в разгрузку — только A; в подводку и неделю гонки — короткий «Кор».</div><div class="strgrid">`;
+    h+=card(STR_A,'Силовая A');
+    if(cfg.strength>=2)h+=card(STR_B,'Силовая B');
+    if(cfg.strength>=3)h+=card(STR_C,'Силовая C');
     h+=card(STR_COR,'Подводка / неделя гонки');
     return h+'</div>';})():'';
   FITNESS_HTML=verdicts+facts+zones+strSec;

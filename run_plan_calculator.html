@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Калькулятор плана подготовки к марафону</title>
+<title>Калькулятор беговых планов (10 км – ультра)</title>
 <style id="baseCss">
   :root{
     --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
@@ -279,6 +279,7 @@
       <div class="fld"><label>Текущий недельный объём</label>
         <div class="volrow"><input type="number" id="curVol" value="70" min="10" max="260" step="1">
         <select id="volUnit"><option value="km">км/нед</option><option value="h">ч/нед</option></select></div></div>
+      <div class="fld"><label>Текущая длинная — минимум <span style="font-weight:400;color:var(--muted)">(необяз.)</span></label><input type="text" id="curLong" placeholder="напр. 2:00 или 120"><div class="hint">нижняя граница: план НЕ сделает длинные короче этого (чтобы не терять привычный объём)</div></div>
       <div class="fld"><label>Начало плана</label><input type="date" id="startD"><div class="hint">сдвинем на понедельник</div></div>
       <div class="fld"><label>Дистанция старта</label>
         <select id="goalDist"><option value="10000">10 км</option><option value="21097">21,1 км</option><option value="42195" selected>Марафон 42,2</option><option value="60000">Ультра 60 км</option><option value="80000">Ультра 80 км</option><option value="100000">Ультра 100 км</option><option value="120000">Ультра 120 км</option><option value="160000">Ультра 160 км</option></select></div>
@@ -288,7 +289,30 @@
         <div id="tuneList"></div>
         <button type="button" class="btn sec" id="addTuneBtn" style="padding:5px 12px;font-size:12px;margin-top:4px">+ добавить старт</button>
         <div class="hint">необязательно; добавляйте сколько нужно, лишние удаляйте «×». Учитываются старты строго между началом плана и датой старта.</div></div>
-      <div class="fld"><label>Тег Garmin</label><input type="text" id="tag" value="[GEN]"><div class="hint">префикс имён тренировок</div></div>
+      <div class="fld" style="grid-column:1/-1">
+        <details style="border:1px dashed var(--line);border-radius:8px;padding:0 12px">
+          <summary style="cursor:pointer;font-weight:700;padding:10px 0">Дополнительно (необязательно): пол, опыт, рельеф, климат, лимиты</summary>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;padding-bottom:12px">
+            <div class="fld" style="margin:0"><label>Пол</label><select id="sex"><option value="m" selected>М</option><option value="f">Ж</option></select></div>
+            <div class="fld" style="margin:0"><label>Опыт</label><select id="exp"><option value="novice">Новичок</option><option value="inter" selected>Средний</option><option value="adv">Опытный</option></select><div class="hint" style="max-width:230px">новичок — до ~2 лет бега / первый старт на дистанции; средний — бегает регулярно 2–4 года; опытный — многолетний стаж, высокая переносимость объёма. Влияет на темп роста формы и число тренировок.</div></div>
+            <div class="fld" style="margin:0"><label>Макс. объём ранее</label><input type="number" id="maxVolEver" placeholder="км/нед" style="width:120px"><div class="hint">потолок пика</div></div>
+            <div class="fld" style="margin:0"><label>Макс. длинная — потолок</label><input type="text" id="maxLongCap" placeholder="напр. 2:30" style="width:120px"><div class="hint" style="max-width:200px">верхняя граница: план НЕ сделает длинные длиннее этого (ограничение по травмам)</div></div>
+            <div class="fld" style="margin:0"><label>Набор высоты трассы, м</label><input type="number" id="elevGain" placeholder="0" style="width:120px"><div class="hint" style="max-width:190px">суммарный подъём на дистанции (рельеф)</div></div>
+            <div class="fld" style="margin:0"><label>Высота старта над ур. моря, м</label><input type="number" id="altitude" placeholder="0" style="width:120px"><div class="hint" style="max-width:190px">для высокогорных стартов (снижает аэробные возможности)</div></div>
+            <div class="fld" style="margin:0"><label style="display:block">&nbsp;</label><label style="font-weight:400;font-size:13px;white-space:nowrap"><input type="checkbox" id="heat"> Жаркий/сложный старт</label></div>
+          </div>
+        </details></div>
+      <div class="fld" style="grid-column:1/-1">
+        <details style="border:1px dashed var(--line);border-radius:8px;padding:0 12px">
+          <summary style="cursor:pointer;font-weight:700;padding:10px 0">Расписание и кросс-тренировки (необязательно)</summary>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;padding-bottom:6px">
+            <div class="fld" style="margin:0"><label>День длинной</label><select id="longDow"><option value="">— (авто)</option><option value="0">Пн</option><option value="1">Вт</option><option value="2">Ср</option><option value="3">Чт</option><option value="4">Пт</option><option value="5">Сб</option><option value="6">Вс</option></select><div class="hint" style="max-width:160px">по умолчанию — день недели старта</div></div>
+            <div class="fld" style="margin:0"><label>Лыжи — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px"><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="ski-6"> Вс</label></div></div>
+            <div class="fld" style="margin:0"><label>Бассейн — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px"><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="pool-6"> Вс</label></div></div>
+            <div class="fld" style="margin:0"><label>Велосипед — дни</label><div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px"><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-0"> Пн</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-1"> Вт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-2"> Ср</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-3"> Чт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-4"> Пт</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-5"> Сб</label><label style="font-weight:400;font-size:12px;white-space:nowrap"><input type="checkbox" id="bike-6"> Вс</label></div></div>
+          </div>
+          <div class="hint" style="padding-bottom:12px">Кросс ставится на выбранный день как аэробная поддержка (Z2), беговой объём не меняет; в неделю гонки и подводку не добавляется.</div>
+        </details></div>
     </div>
   </section>
 
@@ -314,6 +338,7 @@
           <input type="range" id="slider" min="0" max="100" value="50">
           <span class="sl">Выносливость</span></div>
         <div class="hint" id="sliderHint">Сбалансированно: МПК + порог + длинные с МР-концовками через раз.</div></div>
+      <div class="fld"><label>Тег Garmin</label><input type="text" id="tag" value="[GEN]"><div class="hint">префикс имён тренировок; авто из дистанции и цели</div></div>
     </div>
     <div class="btnrow">
       <button class="btn" id="goBtn">Построить план</button>
@@ -494,9 +519,11 @@ function projectFitness(cfg){
   const recF=1+Math.max(0,(cfg.age||35)-35)*0.015;
   const twRaw=Math.max(1,N-2), trainWeeks=twRaw<=14?twRaw:14+(twRaw-14)*0.55;
   const t10cur=timeFor(10000,anchorVd), curMarEq=timeFor(42195,anchorVd);
-  const peakKm0=cfg.volUnit==='h'?cfg.peakVol*3600/mid(paceSet(curMarEq,t10cur).easy):(cfg.peakVol||cfg.peakKm||80);
+  let peakKm0=cfg.volUnit==='h'?cfg.peakVol*3600/mid(paceSet(curMarEq,t10cur).easy):(cfg.peakVol||cfg.peakKm||80);
+  if(cfg.maxVolEver>0)peakKm0=Math.min(peakKm0,cfg.maxVolEver*1.1);   // потолок ранее достигнутого объёма
   const volF=clamp(peakKm0/90,0.7,1.15);
-  const gain=weeklyGain(anchorVd)*trainWeeks*volF/Math.sqrt(recF);
+  const expF={novice:0.82,inter:1.0,adv:1.12}[cfg.exp]||1;            // опыт влияет на скорость прогресса
+  const gain=weeklyGain(anchorVd)*trainWeeks*volF*expF/Math.sqrt(recF);
   const achGoalVd=anchorVd+gain*GM.gainF;
   const verdict=(t,a,c)=>{const need=t-c;if(need<=0)return 'поддержание';const r=need/(a-c);return r<=0.75?'реалистично':(r<=1.05?'амбициозно':'нереалистично');};
   let curGoalTime,vdTarget,vG,endGoal;
@@ -514,6 +541,12 @@ function projectFitness(cfg){
     vG=vdTarget!=null?verdict(vdTarget,achGoalVd,vdot(goalDist,curGoalTime)):'—';
     endGoal=Math.round(Math.min(Math.max(timeFor(goalDist,achGoalVd),cfg.tgtGoal||0),curGoalTime));
   }
+  const elev=+cfg.elevGain||0, heat=!!cfg.heat, alt=+cfg.altitude||0; // рельеф/климат/высота → штраф к времени
+  const altPct=alt>300?Math.min((alt-300)/300*0.008,0.10):0;          // ~0.8%/300 м выше 300 м, макс 10%
+  if(elev||heat||altPct){const adj=t=>Math.round((t+elev*0.6)*(heat?1.03:1)*(1+altPct)); curGoalTime=adj(curGoalTime); endGoal=adj(endGoal);
+    if(elev>=300)notes.push(`Учтён набор ~${elev} м (+~${Math.round(elev*0.6/60)} мин); добавь холмовую работу и спуски.`);
+    if(heat)notes.push('Жаркий/сложный старт: заложено +~3%; в жару держись пульса, а не темпа.');
+    if(altPct>0)notes.push(`Высокогорье ~${alt} м: заложено +~${Math.round(altPct*100)}%; нужна акклиматизация (приезд заранее либо «жить высоко — тренироваться низко»).`);}
   const eq=[10000,21097,42195].filter(d=>d<goalDist).map(d=>({dist:d,sec:Math.round(timeFor(d,achGoalVd))}));
   return {anchorVd,achGoalVd,vdTarget,vG,endGoal,curGoalTime,N,start,marD,recF,peakKm0,gain,t10cur,curMarEq,goalDist,GM,eq,notes};
 }
@@ -559,7 +592,7 @@ function fuelFor(min,weight,isRace){
 function buildPlan(cfg){
   const notes=[];
   normalizeCfg(cfg);
-  const hrmax=Math.round(208-0.7*(cfg.age||35));
+  const hrmax=cfg.sex==='f'?Math.round(206-0.88*(cfg.age||35)):Math.round(208-0.7*(cfg.age||35)); // пол → HRmax (запасная оценка)
   const start=toMonday(dParse(cfg.startISO));
   if(dISO(start)!==cfg.startISO) notes.push(`Начало плана сдвинуто на понедельник ${fmtDM(start)} — недели считаются с понедельника.`);
   const marD=dParse(cfg.goalISO||cfg.marathonISO);
@@ -611,6 +644,10 @@ function buildPlan(cfg){
   const baseRuns=Math.min(runs,7); const dbl=Math.max(0,runs-7);   // 8–12 → вторые пробежки
   const TPL={4:['-','Q1','-','Q2','-','E','L'],5:['-','Q1','E','Q2','-','E','L'],
              6:['R','Q1','E','Q2','-','E','L'],7:['R','Q1','E','Q2','R','E','L']}[baseRuns];
+  const longDow=(cfg.longDow==null||cfg.longDow==='')?((marD.getDay()+6)%7):clamp(+cfg.longDow,0,6); // авто = день недели старта
+  const TPLr=longDow===6?TPL:TPL.map((_,i)=>TPL[(i-longDow+6+7)%7]);               // шаблон повёрнут под день длинной
+  const strDays=TPLr.map((v,idx)=>({v:v,idx:idx})).filter(o=>o.v==='E'||o.v==='R'||o.v==='-').map(o=>o.idx); if(!strDays.length)strDays.push((longDow+1)%7);
+  const sparkDow=(longDow+6)%7;                                                    // день перед длинной (спарка ультры)
 
   // ---- недельные объёмы: старт ~72% пика, рост ≤10%/нед, разгрузки, тейпер ----
   const tune=(cfg.tuneRaces||(cfg.tuneISO||[]).map(x=>({iso:x,dist:10000})))
@@ -708,7 +745,8 @@ function buildPlan(cfg){
   // ---- сборка недель ----
   const weeks=[]; const workouts=[];
   const strideN=s<0.35?6:4;
-  const longShare=lerp(TUNE.longShare[0],TUNE.longShare[1],s), maxLongMin=lerp(TUNE.maxLongMin[0],TUNE.maxLongMin[1],s);
+  const longShare=lerp(TUNE.longShare[0],TUNE.longShare[1],s); let maxLongMin=lerp(TUNE.maxLongMin[0],TUNE.maxLongMin[1],s);
+  if(cfg.maxLongCap>0)maxLongMin=Math.min(maxLongMin,cfg.maxLongCap);   // потолок безопасной длинной
   const noQualUntil={};                                          // дата -> лёгкие дни после промежуточного старта
   tune.forEach(t=>{const n=tuneRecDays(t.dist);for(let k=1;k<=n;k++)noQualUntil[dISO(dAdd(t.d,k))]=1;});
 
@@ -725,6 +763,8 @@ function buildPlan(cfg){
     // целевые км длинной этой недели
     let lrKm=clamp(Math.round(wkm*longShare),12,isUltra?70:33);  // ультре — выше, чтобы работал maxLongMin (время на ногах)
     let lrMin=lrKm*mid(R.longp)/60; if(lrMin>maxLongMin){lrMin=maxLongMin;lrKm=Math.round(lrMin*60/mid(R.longp));}
+    if(cfg.curLong>0&&(phase==='base'||phase==='spec'||phase==='peak')){ // не опускать длинную ниже привычной
+      const fl=Math.min(cfg.curLong,maxLongMin); if(lrMin<fl){lrMin=fl;lrKm=Math.round(lrMin*60/mid(R.longp));} }
     if(phase==='taper'){lrMin=Math.min(lrMin,95);lrKm=Math.round(lrMin*60/mid(R.longp));}
 
     for(let di=0;di<7;di++){
@@ -780,7 +820,7 @@ function buildPlan(cfg){
           days.push({date:dt,items});continue;}
       }
       // --- обычные недели по шаблону ---
-      const slot=TPL[di];
+      const slot=TPLr[di];
       if(slot==='-'){days.push({date:dt,items:[{kind:'rest',label:'Отдых'}]});continue;}
       if(slot==='Q1'&&!easyDay&&phase!=='down'){const q=q1For(i,wkm,R,phase);
         items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];}
@@ -818,7 +858,7 @@ function buildPlan(cfg){
         }}
       else if(slot==='R'||easyDay){items=[{kind:'run',z:'rec',name:'Восстановительный',steps:[recS(35)]}];}
       else {items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(45)]}];} // placeholder, длит. подгоним ниже
-      if(isUltra&&di===5&&(phase==='spec'||phase==='peak')&&items[0]&&items[0].kind==='run'&&(items[0].z==='easy'||items[0].z==='rec')){
+      if(isUltra&&di===sparkDow&&(phase==='spec'||phase==='peak')&&items[0]&&items[0].kind==='run'&&(items[0].z==='easy'||items[0].z==='rec')){
         const ml=Math.round(clamp(lrMin*0.55,70,180));
         items=[{kind:'run',z:'long',name:`Средне-длинная ${hm(ml)} (спарка)`,steps:[longE(ml)]}];
       }
@@ -829,7 +869,7 @@ function buildPlan(cfg){
     if(dbl>0 && !raceHere && phase!=='taper'){
       const prio=[1,3,2,0,4]; let added=0;        // Вт, Чт, Ср, Пн, Пт
       for(const dj of prio){ if(added>=dbl)break; const d=days[dj]; if(!d)continue;
-        if(!d.items.some(x=>x.kind==='run'))continue; if(TPL[dj]==='L')continue;
+        if(!d.items.some(x=>x.kind==='run'))continue; if(TPLr[dj]==='L')continue;
         d.items.push({kind:'run',z:'rec',dbl2:true,name:'Восстановительный (2-я трен.)',steps:[recS(25)]}); added++; }
     }
     // --- подгонка объёма: лёгкие/восст. дни заполняют остаток недели ---
@@ -849,12 +889,19 @@ function buildPlan(cfg){
 
     // --- силовые ---
     const strN=Math.max(0,Math.min(2,+cfg.strength||0));
+    const sdA=strDays[0], sdB=(strDays[1]!=null?strDays[1]:strDays[0]);
     if(strN>0&&!raceHere&&phase!=='taper'){
       if(tuneDow<0){
-        days[0].items.push({kind:'str',...STR_A});
-        if(strN>=2&&phase!=='down')days[(runs>=5?2:4)].items.push({kind:'str',...STR_B});
-      } else if(tuneDow>=4){days[0].items.push({kind:'str',...STR_A});} // гонка в конце недели — A в Пн не мешает
-    } else if(strN>0&&phase==='taper'){days[0].items.push({kind:'str',...STR_COR});}
+        days[sdA].items.push({kind:'str',...STR_A});
+        if(strN>=2&&phase!=='down')days[sdB].items.push({kind:'str',...STR_B});
+      } else if(tuneDow>=4){days[sdA].items.push({kind:'str',...STR_A});}
+    } else if(strN>0&&phase==='taper'){days[sdA].items.push({kind:'str',...STR_COR});}
+    // --- кросс-тренировки (лыжи/бассейн/велосипед) ---
+    if(cfg.cross&&cfg.cross.length&&!raceHere&&phase!=='taper'){
+      cfg.cross.forEach(function(c){ var dd=c.days||(c.dow!=null?[c.dow]:[]); dd.forEach(function(dj0){ var dj=clamp(+dj0,0,6); var d=days[dj]; if(!d)return;
+        var item={kind:'cross',sport:c.sport,gtype:c.gtype,name:c.name,mins:c.mins,desc:c.desc};
+        if(d.items.length===1&&d.items[0].kind==='rest')d.items=[item]; else d.items.push(item); }); });
+    }
 
     // --- питание (по длительности ≥75 мин, единое правило с редактором); разбор шагов собирает garmin_plan_import.py ---
     const wgt=cfg.weight||60;
@@ -881,6 +928,8 @@ function buildPlan(cfg){
         if(x.note)wo.note=x.note;
         workouts.push(wo);}
       if(x.kind==='str')workouts.push({date:dISO(d.date),kind:'str',
+        name:`${cfg.tag} W${i+1}D${(d.date.getDay()+6)%7+1} ${x.name}`,desc:x.desc,mins:x.mins});
+      if(x.kind==='cross')workouts.push({date:dISO(d.date),kind:'cross',sport:x.sport,gtype:x.gtype,
         name:`${cfg.tag} W${i+1}D${(d.date.getDay()+6)%7+1} ${x.name}`,desc:x.desc,mins:x.mins});}));
     const phName={base:'База',spec:'Специфика',down:'Разгрузка',peak:'Пиковая неделя',
       taper:'Подводка',race:'Неделя гонки',tune:'Неделя промежуточного старта'}[phase];
@@ -904,7 +953,7 @@ function buildPlan(cfg){
 
 
 // ---- адаптация загруженного плана под возврат после травмы/болезни ----
-function classifyRec(w){
+function classifyRec(w){ if(w.kind==='cross')return 'cross';
   if(w.kind==='str')return 'str';
   var n=w.name||'';
   if(/МАРАФОН|СТАРТ|КОНТРОЛ/i.test(n))return 'race';
@@ -937,6 +986,7 @@ function adaptRecovery(list, fromISO, weeks, reason){
     const d=dParse(w.date);
     if(d<from || d>=endWin){ out.push({...w}); return; }
     const ri=Math.floor(dDiff(d,from)/7), cls=classifyRec(w), pre=prefixOf(w.name);
+    if(cls==='cross'){ out.push({...w}); return; }   // кросс полезен при восстановлении — оставляем
     if(cls==='am'){ dropped++; return; }
     if(cls==='str'){ coreN++; out.push({date:w.date,kind:'str',name:pre+' '+coreName,desc:coreDesc,mins:Math.min(+w.mins||15,15)}); return; }
     const orig=Math.round(sesMinNoR(w.steps)||0);
@@ -1215,7 +1265,7 @@ function saveModal(){
 function fillForm(cfg){
   const gd=cfg.goalDist||42195;
   $('goalDist').value=gd; $('goalD').value=cfg.goalISO||cfg.marathonISO||'';
-  $('tgtGoal').value=fmtT(cfg.tgtGoal||(gd===10000?cfg.tgt10:gd===21097?cfg.tgt21:cfg.tgtMar)||0);
+  $('tgtGoal').value=fmtT(cfg.tgtGoal||(gd===10000?cfg.tgt10:gd===21097?cfg.tgt21:cfg.tgtMar)||0); tgtTouched=true;
   let res=(cfg.results&&cfg.results.length)?cfg.results:[];
   if(!res.length){ if(cfg.cur10)res.push({dist:10000,sec:cfg.cur10}); if(cfg.curMar)res.push({dist:42195,sec:cfg.curMar}); }
   setResRows(res);
@@ -1223,6 +1273,13 @@ function fillForm(cfg){
   $('lthr').value=cfg.lthr||''; $('ltpace').value=cfg.ltPace?fmtP(cfg.ltPace):''; ltpaceTouched=!!cfg.ltPace;
   $('startD').value=cfg.startISO;
   $('curVol').value=cfg.curVol||Math.round((cfg.peakVol||80)*0.8);
+  $('curLong').value=cfg.curLong?String(cfg.curLong):'';
+  if($('sex'))$('sex').value=cfg.sex||'m'; if($('exp'))$('exp').value=cfg.exp||'inter';
+  if($('maxVolEver'))$('maxVolEver').value=cfg.maxVolEver||''; if($('maxLongCap'))$('maxLongCap').value=cfg.maxLongCap?String(cfg.maxLongCap):'';
+  if($('elevGain'))$('elevGain').value=cfg.elevGain||''; if($('altitude'))$('altitude').value=cfg.altitude||''; if($('heat'))$('heat').checked=!!cfg.heat;
+  if($('longDow'))$('longDow').value=(cfg.longDow==null?'':String(cfg.longDow));
+  ['ski','pool','bike'].forEach(function(sp){for(var i=0;i<7;i++){var c=$(sp+'-'+i);if(c)c.checked=false;}});
+  (cfg.cross||[]).forEach(function(cx){(cx.days||(cx.dow!=null?[cx.dow]:[])).forEach(function(dj){var c=$(cx.sport+'-'+dj);if(c)c.checked=true;});});
   if(cfg.startISO&&$('goalD').value){setPlanWeeks(Math.max(1,Math.round(dDiff(dParse($('goalD').value),dParse(cfg.startISO))/7)));$('planWeeks').dataset.touched='1';}
   setTuneRows(cfg.tuneRaces||[]);
   $('peakVol').value=cfg.peakVol; $('volUnit').value=cfg.volUnit; $('runs').value=cfg.runs; peakTouched=true; runsTouched=true; strTouched=true;
@@ -1247,7 +1304,7 @@ function fillDatesTunes(pr){
   if(pr.marathonISO)$('marD').value=pr.marathonISO;
   setTuneRows(pr.tuneRaces||[]);
 }
-function zoneOfW(w){ if(w.kind==='str')return 'str'; const n=w.name||'';
+function zoneOfW(w){ if(w.kind==='str')return 'str'; if(w.kind==='cross')return 'cross'; const n=w.name||'';
   if(/МАРАФОН|СТАРТ|КОНТРОЛ/i.test(n))return 'race';
   if(/Длинн/i.test(n))return 'long';
   if(/Порог/i.test(n))return 'thr';
@@ -1293,7 +1350,7 @@ function renderStaticFromEdit(cfgRef){
       wmin+=min; if(isRun)wkm+=km;
       const z=zoneOfW(w); if(z==='long'&&km>longKm)longKm=km;
       const q=(z==='mp'||z==='thr'||z==='vo2'||z==='race')?' qual':'';
-      const tgt=isRun?targetLabelNoR(w,cfgRef):'ОФП';
+      const tgt=isRun?targetLabelNoR(w,cfgRef):(w.kind==='cross'?'кросс Z2':'ОФП');
       const fuel=isRun?fuelForWorkout(w,cfgRef):null;
       return `<tr class="${q}" data-date="${w.date}"><td class="day">${DOW[(w._date.getDay()+6)%7]}<span class="dt">${pad2(w._date.getDate())}.${pad2(w._date.getMonth()+1)}</span></td>
         <td class="chip-cell"><span class="chip" style="background:var(${ZC[z]})">${ZLAB[z]}</span></td>
@@ -1308,7 +1365,7 @@ function renderStaticFromEdit(cfgRef){
 
 // флаги ручного ввода объявляем ДО initDates (иначе TDZ при первом recalcEstimate)
 let sliderTouched=false;
-let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false, tagTouched=false;
+let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false, tagTouched=false, tgtTouched=false;
 (function initDates(){
   const t=new Date();t.setHours(0,0,0,0);
   const nm=dAdd(t,((8-t.getDay())%7)||7);
@@ -1320,8 +1377,8 @@ let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false,
   $('addResBtn').onclick=()=>addResRow(10000,'');
   setResRows([{dist:10000,time:'41:30'}]);
   // живой пересчёт по «сырым» данным
-  ['goalDist','age','curVol','volUnit','weight','lthr'].forEach(id=>{const e=$(id);if(e){e.addEventListener('input',recalcEstimate);e.addEventListener('change',recalcEstimate);}});
-  $('tgtGoal').addEventListener('input',recalcEstimate);
+  ['goalDist','age','curVol','volUnit','weight','lthr','curLong','sex','exp','maxVolEver','maxLongCap','elevGain','altitude','heat'].forEach(id=>{const e=$(id);if(e){e.addEventListener('input',recalcEstimate);e.addEventListener('change',recalcEstimate);}});
+  $('tgtGoal').addEventListener('input',()=>{tgtTouched=true;recalcEstimate();});
   // связь длительность ↔ даты
   $('planWeeks').addEventListener('change',syncFromDuration);
   $('goalD').addEventListener('change',syncFromGoalDate);
@@ -1441,27 +1498,34 @@ function recalcEstimate(){
     const N=Math.max(1,Math.floor(dDiff(dParse($('goalD').value),dParse($('startD').value))/7)+1);
     const recF=1+Math.max(0,(+$('age').value||35)-35)*0.015;
     const curVol=+$('curVol').value||0, volUnit=$('volUnit').value, volKm=volUnit==='h'?curVol*11:curVol;
-    const recPeak=recommendVolume(curVol,gd,N,recF);
+    const exp=($('exp')&&$('exp').value)||'inter';
+    const maxVolEver=+(($('maxVolEver')&&$('maxVolEver').value)||0)||0;
+    let recPeak=recommendVolume(curVol,gd,N,recF);
+    if(maxVolEver&&recPeak)recPeak=Math.round(Math.min(recPeak,maxVolEver*1.1));
     if(recPeak&&!peakTouched)$('peakVol').value=recPeak;
     if($('peakRec'))$('peakRec').textContent=recPeak?('рекомендовано ≈'+recPeak+' '+(volUnit==='h'?'ч':'км')+'/нед'+(peakTouched?' · задано вручную':'')):'в тех же единицах, что текущий объём';
-    const recRuns=recommendRuns(volKm,gd,recF); if(!runsTouched)$('runs').value=recRuns;
+    let recRuns=recommendRuns(volKm,gd,recF); if(exp==='novice')recRuns=Math.max(4,recRuns-1); if(!runsTouched)$('runs').value=recRuns;
     if($('runsRec'))$('runsRec').textContent='рекомендовано '+recRuns+(runsTouched?' · задано вручную':'');
     const recStr=recommendStrength(gd,volKm,recF); if(!strTouched)$('strength').value=recStr;
     if($('strRec'))$('strRec').textContent='рекомендовано '+recStr+(strTouched?' · задано вручную':'');
     // прогноз
     const ltp=(()=>{const v=($('ltpace').value||'').trim();if(!v)return null;const q=v.split(':').map(Number);return q.length===2&&!q.some(isNaN)?q[0]*60+q[1]:null;})();
-    const tgtSec=parseT($('tgtGoal').value)||null;
+    const cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,
+      age:+$('age').value||35,peakVol:+$('peakVol').value||recPeak||80,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp,
+      exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m'};
+    const prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
+    if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
+    const realistic=prR.endGoal, ambitious=Math.round(prR.endGoal*0.975), midT=Math.round((realistic+ambitious)/2);
+    if(!tgtTouched)$('tgtGoal').value=fmtT(midT);                             // цель = середина рекомендуемого диапазона
+    const tgtSec=parseT($('tgtGoal').value)||midT;
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';
-    const cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,tgtGoal:tgtSec,
-      age:+$('age').value||35,peakVol:+$('peakVol').value||recPeak||80,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp};
-    const pr=projectFitness(cfg);
-    if(!pr){el.innerHTML='нужен хотя бы один результат';return;}
-    if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(pr.endGoal)}</b>, амбициозно ≈${fmtT(Math.round(pr.endGoal*0.975))} · сейчас ≈${fmtT(pr.curGoalTime)}`;
+    const pr=projectFitness(Object.assign({},cfg,{tgtGoal:tgtSec}));          // с целью — для вердикта
+    if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`;
     const vtxt={'реалистично':'реалистично','амбициозно':'амбициозно','нереалистично':'вне досягаемости к дате','поддержание':'поддержание'}[pr.vG]||'';
     let html='';
-    if(tgtSec)html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b></div>`;
-    html+=`<div style="margin-top:2px">Прогноз к старту: <b>≈${fmtT(pr.endGoal)}</b>${vtxt?' — '+vtxt:''}</div>`;
-    if(pr.eq.length)html+=`<div style="margin-top:4px">Эквивалент формы:</div><ul style="margin:3px 0 0 18px;padding:0">${pr.eq.map(e=>`<li>${distName(e.dist)} — ${fmtT(e.sec)}</li>`).join('')}</ul>`;
+    html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(середина диапазона)</span>'}</div>`;
+    html+=`<div style="margin-top:2px">Прогноз к старту: <b>≈${fmtT(realistic)}</b>${vtxt?' — '+vtxt:''}</div>`;
+    if(prR.eq.length)html+=`<div style="margin-top:4px">Эквивалент формы:</div><ul style="margin:3px 0 0 18px;padding:0">${prR.eq.map(e=>`<li>${distName(e.dist)} — ${fmtT(e.sec)}</li>`).join('')}</ul>`;
     const rec=recommendAccent(results,gd); const acc=rec.val>0.6?'выносливость':rec.val<0.4?'скорость':'баланс';
     html+=`<div style="margin-top:6px;color:var(--muted)">Рекомендуемый акцент: <b>${acc}</b> — ${rec.reason}${sliderTouched?' <span style="opacity:.7">(ползунок задан вручную)</span>':''}</div>`;
     el.innerHTML=html;
@@ -1474,6 +1538,8 @@ function readCfg(){
   if(!$('startD').value)throw 'Укажите дату начала плана.';
   const results=readResRows();
   if(!results.length)throw 'Добавьте хотя бы один текущий результат (дистанция + время).';
+  const cross=(function(){var defs=[['ski','Лыжи',70,'Аэробный кросс на лыжах, Z2 по самочувствию.','cardio_training'],['pool','Бассейн',45,'Плавание / аквабег, аэробно, восстановление.','lap_swimming'],['bike','Велосипед',75,'Вело-кросс, Z2 по самочувствию.','cycling']];
+    return defs.map(function(d){var days=[];for(var i=0;i<7;i++){var c=$(d[0]+'-'+i);if(c&&c.checked)days.push(i);} return days.length?{sport:d[0],name:d[1],mins:d[2],desc:d[3],gtype:d[4],days:days}:null;}).filter(Boolean);})();
   const cfg={startISO:$('startD').value,goalISO:$('goalD').value,goalDist:+$('goalDist').value,
     tuneRaces:readTuneRows(),results,
     tgtGoal:req('tgtGoal','цель'),
@@ -1482,6 +1548,12 @@ function readCfg(){
     ltPace:$('ltpace').value?(()=>{const p=$('ltpace').value.trim().split(':').map(Number);
       if(p.length!==2||p.some(isNaN))throw 'Темп ПАНО — в формате м:сс, например 4:10.';return p[0]*60+p[1];})():null,
     peakVol:+$('peakVol').value,volUnit:$('volUnit').value,runs:+$('runs').value,curVol:+$('curVol').value||null,
+    curLong:(function(){var v=($('curLong').value||'').trim();if(!v)return null;var sec=parseT(v);return sec?Math.round(sec/60):null;})(),
+    sex:($('sex')&&$('sex').value)||'m',exp:($('exp')&&$('exp').value)||'inter',
+    maxVolEver:+($('maxVolEver')&&$('maxVolEver').value)||null,
+    maxLongCap:(function(){var v=(($('maxLongCap')&&$('maxLongCap').value)||'').trim();if(!v)return null;var sec=parseT(v);return sec?Math.round(sec/60):null;})(),
+    elevGain:+($('elevGain')&&$('elevGain').value)||0,altitude:+($('altitude')&&$('altitude').value)||0,heat:!!($('heat')&&$('heat').checked),
+    longDow:($('longDow')&&$('longDow').value!=='')?+$('longDow').value:null,cross:cross,
     strength:+$('strength').value,slider:(+$('slider').value)/100,
     tag:($('tag').value||'[GEN]').trim()};
   if(cfg.ltPace&&cfg.ltPace>600)throw 'Темп ПАНО выглядит странно (медленнее 10:00/км) — проверьте формат м:сс.';
@@ -1489,12 +1561,13 @@ function readCfg(){
   return cfg;
 }
 
-const ZC={rec:'--z-rec',easy:'--z-easy',mp:'--z-mp',thr:'--z-thr',vo2:'--z-vo2',long:'--z-long',race:'--z-race',rest:'--z-rest',str:'--z-rep'};
-const ZLAB={rec:'Восст.',easy:'Лёгкий',mp:'Марафон. темп',thr:'Порог',vo2:'МПК/10к',long:'Длинная',race:'Старт',rest:'Отдых',str:'Силовая'};
+const ZC={rec:'--z-rec',easy:'--z-easy',mp:'--z-mp',thr:'--z-thr',vo2:'--z-vo2',long:'--z-long',race:'--z-race',rest:'--z-rest',str:'--z-rep',cross:'--z-rec'};
+const ZLAB={rec:'Восст.',easy:'Лёгкий',mp:'Марафон. темп',thr:'Порог',vo2:'МПК/10к',long:'Длинная',race:'Старт',rest:'Отдых',str:'Силовая',cross:'Кросс'};
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 
 function itemTarget(x,R,zb){ // краткая цель для правой колонки
   if(x.kind==='str')return 'ОФП';
+  if(x.kind==='cross')return 'кросс Z2';
   if(x.kind==='rest')return '—';
   const firstPace=(st)=>{if(st.t==='repeat'){for(const q of st.steps){const r=firstPace(q);if(r)return r;}return null;}
     return (st.tg&&st.tg.pace&&st.t!=='recovery'&&st.d!=='Ускорение')?st.tg.pace:null;};
@@ -1568,10 +1641,10 @@ function render(p){
       const isT=dDiff(d.date,today)===0; if(isT)hasToday=true;
       const dl=`${DOW[(d.date.getDay()+6)%7]}<span class="dt">${pad2(d.date.getDate())}.${pad2(d.date.getMonth()+1)}</span>${isT?'<span class="todaytag">сегодня</span>':''}`;
       return d.items.map((x,i)=>{
-        const z=x.kind==='str'?'str':x.kind==='rest'?'rest':x.z;
+        const z=x.kind==='str'?'str':x.kind==='cross'?'cross':x.kind==='rest'?'rest':x.z;
         const q=(z==='mp'||z==='thr'||z==='vo2'||z==='race')?' qual':'';
         const dayCell=i===0?`<td class="day${isT?' today':''}" rowspan="${d.items.length}">${dl}</td>`:'';
-        const body=x.kind==='rest'?esc(x.label):x.kind==='str'?`<b>${esc(x.name)}</b> · ${x.mins} мин`
+        const body=x.kind==='rest'?esc(x.label):(x.kind==='str'||x.kind==='cross')?`<b>${esc(x.name)}</b> · ${x.mins} мин`
           :`<b>${esc(x.name)}</b> — ${esc(x.label)}`;
         const km=x.kind==='run'?` <span class="kmref">≈${x.km.toFixed(x.km<10?1:0)} км · ${hm(x.min)}</span>`:'';
         const fuel=x.fuel?` <span class="fuel">~${x.fuel.gph} г/ч · ≈${x.fuel.gels} гел.</span>`:'';

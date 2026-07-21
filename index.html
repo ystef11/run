@@ -30,17 +30,11 @@
     transition:background .12s ease;}
   .card:hover{background:#fbeee9;}
   .card .icon{font-size:24px;display:block;margin-bottom:12px;}
-  .card .title{font-size:17px;font-weight:800;letter-spacing:-.01em;line-height:1.3;}
-  .card .desc{font-size:13.5px;color:var(--muted);margin-top:7px;line-height:1.55;}
+  .card .title{display:block;font-size:17px;font-weight:800;letter-spacing:-.01em;line-height:1.3;}
+  .card .desc{display:block;font-size:13.5px;color:var(--muted);margin-top:7px;line-height:1.55;}
 
   .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:24px;}
-  .panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:4px;}
-  .panel-head h2{font-size:16px;margin:0;font-weight:800;letter-spacing:-.01em;}
-  .pill{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;
-    padding:4px 10px;border-radius:20px;border:1px solid var(--line);color:var(--muted);background:#fff;}
-  .pill.on{color:#1f9b8e;border-color:#1f9b8e;background:#eaf6f3;}
 
-  #gate p{font-size:14px;color:var(--muted);margin:12px 0 16px;line-height:1.6;}
   .gate-form{display:flex;gap:10px;flex-wrap:wrap;}
   .gate-form input{flex:1;min-width:180px;border:1px solid var(--line);border-radius:8px;
     padding:12px 14px;font-size:14px;background:#fff;color:var(--ink);}
@@ -66,7 +60,7 @@
   <header>
     <div class="eyebrow">Running Toolkit</div>
     <h1>Беговые инструменты</h1>
-    <div class="sub">Калькуляторы для тренировок в открытом доступе. Планы подготовки — в личном кабинете.</div>
+    <div class="sub">Калькуляторы для тренировок в открытом доступе.</div>
   </header>
 
   <div class="section-title">Общедоступные калькуляторы</div>
@@ -85,13 +79,7 @@
 
   <div class="section-title">Личный кабинет</div>
   <div class="panel">
-    <div class="panel-head">
-      <h2>🔒 Планы тренировок</h2>
-      <span class="pill" id="statusPill">закрыт</span>
-    </div>
-
     <div id="gate">
-      <p>Введите пароль, чтобы открыть планы тренировок.</p>
       <div class="gate-form">
         <input type="password" id="pwd" placeholder="Пароль" autocomplete="off">
         <button onclick="tryUnlock()">Войти</button>
@@ -128,9 +116,6 @@
     const unlocked = sessionStorage.getItem(STORAGE_KEY) === "1";
     document.getElementById("gate").style.display = unlocked ? "none" : "block";
     document.getElementById("cabinet-content").style.display = unlocked ? "block" : "none";
-    const pill = document.getElementById("statusPill");
-    pill.textContent = unlocked ? "открыт" : "закрыт";
-    pill.classList.toggle("on", unlocked);
   }
 
   function tryUnlock(){

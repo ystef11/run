@@ -1588,8 +1588,8 @@ function recalcEstimate(){
     if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`+(volLimited?` <span style="color:#c00">⚠ под эту цель желателен объём от ~${goalFloor} км/нед, но безопасно ты выйдешь ~${safeMax} — цель и прогноз рассчитаны под достижимый объём</span>`:'');
     const vtxt={'реалистично':'реалистично','амбициозно':'амбициозно','нереалистично':'вне досягаемости к дате','поддержание':'поддержание'}[pr.vG]||'';
     let html='';
-    html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(реалистичная цель)</span>'}</div>`;
-    html+=`<div style="margin-top:2px">Прогноз к старту: <b>≈${fmtT(realistic)}</b>${vtxt?' — '+vtxt:''}</div>`;
+    html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(реалистичная цель)</span>'}${vtxt?' — '+vtxt:''}</div>`;
+    html+=`<div style="margin-top:2px">Прогноз к старту: <b>≈${fmtT(realistic)}</b></div>`;
     if(prR.eq.length)html+=`<div style="margin-top:4px">Эквивалент формы:</div><ul style="margin:3px 0 0 18px;padding:0">${prR.eq.map(e=>`<li>${distName(e.dist)} — ${fmtT(e.sec)}</li>`).join('')}</ul>`;
     const rec=recommendAccent(results,gd); const acc=rec.val>0.6?'выносливость':rec.val<0.4?'скорость':'баланс';
     html+=`<div style="margin-top:6px;color:var(--muted)">Рекомендуемый акцент: <b>${acc}</b> — ${rec.reason}${sliderTouched?' <span style="opacity:.7">(ползунок задан вручную)</span>':''}</div>`;

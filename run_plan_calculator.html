@@ -1546,8 +1546,10 @@ function recalcEstimate(){
     const accV=(+$('slider').value||50)/100;                      // 0 скорость … 1 выносливость (item3: акцент → объём)
     const rampRec=recommendVolume(curVol,gd,N,recF)||0;           // безопасный рост от текущего (~×1.2)
     const everCap=maxVolEver?Math.round(maxVolEver*1.1):Infinity; // не сильно выше макс. ранее (травмобезопасность)
-    const rampMax=curVol?Math.round(curVol*1.5):Infinity;         // безопасный максимум от текущего за цикл
-    const safeMax=Math.min(rampMax,everCap);
+    const workWeeks=Math.max(1,N-2);                              // рабочие недели без подводки
+    const rampMult=clamp(1+workWeeks*0.04/Math.sqrt(recF),1.1,2.2); // потолок роста растёт с длительностью плана (~10%/нед с разгрузками)
+    const rampMax=curVol?Math.round(curVol*rampMult):Infinity;    // безопасный максимум от текущего за цикл
+    const safeMax=Math.min(rampMax,everCap,corr[1]||Infinity);    // + не выше макс.ранее×1.1 и верха целевого коридора
     const safeMin=curVol||Math.round(corr[0]*0.8);
     const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(accV,0,1)*0.6); // ориентир в коридоре, сдвиг по акценту
     const goalFloor=corr[0];

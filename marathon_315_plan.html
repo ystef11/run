@@ -289,7 +289,7 @@ const WEEKMETA=[
  {phase:'Пиковая неделя (текущая)',hours:'9:00',type:'peak'},
  {phase:'Разгрузка (после пика)',hours:'7:10',type:'down'},
  {phase:'База +',hours:'9:00',type:''},
- {phase:'Пропущена (травма спины)',hours:'—',type:'down'},
+ {phase:'Пропущена',hours:'—',type:'down'},
  {phase:'Возврат после травмы спины',hours:'4:30',type:'down'},
  {phase:'Восстановление объёма',hours:'6:30',type:''},
  {phase:'Возврат к специфике (мягче)',hours:'8:30',type:''},
@@ -379,7 +379,7 @@ $('weeks').innerHTML=WEEKMETA.map(function(meta,wi){
             : '<span class="badge">'+meta.phase+'</span>';
   var weekHasToday=false, rows='';
   if(order.length===0){
-    rows='<tr><td class="day">—</td><td class="chip-cell"><span class="chip" style="background:var(--z-rest)">Отдых</span></td><td class="ses">Пропущено — травма спины</td></tr>';
+    rows='<tr><td class="day">—</td><td class="chip-cell"><span class="chip" style="background:var(--z-rest)">Отдых</span></td><td class="ses">Пропущено</td></tr>';
   } else {
     rows=order.map(function(date){
       var sess=byDate[date], d=new Date(date+'T00:00:00'), di=(d.getDay()+6)%7;

@@ -1,69 +1,161 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Беговые инструменты</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            line-height: 1.6;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Беговые инструменты</title>
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:800px;margin:0 auto;padding:32px 20px 80px;}
 
-        h1 {
-            color: #333;
-        }
+  header{border-bottom:3px solid var(--ink);padding-bottom:20px;margin-bottom:28px;}
+  .eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(28px,6vw,44px);line-height:1.02;margin:8px 0 4px;font-weight:800;letter-spacing:-.02em;}
+  .sub{font-size:15px;color:var(--muted);margin:6px 0 0;}
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+  .section-title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    font-weight:700;margin:36px 0 14px;display:flex;align-items:center;gap:10px;}
+  .section-title::after{content:"";flex:1;height:1px;background:var(--line);}
 
-        li {
-            margin: 15px 0;
-        }
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
 
-        a {
-            display: inline-block;
-            padding: 12px 18px;
-            text-decoration: none;
-            background-color: #0078d7;
-            color: white;
-            border-radius: 6px;
-        }
+  .card{display:block;background:var(--card);padding:22px;text-decoration:none;color:var(--ink);
+    transition:background .12s ease;}
+  .card:hover{background:#fbeee9;}
+  .card .icon{font-size:24px;display:block;margin-bottom:12px;}
+  .card .title{font-size:17px;font-weight:800;letter-spacing:-.01em;line-height:1.3;}
+  .card .desc{font-size:13.5px;color:var(--muted);margin-top:7px;line-height:1.55;}
 
-        a:hover {
-            background-color: #005ea6;
-        }
-    </style>
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:24px;}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:4px;}
+  .panel-head h2{font-size:16px;margin:0;font-weight:800;letter-spacing:-.01em;}
+  .pill{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;
+    padding:4px 10px;border-radius:20px;border:1px solid var(--line);color:var(--muted);background:#fff;}
+  .pill.on{color:#1f9b8e;border-color:#1f9b8e;background:#eaf6f3;}
+
+  #gate p{font-size:14px;color:var(--muted);margin:12px 0 16px;line-height:1.6;}
+  .gate-form{display:flex;gap:10px;flex-wrap:wrap;}
+  .gate-form input{flex:1;min-width:180px;border:1px solid var(--line);border-radius:8px;
+    padding:12px 14px;font-size:14px;background:#fff;color:var(--ink);}
+  .gate-form input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(223,74,46,.12);}
+  .gate-form button{appearance:none;border:none;background:var(--accent);color:#fff;font-weight:700;font-size:14px;
+    letter-spacing:.02em;padding:12px 22px;border-radius:8px;cursor:pointer;
+    box-shadow:0 2px 0 #b53a1e, 0 2px 8px rgba(223,74,46,.25);transition:transform .1s,box-shadow .1s,background .12s;}
+  .gate-form button:hover{background:#c8401f;transform:translateY(-1px);box-shadow:0 3px 0 #b53a1e, 0 4px 10px rgba(223,74,46,.3);}
+  .gate-form button:active{transform:translateY(1px);box-shadow:0 1px 0 #b53a1e;}
+  .error{font-size:12.5px;color:var(--accent);margin-top:10px;display:none;font-weight:600;}
+
+  #cabinet-content{display:none;margin-top:20px;}
+  .logout{appearance:none;margin-top:18px;border:1px solid var(--line);background:#fff;color:var(--muted);
+    font-weight:700;font-size:13px;padding:10px 18px;border-radius:8px;cursor:pointer;transition:all .12s;}
+  .logout:hover{border-color:var(--accent);color:var(--accent);background:#fbeee9;}
+
+  footer{margin-top:36px;font-size:11.5px;color:var(--muted);text-align:center;}
+</style>
 </head>
 <body>
-    <h1>Беговые инструменты</h1>
+<div class="wrap">
 
-    <ul>
-        <li>
-            <a href="marathon_315_plan.html">
-                План подготовки к марафону 3:15
-            </a>
-        </li>
-        <li>
-            <a href="wife_10k_plan.html">
-                План подготовки к 10k и полумарафону
-            </a>
-        </li>
-        <li>
-            <a href="gel_calculator.html">
-                Калькулятор энергетических гелей
-            </a>
-        </li>
-        <li>
-            <a href="run_plan_calculator.html">
-                Калькулятор бегового плана
-            </a>
-        </li>
-    </ul>
+  <header>
+    <div class="eyebrow">Running Toolkit</div>
+    <h1>Беговые инструменты</h1>
+    <div class="sub">Калькуляторы для тренировок в открытом доступе. Планы подготовки — в личном кабинете.</div>
+  </header>
+
+  <div class="section-title">Общедоступные калькуляторы</div>
+  <div class="grid">
+    <a class="card" href="run_plan_calculator.html">
+      <span class="icon">📐</span>
+      <span class="title">Калькулятор бегового плана</span>
+      <span class="desc">Построение тренировочного плана под вашу дистанцию и темп</span>
+    </a>
+    <a class="card" href="gel_calculator.html">
+      <span class="icon">⚡</span>
+      <span class="title">Калькулятор энергетических гелей</span>
+      <span class="desc">Расчёт количества и графика приёма гелей на дистанции</span>
+    </a>
+  </div>
+
+  <div class="section-title">Личный кабинет</div>
+  <div class="panel">
+    <div class="panel-head">
+      <h2>🔒 Планы тренировок</h2>
+      <span class="pill" id="statusPill">закрыт</span>
+    </div>
+
+    <div id="gate">
+      <p>Введите пароль, чтобы открыть планы тренировок.</p>
+      <div class="gate-form">
+        <input type="password" id="pwd" placeholder="Пароль" autocomplete="off">
+        <button onclick="tryUnlock()">Войти</button>
+      </div>
+      <div class="error" id="err">Неверный пароль</div>
+    </div>
+
+    <div id="cabinet-content">
+      <div class="grid">
+        <a class="card" href="marathon_315_plan.html">
+          <span class="icon">🏁</span>
+          <span class="title">План подготовки к марафону 3:15</span>
+          <span class="desc">Полный тренировочный план на марафонский цикл</span>
+        </a>
+        <a class="card" href="wife_10k_plan.html">
+          <span class="icon">🏃</span>
+          <span class="title">План подготовки к 10k и полумарафону</span>
+          <span class="desc">Тренировочный план на дистанции 10 км и 21.1 км</span>
+        </a>
+      </div>
+      <button class="logout" onclick="lock()">Выйти из кабинета</button>
+    </div>
+  </div>
+
+  <footer>Беговые инструменты · личный кабинет защищён паролем на стороне браузера</footer>
+</div>
+
+<script>
+  // Простая клиентская защита — меняйте пароль здесь.
+  const CABINET_PASSWORD = "beg2026";
+  const STORAGE_KEY = "cabinetUnlocked";
+
+  function render(){
+    const unlocked = sessionStorage.getItem(STORAGE_KEY) === "1";
+    document.getElementById("gate").style.display = unlocked ? "none" : "block";
+    document.getElementById("cabinet-content").style.display = unlocked ? "block" : "none";
+    const pill = document.getElementById("statusPill");
+    pill.textContent = unlocked ? "открыт" : "закрыт";
+    pill.classList.toggle("on", unlocked);
+  }
+
+  function tryUnlock(){
+    const input = document.getElementById("pwd");
+    const err = document.getElementById("err");
+    if(input.value === CABINET_PASSWORD){
+      sessionStorage.setItem(STORAGE_KEY, "1");
+      err.style.display = "none";
+      input.value = "";
+      render();
+    } else {
+      err.style.display = "block";
+    }
+  }
+
+  function lock(){
+    sessionStorage.removeItem(STORAGE_KEY);
+    render();
+  }
+
+  document.getElementById("pwd").addEventListener("keydown", function(e){
+    if(e.key === "Enter") tryUnlock();
+  });
+
+  render();
+</script>
 </body>
 </html>

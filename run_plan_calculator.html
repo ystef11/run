@@ -594,7 +594,7 @@ function projectFitness(cfg){
   const elev=+cfg.elevGain||0, heat=!!cfg.heat, alt=+cfg.altitude||0; // рельеф/климат/высота → штраф к времени
   const altPct=alt>300?Math.min((alt-300)/300*0.008,0.10):0;          // ~0.8%/300 м выше 300 м, макс 10%
   if(elev||heat||altPct){const adj=t=>Math.round((t+elev*0.6)*(heat?1.03:1)*(1+altPct)); curGoalTime=adj(curGoalTime); endGoal=adj(endGoal);
-    if(elev>=300)notes.push(`Учтён набор ~${elev} м (+~${Math.round(elev*0.6/60)} мин); добавь холмовую работу и спуски.`);
+    if(elev>=300)notes.push(`Учтён набор ~${elev} м (+~${Math.round(elev*0.6/60)} мин); в план добавлена горочная работа (одна из качественных тренировок — «Горки»).`);
     if(heat)notes.push('Жаркий/сложный старт: заложено +~3%; в жару держись пульса, а не темпа.');
     if(altPct>0)notes.push(`Высокогорье ~${alt} м: заложено +~${Math.round(altPct*100)}%; нужна акклиматизация (приезд заранее либо «жить высоко — тренироваться низко»).`);}
   const eq=[5000,10000,21097,42195].filter(d=>d<goalDist).map(d=>({dist:d,sec:Math.round(timeFor(d,achGoalVd))}));
@@ -686,6 +686,10 @@ function buildPlan(cfg){
     peakRestore:.95       // мин. доля пика при переносе пиковой недели (коллизия со стартом)
   };
   // ---- восстановление и структура ----
+  const elevGain=+cfg.elevGain||0;
+  const gpk=goalDist>0?elevGain/(goalDist/1000):0;                // м набора на 1 км дистанции — интенсивность рельефа (300 м на 5 км ≠ 300 м на марафон)
+  const hilly=gpk>=8;                                             // порог, с которого включаем горочную работу
+  const hillTier=gpk>=40?2:(gpk>=20?1:0);                         // 0 пологий рельеф · 1 умеренный · 2 горный старт — растёт акцент на горки
   const s=clamp(cfg.slider==null?0.5:cfg.slider,0,1);            // 0 скорость … 1 выносливость
   const taperW=clamp((GM.taperBase||2)+(recF>1.25?1:0),1,Math.max(1,N-3)); // подводка зависит от дистанции и восстановления
   const downEvery=recF>1.15?3:4;
@@ -748,26 +752,42 @@ function buildPlan(cfg){
 
   // ---- ротации качественных работ (зависят от бегунка) ----
   const nQ=w=>clamp(Math.round(w/TUNE.qDiv),TUNE.qMin,TUNE.qMax);
+  // горочная качественная (при заметном наборе высоты трассы): усилие в гору по пульсу/ощущению, трусца вниз.
+  // Реп и длительность подхода растут с горным тиром (hillTier), чтобы более крутые/горные старты получали больше специфики.
+  const hillOpt=(w,phase)=>{const hn=clamp(Math.round(w/14)+hillTier,5,10+hillTier*2),
+      up=(phase==='spec'||phase==='peak'?75:60)+hillTier*15;
+    return {nm:`Горки ${hn}x${up}"`,st:rp(hn,[st('interval','time',up,HRZ(4),'В гору'),
+      st('recovery','time',Math.round(up*1.4),HRZ(1),'Вниз трусцой')]),
+      note:'В гору — по пульсу/усилию (Z4), не по темпу; вниз — трусцой, следи за техникой на спуске.'};};
+  // затяжные подъёмы (силовая выносливость под рельеф) — замещают часть пороговых при умеренном/горном тире
+  const hillSupport=(w,phase)=>{const m=(phase==='spec'||phase==='peak')?3+hillTier:2+hillTier,
+      dur=(phase==='spec'||phase==='peak')?6:4;
+    return {nm:`Подъёмы ${m}x${dur}'`,z:'thr',
+      steps:[warm(12),rp(m,[st('interval','time',dur*60,HRZ(3),'Затяжной подъём'),st('recovery','time',180,HRZ(1),'Вниз трусцой')]),cool(8)],
+      note:'Затяжные подъёмы по пульсу Z3 — силовая выносливость под рельеф трассы; вниз — трусцой восстановительно.'};};
   const q1For=(i,w,R,phase)=>{const n=nQ(w),k=i%4;
     if(phase==='taper')return {nm:`Острая ${Math.max(3,n-2)}x1000`,z:'vo2',
       steps:[warm(12),repsD(Math.max(3,n-2),1000,R.vo2,90),cool(10)]};
+    let rots;
     if(s<0.35){ // акцент скорость: короче и быстрее
-      const rot=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
-                 {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
-                 {nm:`МПК ${n}x800`,st:repsD(n,800,R.vo2,75)},
-                 {nm:`Повторы ${n+1}x600`,st:repsD(n+1,600,R.rep,90)}][k];
-      return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)]};}
-    if(s>0.65){ // акцент выносливость: круизные, длиннее
-      const rot=[{nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
-                 {nm:`Круизные ${Math.max(3,n-1)}x1600`,st:repsD(Math.max(3,n-1),1600,R.t10,120)},
-                 {nm:`МПК ${Math.max(3,n-1)}x1000`,st:repsD(Math.max(3,n-1),1000,R.vo2,90)},
-                 {nm:`Ступени ${Math.max(3,n-1)}x1500`,st:repsD(Math.max(3,n-1),1500,R.t10,105)}][k];
-      return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)]};}
-    const rot=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
-               {nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
-               {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
-               {nm:`Круизные ${n}x800`,st:repsD(n,800,R.t10,75)}][k];
-    return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)]};};
+      rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
+            {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
+            {nm:`МПК ${n}x800`,st:repsD(n,800,R.vo2,75)},
+            {nm:`Повторы ${n+1}x600`,st:repsD(n+1,600,R.rep,90)}];
+    } else if(s>0.65){ // акцент выносливость: круизные, длиннее
+      rots=[{nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
+            {nm:`Круизные ${Math.max(3,n-1)}x1600`,st:repsD(Math.max(3,n-1),1600,R.t10,120)},
+            {nm:`МПК ${Math.max(3,n-1)}x1000`,st:repsD(Math.max(3,n-1),1000,R.vo2,90)},
+            {nm:`Ступени ${Math.max(3,n-1)}x1500`,st:repsD(Math.max(3,n-1),1500,R.t10,105)}];
+    } else {
+      rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
+            {nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
+            {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
+            {nm:`Круизные ${n}x800`,st:repsD(n,800,R.t10,75)}];
+    }
+    if(hilly){const ho=hillOpt(w,phase);for(let t=0;t<=hillTier;t++)rots=rots.concat([ho]);} // больше слотов горок при более крутом/горном профиле
+    const rot=rots[i%rots.length];
+    return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)],note:rot.note};};
   // разгрузочная качественная: короче обычной и по акценту бегунка (без хардкода одной тренировки)
   const downQ=(i,w,R)=>{const n=nQ(w),k=i%2; // разгрузка тоже чередуется — 2 варианта на профиль
     if(s<0.35){const rot=[{nm:`Освежающие ${Math.min(8,n+2)}x400`,z:'vo2',st:repsD(Math.min(8,n+2),400,R.rep,100)},
@@ -911,9 +931,11 @@ function buildPlan(cfg){
       const slot=TPLr[di];
       if(slot==='-'){days.push({date:dt,items:[{kind:'rest',label:'Отдых'}]});continue;}
       if(slot==='Q1'&&!easyDay&&phase!=='down'){const q=q1For(i,wkm,R,phase);
-        items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];}
-      else if(slot==='Q3'&&!easyDay&&phase!=='down'){const q=q2Thr(i,R);   // 3-я качественная — порог (поддерживающая)
-        items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];}
+        items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}]; if(q.note)items[0].note=q.note;}
+      else if(slot==='Q3'&&!easyDay&&phase!=='down'){                     // 3-я качественная — порог (поддерживающая); на рельефе — затяжные подъёмы
+        const useHill=hillTier>=2||(hillTier===1&&i%2===0);
+        const q=useHill?hillSupport(wkm,phase):q2Thr(i,R);
+        items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}]; if(q.note)items[0].note=q.note;}
       else if(slot==='Q2'&&!easyDay&&!(phase==='down'&&recF>1.25)){
         if(phase==='down'){const q=downQ(i,wkm,R);items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];}
         else {const q=q2For(i,wkm,R,phase,prog);items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];if(q.note)items[0].note=q.note;}}
@@ -951,6 +973,13 @@ function buildPlan(cfg){
       if(isUltra&&di===sparkDow&&(phase==='spec'||phase==='peak')&&items[0]&&items[0].kind==='run'&&(items[0].z==='easy'||items[0].z==='rec')){
         const ml=r5(clamp(lrMin*0.55,70,180));
         items=[{kind:'run',z:'long',name:`Средне-длинная ${hm(ml)} (спарка)`,steps:[longE(ml)]}];
+      }
+      // горный старт (hillTier=2): встраиваем блок подъёмов в длинную на спец./пиковой фазе — под профиль трассы
+      if(hillTier>=2&&items[0]&&items[0].kind==='run'&&items[0].z==='long'&&(phase==='spec'||phase==='peak')){
+        const vb=3,vm=8;
+        items[0].steps.push(rp(vb,[st('interval','time',vm*60,HRZ(3),'Подъём'),st('recovery','time',240,HRZ(1),'Вниз трусцой')]));
+        items[0].name+=` + ${vb}x${vm}' подъёмы`;
+        items[0].note='Встроен блок подъёмов — по возможности выбери трассу с реальным набором высоты, аналогичным старту.';
       }
       days.push({date:dt,items});
     }

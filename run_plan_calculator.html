@@ -502,6 +502,21 @@ const MODELS={
 const ENDFAC={42195:.97,21097:.985,10000:1.0,5000:1.0};
 const VOLCORRIDOR={5000:[28,45],10000:[40,60],21097:[55,80],42195:[65,95],60000:[80,130],80000:[95,150],100000:[110,165],120000:[120,175],160000:[130,185]}; // целевой пик км/нед по дистанции
 const VOLPIVOT={5000:38,10000:50,21097:65,42195:90,60000:105,80000:120,100000:135,120000:145,160000:155};
+// ---- параметры недельного роста объёма (правило ~10%), общие для генератора плана и прогноза формы ----
+const RAMP_START_SHARE=.72;   // старт роста к пику, доля пика (используется и генератором, и прогнозом)
+const RAMP_GROW_CAP=1.10;     // макс. недельный прирост, ×
+const RAMP_GROW_FLOOR_KM=3;   // на малых объёмах % даёт слишком мелкий шаг — не менее +3 км/нед
+// сколько объёма реально успеваем нарастить за buildWeeks недель роста от RAMP_START_SHARE*peakKm до peakKm
+function achievablePeakKm(peakKm, buildWeeks){
+  if(!peakKm||buildWeeks<=0)return peakKm;
+  let prev=peakKm*RAMP_START_SHARE;
+  for(let i=1;i<=buildWeeks;i++){
+    const target=lerp(peakKm*RAMP_START_SHARE,peakKm,i/buildWeeks);
+    const cap=Math.max(prev*RAMP_GROW_CAP,prev+RAMP_GROW_FLOOR_KM);
+    prev=Math.min(target,cap);
+  }
+  return prev;
+}
 // «под цель»: фактически требуемый недельный объём под целевой VDOT × надбавка за разрыв с текущей формой (ambition).
 // НЕ содержит корридорного пола и НЕ ограничивается безопасностью — это чистая физиологическая потребность.
 function podcelRange(vd, corr, anchor0){
@@ -562,8 +577,14 @@ function projectFitness(cfg){
   if(crossEq>0){ peakKm0+=Math.min(0.5*crossEq,0.30*peakKm0);                    // аэробная база растёт (с ограничением)
     notes.push('Кросс ~'+Math.round(crossMinWk)+' мин/нед учтён как ~'+Math.round(crossEq)+' км аэробного эквивалента (влияет на прогноз и восстановление).'); }
   if(strSess>0)notes.push('Силовые '+strSess+'/нед учтены в восстановлении: A/B/C — полновесно, «Кор» (подводка) — легче'+(strAge>1?'; для твоего возраста нагрузка усилена ×'+strAge.toFixed(2):'')+'. Аэробную форму не повышают.');
+  // достижимость заявленного пика с учётом правила ~10% прироста/нед (та же модель роста, что и в генераторе плана) — прогноз формы должен строиться от РЕАЛЬНО достижимого объёма, а не от заявленного числа
+  const taperWp=clamp((GM.taperBase||2)+(recF>1.25?1:0),1,Math.max(1,N-3));
+  const peakIdxP=Math.max(0,N-2-taperWp);
+  const peakKmAch=achievablePeakKm(peakKm0,peakIdxP);
+  const peakKmEff=Math.min(peakKm0,peakKmAch);
+  if(peakKmEff<peakKm0-3)notes.push(`Заявленный пик ${Math.round(peakKm0)} км/нед недостижим по правилу ~10% прироста за ${peakIdxP} нед. роста — прогноз формы считаем от фактически достижимого ≈${Math.round(peakKmEff)} км.`);
   const volPivot=VOLPIVOT[goalDist]||90;                      // порог объёма масштабируется под дистанцию
-  const volF=clamp(peakKm0/volPivot,0.7,1.15);
+  const volF=clamp(peakKmEff/volPivot,0.7,1.15);
   const expF={novice:0.82,inter:1.0,adv:1.12}[cfg.exp]||1;            // опыт влияет на скорость прогресса
   // частота пробежек: тот же объём реже = меньше стимула; ниже оптимума для объёма — штраф к приросту
   const runsN=clamp(+cfg.runs||5,3,12);
@@ -598,7 +619,7 @@ function projectFitness(cfg){
     if(heat)notes.push('Жаркий/сложный старт: заложено +~3%; в жару держись пульса, а не темпа.');
     if(altPct>0)notes.push(`Высокогорье ~${alt} м: заложено +~${Math.round(altPct*100)}%; нужна акклиматизация (приезд заранее либо «жить высоко — тренироваться низко»).`);}
   const eq=[5000,10000,21097,42195].filter(d=>d<goalDist).map(d=>({dist:d,sec:Math.round(timeFor(d,achGoalVd))}));
-  return {anchorVd,achGoalVd,vdTarget,vG,endGoal,curGoalTime,N,start,marD,recF,peakKm0,gain,t10cur,curMarEq,goalDist,GM,eq,notes};
+  return {anchorVd,achGoalVd,vdTarget,vG,endGoal,curGoalTime,N,start,marD,recF,peakKm0,peakKmEff,gain,t10cur,curMarEq,goalDist,GM,eq,notes};
 }
 
 // ---- оценка длительности/км шагов (по среднему темпу зоны данной недели) ----
@@ -672,8 +693,9 @@ function buildPlan(cfg){
   const peakKm=cfg.peakKm;
   // ---- настроечные коэффициенты генератора (все "магические числа" здесь) ----
   const TUNE={
-    startShare:.72,       // старт объёма, доля пика
-    growCap:1.10,         // макс. недельный прирост (правило ~10%)
+    startShare:RAMP_START_SHARE, // старт объёма, доля пика
+    growCap:RAMP_GROW_CAP,       // макс. недельный прирост (правило ~10%)
+    growFloorKm:RAMP_GROW_FLOOR_KM, // на малых объёмах 10% — это 2-3 км, физиологически не значимо; разрешаем прирост не меньше этого абсолюта
     downF:.76,            // множитель разгрузочной недели
     taperShares:[.72,.60],// объём 1-й и 2-й недели подводки, доля пика
     raceShare:.42,        // объём недели гонки (вкл. марафон)
@@ -729,20 +751,19 @@ function buildPlan(cfg){
   const tuneVolF=x=>x>=60000?TUNE.tuneVol.m*clamp(1-0.15*clamp((x-42195)/(160000-42195),0,1),0.5,1):x>=42000?TUNE.tuneVol.m:x>=21000?TUNE.tuneVol.h:TUNE.tuneVol.t;
   const tuneRecDays=x=>Math.ceil(postRaceEasy*(x>=60000?3+2*clamp((x-42195)/(160000-42195),0,1):x>=42000?3:x>=21000?1.7:1));
   const kms=new Array(N).fill(0); const types=new Array(N).fill('');
-  let prev=cfg.peakKm*TUNE.startShare, capped=false;
+  let prev=cfg.peakKm*TUNE.startShare;
   for(let i=0;i<N;i++){
     if(i===N-1){kms[i]=cfg.peakKm*TUNE.raceShare;types[i]='race';continue;}
     if(i>peakIdx){const t=i-peakIdx;kms[i]=cfg.peakKm*(t===1?TUNE.taperShares[0]:TUNE.taperShares[1]);types[i]='taper';continue;}
     const f=peakIdx===0?1:i/peakIdx;
     let k=lerp(cfg.peakKm*TUNE.startShare,cfg.peakKm,f);
-    if(k>prev*TUNE.growCap&&i>0){k=prev*TUNE.growCap;capped=true;} // правило ~10%
+    const growCapAbs=Math.max(prev*TUNE.growCap,prev+TUNE.growFloorKm); // на малых объёмах % даёт слишком мелкий шаг — берём больший из (10%, +3 км)
+    if(k>growCapAbs&&i>0)k=growCapAbs; // правило ~10%, но не менее growFloorKm км/нед (недостижимость пика уже отмечена в прогнозе — см. projectFitness)
     if(i===peakIdx)types[i]='peak';
     if(i>0&&i<peakIdx&&(i+1)%downEvery===0){k*=TUNE.downF;types[i]='down';}
     else prev=k;
     kms[i]=k;
   }
-  if(capped){const real=Math.round(Math.max(...kms));
-    if(real<cfg.peakKm-3)notes.push(`Заявленный пик ${cfg.peakKm} км/нед недостижим по правилу ~10% прироста за ${peakIdx} нед. роста — фактический пик ≈${real} км.`);}
   tuneIdx.forEach((ti,j)=>{if(types[ti]!=='race'){kms[ti]*=tuneVolF(tune[j].dist);types[ti]='tune';}});
   if(peakIdx>=0&&types[peakIdx]==='tune'){ // старт съел пиковую неделю → пик переносим на ближайшую раннюю рабочую
     let j=peakIdx-1; while(j>0&&types[j])j--;

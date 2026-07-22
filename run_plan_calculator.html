@@ -544,7 +544,7 @@ function projectFitness(cfg){
   // промежуточные старты: сам старт — сильная качественная сессия (≈ нейтрально), но восстановительный шлейф растёт с дистанцией и съедает часть блока. Нетто-эффект по дистанции × восстановление (возраст).
   let tuneLoss=0;
   (cfg.tuneRaces||[]).forEach(function(t){const d=dParse(t.iso),dd=+t.dist||10000;
-    if(d>start&&d<marD)tuneLoss+=(dd>=42195?0.8:dd>=21097?0.4:0);});  // 10к и короче — без штрафа; ПМ — небольшой; марафон-тюнап — заметный
+    if(d>start&&d<marD)tuneLoss+=(dd>=42195?0.8+0.5*clamp((dd-42195)/(160000-42195),0,1):dd>=21097?0.4:0);});  // 10к и короче — без штрафа; ПМ — небольшой; марафон-тюнап — заметный; ультра-тюнап — растёт с дистанцией до 60 км до +0.5
   tuneLoss*=recF;                                                     // возрастным восстановление после старта дороже
   const trainWeeksEff=Math.max(4, trainWeeks-tuneLoss);
   const t10cur=timeFor(10000,anchorVd), curMarEq=timeFor(42195,anchorVd);
@@ -726,8 +726,8 @@ function buildPlan(cfg){
   const tuneIdx=tune.map(t=>Math.floor(dDiff(t.d,start)/7));
   const distName=x=>x>=160000?'160 КМ':x>=120000?'120 КМ':x>=100000?'100 КМ':x>=80000?'80 КМ':x>=60000?'60 КМ':x>=42000?'42,2 КМ':x>=21000?'21,1 КМ':x>=10000?'10 КМ':'5 КМ';
   const distPace=(R,x)=>x>=42000?R.mp:x>=21000?[(R.mp[0]+R.thr[0])/2,(R.mp[1]+R.thr[1])/2]:R.race10;
-  const tuneVolF=x=>x>=42000?TUNE.tuneVol.m:x>=21000?TUNE.tuneVol.h:TUNE.tuneVol.t;
-  const tuneRecDays=x=>Math.ceil(postRaceEasy*(x>=42000?3:x>=21000?1.7:1));
+  const tuneVolF=x=>x>=60000?TUNE.tuneVol.m*clamp(1-0.15*clamp((x-42195)/(160000-42195),0,1),0.5,1):x>=42000?TUNE.tuneVol.m:x>=21000?TUNE.tuneVol.h:TUNE.tuneVol.t;
+  const tuneRecDays=x=>Math.ceil(postRaceEasy*(x>=60000?3+2*clamp((x-42195)/(160000-42195),0,1):x>=42000?3:x>=21000?1.7:1));
   const kms=new Array(N).fill(0); const types=new Array(N).fill('');
   let prev=cfg.peakKm*TUNE.startShare, capped=false;
   for(let i=0;i<N;i++){
@@ -1413,7 +1413,7 @@ function reconstructFromWorkouts(data){
   const ws=(data.workouts||[]).filter(w=>w.date).slice().sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
   if(!ws.length)return null;
   const startISO=dISO(toMonday(dParse(ws[0].date)));
-  const distOf=n=>/42|марафон/i.test(n)?42195:/21|полумар/i.test(n)?21097:/5\s*км/i.test(n)?5000:10000;
+  const distOf=n=>/160/.test(n)?160000:/120/.test(n)?120000:/100/.test(n)?100000:/80/.test(n)?80000:/60/.test(n)?60000:/42|марафон/i.test(n)?42195:/21|полумар/i.test(n)?21097:/5\s*км/i.test(n)?5000:10000;
   const goalW=ws.find(w=>/МАРАФОН|ПОЛУМАРАФОН|ГЛАВНЫЙ|10 КМ|5 КМ/i.test(w.name))||ws[ws.length-1];
   const goalISO=(data.meta&&(data.meta.goalISO||data.meta.marathon))||goalW.date;
   const goalDist=(data.meta&&data.meta.cfg&&data.meta.cfg.goalDist)||distOf(goalW.name);
@@ -1533,6 +1533,11 @@ function tuneRowHtml(iso,dist){
       <option value="10000"${d===10000?' selected':''}>10 км</option>
       <option value="21097"${d===21097?' selected':''}>21,1 км</option>
       <option value="42195"${d===42195?' selected':''}>42,2 км</option>
+      <option value="60000"${d===60000?' selected':''}>Ультра 60 км</option>
+      <option value="80000"${d===80000?' selected':''}>Ультра 80 км</option>
+      <option value="100000"${d===100000?' selected':''}>Ультра 100 км</option>
+      <option value="120000"${d===120000?' selected':''}>Ультра 120 км</option>
+      <option value="160000"${d===160000?' selected':''}>Ультра 160 км</option>
     </select>
     <button type="button" class="edbtn del t-del" title="Удалить старт" onclick="this.closest('.tunerow').remove()">×</button>
   </div>`;

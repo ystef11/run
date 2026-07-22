@@ -747,30 +747,38 @@ function buildPlan(cfg){
 
   // ---- ротации качественных работ (зависят от бегунка) ----
   const nQ=w=>clamp(Math.round(w/TUNE.qDiv),TUNE.qMin,TUNE.qMax);
-  const q1For=(i,w,R,phase)=>{const n=nQ(w),k=i%3;
+  const q1For=(i,w,R,phase)=>{const n=nQ(w),k=i%4;
     if(phase==='taper')return {nm:`Острая ${Math.max(3,n-2)}x1000`,z:'vo2',
       steps:[warm(12),repsD(Math.max(3,n-2),1000,R.vo2,90),cool(10)]};
     if(s<0.35){ // акцент скорость: короче и быстрее
       const rot=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
                  {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
-                 {nm:`МПК ${n}x800`,st:repsD(n,800,R.vo2,75)}][k];
+                 {nm:`МПК ${n}x800`,st:repsD(n,800,R.vo2,75)},
+                 {nm:`Повторы ${n+1}x600`,st:repsD(n+1,600,R.rep,90)}][k];
       return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)]};}
     if(s>0.65){ // акцент выносливость: круизные, длиннее
       const rot=[{nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
                  {nm:`Круизные ${Math.max(3,n-1)}x1600`,st:repsD(Math.max(3,n-1),1600,R.t10,120)},
-                 {nm:`МПК ${Math.max(3,n-1)}x1000`,st:repsD(Math.max(3,n-1),1000,R.vo2,90)}][k];
+                 {nm:`МПК ${Math.max(3,n-1)}x1000`,st:repsD(Math.max(3,n-1),1000,R.vo2,90)},
+                 {nm:`Ступени ${Math.max(3,n-1)}x1500`,st:repsD(Math.max(3,n-1),1500,R.t10,105)}][k];
       return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)]};}
     const rot=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
                {nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
-               {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)}][k];
+               {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
+               {nm:`Круизные ${n}x800`,st:repsD(n,800,R.t10,75)}][k];
     return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)]};};
   // разгрузочная качественная: короче обычной и по акценту бегунка (без хардкода одной тренировки)
-  const downQ=(i,w,R)=>{const n=nQ(w);
-    if(s<0.35)return {nm:`Освежающие ${Math.min(8,n+2)}x400`,z:'vo2',
-      steps:[warm(12),repsD(Math.min(8,n+2),400,R.rep,100),cool(8)]};
-    if(s>0.65)return {nm:'Темп10к 2x10\'',z:'thr',steps:[warm(12),repsT(2,10,R.t10,2),cool(8)]};
-    return {nm:'Порог 2x8\'',z:'thr',steps:[warm(12),repsT(2,8,R.thr,2),cool(8)]};};
-  const q2Thr=(i,R)=>{const rot=[{nm:"Порог 2x15'",st:repsT(2,15,R.thr,3)},{nm:"Порог 3x10'",st:repsT(3,10,R.thr,2)},{nm:"Порог 2x12'",st:repsT(2,12,R.thr,2)}][i%3];return {nm:rot.nm,z:'thr',steps:[warm(12),rot.st,cool(8)]};};
+  const downQ=(i,w,R)=>{const n=nQ(w),k=i%2; // разгрузка тоже чередуется — 2 варианта на профиль
+    if(s<0.35){const rot=[{nm:`Освежающие ${Math.min(8,n+2)}x400`,z:'vo2',st:repsD(Math.min(8,n+2),400,R.rep,100)},
+                          {nm:'Свежий темп 2x6\'',z:'thr',st:repsT(2,6,R.t10,2)}][k];
+      return {nm:rot.nm,z:rot.z,steps:[warm(12),rot.st,cool(8)]};}
+    if(s>0.65){const rot=[{nm:'Темп10к 2x10\'',z:'thr',st:repsT(2,10,R.t10,2)},
+                          {nm:`Круизные ${Math.max(3,n-1)}x1000`,z:'vo2',st:repsD(Math.max(3,n-1),1000,R.t10,90)}][k];
+      return {nm:rot.nm,z:rot.z,steps:[warm(12),rot.st,cool(8)]};}
+    const rot=[{nm:'Порог 2x8\'',z:'thr',st:repsT(2,8,R.thr,2)},
+               {nm:`МПК ${Math.max(3,n-2)}x600`,z:'vo2',st:repsD(Math.max(3,n-2),600,R.vo2,90)}][k];
+    return {nm:rot.nm,z:rot.z,steps:[warm(12),rot.st,cool(8)]};};
+  const q2Thr=(i,R)=>{const rot=[{nm:"Порог 2x15'",st:repsT(2,15,R.thr,3)},{nm:"Порог 3x10'",st:repsT(3,10,R.thr,2)},{nm:"Порог 2x12'",st:repsT(2,12,R.thr,2)},{nm:"Порог 4x8'",st:repsT(4,8,R.thr,1.5)}][i%4];return {nm:rot.nm,z:'thr',steps:[warm(12),rot.st,cool(8)]};};
   const q2For=(i,w,R,phase,prog)=>{
     const inSpec=i>=Math.round(N*GM.specFrac);
     if(isUltra){                             // УЛЬТРА: аэробные стабильные блоки + МР
@@ -802,7 +810,8 @@ function buildPlan(cfg){
     if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv),3,6);
       const rot=[{nm:`Круизные ${n}x1000 @10к`,z:'vo2',st:repsD(n,1000,R.t10,90)},
                  {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
-                 {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)}][i%3];
+                 {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
+                 {nm:`Быстрые ${n+1}x600 @10к`,z:'vo2',st:repsD(n+1,600,R.t10,75)}][i%4];
       return {nm:rot.nm,z:rot.z,steps:[warm(15),rot.st,cool(10)]};}
     return q2Thr(i,R);
   };

@@ -1599,7 +1599,7 @@ function recalcEstimate(){
     const maintainMin=(volUnit!=='h'&&anchor0)?podcelRange(anchor0,corr,anchor0).lo:0;   // минимум объёма для поддержания текущей формы («под цель» текущего VDOT)
     const volLow=(volUnit!=='h')&&maintainMin>0&&curPeak>0&&curPeak<maintainMin;          // объём ниже поддержания — прогресс не работает, прогноз недостоверен
     const unit=volUnit==='h'?'ч':'км';
-    const volLimited=(volUnit!=='h')&&isFinite(safeMax)&&(gloHard>safeMax); // даже жёсткий минимум под VDOT-класс цели выше безопасно достижимого — цель недостижима
+    let volLimited=(volUnit!=='h')&&isFinite(safeMax)&&(gloHard>safeMax); // даже жёсткий минимум под VDOT-класс цели выше безопасно достижимого — цель недостижима (пересчитывается ниже от финальной цели)
     if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед';
       if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax;
       if(volUnit!=='h')t+=' · под цель ~'+glo+'–'+ghi+' км';
@@ -1644,6 +1644,12 @@ function recalcEstimate(){
     const midT=Math.round((realistic+ambitious)/2);
     if(!tgtTouched)$('tgtGoal').value=fmtT(realistic);                        // цель = реалистичное из диапазона
     const tgtSec=parseT($('tgtGoal').value)||realistic;
+    if(volUnit!=='h'){                                          // «под цель» считаем от ФИНАЛЬНой (отображаемой) цели, а не от устаревшего значения поля на начало пересчёта
+      const vdF=gd>42195?vdot(42195,riegelInv(tgtSec,gd)):vdot(gd,tgtSec);
+      const rF=podcelRange(vdF,corr,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
+      volLimited=isFinite(safeMax)&&(gloHard>safeMax);
+      if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед'; if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax; t+=' · под цель ~'+glo+'–'+ghi+' км'; $('peakRec').textContent=t; }
+    }
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';
     const pr=projectFitness(Object.assign({},cfg,{tgtGoal:tgtSec}));          // с целью — для вердикта
     if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`+(volLow?` <span style="color:#c00">⚠ пиковый объём ~${curPeak} ${unit}/нед ниже минимума для поддержания формы (~${maintainMin} ${unit}/нед) — при таком объёме прогресс не работает, целевое время недостоверно; увеличьте объём.</span>`:'')+(volLimited?` <span style="color:#c00">⚠ под эту цель нужен объём ~${glo} км/нед, но безопасно ты выйдешь только ~${safeMax} км/нед — поэтому цель недостижима в полном объёме; целевое время и прогноз пересчитаны под безопасно достижимый объём (реалистично ≈${fmtT(realistic)}).</span>`:'');

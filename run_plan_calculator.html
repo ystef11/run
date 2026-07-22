@@ -501,6 +501,20 @@ const MODELS={
 const ENDFAC={42195:.97,21097:.985,10000:1.0};
 const VOLCORRIDOR={10000:[40,60],21097:[55,80],42195:[65,95],60000:[80,130],80000:[95,150],100000:[110,165],120000:[120,175],160000:[130,185]}; // целевой пик км/нед по дистанции
 const VOLPIVOT={10000:50,21097:65,42195:90,60000:105,80000:120,100000:135,120000:145,160000:155};
+// «под цель»: фактически требуемый недельный объём под целевой VDOT × надбавка за разрыв с текущей формой (ambition).
+// НЕ содержит корридорного пола и НЕ ограничивается безопасностью — это чистая физиологическая потребность.
+function podcelRange(vd, corr, anchor0){
+  const refVd=53.5, k=0.05;                                   // VDOT 53.5 (≈марафон 3:00) ↔ верх коридора; объём растёт экспоненциально с классом цели
+  const im=corr[1]*Math.exp(k*(vd-refVd));
+  let lo=Math.round(clamp(im*0.9,  corr[0]*0.6, corr[1]*2.5));
+  let hi=Math.round(clamp(im*1.08, corr[0]*0.6, corr[1]*2.6));
+  hi=Math.max(hi, Math.round(lo*1.15));
+  const loHard=lo;                                            // объём под класс цели без надбавки — для проверки достижимости
+  const amb=anchor0?clamp((vd-anchor0)/(anchor0*0.06),0,1):0; // амбициозность: насколько цель выше текущей формы
+  const up=1+0.6*amb;                                         // надбавка: амбициозная цель → нужно бегать больше, чем «естественно» для класса
+  lo=Math.round(lo*up); hi=Math.round(hi*up); hi=Math.max(hi, Math.round(lo*1.05));
+  return {lo, hi, loHard, mid:(lo+hi)/2};
+}
 const rgExp=dist=>1.06+0.12*clamp((dist-42195)/(160000-42195),0,1); // усталость растёт с дистанцией
 const riegel=(marSec,dist)=>marSec*Math.pow(dist/42195,rgExp(dist));   // марафон → ультра
 const riegelInv=(sec,dist)=>sec/Math.pow(dist/42195,rgExp(dist));     // ультра → марафон-эквивалент
@@ -1573,18 +1587,9 @@ function recalcEstimate(){
       if(anchor0)ambition=clamp((vdGoal-anchor0)/(anchor0*0.06),0,1);
     }
     const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(0.6*clamp(accV,0,1)+0.4*ambition,0,1)); // ориентир в коридоре: акцент + амбициозность цели
-    // «под цель» — объём под класс цели (целевой VDOT), а не только под дистанцию
-    let glo=corr[0], ghi=corr[1];
-    if(volUnit!=='h'&&vdGoal){ const refVd=53.5, k=0.05;        // VDOT 53.5 (≈марафон 3:00) ↔ верх коридора; объём растёт экспоненциально с классом цели
-      const idealMid=corr[1]*Math.exp(k*(vdGoal-refVd));
-      glo=Math.round(clamp(idealMid*0.9, corr[0]*0.6, corr[1]*2.5));
-      ghi=Math.round(clamp(idealMid*1.08, corr[0]*0.6, corr[1]*2.6));
-      ghi=Math.max(ghi, Math.round(glo*1.15)); }                // всегда вилка, а не одно число
-    const gloHard=glo;                                          // жёсткий минимум под VDOT-класс цели — для проверки достижимости
-    if(volUnit!=='h'){                                          // «под цель» = max(объём под VDOT-класс, объём под разрыв с формой): учитывает и целевое время, и форму, без потолка безопасности
-      glo=Math.max(glo, goalTarget);                           // амбициозная цель относительно формы → нужно бегать больше → «под цель» выше (≥ рекомендуемого)
-      ghi=Math.max(ghi, Math.round(goalTarget*1.12));
-      ghi=Math.max(ghi, Math.round(glo*1.05)); }               // непустая вилка
+    // «под цель» — фактически требуемый объём: VDOT-класс цели × надбавка за разрыв с формой (см. podcelRange). Без корридорного пола и без потолка безопасности.
+    let glo=corr[0], ghi=corr[1], gloHard=corr[0];
+    if(volUnit!=='h'&&vdGoal){ const r=podcelRange(vdGoal,corr,anchor0); glo=r.lo; ghi=r.hi; gloHard=r.loHard; }
     let recPeak;
     if(volUnit==='h'){ recPeak=rampRec||null; }
     else { recPeak=Math.round(clamp(Math.max(rampRec,goalTarget), safeMin, isFinite(safeMax)?safeMax:9999)); }
@@ -1613,7 +1618,26 @@ function recalcEstimate(){
       strength:+$('strength').value,cross:readCross()};
     const prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
     if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
-    const realistic=prR.endGoal, ambitious=Math.round(prR.endGoal*0.975), midT=Math.round((realistic+ambitious)/2);
+    let realistic=prR.endGoal;
+    if(volUnit!=='h'){                                          // коррекция авто-цели: середина «под цель» не должна превышать фактически доступный пиковый объём
+      const capVol=peakTouched?curPeak:safeMax;                // ручной пик — ограничиваем по нему; авто — по безопасному потолку
+      if(isFinite(capVol)&&capVol>0){
+        const vdOf=ts=>gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts);
+        let inf=Math.max(1,Math.round(prR.endGoal*0.5)), feas=prR.curGoalTime;   // inf: слишком быстро; feas: текущая форма (заведомо укладывается)
+        if(podcelRange(vdOf(feas),corr,anchor0).mid<=capVol){
+          for(let i=0;i<44;i++){const m=(inf+feas)/2; podcelRange(vdOf(m),corr,anchor0).mid<=capVol?feas=m:inf=m;}
+          realistic=Math.max(realistic, Math.round(feas));     // цель не быстрее, чем позволяет доступный объём
+        }
+      }
+    }
+    // «амбициозно» = граница вердикта r=1.05 (из модели достижимости), а не фикс. −2.5% — чтобы цель внутри диапазона не была «вне досягаемости»
+    const cVd = gd>42195 ? vdot(42195, riegelInv(prR.curGoalTime, gd)) : vdot(gd, prR.curGoalTime);
+    const ambVd = cVd + 1.05*(prR.achGoalVd - cVd);
+    const rawEnd = gd>42195 ? riegel(timeFor(42195,prR.achGoalVd),gd) : timeFor(gd,prR.achGoalVd);
+    const rawAmb = gd>42195 ? riegel(timeFor(42195,ambVd),gd) : timeFor(gd,ambVd);
+    let ambitious = rawEnd>0 ? Math.round(prR.endGoal * rawAmb / rawEnd) : Math.round(realistic*0.975);
+    ambitious = Math.min(ambitious, realistic);                // амбициозно не медленнее реалистичного
+    const midT=Math.round((realistic+ambitious)/2);
     if(!tgtTouched)$('tgtGoal').value=fmtT(realistic);                        // цель = реалистичное из диапазона
     const tgtSec=parseT($('tgtGoal').value)||realistic;
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';

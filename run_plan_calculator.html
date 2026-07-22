@@ -540,6 +540,12 @@ function projectFitness(cfg){
   const goalDist=+cfg.goalDist||42195, GM=MODELS[goalDist]||MODELS[42195];
   const recF=1+Math.max(0,(cfg.age||35)-35)*0.015;
   const twRaw=Math.max(1,N-2), trainWeeks=twRaw<=14?twRaw:14+(twRaw-14)*0.55;
+  // промежуточные старты: сам старт — сильная качественная сессия (≈ нейтрально), но восстановительный шлейф растёт с дистанцией и съедает часть блока. Нетто-эффект по дистанции × восстановление (возраст).
+  let tuneLoss=0;
+  (cfg.tuneRaces||[]).forEach(function(t){const d=dParse(t.iso),dd=+t.dist||10000;
+    if(d>start&&d<marD)tuneLoss+=(dd>=42195?0.8:dd>=21097?0.4:0);});  // 10к и короче — без штрафа; ПМ — небольшой; марафон-тюнап — заметный
+  tuneLoss*=recF;                                                     // возрастным восстановление после старта дороже
+  const trainWeeksEff=Math.max(4, trainWeeks-tuneLoss);
   const t10cur=timeFor(10000,anchorVd), curMarEq=timeFor(42195,anchorVd);
   let peakKm0=cfg.volUnit==='h'?cfg.peakVol*3600/mid(paceSet(curMarEq,t10cur).easy):(cfg.peakVol||cfg.peakKm||80);
   if(cfg.maxVolEver>0)peakKm0=Math.min(peakKm0,cfg.maxVolEver*1.1);   // потолок ранее достигнутого объёма
@@ -566,7 +572,7 @@ function projectFitness(cfg){
   runsOpt=clamp(Math.round(runsOpt),4,12);
   const runsF=clamp(1-0.06*Math.max(0,runsOpt-runsN),0.75,1);  // каждая пробежка ниже оптимума ≈ −6% прироста, пол 0.75
   if(runsF<0.995)notes.push('Частота '+runsN+' пробежек/нед ниже оптимальной (~'+runsOpt+') для этого объёма: при том же километраже реже = меньше тренировочного стимула — прирост формы снижен ×'+runsF.toFixed(2)+'. Добавь пробежек или прими более консервативную цель.');
-  const gain=weeklyGain(anchorVd)*trainWeeks*volF*expF*runsF/Math.sqrt(recF*(1+0.02*crossDays+0.012*strLoad)); // кросс + силовые (по весу и возрасту) = доп. общая нагрузка
+  const gain=weeklyGain(anchorVd)*trainWeeksEff*volF*expF*runsF/Math.sqrt(recF*(1+0.02*crossDays+0.012*strLoad)); // кросс + силовые + шлейф промежуточных стартов = меньше эффективных недель роста
   const achGoalVd=anchorVd+gain*GM.gainF;
   const verdict=(t,a,c)=>{const need=t-c;if(need<=0)return 'поддержание';const r=need/(a-c);return r<=0.75?'реалистично':(r<=1.05?'амбициозно':'нереалистично');};
   let curGoalTime,vdTarget,vG,endGoal;
@@ -1623,7 +1629,7 @@ function recalcEstimate(){
     const cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,
       age:+$('age').value||35,peakVol:+$('peakVol').value||recPeak||80,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp,
       exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m',
-      runs:+$('runs').value||5,curVol:curVol||null,
+      runs:+$('runs').value||5,curVol:curVol||null,tuneRaces:readTuneRows(),
       strength:+$('strength').value,cross:readCross()};
     const prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
     if(!prR){el.innerHTML='нужен хотя бы один результат';return;}

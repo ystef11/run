@@ -1570,14 +1570,17 @@ function recalcEstimate(){
     const curVol=+$('curVol').value||0, volUnit=$('volUnit').value, volKm=volUnit==='h'?curVol*11:curVol;
     const exp=($('exp')&&$('exp').value)||'inter';
     const maxVolEver=+(($('maxVolEver')&&$('maxVolEver').value)||0)||0;
-    const corr=VOLCORRIDOR[gd]||VOLCORRIDOR[42195];
+    const corrBase=VOLCORRIDOR[gd]||VOLCORRIDOR[42195];          // базовый корридор дистанции — для «под цель» (физиология, от опыта не зависит)
+    const EXPVOL={novice:0.7,inter:1.0,adv:1.15};                // масштаб корридора объёма по опыту
+    const corr=[Math.round(corrBase[0]*(EXPVOL[exp]||1)), Math.round(corrBase[1]*(EXPVOL[exp]||1))]; // корридор опыта — для safeMax и границ рекомендованного
     const accV=(+$('slider').value||50)/100;                      // 0 скорость … 1 выносливость (item3: акцент → объём)
     const rampRec=recommendVolume(curVol,gd,N,recF)||0;           // безопасный рост от текущего (~×1.2)
-    const everCap=maxVolEver?Math.round(maxVolEver*1.1):Infinity; // не сильно выше макс. ранее (травмобезопасность)
     const workWeeks=Math.max(1,N-2);                              // рабочие недели без подводки
     const rampMult=clamp(1+workWeeks*0.04/Math.sqrt(recF),1.1,2.2); // потолок роста растёт с длительностью плана (~10%/нед с разгрузками)
-    const rampMax=curVol?Math.round(curVol*rampMult):Infinity;    // безопасный максимум от текущего за цикл
-    const safeMax=Math.min(rampMax,everCap,corr[1]||Infinity);    // + не выше макс.ранее×1.1 и верха целевого коридора
+    const rampMax=curVol?Math.round(curVol*rampMult):Infinity;    // безопасный рост от текущего за цикл (рейт-лимит)
+    const regain=maxVolEver||0;                                  // «макс. ранее» = ёмкость: к прежнему пику можно безопасно вернуться (а не потолок)
+    const newTerr=maxVolEver?Math.round(maxVolEver*(1+0.02*workWeeks)):Infinity; // выше all-time — осторожно, запас растёт с длиной плана
+    const safeMax=Math.min(Math.max(rampMax,regain), newTerr, corr[1]||Infinity); // ёмкость (возврат к пику), но не выше новой территории и верха корридора опыта
     const safeMin=curVol||Math.round(corr[0]*0.8);
     // целевой VDOT (для ультры — марафон-эквивалент по Ригелю); амбициозность — насколько цель выше текущей формы (~6% VDOT ≈ потолок за цикл)
     let ambition=0, vdGoal=null;
@@ -1586,17 +1589,21 @@ function recalcEstimate(){
       vdGoal=gd>42195?vdot(42195,riegelInv(tgtSecNow,gd)):vdot(gd,tgtSecNow);
       if(anchor0)ambition=clamp((vdGoal-anchor0)/(anchor0*0.06),0,1);
     }
-    const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(0.6*clamp(accV,0,1)+0.4*ambition,0,1)); // ориентир в коридоре: акцент + амбициозность цели
-    // «под цель» — фактически требуемый объём: VDOT-класс цели × надбавка за разрыв с формой (см. podcelRange). Без корридорного пола и без потолка безопасности.
-    let glo=corr[0], ghi=corr[1], gloHard=corr[0];
-    if(volUnit!=='h'&&vdGoal){ const r=podcelRange(vdGoal,corr,anchor0); glo=r.lo; ghi=r.hi; gloHard=r.loHard; }
+    const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(0.6*clamp(accV,0,1)+0.4*ambition,0,1)); // корридорный ориентир (fallback, если цель не задана)
+    // «под цель» — фактически требуемый объём: VDOT-класс цели × надбавка за разрыв с формой (podcelRange, на БАЗОВОМ корридоре — физиология, от опыта не зависит).
+    let glo=corrBase[0], ghi=corrBase[1], gloHard=corrBase[0];
+    if(volUnit!=='h'&&vdGoal){ const r=podcelRange(vdGoal,corrBase,anchor0); glo=r.lo; ghi=r.hi; gloHard=r.loHard; }
+    // «рекомендовано» = физиологическая потребность («под цель»), не ниже низа корридора опыта, не выше безопасного роста (при конфликте приоритет безопасности)
+    const podPoint=(volUnit!=='h'&&vdGoal)?Math.round(glo+(ghi-glo)*clamp(accV,0,1)):goalTarget; // точка в «под цель» по акценту
+    const expFloor=corr[0];                                       // низ корридора опыта — минимальная разумная база для дистанции/опыта
+    const baseUnreachable=(volUnit!=='h')&&isFinite(safeMax)&&expFloor>safeMax; // даже минимум базы выше безопасно достижимого — дистанция/цель пока нереалистична
     let recPeak;
     if(volUnit==='h'){ recPeak=rampRec||null; }
-    else { recPeak=Math.round(clamp(Math.max(rampRec,goalTarget), safeMin, isFinite(safeMax)?safeMax:9999)); }
+    else { recPeak=Math.round(clamp(podPoint, Math.min(expFloor,safeMax), isFinite(safeMax)?safeMax:9999)); }
     if(recPeak&&!peakTouched)$('peakVol').value=recPeak;
     const curPeak=+$('peakVol').value||recPeak||0;
     const over=isFinite(safeMax)&&curPeak>safeMax;
-    const maintainMin=(volUnit!=='h'&&anchor0)?podcelRange(anchor0,corr,anchor0).lo:0;   // минимум объёма для поддержания текущей формы («под цель» текущего VDOT)
+    const maintainMin=(volUnit!=='h'&&anchor0)?podcelRange(anchor0,corrBase,anchor0).lo:0;   // минимум объёма для поддержания текущей формы («под цель» текущего VDOT)
     const volLow=(volUnit!=='h')&&maintainMin>0&&curPeak>0&&curPeak<maintainMin;          // объём ниже поддержания — прогресс не работает, прогноз недостоверен
     const unit=volUnit==='h'?'ч':'км';
     let volLimited=(volUnit!=='h')&&isFinite(safeMax)&&(gloHard>safeMax); // даже жёсткий минимум под VDOT-класс цели выше безопасно достижимого — цель недостижима (пересчитывается ниже от финальной цели)
@@ -1606,7 +1613,7 @@ function recalcEstimate(){
       $('peakRec').textContent=t; }
     const pv=$('peakVol');
     if(pv){ if(over||volLow){pv.style.borderColor='#d33';pv.style.background='#fff5f5';} else {pv.style.borderColor='';pv.style.background='';} }
-    if($('peakWarn'))$('peakWarn').textContent=over?('⚠ '+curPeak+' '+unit+'/нед выше безопасного максимума (~'+safeMax+'): резкий рост объёма повышает риск травм'+(everCap<rampMax?' — столько ты раньше не бегал':'')):(volLow?('⚠ '+curPeak+' '+unit+'/нед ниже минимума для поддержания формы (~'+maintainMin+' '+unit+'/нед): при таком объёме прогресс не работает, прогноз недостоверен'):'');
+    if($('peakWarn'))$('peakWarn').textContent=over?('⚠ '+curPeak+' '+unit+'/нед выше безопасного максимума (~'+safeMax+'): резкий рост объёма повышает риск травм'+(maxVolEver&&curPeak>maxVolEver?' — выше твоего прежнего максимума':'')):(volLow?('⚠ '+curPeak+' '+unit+'/нед ниже минимума для поддержания формы (~'+maintainMin+' '+unit+'/нед): при таком объёме прогресс не работает, прогноз недостоверен'):(baseUnreachable?('⚠ для этой дистанции нужно ≥'+expFloor+' '+unit+'/нед, но от текущего объёма безопасно наберёшь только ~'+safeMax+' — цель пока нереалистична, наращивай базу дольше'):''));
     let recRuns=recommendRuns(volKm,gd,recF); if(exp==='novice')recRuns=Math.max(4,recRuns-1); if(!runsTouched)$('runs').value=recRuns;
     if($('runsRec'))$('runsRec').textContent='рекомендовано '+recRuns+(runsTouched?' · задано вручную':'');
     const recStr=recommendStrength(gd,volKm,recF,exp); if(!strTouched)$('strength').value=recStr;
@@ -1624,7 +1631,7 @@ function recalcEstimate(){
     if(volUnit!=='h' && anchor0){                              // коррекция авто-цели по «под цель» (нижняя граница) и фактическому пику; итог = медленнее из (физиология, объём)
       const capVol=peakTouched?curPeak:safeMax;                // ручной пик — по нему; авто — по безопасному потолку
       if(isFinite(capVol)&&capVol>0){
-        const podLo=ts=>podcelRange(gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts),corr,anchor0).lo;
+        const podLo=ts=>podcelRange(gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts),corrBase,anchor0).lo;
         let fast=Math.max(1,Math.round(prR.endGoal*0.5)), slow=Math.round(prR.curGoalTime*1.8);  // fast: слишком быстро (не укладывается), slow: сильный регресс
         if(podLo(slow)>capVol){                                // объём ниже пола «под цель» (поддержание невозможно) — регресс, тем сильнее, чем меньше объём
           realistic=Math.max(realistic, Math.round(prR.curGoalTime*clamp(maintainMin/capVol,1,1.8)));
@@ -1646,7 +1653,7 @@ function recalcEstimate(){
     const tgtSec=parseT($('tgtGoal').value)||realistic;
     if(volUnit!=='h'){                                          // «под цель» считаем от ФИНАЛЬНой (отображаемой) цели, а не от устаревшего значения поля на начало пересчёта
       const vdF=gd>42195?vdot(42195,riegelInv(tgtSec,gd)):vdot(gd,tgtSec);
-      const rF=podcelRange(vdF,corr,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
+      const rF=podcelRange(vdF,corrBase,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
       volLimited=isFinite(safeMax)&&(gloHard>safeMax);
       if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед'; if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax; t+=' · под цель ~'+glo+'–'+ghi+' км'; $('peakRec').textContent=t; }
     }

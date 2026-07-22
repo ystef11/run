@@ -1581,6 +1581,11 @@ function recalcEstimate(){
     let recPeak;
     if(volUnit==='h'){ recPeak=rampRec||null; }
     else { recPeak=Math.round(clamp(Math.max(rampRec,goalTarget), safeMin, isFinite(safeMax)?safeMax:9999)); }
+    if(volUnit!=='h'){                                          // объединяем модели: «под цель» = полный диапазон объёма для достижения цели, охватывающий рекомендуемый пик
+      ghi=Math.max(ghi, goalTarget, recPeak||0);               // верх тянется к амбиция-ориентиру и рекомендуемому объёму, а не только к VDOT-минимуму класса
+      if(isFinite(safeMax))ghi=Math.min(ghi, safeMax);         // но не выше безопасно достижимого за цикл
+      glo=Math.min(glo, recPeak||glo);                         // низ вилки не выше рекомендуемого
+      ghi=Math.max(ghi, Math.round(glo*1.05)); }               // всегда непустая вилка
     if(recPeak&&!peakTouched)$('peakVol').value=recPeak;
     const curPeak=+$('peakVol').value||recPeak||0;
     const over=isFinite(safeMax)&&curPeak>safeMax;

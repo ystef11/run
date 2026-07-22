@@ -1621,14 +1621,16 @@ function recalcEstimate(){
     const prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
     if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
     let realistic=prR.endGoal;
-    if(volUnit!=='h'){                                          // коррекция авто-цели: середина «под цель» не должна превышать фактически доступный пиковый объём
-      const capVol=peakTouched?curPeak:safeMax;                // ручной пик — ограничиваем по нему; авто — по безопасному потолку
+    if(volUnit!=='h' && anchor0){                              // коррекция авто-цели по «под цель» (нижняя граница) и фактическому пику; итог = медленнее из (физиология, объём)
+      const capVol=peakTouched?curPeak:safeMax;                // ручной пик — по нему; авто — по безопасному потолку
       if(isFinite(capVol)&&capVol>0){
-        const vdOf=ts=>gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts);
-        let inf=Math.max(1,Math.round(prR.endGoal*0.5)), feas=prR.curGoalTime;   // inf: слишком быстро; feas: текущая форма (заведомо укладывается)
-        if(podcelRange(vdOf(feas),corr,anchor0).mid<=capVol){
-          for(let i=0;i<44;i++){const m=(inf+feas)/2; podcelRange(vdOf(m),corr,anchor0).mid<=capVol?feas=m:inf=m;}
-          realistic=Math.max(realistic, Math.round(feas));     // цель не быстрее, чем позволяет доступный объём
+        const podLo=ts=>podcelRange(gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts),corr,anchor0).lo;
+        let fast=Math.max(1,Math.round(prR.endGoal*0.5)), slow=Math.round(prR.curGoalTime*1.8);  // fast: слишком быстро (не укладывается), slow: сильный регресс
+        if(podLo(slow)>capVol){                                // объём ниже пола «под цель» (поддержание невозможно) — регресс, тем сильнее, чем меньше объём
+          realistic=Math.max(realistic, Math.round(prR.curGoalTime*clamp(maintainMin/capVol,1,1.8)));
+        } else {
+          for(let i=0;i<46;i++){const m=(fast+slow)/2; podLo(m)<=capVol?slow=m:fast=m;}
+          realistic=Math.max(realistic, Math.round(slow));     // цель не быстрее, чем позволяет доступный объём
         }
       }
     }

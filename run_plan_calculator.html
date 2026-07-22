@@ -543,7 +543,15 @@ function projectFitness(cfg){
   const volPivot=VOLPIVOT[goalDist]||90;                      // порог объёма масштабируется под дистанцию
   const volF=clamp(peakKm0/volPivot,0.7,1.15);
   const expF={novice:0.82,inter:1.0,adv:1.12}[cfg.exp]||1;            // опыт влияет на скорость прогресса
-  const gain=weeklyGain(anchorVd)*trainWeeks*volF*expF/Math.sqrt(recF*(1+0.02*crossDays+0.012*strLoad)); // кросс + силовые (по весу и возрасту) = доп. общая нагрузка
+  // частота пробежек: тот же объём реже = меньше стимула; ниже оптимума для объёма — штраф к приросту
+  const runsN=clamp(+cfg.runs||5,4,12);
+  const runsBaseVol=cfg.volUnit==='h'?peakKm0:(cfg.curVol||peakKm0);
+  let runsOpt=4+runsBaseVol/18+(goalDist>=42195?1:0)+(goalDist>42195?1:0)-(recF>1.2?1:0);
+  if(cfg.exp==='novice')runsOpt-=1;
+  runsOpt=clamp(Math.round(runsOpt),4,12);
+  const runsF=clamp(1-0.06*Math.max(0,runsOpt-runsN),0.75,1);  // каждая пробежка ниже оптимума ≈ −6% прироста, пол 0.75
+  if(runsF<0.995)notes.push('Частота '+runsN+' пробежек/нед ниже оптимальной (~'+runsOpt+') для этого объёма: при том же километраже реже = меньше тренировочного стимула — прирост формы снижен ×'+runsF.toFixed(2)+'. Добавь пробежек или прими более консервативную цель.');
+  const gain=weeklyGain(anchorVd)*trainWeeks*volF*expF*runsF/Math.sqrt(recF*(1+0.02*crossDays+0.012*strLoad)); // кросс + силовые (по весу и возрасту) = доп. общая нагрузка
   const achGoalVd=anchorVd+gain*GM.gainF;
   const verdict=(t,a,c)=>{const need=t-c;if(need<=0)return 'поддержание';const r=need/(a-c);return r<=0.75?'реалистично':(r<=1.05?'амбициозно':'нереалистично');};
   let curGoalTime,vdTarget,vG,endGoal;
@@ -1094,7 +1102,7 @@ const sesMinNoR=steps=>steps.reduce((a,s)=>a+stepMinNoR(s),0);
 const sesKmNoR =steps=>steps.reduce((a,s)=>a+stepKmNoR(s),0);
 function firstPaceOf(steps){
   const rec=s=>{if(s.t==='repeat'){for(const q of s.steps){const r=rec(q);if(r)return r;}return null;}
-    return (s.tg&&s.tg.pace&&s.t!=='recovery')?s.tg.pace:null;};
+    return (s.tg&&s.tg.pace&&s.t!=='recovery'&&s.d!=='Ускорение')?s.tg.pace:null;}; // страйды не считаем целью темпа
   for(const s of steps){const p=rec(s);if(p)return p;}
   return null;
 }
@@ -1563,7 +1571,13 @@ function recalcEstimate(){
       if(anchor0)ambition=clamp((vdGoal-anchor0)/(anchor0*0.06),0,1);
     }
     const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(0.6*clamp(accV,0,1)+0.4*ambition,0,1)); // ориентир в коридоре: акцент + амбициозность цели
-    const goalFloor=corr[0];
+    // «под цель» — объём под класс цели (целевой VDOT), а не только под дистанцию
+    let glo=corr[0], ghi=corr[1];
+    if(volUnit!=='h'&&vdGoal){ const refVd=53.5, k=0.05;        // VDOT 53.5 (≈марафон 3:00) ↔ верх коридора; объём растёт экспоненциально с классом цели
+      const idealMid=corr[1]*Math.exp(k*(vdGoal-refVd));
+      glo=Math.round(clamp(idealMid*0.9, corr[0]*0.6, corr[1]*2.5));
+      ghi=Math.round(clamp(idealMid*1.08, corr[0]*0.6, corr[1]*2.6));
+      ghi=Math.max(ghi, Math.round(glo*1.15)); }                // всегда вилка, а не одно число
     let recPeak;
     if(volUnit==='h'){ recPeak=rampRec||null; }
     else { recPeak=Math.round(clamp(Math.max(rampRec,goalTarget), safeMin, isFinite(safeMax)?safeMax:9999)); }
@@ -1571,16 +1585,10 @@ function recalcEstimate(){
     const curPeak=+$('peakVol').value||recPeak||0;
     const over=isFinite(safeMax)&&curPeak>safeMax;
     const unit=volUnit==='h'?'ч':'км';
-    const volLimited=(volUnit!=='h')&&isFinite(safeMax)&&(goalFloor>safeMax); // цель требует больше, чем безопасно
+    const volLimited=(volUnit!=='h')&&isFinite(safeMax)&&(glo>safeMax); // объём под цель выше безопасно достижимого — цель недостижима в полном объёме
     if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед';
       if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax;
-      if(volUnit!=='h'){ let glo=corr[0], ghi=corr[1];          // «под цель» — объём под класс цели (целевой VDOT), а не только под дистанцию
-        if(vdGoal){ const refVd=53.5, k=0.05;                   // VDOT 53.5 (≈марафон 3:00) ↔ верх коридора; объём растёт экспоненциально с классом цели
-          const idealMid=corr[1]*Math.exp(k*(vdGoal-refVd));
-          glo=Math.round(clamp(idealMid*0.9, corr[0]*0.6, corr[1]*2.5));
-          ghi=Math.round(clamp(idealMid*1.08, corr[0]*0.6, corr[1]*2.6));
-          ghi=Math.max(ghi, Math.round(glo*1.15)); }   // всегда вилка, а не одно число (даже у нижнего пола)
-        t+=' · под цель ~'+glo+'–'+ghi+' км'; }
+      if(volUnit!=='h')t+=' · под цель ~'+glo+'–'+ghi+' км';
       $('peakRec').textContent=t; }
     const pv=$('peakVol');
     if(pv){ if(over){pv.style.borderColor='#d33';pv.style.background='#fff5f5';} else {pv.style.borderColor='';pv.style.background='';} }
@@ -1594,6 +1602,7 @@ function recalcEstimate(){
     const cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,
       age:+$('age').value||35,peakVol:+$('peakVol').value||recPeak||80,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp,
       exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m',
+      runs:+$('runs').value||5,curVol:curVol||null,
       strength:+$('strength').value,cross:readCross()};
     const prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
     if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
@@ -1602,7 +1611,7 @@ function recalcEstimate(){
     const tgtSec=parseT($('tgtGoal').value)||realistic;
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';
     const pr=projectFitness(Object.assign({},cfg,{tgtGoal:tgtSec}));          // с целью — для вердикта
-    if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`+(volLimited?` <span style="color:#c00">⚠ под эту цель желателен объём от ~${goalFloor} км/нед, но безопасно ты выйдешь ~${safeMax} — цель и прогноз рассчитаны под достижимый объём</span>`:'');
+    if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`+(volLimited?` <span style="color:#c00">⚠ под эту цель нужен объём ~${glo} км/нед, но безопасно ты выйдешь только ~${safeMax} км/нед — поэтому цель недостижима в полном объёме; целевое время и прогноз пересчитаны под безопасно достижимый объём (реалистично ≈${fmtT(realistic)}).</span>`:'');
     const vtxt={'реалистично':'реалистично','амбициозно':'амбициозно','нереалистично':'вне досягаемости к дате','поддержание':'поддержание'}[pr.vG]||'';
     let html='';
     html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(реалистичная цель)</span>'}${vtxt?' — '+vtxt:''}</div>`;

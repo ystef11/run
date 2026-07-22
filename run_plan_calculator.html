@@ -1596,6 +1596,8 @@ function recalcEstimate(){
     if(recPeak&&!peakTouched)$('peakVol').value=recPeak;
     const curPeak=+$('peakVol').value||recPeak||0;
     const over=isFinite(safeMax)&&curPeak>safeMax;
+    const maintainMin=(volUnit!=='h'&&anchor0)?podcelRange(anchor0,corr,anchor0).lo:0;   // минимум объёма для поддержания текущей формы («под цель» текущего VDOT)
+    const volLow=(volUnit!=='h')&&maintainMin>0&&curPeak>0&&curPeak<maintainMin;          // объём ниже поддержания — прогресс не работает, прогноз недостоверен
     const unit=volUnit==='h'?'ч':'км';
     const volLimited=(volUnit!=='h')&&isFinite(safeMax)&&(gloHard>safeMax); // даже жёсткий минимум под VDOT-класс цели выше безопасно достижимого — цель недостижима
     if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед';
@@ -1603,8 +1605,8 @@ function recalcEstimate(){
       if(volUnit!=='h')t+=' · под цель ~'+glo+'–'+ghi+' км';
       $('peakRec').textContent=t; }
     const pv=$('peakVol');
-    if(pv){ if(over){pv.style.borderColor='#d33';pv.style.background='#fff5f5';} else {pv.style.borderColor='';pv.style.background='';} }
-    if($('peakWarn'))$('peakWarn').textContent=over?('⚠ '+curPeak+' '+unit+'/нед выше безопасного максимума (~'+safeMax+'): резкий рост объёма повышает риск травм'+(everCap<rampMax?' — столько ты раньше не бегал':'')):'';
+    if(pv){ if(over||volLow){pv.style.borderColor='#d33';pv.style.background='#fff5f5';} else {pv.style.borderColor='';pv.style.background='';} }
+    if($('peakWarn'))$('peakWarn').textContent=over?('⚠ '+curPeak+' '+unit+'/нед выше безопасного максимума (~'+safeMax+'): резкий рост объёма повышает риск травм'+(everCap<rampMax?' — столько ты раньше не бегал':'')):(volLow?('⚠ '+curPeak+' '+unit+'/нед ниже минимума для поддержания формы (~'+maintainMin+' '+unit+'/нед): при таком объёме прогресс не работает, прогноз недостоверен'):'');
     let recRuns=recommendRuns(volKm,gd,recF); if(exp==='novice')recRuns=Math.max(4,recRuns-1); if(!runsTouched)$('runs').value=recRuns;
     if($('runsRec'))$('runsRec').textContent='рекомендовано '+recRuns+(runsTouched?' · задано вручную':'');
     const recStr=recommendStrength(gd,volKm,recF,exp); if(!strTouched)$('strength').value=recStr;
@@ -1642,7 +1644,7 @@ function recalcEstimate(){
     const tgtSec=parseT($('tgtGoal').value)||realistic;
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';
     const pr=projectFitness(Object.assign({},cfg,{tgtGoal:tgtSec}));          // с целью — для вердикта
-    if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`+(volLimited?` <span style="color:#c00">⚠ под эту цель нужен объём ~${glo} км/нед, но безопасно ты выйдешь только ~${safeMax} км/нед — поэтому цель недостижима в полном объёме; целевое время и прогноз пересчитаны под безопасно достижимый объём (реалистично ≈${fmtT(realistic)}).</span>`:'');
+    if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`+(volLow?` <span style="color:#c00">⚠ пиковый объём ~${curPeak} ${unit}/нед ниже минимума для поддержания формы (~${maintainMin} ${unit}/нед) — при таком объёме прогресс не работает, целевое время недостоверно; увеличьте объём.</span>`:'')+(volLimited?` <span style="color:#c00">⚠ под эту цель нужен объём ~${glo} км/нед, но безопасно ты выйдешь только ~${safeMax} км/нед — поэтому цель недостижима в полном объёме; целевое время и прогноз пересчитаны под безопасно достижимый объём (реалистично ≈${fmtT(realistic)}).</span>`:'');
     const vtxt={'реалистично':'реалистично','амбициозно':'амбициозно','нереалистично':'вне досягаемости к дате','поддержание':'поддержание'}[pr.vG]||'';
     let html='';
     html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(реалистичная цель)</span>'}${vtxt?' — '+vtxt:''}</div>`;

@@ -265,7 +265,7 @@
     <div class="sub">5 км, 10 км, полумарафон, марафон и ультра (60–160 км): план строится от текущей формы (VDOT) к реалистичной цели с учётом восстановления, возраста и акцента подготовки.</div>
   </header>
 
-  <section class="panel">
+  <section class="panel" id="srcPanel">
     <h2>Исходные данные</h2>
     <div class="fgrid">
       <div class="fld" style="grid-column:1/-1"><label>Текущие результаты (недавние гонки/прикидки)</label>
@@ -1508,6 +1508,9 @@ function renderStaticFromEdit(cfgRef){
 // флаги ручного ввода объявляем ДО initDates (иначе TDZ при первом recalcEstimate)
 let sliderTouched=false;
 let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false, tagTouched=false, tgtTouched=false;
+// любое изменение в блоке «Исходные данные» сбрасывает ручной ввод в «Параметрах плана»,
+// чтобы авто-вычисляемые поля (цель, объём, тренировки/нед, силовые, тег) пересчитались от новых вводных
+function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouched=false; tagTouched=false; tgtTouched=false;}
 (function initDates(){
   const t=new Date();t.setHours(0,0,0,0);
   const nm=dAdd(t,((8-t.getDay())%7)||7);
@@ -1535,6 +1538,15 @@ let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false,
   $('strength').addEventListener('change',()=>{strTouched=true; recalcEstimate();});
   $('tag').addEventListener('input',()=>{tagTouched=true;});
   const sl=$('slider'); if(sl)sl.addEventListener('input',()=>{sliderTouched=true;recalcEstimate();});
+  // делегирование на весь блок «Исходные данные» (в т.ч. динамические строки результатов/промежуточных стартов,
+  // день длинной, кросс-тренировки) — capture:true, чтобы флаги сбросились ДО обработчиков конкретных полей выше
+  const srcPanelEl=$('srcPanel');
+  if(srcPanelEl){
+    srcPanelEl.addEventListener('input',resetPlanParamsTouched,true);
+    srcPanelEl.addEventListener('change',resetPlanParamsTouched,true);
+    // поля без собственного recalcEstimate (промежуточные старты, день длинной, кросс-тренировки) — досчитываем здесь
+    srcPanelEl.addEventListener('change',recalcEstimate);
+  }
   recalcEstimate();
 })();
 

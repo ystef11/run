@@ -559,6 +559,17 @@ const rgExp=dist=>1.06+0.12*clamp((dist-42195)/(160000-42195),0,1); // уста�
 const riegel=(marSec,dist)=>marSec*Math.pow(dist/42195,rgExp(dist));   // марафон → ультра
 const riegelInv=(sec,dist)=>sec/Math.pow(dist/42195,rgExp(dist));     // ультра → марафон-эквивалент
 const distName=x=>x>=160000?'160 КМ':x>=120000?'120 КМ':x>=100000?'100 КМ':x>=80000?'80 КМ':x>=60000?'60 КМ':x>=42000?'42,2 КМ':x>=21000?'21,1 КМ':x>=10000?'10 КМ':'5 КМ'; // модульная версия
+// рельеф/жара/высота: штраф ко ВРЕМЕНИ (реальный ожидаемый финиш), а не к физиологии.
+// toClean переводит введённое/показанное (курс-дисконтированное) время в «чистый» равнинный эквивалент — им и только им считаем VDOT/объём/«под цель».
+// toDisp — обратное преобразование, только для отображения пользователю (ожидаемый финиш, гоночный темп в плане, тег).
+function courseAdjust(cfg){
+  const elev=+cfg.elevGain||0, heat=!!cfg.heat, alt=+cfg.altitude||0;
+  const altPct=alt>300?Math.min((alt-300)/300*0.008,0.10):0;         // ~0.8%/300 м выше 300 м, макс 10%
+  const mult=(heat?1.03:1)*(1+altPct), active=!!(elev||heat||altPct);
+  return {elev,heat,alt,altPct,active,
+    toDisp:t=>active?Math.round((t+elev*0.6)*mult):t,
+    toClean:t=>active?Math.round(t/mult-elev*0.6):t};
+}
 function normalizeCfg(cfg){
   if(!cfg.results||!cfg.results.length){cfg.results=[];
     if(cfg.cur10)cfg.results.push({dist:10000,sec:cfg.cur10});
@@ -572,6 +583,10 @@ function projectFitness(cfg){
   normalizeCfg(cfg);
   let anchorVd=bestVdot(cfg.results); if(anchorVd==null)return null;
   const notes=[];
+  const ca=courseAdjust(cfg);
+  // cfg.tgtGoal — цель, как её вводит/видит пользователь (реальное, курс-дисконтированное время);
+  // для VDOT-расчётов (vdTarget/verdict/endGoal-клампа) нужен «чистый» эквивалент.
+  const tgtGoalClean=cfg.tgtGoal?ca.toClean(cfg.tgtGoal):null;
   if(cfg.ltPace){const vdLT=vdot(3600/cfg.ltPace*1000,3600);
     if(Math.abs(vdLT-anchorVd)>2.5)notes.push(`Темп ПАНО ${fmtP(cfg.ltPace)} даёт VDOT ${vdLT.toFixed(1)} — форма усреднена с гоночной.`);
     anchorVd=0.75*anchorVd+0.25*vdLT;}
@@ -625,25 +640,26 @@ function projectFitness(cfg){
   if(goalDist>42195){                       // УЛЬТРА: время по Ригелю от марафон-эквивалента
     const marCur=timeFor(42195,anchorVd), marAch=timeFor(42195,achGoalVd);
     curGoalTime=Math.round(riegel(marCur,goalDist));
-    endGoal=Math.round(Math.min(Math.max(riegel(marAch,goalDist),cfg.tgtGoal||0),curGoalTime));
-    vdTarget=cfg.tgtGoal?vdot(42195,riegelInv(cfg.tgtGoal,goalDist)):null;
+    endGoal=Math.round(Math.min(Math.max(riegel(marAch,goalDist),tgtGoalClean||0),curGoalTime));
+    vdTarget=tgtGoalClean?vdot(42195,riegelInv(tgtGoalClean,goalDist)):null;
     vG=vdTarget!=null?verdict(vdTarget,achGoalVd,vdot(42195,marCur)):'—';
     notes.push('Прогноз времени на ультре — грубая оценка от марафон-формы (модель Ригеля) для равнинной трассы; на рельефе/грунте и жаре добавляйте 15–40%+.');
   } else {
     const atGoal=(cfg.results||[]).find(r=>r.dist===goalDist&&r.sec>0);
     curGoalTime=atGoal?atGoal.sec:Math.round(timeFor(goalDist,anchorVd*ENDFAC[goalDist]));
-    vdTarget=cfg.tgtGoal?vdot(goalDist,cfg.tgtGoal):null;
+    vdTarget=tgtGoalClean?vdot(goalDist,tgtGoalClean):null;
     vG=vdTarget!=null?verdict(vdTarget,achGoalVd,vdot(goalDist,curGoalTime)):'—';
-    endGoal=Math.round(Math.min(Math.max(timeFor(goalDist,achGoalVd),cfg.tgtGoal||0),curGoalTime));
+    endGoal=Math.round(Math.min(Math.max(timeFor(goalDist,achGoalVd),tgtGoalClean||0),curGoalTime));
   }
-  const elev=+cfg.elevGain||0, heat=!!cfg.heat, alt=+cfg.altitude||0; // рельеф/климат/высота → штраф к времени
-  const altPct=alt>300?Math.min((alt-300)/300*0.008,0.10):0;          // ~0.8%/300 м выше 300 м, макс 10%
-  if(elev||heat||altPct){const adj=t=>Math.round((t+elev*0.6)*(heat?1.03:1)*(1+altPct)); curGoalTime=adj(curGoalTime); endGoal=adj(endGoal);
-    if(elev>=300)notes.push(`Учтён набор ~${elev} м (+~${Math.round(elev*0.6/60)} мин); в план добавлена горочная работа (одна из качественных тренировок — «Горки»).`);
-    if(heat)notes.push('Жаркий/сложный старт: заложено +~3%; в жару держись пульса, а не темпа.');
-    if(altPct>0)notes.push(`Высокогорье ~${alt} м: заложено +~${Math.round(altPct*100)}%; нужна акклиматизация (приезд заранее либо «жить высоко — тренироваться низко»).`);}
+  // curGoalTime/endGoal здесь — «чистые» (равнина, без жары/высоты): именно они идут во всю физиологию (VDOT/«под цель»/прогноз объёма).
+  // Disp-версии — курс-дисконтированные, только для показа пользователю (ожидаемый финиш, темп гонки в плане, тег).
+  const curGoalTimeDisp=ca.active?ca.toDisp(curGoalTime):curGoalTime;
+  const endGoalDisp=ca.active?ca.toDisp(endGoal):endGoal;
+  if(ca.elev>=300)notes.push(`Учтён набор ~${ca.elev} м (+~${Math.round(ca.elev*0.6/60)} мин к ожидаемому финишу); в план добавлена горочная работа (одна из качественных тренировок — «Горки»).`);
+  if(ca.heat)notes.push('Жаркий/сложный старт: к ожидаемому финишу заложено +~3% (в жару держись пульса, а не темпа); на нужный тренировочный объём это не влияет.');
+  if(ca.altPct>0)notes.push(`Высокогорье ~${ca.alt} м: к ожидаемому финишу заложено +~${Math.round(ca.altPct*100)}%; нужна акклиматизация (приезд заранее либо «жить высоко — тренироваться низко»).`);
   const eq=[5000,10000,21097,42195].filter(d=>d<goalDist).map(d=>({dist:d,sec:Math.round(timeFor(d,achGoalVd))}));
-  return {anchorVd,achGoalVd,vdTarget,vG,endGoal,curGoalTime,N,start,marD,recF,peakKm0,peakKmEff,gain,t10cur,curMarEq,goalDist,GM,eq,notes};
+  return {anchorVd,achGoalVd,vdTarget,vG,endGoal,curGoalTime,endGoalDisp,curGoalTimeDisp,N,start,marD,recF,peakKm0,peakKmEff,gain,t10cur,curMarEq,goalDist,GM,eq,notes};
 }
 
 // ---- оценка длительности/км шагов (по среднему темпу зоны данной недели) ----
@@ -703,7 +719,8 @@ function buildPlan(cfg){
   const proj=projectFitness(cfg);
   if(!proj)return {error:'Добавьте хотя бы один текущий результат (дистанция + время).'};
   proj.notes.forEach(n=>notes.push(n));
-  const anchorVd=proj.anchorVd, achGoalVd=proj.achGoalVd, endGoal=proj.endGoal, vG=proj.vG, curGoalTime=proj.curGoalTime;
+  const anchorVd=proj.anchorVd, achGoalVd=proj.achGoalVd, vG=proj.vG;
+  const endGoal=proj.endGoalDisp, curGoalTime=proj.curGoalTimeDisp; // отображаемые (курс-дисконтированные) времена — для сообщений/тега/гоночного темпа в плане
   const recF=proj.recF; cfg.peakKm=proj.peakKm0;
   if(vG==='нереалистично')notes.push(`${GM.name} ${fmtT(cfg.tgtGoal)} к ${fmtDM(marD)} недостижим от текущей формы; темпы построены под реалистичный ≈${fmtT(endGoal)}.`);
   const curMar=Math.round(proj.curMarEq), end10=Math.round(timeFor(10000,achGoalVd)), endMar=Math.round(timeFor(42195,achGoalVd));
@@ -1453,16 +1470,20 @@ function saveModal(){
   closeModal(); renderEditor();
   ['jsonBtn','htmlBtn','printBtn'].forEach(id=>$(id).disabled=false);
 }
+// Восстанавливает ВСЕ входящие параметры (readCfg()) обратно в форму — для отладки и повторного экспорта.
+// cfg может быть из более старой версии калькулятора и не содержать часть полей — везде есть безопасные фолбэки,
+// поэтому отсутствующие поля просто получают дефолт, а не ломают восстановление остальных.
 function fillForm(cfg){
+  cfg=cfg||{};
   const gd=cfg.goalDist||42195;
   $('goalDist').value=gd; $('goalD').value=cfg.goalISO||cfg.marathonISO||'';
   $('tgtGoal').value=fmtT(cfg.tgtGoal||(gd===10000?cfg.tgt10:gd===21097?cfg.tgt21:cfg.tgtMar)||0); tgtTouched=true;
   let res=(cfg.results&&cfg.results.length)?cfg.results:[];
   if(!res.length){ if(cfg.cur10)res.push({dist:10000,sec:cfg.cur10}); if(cfg.curMar)res.push({dist:42195,sec:cfg.curMar}); }
-  setResRows(res);
-  $('age').value=cfg.age; $('weight').value=cfg.weight;
+  if(res.length)setResRows(res);
+  $('age').value=cfg.age||38; $('weight').value=cfg.weight||60;
   $('lthr').value=cfg.lthr||''; $('ltpace').value=cfg.ltPace?fmtP(cfg.ltPace):''; ltpaceTouched=!!cfg.ltPace;
-  $('startD').value=cfg.startISO;
+  if(cfg.startISO)$('startD').value=cfg.startISO;
   $('curVol').value=cfg.curVol||Math.round((cfg.peakVol||80)*0.8);
   $('curLong').value=cfg.curLong?String(cfg.curLong):'';
   if($('sex'))$('sex').value=cfg.sex||'m'; if($('exp'))$('exp').value=cfg.exp||'inter';
@@ -1471,12 +1492,32 @@ function fillForm(cfg){
   if($('longDow'))$('longDow').value=(cfg.longDow==null?'':String(cfg.longDow));
   ['ski','pool','bike','fitness'].forEach(function(sp){for(var i=0;i<7;i++){var c=$(sp+'-'+i);if(c)c.checked=false;} var a=$(sp+'-auto');if(a)a.checked=false;});
   (cfg.cross||[]).forEach(function(cx){(cx.days||(cx.dow!=null?[cx.dow]:[])).forEach(function(dj){var c=$(cx.sport+'-'+dj);if(c)c.checked=true;}); if(cx.auto&&$(cx.sport+'-auto'))$(cx.sport+'-auto').checked=true;});
+  // предстартовый контекст (гонка перед планом / переход с другой программы) — необязательные поля,
+  // в JSON старых версий калькулятора их может не быть, тогда остаются дефолты формы
+  if($('preCtx'))$('preCtx').value=cfg.preCtx||'none';
+  if($('preRaceDist'))$('preRaceDist').value=cfg.preRaceDist||10000;
+  if($('preRaceDate')&&cfg.preRaceDate)$('preRaceDate').value=cfg.preRaceDate;
+  if($('preRaceHard'))$('preRaceHard').checked=!!cfg.preRaceHard;
+  if($('transPeakVol'))$('transPeakVol').value=cfg.transPeakVol||'';
+  if($('transWeeksAgo'))$('transWeeksAgo').value=(cfg.transWeeksAgo==null?1:cfg.transWeeksAgo);
+  if(typeof updatePreCtxUI==='function')updatePreCtxUI();
   if(cfg.startISO&&$('goalD').value){setPlanWeeks(Math.max(1,Math.round(dDiff(dParse($('goalD').value),dParse(cfg.startISO))/7)));$('planWeeks').dataset.touched='1';}
   setTuneRows(cfg.tuneRaces||[]);
-  $('peakVol').value=cfg.peakVol; $('volUnit').value=cfg.volUnit; $('runs').value=cfg.runs; peakTouched=true; runsTouched=true; strTouched=true;
-  $('tag').value=cfg.tag; tagTouched=true; $('strength').value=cfg.strength;
+  $('peakVol').value=cfg.peakVol||80; $('volUnit').value=cfg.volUnit||'km'; $('runs').value=cfg.runs||6; peakTouched=true; runsTouched=true; strTouched=true;
+  $('tag').value=cfg.tag||'[GEN]'; tagTouched=true; $('strength').value=(cfg.strength==null?2:cfg.strength);
   sliderTouched=true; $('slider').value=Math.round((cfg.slider==null?0.5:cfg.slider)*100); $('slider').oninput();
   recalcEstimate();
+}
+// достаточно ли во входящем cfg данных, чтобы восстановить форму (а не только даты/старты из тренировок).
+// Понимает и текущий формат (results/tgtGoal/goalISO), и более старый (cur10/tgt10/tgtMar/marathonISO) —
+// JSON от старой версии калькулятора без части полей всё равно распознаётся как «полный», если есть минимум для расчёта.
+function hasFullCfg(c){
+  if(!c)return false;
+  const hasStart=!!c.startISO;
+  const hasGoalDate=!!(c.goalISO||c.marathonISO);
+  const hasResult=(c.results&&c.results.length)||c.cur10||c.curMar;
+  const hasTarget=c.tgtGoal||c.tgt10||c.tgt21||c.tgtMar;
+  return !!(hasStart&&hasGoalDate&&hasResult&&hasTarget);
 }
 // восстановление дат и промежуточных стартов из самих тренировок (для JSON без meta.cfg)
 function reconstructFromWorkouts(data){
@@ -1732,6 +1773,7 @@ function recalcEstimate(){
     const curVol=+$('curVol').value||0, volUnit=$('volUnit').value, volKm=volUnit==='h'?curVol*11:curVol;
     const exp=($('exp')&&$('exp').value)||'inter';
     const maxVolEver=+(($('maxVolEver')&&$('maxVolEver').value)||0)||0;
+    const ca=courseAdjust({elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked)}); // рельеф/жара/высота: только для перевода реального времени в «чистое» и обратно
     const corrBase=VOLCORRIDOR[gd]||VOLCORRIDOR[42195];          // базовый корридор дистанции — для «под цель» (физиология, от опыта не зависит)
     const EXPVOL={novice:0.7,inter:1.0,adv:1.15};                // масштаб корридора объёма по опыту
     const corr=[Math.round(corrBase[0]*(EXPVOL[exp]||1)), Math.round(corrBase[1]*(EXPVOL[exp]||1))]; // корридор опыта — для safeMax и границ рекомендованного
@@ -1748,7 +1790,8 @@ function recalcEstimate(){
     let ambition=0, vdGoal=null;
     const tgtSecNow=parseT(($('tgtGoal').value||'').trim());
     if(tgtSecNow){
-      vdGoal=gd>42195?vdot(42195,riegelInv(tgtSecNow,gd)):vdot(gd,tgtSecNow);
+      const tgtSecNowClean=ca.toClean(tgtSecNow);               // поле хранит реальное (курс-дисконтированное) время — под VDOT берём чистый эквивалент
+      vdGoal=gd>42195?vdot(42195,riegelInv(tgtSecNowClean,gd)):vdot(gd,tgtSecNowClean);
       if(anchor0)ambition=clamp((vdGoal-anchor0)/(anchor0*0.06),0,1);
     }
     const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(0.6*clamp(accV,0,1)+0.4*ambition,0,1)); // корридорный ориентир (fallback, если цель не задана)
@@ -1810,10 +1853,11 @@ function recalcEstimate(){
     let ambitious = rawEnd>0 ? Math.round(prR.endGoal * rawAmb / rawEnd) : Math.round(realistic*0.975);
     ambitious = Math.min(ambitious, realistic);                // амбициозно не медленнее реалистичного
     const midT=Math.round((realistic+ambitious)/2);
-    if(!tgtTouched)$('tgtGoal').value=fmtT(realistic);                        // цель = реалистичное из диапазона
-    const tgtSec=parseT($('tgtGoal').value)||realistic;
-    if(volUnit!=='h'){                                          // «под цель» считаем от ФИНАЛЬНой (отображаемой) цели, а не от устаревшего значения поля на начало пересчёта
-      const vdF=gd>42195?vdot(42195,riegelInv(tgtSec,gd)):vdot(gd,tgtSec);
+    if(!tgtTouched)$('tgtGoal').value=fmtT(ca.toDisp(realistic));             // цель = реалистичное из диапазона, показываем реальное (курс-дисконтированное) время
+    const tgtSec=parseT($('tgtGoal').value)||ca.toDisp(realistic);            // tgtSec — реальное время, как его видит пользователь
+    if(volUnit!=='h'){                                          // «под цель» считаем от ФИНАЛЬНОЙ (отображаемой) цели, но VDOT — от её чистого эквивалента: жара/рельеф/высота не должны занижать нужный объём
+      const tgtSecClean=ca.toClean(tgtSec);
+      const vdF=gd>42195?vdot(42195,riegelInv(tgtSecClean,gd)):vdot(gd,tgtSecClean);
       const rF=podcelRange(vdF,corrBase,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
       volLimited=isFinite(safeMax)&&(glo>safeMax+1);
       baseUnreachable=isFinite(safeMax)&&(glo>safeMax+1);
@@ -1822,11 +1866,11 @@ function recalcEstimate(){
     if($('peakWarn'))$('peakWarn').textContent=over?('⚠ '+curPeak+' '+unit+'/нед выше безопасного максимума (~'+safeMax+'): резкий рост объёма повышает риск травм'+(maxVolEver&&curPeak>maxVolEver?' — выше твоего прежнего максимума':'')):(volLow?('⚠ '+curPeak+' '+unit+'/нед ниже минимума для поддержания формы (~'+maintainMin+' '+unit+'/нед): при таком объёме прогресс не работает, прогноз недостоверен'):(baseUnreachable?('⚠ под цель нужно ≥'+glo+' '+unit+'/нед, но от текущего объёма безопасно наберёшь только ~'+safeMax+' — цель пока нереалистична, наращивай базу дольше'):''));
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';
     const pr=projectFitness(Object.assign({},cfg,{tgtGoal:tgtSec}));          // с целью — для вердикта
-    if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(realistic)}</b>, амбициозно ≈${fmtT(ambitious)} · сейчас ≈${fmtT(prR.curGoalTime)}`+(volLow?` <span style="color:#c00">⚠ пиковый объём ~${curPeak} ${unit}/нед ниже минимума для поддержания формы (~${maintainMin} ${unit}/нед) — при таком объёме прогресс не работает, целевое время недостоверно; увеличьте объём.</span>`:'')+(volLimited?` <span style="color:#c00">⚠ под эту цель нужен объём ~${glo} км/нед, но безопасно ты выйдешь только ~${safeMax} км/нед — поэтому цель недостижима в полном объёме; целевое время и прогноз пересчитаны под безопасно достижимый объём (реалистично ≈${fmtT(realistic)}).</span>`:'');
+    if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(ca.toDisp(realistic))}</b>, амбициозно ≈${fmtT(ca.toDisp(ambitious))} · сейчас ≈${fmtT(ca.toDisp(prR.curGoalTime))}`+(volLow?` <span style="color:#c00">⚠ пиковый объём ~${curPeak} ${unit}/нед ниже минимума для поддержания формы (~${maintainMin} ${unit}/нед) — при таком объёме прогресс не работает, целевое время недостоверно; увеличьте объём.</span>`:'')+(volLimited?` <span style="color:#c00">⚠ под эту цель нужен объём ~${glo} км/нед, но безопасно ты выйдешь только ~${safeMax} км/нед — поэтому цель недостижима в полном объёме; целевое время и прогноз пересчитаны под безопасно достижимый объём (реалистично ≈${fmtT(ca.toDisp(realistic))}).</span>`:'');
     const vtxt={'реалистично':'реалистично','амбициозно':'амбициозно','нереалистично':'вне досягаемости к дате','поддержание':'поддержание'}[pr.vG]||'';
     let html='';
     html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(реалистичная цель)</span>'}${vtxt?' — '+vtxt:''}</div>`;
-    html+=`<div style="margin-top:2px">Прогноз к старту: <b>≈${fmtT(realistic)}</b></div>`;
+    html+=`<div style="margin-top:2px">Прогноз к старту: <b>≈${fmtT(ca.toDisp(realistic))}</b></div>`;
     if(prR.eq.length)html+=`<div style="margin-top:4px">Эквивалент формы:</div><ul style="margin:3px 0 0 18px;padding:0">${prR.eq.map(e=>`<li>${distName(e.dist)} — ${fmtT(e.sec)}</li>`).join('')}</ul>`;
     const rec=recommendAccent(results,gd); const acc=rec.val>0.6?'выносливость':rec.val<0.4?'скорость':'баланс';
     html+=`<div style="margin-top:6px;color:var(--muted)">Рекомендуемый акцент: <b>${acc}</b> — ${rec.reason}${sliderTouched?' <span style="opacity:.7">(ползунок задан вручную)</span>':''}</div>`;
@@ -2016,8 +2060,8 @@ $('goBtn').onclick=()=>{
     const p=buildPlan(cfg);
     if(p.error)throw p.error;
     LAST=p; render(p);              // считает FITNESS_HTML
-    META={tag:cfg.tag,name:`План: марафон ${fmtT(p.analysis.endMar)} · ${cfg.marathonISO}`,
-      marathon:cfg.marathonISO,generated:dISO(new Date()),schema:1,cfg};
+    META={tag:cfg.tag,name:`План: ${p.analysis.goalShort||''} ${fmtT(p.analysis.endGoal)} · ${cfg.goalISO}`,
+      marathon:cfg.goalISO,generated:dISO(new Date()),schema:1,cfg};
     EDIT=cloneWorkouts(p.workouts);
     // предстартовый контекст «недавняя гонка» — досчитываем окно восстановления и смягчаем задетые недели плана
     let preRaceNote='';
@@ -2051,7 +2095,7 @@ $('importInput').onchange=(e)=>{
     LAST=null; ANALYTICS_HTML=''; FITNESS_HTML=''; $('out').innerHTML='';
     const note=$('importNote');
     const c=META.cfg||{};
-    const full=(c.cur10&&c.tgt10&&c.tgtMar&&c.startISO&&c.marathonISO)?{...c}:null;
+    const full=hasFullCfg(c)?{...c}:null;
     if(full){
       try{fillForm(full);}catch(err){}
       try{

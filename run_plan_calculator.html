@@ -1450,7 +1450,7 @@ function fillDatesTunes(pr){
 function zoneOfW(w){ if(w.kind==='str')return 'str'; if(w.kind==='cross')return 'cross'; const n=w.name||'';
   if(/МАРАФОН|СТАРТ|КОНТРОЛ/i.test(n))return 'race';
   if(/Длинн/i.test(n))return 'long';
-  if(/Порог/i.test(n))return 'thr';
+  if(/Порог|Темп(?!10к)/i.test(n))return 'thr';
   if(/\bМР\b|Марафонск|Настройк/i.test(n))return 'mp';
   if(/МПК|Темп10к|Интервал|Заострен|Остр|Освежающ|Фартлек|Круизн|Повтор/i.test(n))return 'vo2';
   if(/Восстанов|Отдых|трусц/i.test(n))return 'rec';

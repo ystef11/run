@@ -1570,7 +1570,7 @@ function chartsFromEdit(){
     <div class="vchart" style="margin-top:14px"><div class="bars">${bars(wk.map(w=>Math.round(w.min)),v=>hm(v))}</div>
       <div class="vlegend"><span style="margin-left:auto">часы:мин/нед — по факту загруженного плана</span></div></div>`;
 }
-function renderStaticFromEdit(cfgRef){
+function renderStaticFromEdit(cfgRef,forExport){
   const weeks=groupEditByWeek(EDIT);
   return weeks.map(g=>{
     let wkm=0,wmin=0,longKm=0;
@@ -1587,7 +1587,7 @@ function renderStaticFromEdit(cfgRef){
       return `<tr class="${q}" data-date="${w.date}"><td class="day">${DOW[(w._date.getDay()+6)%7]}<span class="dt">${pad2(w._date.getDate())}.${pad2(w._date.getMonth()+1)}</span></td>
         <td class="chip-cell"><span class="chip" style="background:var(${ZC[z]})">${ZLAB[z]}</span></td>
         <td class="ses"><b>${esc(w.name)}</b> — ${esc(desc)}${km?` <span class="kmref">≈${km.toFixed(km<10?1:0)} км · ${hm(min)}</span>`:(min?` <span class="kmref">${hm(min)}</span>`:'')}${fuel?` <span class="fuel">~${fuel.gph} г/ч · всего ~${fuel.total} г ≈ ${fuel.gels} гел.</span>`:''} &nbsp;<span class="hrv">${esc(tgt)}</span></td>
-        <td class="rowact"><button class="edbtn" onclick="event.stopPropagation();openEditModal(${w._idx})" title="Изменить">✎</button><button class="edbtn del" onclick="event.stopPropagation();deleteWorkout(${w._idx})" title="Удалить">🗑</button></td></tr>`;
+        ${forExport?'':`<td class="rowact"><button class="edbtn" onclick="event.stopPropagation();openEditModal(${w._idx})" title="Изменить">✎</button><button class="edbtn del" onclick="event.stopPropagation();deleteWorkout(${w._idx})" title="Удалить">🗑</button></td>`}</tr>`;
     }).join('');
     return `<div class="week"><div class="whead"><div class="wmeta"><div class="dates">Неделя от ${fmtDM(dParse(g.mon))}</div></div>
       <div class="vol"><div class="num mono">≈${Math.round(wkm)}<small> км</small></div><div class="lbl">≈${hm(wmin)} ч/нед${longKm?` · долгая ≈${Math.round(longKm)} км`:''}</div></div></div>
@@ -2160,7 +2160,7 @@ $('htmlBtn').onclick=()=>{
   const title=`План подготовки${endMarTxt?` · Марафон ${endMarTxt}`:''}${(META&&META.marathon)?` · ${META.marathon}`:''}`;
   const planObj={meta:{...(META||{tag:'[GEN]',schema:1}),generated:dISO(new Date())},workouts:EDIT};
   const planStr=JSON.stringify(JSON.stringify(planObj)).replace(/</g,'\\u003c'); // безопасно для <\/script>
-  const body=(ANALYTICS_HTML||'')+`<h2>Недельный план</h2>`+renderStaticFromEdit(cfgRef);
+  const body=(ANALYTICS_HTML||'')+`<h2>Недельный план</h2>`+renderStaticFromEdit(cfgRef,true);
   const doc=`<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title>
 <style>${css}</style></head><body><div class="wrap">

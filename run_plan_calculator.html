@@ -2228,6 +2228,7 @@ $('htmlBtn').onclick=()=>{
   const planStr=JSON.stringify(JSON.stringify(planObj)).replace(/</g,'\\u003c'); // безопасно для <\/script>
   const body=(ANALYTICS_HTML||'')+`<h2>Недельный план</h2>`+renderStaticFromEdit(cfgRef,true);
   const doc=`<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${title}</title>
 <style>${css}</style></head><body><div class="wrap">
 <div class="topbar"><button class="jumpbtn" id="jumpBtn" onclick="jumpToday()">📍 К текущему дню</button></div>

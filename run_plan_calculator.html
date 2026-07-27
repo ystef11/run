@@ -655,7 +655,10 @@ function projectFitness(cfg){
     const atGoal=(cfg.results||[]).find(r=>r.dist===goalDist&&r.sec>0);
     curGoalTime=atGoal?atGoal.sec:Math.round(timeFor(goalDist,anchorVd*ENDFAC[goalDist]));
     vdTarget=tgtGoalClean?vdot(goalDist,tgtGoalClean):null;
-    vG=vdTarget!=null?verdict(vdTarget,achGoalVd,vdot(goalDist,curGoalTime)):'—';
+    // вердикт считаем от той же базы, из которой спрогнозирован achGoalVd (anchorVd), а не от vdot фактического
+    // введённого результата — иначе при расхождении anchorVd (усреднён с ПАНО) и «сырого» результата вердикт
+    // считает несуществующий разрыв и может дать «нереалистично» даже когда прогноз почти совпадает с целью.
+    vG=vdTarget!=null?verdict(vdTarget,achGoalVd,anchorVd):'—';
     endGoal=Math.round(Math.min(Math.max(timeFor(goalDist,achGoalVd),tgtGoalClean||0),curGoalTime));
   }
   // curGoalTime/endGoal здесь — «чистые» (равнина, без жары/высоты): именно они идут во всю физиологию (VDOT/«под цель»/прогноз объёма).

@@ -789,20 +789,23 @@ function buildPlan(cfg){
     let best=-1,bd=-1; for(let i=0;i<7;i++){ if(TPLr[i]!=='E')continue; const dmin=Math.min.apply(null,qi.map(q=>Math.min((i-q+7)%7,(q-i+7)%7))); if(dmin>bd){bd=dmin;best=i;} }
     if(best>=0)TPLr[best]='Q3'; }
   const strDays=TPLr.map((v,idx)=>({v:v,idx:idx})).filter(o=>o.v==='E'||o.v==='R'||o.v==='-').map(o=>o.idx); if(!strDays.length)strDays.push((longDow+1)%7);
-  // ---- неделя 1: адаптационные дни до факт. старта — переносим качественную (если попала в адаптацию) на первый тренировочный день ----
+  // ---- неделя 1: адаптационные дни до факт. старта — переносим качественную (если попала в адаптацию), но НЕ на самый первый тренировочный день ----
   let TPL0=TPLr, strDays0=strDays;
   if(leadDays>0){
     TPL0=TPLr.slice();
-    const qLead=TPL0.map((v,idx)=>({v,idx})).filter(o=>o.idx<leadDays&&(o.v==='Q1'||o.v==='Q2'||o.v==='Q3'));
-    qLead.forEach(o=>{
-      const notStr=[]; const anyE=[];
-      for(let j=leadDays;j<7;j++){ if(TPL0[j]==='E'||TPL0[j]==='R'||TPL0[j]==='-'){ if(!strDays.includes(j))notStr.push(j); anyE.push(j); } }
-      const target=notStr[0]!=null?notStr[0]:anyE[0];
-      if(target!=null){ TPL0[target]=o.v; TPL0[o.idx]='-'; }
-    });
-    strDays0=strDays.filter(d=>d>=leadDays);
-    if(!strDays0.length){ // резервный день для силовой недели 1, если все обычные strDays попали в адаптацию
-      let cand=-1; for(let j=leadDays;j<7;j++){ if(TPL0[j]!=='L'){cand=j;break;} }
+    const usedForQ=new Set();
+    const isQ=v=>v==='Q1'||v==='Q2'||v==='Q3';
+    const scan=from=>{ const notStr=[],anyE=[];
+      for(let j=from;j<7;j++){ if(usedForQ.has(j))continue; if(TPL0[j]==='E'||TPL0[j]==='R'||TPL0[j]==='-'){ if(!strDays.includes(j))notStr.push(j); anyE.push(j); } }
+      return notStr[0]!=null?notStr[0]:anyE[0]; };
+    const relocate=(idx)=>{ const v=TPL0[idx];
+      let target=scan(leadDays+1); if(target==null)target=scan(leadDays); // сперва пробуем день ПОСЛЕ первого тренировочного, и только если некуда — на него самого
+      if(target!=null){ TPL0[target]=v; TPL0[idx]='-'; usedForQ.add(target); } };
+    TPL0.map((v,idx)=>({v,idx})).filter(o=>o.idx<leadDays&&isQ(o.v)).forEach(o=>relocate(o.idx));
+    if(isQ(TPL0[leadDays])) relocate(leadDays); // план не должен начинаться прямо с качественной тренировки
+    strDays0=strDays.filter(d=>d>=leadDays&&!usedForQ.has(d));
+    if(!strDays0.length){ // резервный день для силовой недели 1, если все обычные strDays заняты адаптацией/качественной
+      let cand=-1; for(let j=leadDays;j<7;j++){ if(TPL0[j]!=='L'&&!usedForQ.has(j)){cand=j;break;} }
       strDays0=[cand>=0?cand:leadDays];
     }
   }
@@ -881,9 +884,9 @@ function buildPlan(cfg){
     let rots;
     if(s<0.35){ // акцент скорость: короче и быстрее
       rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
-            {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
+            {nm:`МПК ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
             {nm:`МПК ${n}x800`,st:repsD(n,800,R.vo2,75)},
-            {nm:`Повторы ${n+1}x600`,st:repsD(n+1,600,R.rep,90)}];
+            {nm:`Быстрые ${n+1}x600`,st:repsD(n+1,600,R.rep,90)}];
     } else if(s>0.65){ // акцент выносливость: круизные, длиннее
       rots=[{nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
             {nm:`Круизные ${Math.max(3,n-1)}x1600`,st:repsD(Math.max(3,n-1),1600,R.t10,120)},
@@ -892,7 +895,7 @@ function buildPlan(cfg){
     } else {
       rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
             {nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
-            {nm:`Короткие ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
+            {nm:`МПК ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
             {nm:`Круизные ${n}x800`,st:repsD(n,800,R.t10,75)}];
     }
     if(hilly){const ho=hillOpt(w,phase);for(let t=0;t<=hillTier;t++)rots=rots.concat([ho]);} // больше слотов горок при более крутом/горном профиле
@@ -1001,17 +1004,17 @@ function buildPlan(cfg){
           else if(goalDist>=21000){const H=hmp(R);stps=[warm(12),strides(3,R),st('interval','distance',21097,PCT(H),`Полумарафон ${fmtP(mid(H))}`),cool(5)];}
           else if(goalDist>=10000){stps=[warm(15),strides(3,R),st('interval','distance',10000,PCT(R.race10),`10 км ${fmtP(mid(R.race10))}`),cool(10)];}
           else {stps=[warm(15),strides(4,R),st('interval','distance',5000,PCT(R.race5),`5 км ${fmtP(mid(R.race5))}`),cool(10)];}
-          items=[{kind:'run',z:'race',name:`${GM.raceName} ${fmtT(endGoal)}`,steps:stps}];}
-        else if(dd===1)items=[{kind:'run',z:'rec',name:'Разминочный выезд',steps:[easyS(22),strides(3,R)]}];
+          items=[{kind:'run',z:'race',name:`ГЛАВНЫЙ СТАРТ ${GM.raceName} ${fmtT(endGoal)}`,steps:stps}];}
+        else if(dd===1)items=[{kind:'run',z:'rec',name:'Восстановительный выезд',steps:[easyS(22),strides(3,R)]}];
         else if(dd===2)items=[{kind:'rest',label:'Отдых (или трусца 25 мин)'}];
         else if(dd===3)items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(32),strides(4,R)]}];
         else if(dd===4)items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(35)]}];
         else if(dd===5){let t;
           if(isUltra)t={z:'easy',name:'Спокойный бег + ускорения',steps:[easyS(30),strides(4,R)]};
           else if(goalDist>=42000)t={z:'mp',name:'Настройка 3x1000 @МР',steps:[warm(12),repsD(3,1000,R.mp,90),strides(4,R),cool(8)]};
-          else if(goalDist>=21000){const H=hmp(R);t={z:'thr',name:'Настройка 3x1000 @ПМ',steps:[warm(12),repsD(3,1000,H,90),strides(4,R),cool(8)]};}
+          else if(goalDist>=21000){const H=hmp(R);t={z:'thr',name:'Настройка-порог 3x1000 @ПМ',steps:[warm(12),repsD(3,1000,H,90),strides(4,R),cool(8)]};}
           else if(goalDist>=10000)t={z:'vo2',name:'Настройка 4x400 остро',steps:[warm(12),repsD(4,400,R.rep,90),strides(4,R),cool(8)]};
-          else t={z:'vo2',name:'Настройка 3x400 @5к',steps:[warm(12),repsD(3,400,R.race5,90),strides(3,R),cool(8)]};
+          else t={z:'vo2',name:'Острая настройка 3x400 @5к',steps:[warm(12),repsD(3,400,R.race5,90),strides(3,R),cool(8)]};
           items=[{kind:'run',z:t.z,name:t.name,steps:t.steps}];}
         else {items=[{kind:'run',z:'rec',name:'Восстановительный',steps:[recS(30)]}];
           if((+cfg.strength||0)>0)items.push({kind:'str',...STR_COR});}
@@ -1030,7 +1033,7 @@ function buildPlan(cfg){
           items=[{kind:'run',z:'race',name:`СТАРТ ${distName(tr.dist)} ${fmtT(predT)}`,steps:stps,
             note:`Ориентир по прогнозу формы на эту дату: ≈${fmtT(predT)} (темп ${fmtP(predP)}/км). Это оценка, а не план — бегите по самочувствию.`}];
           days.push({date:dt,items});continue;}
-        if(dd===1){items=[{kind:'run',z:'rec',name:'Предстартовый шейкаут',steps:[easyS(20),strides(3,R)],fixed:1}];
+        if(dd===1){items=[{kind:'run',z:'rec',name:'Восстановительный шейкаут',steps:[easyS(20),strides(3,R)],fixed:1}];
           days.push({date:dt,items});continue;}
         if(dd===2){days.push({date:dt,items:[{kind:'rest',label:'Отдых'}]});continue;}
         if(dd>=3&&tr.dist>=42000){items=[{kind:'run',z:'easy',name:'Лёгкий (подводка)',steps:[easyS(35)],fixed:1}];
@@ -1203,11 +1206,11 @@ function preRaceRecoveryDays(dist,hard,exp,recF){
 function classifyRec(w){ if(w.kind==='cross')return 'cross';
   if(w.kind==='str')return 'str';
   var n=w.name||'';
-  if(/МАРАФОН|СТАРТ|КОНТРОЛ/i.test(n))return 'race';
+  if(/МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ|(?<![А-Яа-яЁё])СТАРТ/i.test(n))return 'race';
   if(/Длинн/i.test(n))return 'long';
   if(/Восст\s*утро/i.test(n))return 'am';
   if(/Восстанов/i.test(n))return 'rec';
-  if(/МПК|Порог|Темп|МР|Интервал|Настройк|Освежающ|Остр|Заострен|Фартлек|Круизн|Повтор/i.test(n))return 'quality';
+  if(/МПК|Порог|Темп|МР|Интервал|Настройк|Освежающ|Остр|Заострен|Фартлек|Круизн|Повтор|Быстр|Ступен|Стабильн|Горк|Подъ[её]м/i.test(n))return 'quality';
   return 'easy';
 }
 function adaptRecovery(list, fromISO, weeks, reason){
@@ -1578,11 +1581,11 @@ function fillDatesTunes(pr){
   setTuneRows(pr.tuneRaces||[]);
 }
 function zoneOfW(w){ if(w.kind==='str')return 'str'; if(w.kind==='cross')return 'cross'; const n=w.name||'';
-  if(/МАРАФОН|СТАРТ|КОНТРОЛ/i.test(n))return 'race';
+  if(/МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ|(?<![А-Яа-яЁё])СТАРТ/i.test(n))return 'race';
   if(/Длинн/i.test(n))return 'long';
-  if(/Порог|Темп(?!10к)/i.test(n))return 'thr';
-  if(/\bМР\b|Марафонск|Настройк/i.test(n))return 'mp';
-  if(/МПК|Темп10к|Интервал|Заострен|Остр|Освежающ|Фартлек|Круизн|Повтор/i.test(n))return 'vo2';
+  if(/(?<![А-Яа-яЁё])МР(?![А-Яа-яЁё])|Марафонск/i.test(n))return 'mp';
+  if(/Порог|Темп(?!10к)|Стабильн|Подъ[её]м/i.test(n))return 'thr';
+  if(/МПК|Темп10к|Интервал|Заострен|Остр|Освежающ|Фартлек|Круизн|Повтор|Быстр|Ступен|Горк/i.test(n))return 'vo2';
   if(/Восстанов|Отдых|трусц/i.test(n))return 'rec';
   return 'easy'; }
 function weeklyFromEdit(){

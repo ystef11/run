@@ -2221,8 +2221,9 @@ $('htmlBtn').onclick=()=>{
   const css=document.getElementById('baseCss').textContent+document.getElementById('calcCss').textContent;
   const cfgRef=(LAST&&LAST.cfg)||(META&&META.cfg)||null;
   setZPaceFrom(cfgRef);
-  const endMarTxt=(LAST&&LAST.analysis)?fmtT(LAST.analysis.endMar):'';
-  const title=`План подготовки${endMarTxt?` · Марафон ${endMarTxt}`:''}${(META&&META.marathon)?` · ${META.marathon}`:''}`;
+  const A=(LAST&&LAST.analysis)||null;
+  const goalTxt=A?`${A.goalName} ${fmtT(A.endGoal)}`:'';
+  const title=`План подготовки${goalTxt?` · ${goalTxt}`:''}${(META&&META.marathon)?` · ${META.marathon}`:''}`;
   const planObj={meta:{...(META||{tag:'[GEN]',schema:1}),generated:dISO(new Date())},workouts:EDIT};
   const planStr=JSON.stringify(JSON.stringify(planObj)).replace(/</g,'\\u003c'); // безопасно для <\/script>
   const body=(ANALYTICS_HTML||'')+`<h2>Недельный план</h2>`+renderStaticFromEdit(cfgRef,true);

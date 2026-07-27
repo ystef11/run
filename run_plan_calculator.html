@@ -1789,7 +1789,10 @@ function recalcEstimate(){
     // целевой VDOT (для ультры — марафон-эквивалент по Ригелю); амбициозность — насколько цель выше текущей формы (~6% VDOT ≈ потолок за цикл)
     let ambition=0, vdGoal=null;
     const tgtSecNow=parseT(($('tgtGoal').value||'').trim());
-    if(tgtSecNow){
+    if(tgtTouched&&tgtSecNow){                                  // цель из поля учитываем только если её реально ввели руками —
+                                                                  // иначе там может быть авто-значение с прошлого цикла (другие курс-поправки),
+                                                                  // и по кругу оно будет «утаскивать» дальше расчёт объёма
+
       const tgtSecNowClean=ca.toClean(tgtSecNow);               // поле хранит реальное (курс-дисконтированное) время — под VDOT берём чистый эквивалент
       vdGoal=gd>42195?vdot(42195,riegelInv(tgtSecNowClean,gd)):vdot(gd,tgtSecNowClean);
       if(anchor0)ambition=clamp((vdGoal-anchor0)/(anchor0*0.06),0,1);
@@ -1805,7 +1808,12 @@ function recalcEstimate(){
     let recPeak;
     if(volUnit==='h'){ recPeak=rampRec||null; }
     else { recPeak=Math.round(clamp(podPoint, Math.min(expFloor,safeMax), isFinite(safeMax)?safeMax:9999)); }
-    if(recPeak&&!peakTouched)$('peakVol').value=recPeak;
+    // объём в поле пока НЕ перезаписываем этим предварительным recPeak (для км/нед): он посчитан от значения цели
+    // на начало пересчёта (могло остаться от прошлого цикла с другими курс-поправками) и участвует ниже как cfg.peakVol
+    // в прогнозе достижимого времени — если перезаписать поле сейчас, эта неточность попадёт в сам прогноз и будет
+    // «протаскиваться» дальше при каждом пересчёте (не возвращаясь к исходному значению при смене жары/рельефа и т.п.).
+    // Для «ч/нед» такой раскрутки нет (rampRec не зависит от цели) — обновляем сразу, как раньше.
+    if(recPeak&&!peakTouched&&volUnit==='h')$('peakVol').value=recPeak;
     const curPeak=+$('peakVol').value||recPeak||0;
     const over=isFinite(safeMax)&&curPeak>safeMax;
     const maintainMin=(volUnit!=='h'&&anchor0)?podcelRange(anchor0,corrBase,anchor0).lo:0;   // минимум объёма для поддержания текущей формы («под цель» текущего VDOT)
@@ -1824,45 +1832,65 @@ function recalcEstimate(){
     if($('strRec'))$('strRec').textContent='рекомендовано '+recStr+(strTouched?' · задано вручную':'');
     // прогноз
     const ltp=(()=>{const v=($('ltpace').value||'').trim();if(!v)return null;const q=v.split(':').map(Number);return q.length===2&&!q.some(isNaN)?q[0]*60+q[1]:null;})();
-    const cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,
-      age:+$('age').value||35,peakVol:+$('peakVol').value||recPeak||80,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp,
-      exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m',
-      runs:+$('runs').value||5,curVol:curVol||null,tuneRaces:readTuneRows(),
-      strength:+$('strength').value,cross:readCross()};
-    const prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
-    if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
-    let realistic=prR.endGoal;
-    if(volUnit!=='h' && anchor0){                              // коррекция авто-цели по «под цель» (нижняя граница) и фактическому пику; итог = медленнее из (физиология, объём)
-      const capVol=peakTouched?curPeak:safeMax;                // ручной пик — по нему; авто — по безопасному потолку
-      if(isFinite(capVol)&&capVol>0){
-        const podLo=ts=>podcelRange(gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts),corrBase,anchor0).lo;
-        let fast=Math.max(1,Math.round(prR.endGoal*0.5)), slow=Math.round(prR.curGoalTime*1.8);  // fast: слишком быстро (не укладывается), slow: сильный регресс
-        if(podLo(slow)>capVol){                                // объём ниже пола «под цель» (поддержание невозможно) — регресс, тем сильнее, чем меньше объём
-          realistic=Math.max(realistic, Math.round(prR.curGoalTime*clamp(maintainMin/capVol,1,1.8)));
-        } else {
-          for(let i=0;i<46;i++){const m=(fast+slow)/2; podLo(m)<=capVol?slow=m:fast=m;}
-          realistic=Math.max(realistic, Math.round(slow));     // цель не быстрее, чем позволяет доступный объём
+    // Объём («рекомендовано») и достижимое время влияют друг на друга (больше объёма → быстрее форма → другая цель →
+    // другой нужный объём), поэтому при авто-объёме сходимся к устойчивой точке в НЕСКОЛЬКО итераций внутри одного
+    // пересчёта — иначе результат «доезжает» до правильного значения только через несколько переключений чекбоксов/полей.
+    // затравка для итерации — НЕ берём старое значение поля (оно могло остаться от предыдущего цикла с другими
+    // курс-поправками/вводными и «утаскивало» бы сходимость в сторону прошлого состояния); берём независимую
+    // от истории оценку (physiология по текущим вводным).
+    let peakSeed=recPeak||80;
+    let cfg, prR, realistic, ambitious, midT, tgtSec;
+    const maxIter=(volUnit!=='h'&&!peakTouched&&anchor0)?5:1;
+    for(let iter=0; iter<maxIter; iter++){
+      cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,
+        age:+$('age').value||35,peakVol:peakTouched?curPeak:peakSeed,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp,
+        exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m',
+        runs:+$('runs').value||5,curVol:curVol||null,tuneRaces:readTuneRows(),
+        strength:+$('strength').value,cross:readCross()};
+      prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
+      if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
+      realistic=prR.endGoal;
+      if(volUnit!=='h' && anchor0){                              // коррекция авто-цели по «под цель» (нижняя граница) и фактическому пику; итог = медленнее из (физиология, объём)
+        const capVol=peakTouched?curPeak:safeMax;                // ручной пик — по нему; авто — по безопасному потолку
+        if(isFinite(capVol)&&capVol>0){
+          const podLo=ts=>podcelRange(gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts),corrBase,anchor0).lo;
+          let fast=Math.max(1,Math.round(prR.endGoal*0.5)), slow=Math.round(prR.curGoalTime*1.8);  // fast: слишком быстро (не укладывается), slow: сильный регресс
+          if(podLo(slow)>capVol){                                // объём ниже пола «под цель» (поддержание невозможно) — регресс, тем сильнее, чем меньше объём
+            realistic=Math.max(realistic, Math.round(prR.curGoalTime*clamp(maintainMin/capVol,1,1.8)));
+          } else {
+            for(let i=0;i<46;i++){const m=(fast+slow)/2; podLo(m)<=capVol?slow=m:fast=m;}
+            realistic=Math.max(realistic, Math.round(slow));     // цель не быстрее, чем позволяет доступный объём
+          }
         }
       }
+      // «амбициозно» = граница вердикта r=1.05 (из модели достижимости), а не фикс. −2.5% — чтобы цель внутри диапазона не была «вне досягаемости»
+      const cVd = gd>42195 ? vdot(42195, riegelInv(prR.curGoalTime, gd)) : vdot(gd, prR.curGoalTime);
+      const ambVd = cVd + 1.05*(prR.achGoalVd - cVd);
+      const rawEnd = gd>42195 ? riegel(timeFor(42195,prR.achGoalVd),gd) : timeFor(gd,prR.achGoalVd);
+      const rawAmb = gd>42195 ? riegel(timeFor(42195,ambVd),gd) : timeFor(gd,ambVd);
+      ambitious = rawEnd>0 ? Math.round(prR.endGoal * rawAmb / rawEnd) : Math.round(realistic*0.975);
+      ambitious = Math.min(ambitious, realistic);                // амбициозно не медленнее реалистичного
+      midT=Math.round((realistic+ambitious)/2);
+      // цель для ЭТОЙ итерации: реалистичное время (если не задано вручную) — не трогаем DOM внутри цикла, чтобы не «протаскивать» промежуточные значения
+      tgtSec=tgtTouched?(parseT($('tgtGoal').value)||ca.toDisp(realistic)):ca.toDisp(realistic);
+      if(volUnit!=='h'){                                          // «под цель» считаем от ФИНАЛЬНОЙ (отображаемой) цели, но VDOT — от её чистого эквивалента: жара/рельеф/высота не должны занижать нужный объём
+        const tgtSecClean=ca.toClean(tgtSec);
+        const vdF=gd>42195?vdot(42195,riegelInv(tgtSecClean,gd)):vdot(gd,tgtSecClean);
+        const rF=podcelRange(vdF,corrBase,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
+        volLimited=isFinite(safeMax)&&(glo>safeMax+1);
+        baseUnreachable=isFinite(safeMax)&&(glo>safeMax+1);
+        // «рекомендовано» пересчитываем от ФИНАЛЬНОЙ (согласованной) цели, а не от значения поля на начало пересчёта —
+        // иначе при смене курс-поправок (жара/рельеф/высота) и любых других вводных цифра «зависает» на переходном значении
+        // и не возвращается обратно при отмене изменения.
+        const podPointF=glo+(ghi-glo)*clamp(accV,0,1);
+        recPeak=Math.round(clamp(podPointF, Math.min(expFloor,safeMax), isFinite(safeMax)?safeMax:9999));
+      }
+      if(peakTouched||Math.abs(recPeak-peakSeed)<1)break;         // сошлись — дальше не итерируем
+      peakSeed=recPeak;
     }
-    // «амбициозно» = граница вердикта r=1.05 (из модели достижимости), а не фикс. −2.5% — чтобы цель внутри диапазона не была «вне досягаемости»
-    const cVd = gd>42195 ? vdot(42195, riegelInv(prR.curGoalTime, gd)) : vdot(gd, prR.curGoalTime);
-    const ambVd = cVd + 1.05*(prR.achGoalVd - cVd);
-    const rawEnd = gd>42195 ? riegel(timeFor(42195,prR.achGoalVd),gd) : timeFor(gd,prR.achGoalVd);
-    const rawAmb = gd>42195 ? riegel(timeFor(42195,ambVd),gd) : timeFor(gd,ambVd);
-    let ambitious = rawEnd>0 ? Math.round(prR.endGoal * rawAmb / rawEnd) : Math.round(realistic*0.975);
-    ambitious = Math.min(ambitious, realistic);                // амбициозно не медленнее реалистичного
-    const midT=Math.round((realistic+ambitious)/2);
-    if(!tgtTouched)$('tgtGoal').value=fmtT(ca.toDisp(realistic));             // цель = реалистичное из диапазона, показываем реальное (курс-дисконтированное) время
-    const tgtSec=parseT($('tgtGoal').value)||ca.toDisp(realistic);            // tgtSec — реальное время, как его видит пользователь
-    if(volUnit!=='h'){                                          // «под цель» считаем от ФИНАЛЬНОЙ (отображаемой) цели, но VDOT — от её чистого эквивалента: жара/рельеф/высота не должны занижать нужный объём
-      const tgtSecClean=ca.toClean(tgtSec);
-      const vdF=gd>42195?vdot(42195,riegelInv(tgtSecClean,gd)):vdot(gd,tgtSecClean);
-      const rF=podcelRange(vdF,corrBase,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
-      volLimited=isFinite(safeMax)&&(glo>safeMax+1);
-      baseUnreachable=isFinite(safeMax)&&(glo>safeMax+1);
-      if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед'; if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax; t+=' · под цель ~'+glo+'–'+ghi+' км'; $('peakRec').textContent=t; }
-    }
+    if(!tgtTouched)$('tgtGoal').value=fmtT(tgtSec);                // цель = реалистичное из диапазона (уже сошедшееся), показываем реальное (курс-дисконтированное) время
+    if(!peakTouched)$('peakVol').value=recPeak;
+    if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед'; if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax; if(volUnit!=='h')t+=' · под цель ~'+glo+'–'+ghi+' км'; $('peakRec').textContent=t; }
     if($('peakWarn'))$('peakWarn').textContent=over?('⚠ '+curPeak+' '+unit+'/нед выше безопасного максимума (~'+safeMax+'): резкий рост объёма повышает риск травм'+(maxVolEver&&curPeak>maxVolEver?' — выше твоего прежнего максимума':'')):(volLow?('⚠ '+curPeak+' '+unit+'/нед ниже минимума для поддержания формы (~'+maintainMin+' '+unit+'/нед): при таком объёме прогресс не работает, прогноз недостоверен'):(baseUnreachable?('⚠ под цель нужно ≥'+glo+' '+unit+'/нед, но от текущего объёма безопасно наберёшь только ~'+safeMax+' — цель пока нереалистична, наращивай базу дольше'):''));
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';
     const pr=projectFitness(Object.assign({},cfg,{tgtGoal:tgtSec}));          // с целью — для вердикта

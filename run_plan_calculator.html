@@ -527,16 +527,20 @@ const ENDFAC={42195:.97,21097:.985,10000:1.0,5000:1.0};
 const VOLCORRIDOR={5000:[28,45],10000:[40,60],21097:[55,80],42195:[65,95],60000:[80,130],80000:[95,150],100000:[110,165],120000:[120,175],160000:[130,185]}; // целевой пик км/нед по дистанции
 const VOLPIVOT={5000:38,10000:50,21097:65,42195:90,60000:105,80000:120,100000:135,120000:145,160000:155};
 // ---- параметры недельного роста объёма (правило ~10%), общие для генератора плана и прогноза формы ----
-const RAMP_START_SHARE=.72;   // старт роста к пику, доля пика (используется и генератором, и прогнозом)
+const RAMP_START_SHARE=.72;   // старт роста к пику, доля пика — используется, ТОЛЬКО когда текущий объём не введён (фолбэк на корридор)
 const RAMP_GROW_CAP=1.10;     // макс. недельный прирост, ×
 const RAMP_GROW_FLOOR_KM=3;   // на малых объёмах % даёт слишком мелкий шаг — не менее +3 км/нед
-// сколько объёма реально успеваем нарастить за buildWeeks недель роста от RAMP_START_SHARE*peakKm до peakKm
-function achievablePeakKm(peakKm, buildWeeks){
+const RAMPEXP={novice:0.92,inter:1.0,adv:1.12}; // опыт → скорость роста объёма ОТ ТЕКУЩЕГО (уже тренированное тело быстрее возвращает/наращивает объём, чем с нуля)
+// сколько объёма реально успеваем нарастить за buildWeeks недель роста от стартовой точки до peakKm.
+// Стартовая точка — фактический текущий объём (startKm), если он известен; если нет — старое поведение (доля пика).
+function achievablePeakKm(peakKm, buildWeeks, startKm, growCapMult){
   if(!peakKm||buildWeeks<=0)return peakKm;
-  let prev=peakKm*RAMP_START_SHARE;
+  const gc=RAMP_GROW_CAP*(growCapMult||1);
+  const start0=(startKm>0)?Math.min(startKm,peakKm):peakKm*RAMP_START_SHARE;
+  let prev=start0;
   for(let i=1;i<=buildWeeks;i++){
-    const target=lerp(peakKm*RAMP_START_SHARE,peakKm,i/buildWeeks);
-    const cap=Math.max(prev*RAMP_GROW_CAP,prev+RAMP_GROW_FLOOR_KM);
+    const target=lerp(start0,peakKm,i/buildWeeks);
+    const cap=Math.max(prev*gc,prev+RAMP_GROW_FLOOR_KM);
     prev=Math.min(target,cap);
   }
   return prev;
@@ -619,7 +623,10 @@ function projectFitness(cfg){
   // достижимость заявленного пика с учётом правила ~10% прироста/нед (та же модель роста, что и в генераторе плана) — прогноз формы должен строиться от РЕАЛЬНО достижимого объёма, а не от заявленного числа
   const taperWp=clamp((GM.taperBase||2)+(recF>1.25?1:0),1,Math.max(1,N-3));
   const peakIdxP=Math.max(0,N-2-taperWp);
-  const peakKmAch=achievablePeakKm(peakKm0,peakIdxP);
+  // фактическая стартовая точка роста — введённый текущий объём (в км-эквиваленте, как и peakKm0), а не доля пика;
+  // если объём не введён — achievablePeakKm сама откатится к старому поведению (доля пика/корридор).
+  const curVolKm=(cfg.curVol>0)?(cfg.volUnit==='h'?cfg.curVol*3600/mid(paceSet(curMarEq,t10cur).easy):cfg.curVol):null;
+  const peakKmAch=achievablePeakKm(peakKm0,peakIdxP,curVolKm,RAMPEXP[cfg.exp]||1);
   const peakKmEff=Math.min(peakKm0,peakKmAch);
   if(peakKmEff<peakKm0-3)notes.push(`Заявленный пик ${Math.round(peakKm0)} км/нед недостижим по правилу ~10% прироста за ${peakIdxP} нед. роста — прогноз формы считаем от фактически достижимого ≈${Math.round(peakKmEff)} км.`);
   const volPivot=VOLPIVOT[goalDist]||90;                      // порог объёма масштабируется под дистанцию
@@ -801,19 +808,24 @@ function buildPlan(cfg){
     if(cfg.transWeeksAgo==null||cfg.transWeeksAgo<=2)preStartAnchorKm=cfg.transPeakVol;
     else notes.push(`Пиковая неделя перехода была ${cfg.transWeeksAgo} нед. назад — это уже не «недавняя» нагрузка, план стартует по обычной прогрессии.`);
   }
+  // фактическая стартовая точка роста объёма — введённый текущий объём (та же конвертация ч→км, что и для пика выше),
+  // а не доля пика «из воздуха»; если объём не введён — старое поведение (доля пика/корридор). Опыт меняет скорость
+  // роста ОТ этой точки (адаптированному телу проще наращивать/возвращать объём, чем с нуля) — та же модель, что и в прогнозе формы.
+  const startKm0=(cfg.curVol>0)?Math.min(cfg.volUnit==='h'?cfg.curVol*3600/mid(P0.easy):cfg.curVol,cfg.peakKm):cfg.peakKm*TUNE.startShare;
+  const growCapEff=TUNE.growCap*(RAMPEXP[cfg.exp]||1);
   const kms=new Array(N).fill(0); const types=new Array(N).fill('');
-  let prev=cfg.peakKm*TUNE.startShare;
+  let prev=startKm0;
   for(let i=0;i<N;i++){
     if(i===N-1){kms[i]=cfg.peakKm*TUNE.raceShare;types[i]='race';continue;}
     if(i>peakIdx){const t=i-peakIdx;kms[i]=cfg.peakKm*(t===1?TUNE.taperShares[0]:TUNE.taperShares[1]);types[i]='taper';continue;}
     const f=peakIdx===0?1:i/peakIdx;
-    let k=lerp(cfg.peakKm*TUNE.startShare,cfg.peakKm,f);
+    let k=lerp(startKm0,cfg.peakKm,f);
     if(i===0&&preStartAnchorKm){
       const floor=preStartAnchorKm*0.85; // не более ~15% провала за неделю относительно недавней нагрузки
       if(k<floor){k=floor;notes.push(`Неделя 1 приподнята до ≈${Math.round(k)} км/нед — плавный переход с недавней нагрузки ≈${Math.round(preStartAnchorKm)} км/нед (дальше план продолжает свою обычную прогрессию).`);}
     }
-    const growCapAbs=Math.max(prev*TUNE.growCap,prev+TUNE.growFloorKm); // на малых объёмах % даёт слишком мелкий шаг — берём больший из (10%, +3 км)
-    if(k>growCapAbs&&i>0)k=growCapAbs; // правило ~10%, но не менее growFloorKm км/нед (недостижимость пика уже отмечена в прогнозе — см. projectFitness)
+    const growCapAbs=Math.max(prev*growCapEff,prev+TUNE.growFloorKm); // на малых объёмах % даёт слишком мелкий шаг — берём больший из (10%×опыт, +3 км)
+    if(k>growCapAbs&&i>0)k=growCapAbs; // правило ~10% (масштабировано опытом), не менее growFloorKm км/нед (недостижимость пика уже отмечена в прогнозе — см. projectFitness)
     if(i===peakIdx)types[i]='peak';
     if(i>0&&i<peakIdx&&(i+1)%downEvery===0){k*=TUNE.downF;types[i]='down';}
     else prev=k;
@@ -1771,8 +1783,10 @@ function recalcEstimate(){
     if(!results.length||!$('goalD').value||!$('startD').value){el.innerHTML='добавьте результаты и даты — покажу прогноз';return;}
     // авто ПАНО-темп из лучшего результата
     const anchor0=bestVdot(results);
+    let autoLtPaceRaw=null;
     if(anchor0&&!ltpaceTouched){const th=paceSet(timeFor(42195,anchor0),timeFor(10000,anchor0)).thr;
-      $('ltpace').value=fmtP(Math.round((th[0]+th[1])/2)); if($('ltpaceHint'))$('ltpaceHint').textContent='подставлен из результатов — можно изменить';}
+      autoLtPaceRaw=(th[0]+th[1])/2;                              // неокруглённое значение — для расчётов; в поле показываем округлённое (только отображение)
+      $('ltpace').value=fmtP(autoLtPaceRaw); if($('ltpaceHint'))$('ltpaceHint').textContent='подставлен из результатов — можно изменить';}
     // недели/восстановление/объём — для рекомендаций
     const N=Math.max(1,Math.floor(dDiff(dParse($('goalD').value),dParse($('startD').value))/7)+1);
     const recF=1+Math.max(0,(+$('age').value||35)-35)*0.015;
@@ -1783,6 +1797,10 @@ function recalcEstimate(){
     const corrBase=VOLCORRIDOR[gd]||VOLCORRIDOR[42195];          // базовый корридор дистанции — для «под цель» (физиология, от опыта не зависит)
     const EXPVOL={novice:0.7,inter:1.0,adv:1.15};                // масштаб корридора объёма по опыту
     const corr=[Math.round(corrBase[0]*(EXPVOL[exp]||1)), Math.round(corrBase[1]*(EXPVOL[exp]||1))]; // корридор опыта — для safeMax и границ рекомендованного
+    // введённый текущий объём — прямое свидетельство уже освоенной нагрузки (факт), тогда как корридор опыта — лишь
+    // оценка по самоотчёту («новичок»/«средний»/...). Если факт выше потолка корридора, доверяем факту и поднимаем
+    // потолок до него (+запас на округление) — иначе safeMin (=curVol) окажется выше safeMax и диапазон инвертируется.
+    if(curVol&&curVol>corr[1])corr[1]=Math.round(curVol*1.03);
     const accV=(+$('slider').value||50)/100;                      // 0 скорость … 1 выносливость (item3: акцент → объём)
     const rampRec=recommendVolume(curVol,gd,N,recF)||0;           // безопасный рост от текущего (~×1.2)
     const workWeeks=Math.max(1,N-2);                              // рабочие недели без подводки
@@ -1804,16 +1822,22 @@ function recalcEstimate(){
       if(anchor0)ambition=clamp((vdGoal-anchor0)/(anchor0*0.06),0,1);
     }
     const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(0.6*clamp(accV,0,1)+0.4*ambition,0,1)); // корридорный ориентир (fallback, если цель не задана)
+    const expFloor=corr[0];                                       // низ корридора опыта — минимальная разумная база для дистанции/опыта
     // «под цель» — фактически требуемый объём: VDOT-класс цели × надбавка за разрыв с формой (podcelRange, на БАЗОВОМ корридоре — физиология, от опыта не зависит).
     let glo=corrBase[0], ghi=corrBase[1], gloHard=corrBase[0];
     if(volUnit!=='h'&&vdGoal){ const r=podcelRange(vdGoal,corrBase,anchor0); glo=r.lo; ghi=r.hi; gloHard=r.loHard; }
-    // «рекомендовано» = физиологическая потребность («под цель»), не ниже низа корридора опыта, не выше безопасного роста (при конфликте приоритет безопасности)
+    // «под цель» — это МИНИМУМ, физиологически достаточный для скромной/поддерживающей цели, а не потолок и не оптимум.
+    // Если человек уже безопасно бегает больше верха этого диапазона (curVol), нет причины советовать снижать объём —
+    // расширяем верх «под цель» до уже освоенного факта, иначе «рекомендовано» окажется выше показанного диапазона
+    // «под цель», и это будет выглядеть как внутреннее противоречие (советуем больше, чем «нужно»).
+    const volFloor=curVol?Math.min(Math.max(expFloor,curVol),safeMax):expFloor;
+    if(volUnit!=='h'&&ghi<volFloor)ghi=volFloor;
+    // «рекомендовано» = физиологическая потребность («под цель»), не ниже низа корридора опыта / уже освоенного объёма, не выше безопасного роста (при конфликте приоритет безопасности)
     const podPoint=(volUnit!=='h'&&vdGoal)?Math.round(glo+(ghi-glo)*clamp(accV,0,1)):goalTarget; // точка в «под цель» по акценту
-    const expFloor=corr[0];                                       // низ корридора опыта — минимальная разумная база для дистанции/опыта
     let baseUnreachable=(volUnit!=='h')&&isFinite(safeMax)&&glo>safeMax+1; // «под цель» выше безопасно достижимого больше чем на 1 км (запас на округление) — цель пока нереалистична (пересчитывается ниже от финальной цели)
     let recPeak;
     if(volUnit==='h'){ recPeak=rampRec||null; }
-    else { recPeak=Math.round(clamp(podPoint, Math.min(expFloor,safeMax), isFinite(safeMax)?safeMax:9999)); }
+    else { recPeak=Math.round(clamp(podPoint, volFloor, isFinite(safeMax)?safeMax:9999)); }
     // объём в поле пока НЕ перезаписываем этим предварительным recPeak (для км/нед): он посчитан от значения цели
     // на начало пересчёта (могло остаться от прошлого цикла с другими курс-поправками) и участвует ниже как cfg.peakVol
     // в прогнозе достижимого времени — если перезаписать поле сейчас, эта неточность попадёт в сам прогноз и будет
@@ -1837,7 +1861,7 @@ function recalcEstimate(){
     const recStr=recommendStrength(gd,volKm,recF,exp); if(!strTouched)$('strength').value=recStr;
     if($('strRec'))$('strRec').textContent='рекомендовано '+recStr+(strTouched?' · задано вручную':'');
     // прогноз
-    const ltp=(()=>{const v=($('ltpace').value||'').trim();if(!v)return null;const q=v.split(':').map(Number);return q.length===2&&!q.some(isNaN)?q[0]*60+q[1]:null;})();
+    const ltp=ltpaceTouched?(()=>{const v=($('ltpace').value||'').trim();if(!v)return null;const q=v.split(':').map(Number);return q.length===2&&!q.some(isNaN)?q[0]*60+q[1]:null;})():autoLtPaceRaw; // вручную — из поля (как ввели); авто — неокруглённое значение, без потери точности из-за отображения
     // Объём («рекомендовано») и достижимое время влияют друг на друга (больше объёма → быстрее форма → другая цель →
     // другой нужный объём), поэтому при авто-объёме сходимся к устойчивой точке в НЕСКОЛЬКО итераций внутри одного
     // пересчёта — иначе результат «доезжает» до правильного значения только через несколько переключений чекбоксов/полей.
@@ -1883,13 +1907,14 @@ function recalcEstimate(){
         const tgtSecClean=ca.toClean(tgtSec);
         const vdF=gd>42195?vdot(42195,riegelInv(tgtSecClean,gd)):vdot(gd,tgtSecClean);
         const rF=podcelRange(vdF,corrBase,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
+        if(ghi<volFloor)ghi=volFloor;                              // тот же довод: не показываем «под цель» уже верхнюю границу ниже освоенного безопасного объёма
         volLimited=isFinite(safeMax)&&(glo>safeMax+1);
         baseUnreachable=isFinite(safeMax)&&(glo>safeMax+1);
         // «рекомендовано» пересчитываем от ФИНАЛЬНОЙ (согласованной) цели, а не от значения поля на начало пересчёта —
         // иначе при смене курс-поправок (жара/рельеф/высота) и любых других вводных цифра «зависает» на переходном значении
         // и не возвращается обратно при отмене изменения.
         const podPointF=glo+(ghi-glo)*clamp(accV,0,1);
-        recPeak=Math.round(clamp(podPointF, Math.min(expFloor,safeMax), isFinite(safeMax)?safeMax:9999));
+        recPeak=Math.round(clamp(podPointF, volFloor, isFinite(safeMax)?safeMax:9999));
       }
       if(peakTouched||Math.abs(recPeak-peakSeed)<1)break;         // сошлись — дальше не итерируем
       peakSeed=recPeak;

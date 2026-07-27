@@ -720,7 +720,8 @@ function buildPlan(cfg){
   normalizeCfg(cfg);
   const hrmax=cfg.sex==='f'?Math.round(206-0.88*(cfg.age||35)):Math.round(208-0.7*(cfg.age||35)); // пол → HRmax (запасная оценка)
   const start=toMonday(dParse(cfg.startISO));
-  if(dISO(start)!==cfg.startISO) notes.push(`Начало плана сдвинуто на понедельник ${fmtDM(start)} — недели считаются с понедельника.`);
+  const leadDays=dISO(start)===cfg.startISO?0:dDiff(dParse(cfg.startISO),start); // дней от понедельника недели 1 до факт. даты старта — делаем их адаптационными
+  if(leadDays>0) notes.push(`Неделя 1 неполная: недели считаются с понедельника, а до Вашей даты старта (${fmtDM(dParse(cfg.startISO))}) ещё ${leadDays} дн. — эти дни сделаны адаптационными (лёгкий бег/отдых, без силовой), качественная тренировка недели при необходимости перенесена на первый тренировочный день.`);
   const marD=dParse(cfg.goalISO||cfg.marathonISO);
   const N=Math.floor(dDiff(marD,start)/7)+1;
   if(N<4) return {error:`До старта всего ${N} нед. — нужно минимум 4, лучше 10+.`};
@@ -788,6 +789,24 @@ function buildPlan(cfg){
     let best=-1,bd=-1; for(let i=0;i<7;i++){ if(TPLr[i]!=='E')continue; const dmin=Math.min.apply(null,qi.map(q=>Math.min((i-q+7)%7,(q-i+7)%7))); if(dmin>bd){bd=dmin;best=i;} }
     if(best>=0)TPLr[best]='Q3'; }
   const strDays=TPLr.map((v,idx)=>({v:v,idx:idx})).filter(o=>o.v==='E'||o.v==='R'||o.v==='-').map(o=>o.idx); if(!strDays.length)strDays.push((longDow+1)%7);
+  // ---- неделя 1: адаптационные дни до факт. старта — переносим качественную (если попала в адаптацию) на первый тренировочный день ----
+  let TPL0=TPLr, strDays0=strDays;
+  if(leadDays>0){
+    TPL0=TPLr.slice();
+    const qLead=TPL0.map((v,idx)=>({v,idx})).filter(o=>o.idx<leadDays&&(o.v==='Q1'||o.v==='Q2'||o.v==='Q3'));
+    qLead.forEach(o=>{
+      const notStr=[]; const anyE=[];
+      for(let j=leadDays;j<7;j++){ if(TPL0[j]==='E'||TPL0[j]==='R'||TPL0[j]==='-'){ if(!strDays.includes(j))notStr.push(j); anyE.push(j); } }
+      const target=notStr[0]!=null?notStr[0]:anyE[0];
+      if(target!=null){ TPL0[target]=o.v; TPL0[o.idx]='-'; }
+    });
+    strDays0=strDays.filter(d=>d>=leadDays);
+    if(!strDays0.length){ // резервный день для силовой недели 1, если все обычные strDays попали в адаптацию
+      let cand=-1; for(let j=leadDays;j<7;j++){ if(TPL0[j]!=='L'){cand=j;break;} }
+      strDays0=[cand>=0?cand:leadDays];
+    }
+  }
+  const sdA0=strDays0[0], sdB0=(strDays0[1]!=null?strDays0[1]:strDays0[0]), sdC0=(strDays0[2]!=null?strDays0[2]:sdB0);
   const sparkDow=(longDow+6)%7;                                                    // день перед длинной (спарка ультры)
   (function(){ if(!cfg.cross)return; var used=new Set([longDow,sparkDow]);          // авто-подбор дней кросса
     cfg.cross.forEach(function(c){c._days=(c.days||[]).slice(); c._days.forEach(function(i){used.add(i);});});
@@ -968,6 +987,9 @@ function buildPlan(cfg){
       const dt=dAdd(wStart,di), iso=dISO(dt);
       const after=dDiff(dt,marD);
       if(after>0){days.push({date:dt,items:[{kind:'rest',label:'—'}]});continue;}
+      if(i===0&&di<leadDays){ // адаптационный день до факт. даты старта — без силовой и качественной, максимум лёгкая трусца
+        days.push({date:dt,items:[{kind:'rest',label:'Отдых (до старта плана)'}]});continue;
+      }
       const easyDay=!!noQualUntil[iso];
       let items=[];
       // --- неделя марафона: фиксированная подводка от даты старта ---
@@ -1019,7 +1041,7 @@ function buildPlan(cfg){
           days.push({date:dt,items});continue;}
       }
       // --- обычные недели по шаблону ---
-      const slot=TPLr[di];
+      const slot=(i===0?TPL0:TPLr)[di];
       if(slot==='-'){days.push({date:dt,items:[{kind:'rest',label:'Отдых'}]});continue;}
       if(slot==='Q1'&&!easyDay&&phase!=='down'){const q=q1For(i,wkm,R,phase);
         items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}]; if(q.note)items[0].note=q.note;}
@@ -1099,7 +1121,7 @@ function buildPlan(cfg){
 
     // --- силовые ---
     const strN=Math.max(0,Math.min(3,+cfg.strength||0));
-    const sdA=strDays[0], sdB=(strDays[1]!=null?strDays[1]:strDays[0]), sdC=(strDays[2]!=null?strDays[2]:sdB);
+    const sdA=i===0?sdA0:strDays[0], sdB=i===0?sdB0:(strDays[1]!=null?strDays[1]:strDays[0]), sdC=i===0?sdC0:(strDays[2]!=null?strDays[2]:sdB);
     if(strN>0&&!raceHere&&phase!=='taper'){
       if(tuneDow<0){
         days[sdA].items.push({kind:'str',...STR_A});

@@ -658,7 +658,11 @@ function projectFitness(cfg){
   if(ca.elev>=300)notes.push(`Учтён набор ~${ca.elev} м (+~${Math.round(ca.elev*0.6/60)} мин к ожидаемому финишу); в план добавлена горочная работа (одна из качественных тренировок — «Горки»).`);
   if(ca.heat)notes.push('Жаркий/сложный старт: к ожидаемому финишу заложено +~3% (в жару держись пульса, а не темпа); на нужный тренировочный объём это не влияет.');
   if(ca.altPct>0)notes.push(`Высокогорье ~${ca.alt} м: к ожидаемому финишу заложено +~${Math.round(ca.altPct*100)}%; нужна акклиматизация (приезд заранее либо «жить высоко — тренироваться низко»).`);
-  const eq=[5000,10000,21097,42195].filter(d=>d<goalDist).map(d=>({dist:d,sec:Math.round(timeFor(d,achGoalVd))}));
+  const equivTime=(d,vd)=>d>42195?riegel(timeFor(42195,vd),d):timeFor(d,vd); // корректно и для ультра (через марафон-эквивалент Ригеля)
+  const stdDists=[5000,10000,21097,42195,60000,80000,100000,120000,160000];
+  const maxDist=Math.max(goalDist, ...(cfg.results||[]).map(r=>r.dist||0));  // «под форму» — макс. из введённых результатов и целевой программы
+  const eqDists=stdDists.filter(d=>d<goalDist||d===maxDist);
+  const eq=eqDists.map(d=>({dist:d,sec:Math.round(equivTime(d,achGoalVd)),curSec:Math.round(equivTime(d,anchorVd))}));
   return {anchorVd,achGoalVd,vdTarget,vG,endGoal,curGoalTime,endGoalDisp,curGoalTimeDisp,N,start,marD,recF,peakKm0,peakKmEff,gain,t10cur,curMarEq,goalDist,GM,eq,notes};
 }
 
@@ -1901,7 +1905,10 @@ function recalcEstimate(){
     let html='';
     html+=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(реалистичная цель)</span>'}${vtxt?' — '+vtxt:''}</div>`;
     html+=`<div style="margin-top:2px">Прогноз к старту: <b>≈${fmtT(ca.toDisp(realistic))}</b></div>`;
-    if(prR.eq.length)html+=`<div style="margin-top:4px">Эквивалент формы:</div><ul style="margin:3px 0 0 18px;padding:0">${prR.eq.map(e=>`<li>${distName(e.dist)} — ${fmtT(e.sec)}</li>`).join('')}</ul>`;
+    if(prR.eq.length)html+=`<div style="margin-top:4px">Эквивалент формы:</div><table style="margin:3px 0 0;border-collapse:collapse;font-size:12.5px">`+
+      `<tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Дистанция</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Целевая форма</td></tr>`+
+      prR.eq.map(e=>`<tr><td style="padding:1px 10px 1px 0">${distName(e.dist)}</td><td style="padding:1px 10px">${fmtT(e.curSec)}</td><td style="padding:1px 0"><b>${fmtT(e.sec)}</b></td></tr>`).join('')+
+      `</table>`;
     const rec=recommendAccent(results,gd); const acc=rec.val>0.6?'выносливость':rec.val<0.4?'скорость':'баланс';
     html+=`<div style="margin-top:6px;color:var(--muted)">Рекомендуемый акцент: <b>${acc}</b> — ${rec.reason}${sliderTouched?' <span style="opacity:.7">(ползунок задан вручную)</span>':''}</div>`;
     el.innerHTML=html;

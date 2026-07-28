@@ -789,7 +789,13 @@ function buildPlan(cfg){
   else if(nQual===3){ const qi=TPLr.map((v,i)=>({v,i})).filter(x=>x.v==='Q1'||x.v==='Q2'||x.v==='L').map(x=>x.i);
     let best=-1,bd=-1; for(let i=0;i<7;i++){ if(TPLr[i]!=='E')continue; const dmin=Math.min.apply(null,qi.map(q=>Math.min((i-q+7)%7,(q-i+7)%7))); if(dmin>bd){bd=dmin;best=i;} }
     if(best>=0)TPLr[best]='Q3'; }
-  const strDays=TPLr.map((v,idx)=>({v:v,idx:idx})).filter(o=>o.v==='E'||o.v==='R'||o.v==='-').map(o=>o.idx); if(!strDays.length)strDays.push((longDow+1)%7);
+  // силовые дни выбираем не просто по порядку, а по максимальной дистанции до ближайшей качественной/длинной —
+  // иначе силовая систематически ложится вплотную (день до/после) к Q1/Q2/Q3/L, что вредно для восстановления
+  const qlIdxForStr=TPLr.map((v,i)=>({v,i})).filter(x=>x.v==='Q1'||x.v==='Q2'||x.v==='Q3'||x.v==='L').map(x=>x.i);
+  const distFromQL=idx=>qlIdxForStr.length?Math.min.apply(null,qlIdxForStr.map(q=>Math.min((idx-q+7)%7,(q-idx+7)%7))):7;
+  const strDays=TPLr.map((v,idx)=>({v:v,idx:idx})).filter(o=>o.v==='E'||o.v==='R'||o.v==='-').map(o=>o.idx)
+    .sort((a,b)=>distFromQL(b)-distFromQL(a)||a-b);
+  if(!strDays.length)strDays.push((longDow+1)%7);
   // ---- неделя 1: адаптационные дни до факт. старта — переносим качественную (если попала в адаптацию), но НЕ на самый первый тренировочный день ----
   let TPL0=TPLr, strDays0=strDays;
   if(leadDays>0){
@@ -809,6 +815,12 @@ function buildPlan(cfg){
       let cand=-1; for(let j=leadDays;j<7;j++){ if(TPL0[j]!=='L'&&!usedForQ.has(j)){cand=j;break;} }
       strDays0=[cand>=0?cand:leadDays];
     }
+    // качественная недели 1 могла переехать (relocate) на другой день из-за адаптационных дней —
+    // пересортировать кандидатов силовой под ФАКТИЧЕСКОЕ положение Q/L в TPL0, иначе неделя 1 всё равно
+    // получает силовую вплотную к качественной (сортировка выше считалась по исходному TPLr, до переноса)
+    const qlIdx0=TPL0.map((v,i)=>({v,i})).filter(x=>x.v==='Q1'||x.v==='Q2'||x.v==='Q3'||x.v==='L').map(x=>x.i);
+    const distQL0=idx=>qlIdx0.length?Math.min.apply(null,qlIdx0.map(q=>Math.min((idx-q+7)%7,(q-idx+7)%7))):7;
+    strDays0=strDays0.slice().sort((a,b)=>distQL0(b)-distQL0(a)||a-b);
   }
   const sdA0=strDays0[0], sdB0=(strDays0[1]!=null?strDays0[1]:strDays0[0]), sdC0=(strDays0[2]!=null?strDays0[2]:sdB0);
   const sparkDow=(longDow+6)%7;                                                    // день перед длинной (спарка ультры)
@@ -996,6 +1008,24 @@ function buildPlan(cfg){
       }
       const easyDay=!!noQualUntil[iso];
       let items=[];
+      // --- подводка последних 5 дней перед стартом: считаем от даты гонки напрямую,
+      // а не по шаблону недели — иначе, если marD не воскресенье, эти дни попадают
+      // в предыдущую (не «гоночную») неделю и получают обычный слот шаблона (в т.ч. длинную вплотную к старту).
+      const ddPre=dDiff(marD,dt);
+      if(!raceHere&&ddPre>=1&&ddPre<=5){
+        if(ddPre===1)items=[{kind:'run',z:'rec',name:'Восстановительный выезд',steps:[easyS(22),strides(3,R)]}];
+        else if(ddPre===2)items=[{kind:'rest',label:'Отдых (или трусца 25 мин)'}];
+        else if(ddPre===3)items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(32),strides(4,R)]}];
+        else if(ddPre===4)items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(35)]}];
+        else {let t;
+          if(isUltra)t={z:'easy',name:'Спокойный бег + ускорения',steps:[easyS(30),strides(4,R)]};
+          else if(goalDist>=42000)t={z:'mp',name:'Настройка 3x1000 @МР',steps:[warm(12),repsD(3,1000,R.mp,90),strides(4,R),cool(8)]};
+          else if(goalDist>=21000){const H=hmp(R);t={z:'thr',name:'Настройка-порог 3x1000 @ПМ',steps:[warm(12),repsD(3,1000,H,90),strides(4,R),cool(8)]};}
+          else if(goalDist>=10000)t={z:'vo2',name:'Настройка 4x400 остро',steps:[warm(12),repsD(4,400,R.rep,90),strides(4,R),cool(8)]};
+          else t={z:'vo2',name:'Острая настройка 3x400 @5к',steps:[warm(12),repsD(3,400,R.race5,90),strides(3,R),cool(8)]};
+          items=[{kind:'run',z:t.z,name:t.name,steps:t.steps}];}
+        days.push({date:dt,items});continue;
+      }
       // --- неделя марафона: фиксированная подводка от даты старта ---
       if(raceHere){
         const dd=dDiff(marD,dt); // дней до старта
@@ -1143,12 +1173,17 @@ function buildPlan(cfg){
     // --- силовые ---
     const strN=Math.max(0,Math.min(3,+cfg.strength||0));
     const sdA=i===0?sdA0:strDays[0], sdB=i===0?sdB0:(strDays[1]!=null?strDays[1]:strDays[0]), sdC=i===0?sdC0:(strDays[2]!=null?strDays[2]:sdB);
+    // «N лёгких дней после старта» (noQualUntil) должно означать отсутствие полновесной силовой, а не только качественной —
+    // иначе на следующий день после промежуточного/главного старта всё равно ставится Силовая A/B в полную нагрузку.
+    const isRecoveryDay=idx=>!!noQualUntil[dISO(days[idx].date)];
+    const pushStr=(idx,item)=>{ if(isRecoveryDay(idx))days[idx].items.push({kind:'str',...STR_COR});
+      else days[idx].items.push({kind:'str',...item}); };
     if(strN>0&&!raceHere&&phase!=='taper'){
       if(tuneDow<0){
-        days[sdA].items.push({kind:'str',...STR_A});
-        if(strN>=2&&phase!=='down')days[sdB].items.push({kind:'str',...STR_B});
-        if(strN>=3&&phase!=='down')days[sdC].items.push({kind:'str',...STR_C});
-      } else if(tuneDow>=4){days[sdA].items.push({kind:'str',...STR_A});}
+        pushStr(sdA,STR_A);
+        if(strN>=2&&phase!=='down')pushStr(sdB,STR_B);
+        if(strN>=3&&phase!=='down')pushStr(sdC,STR_C);
+      } else if(tuneDow>=4){pushStr(sdA,STR_A);}
     } else if(strN>0&&phase==='taper'){days[sdA].items.push({kind:'str',...STR_COR});}
     // --- кросс-тренировки (лыжи/бассейн/велосипед) ---
     if(cfg.cross&&cfg.cross.length&&!raceHere&&phase!=='taper'){
@@ -1197,7 +1232,7 @@ function buildPlan(cfg){
     curGoalTime,endGoal,tgtGoal:cfg.tgtGoal||null,
     equiv:proj.eq.map(e=>({dist:e.dist,name:distName(e.dist),sec:e.sec})),
     endMar,end10,recF:+recF.toFixed(2),taperW,downEvery,postRaceEasy,notes,N,
-    peakReal:Math.round(Math.max(...kms)),hrmax,lthr:cfg.lthr||null,
+    peakReal:Math.round(Math.max(...weeks.map(w=>w.km))),hrmax,lthr:cfg.lthr||null,
     zbpm:cfg.lthr?{1:zbpm(1,cfg.lthr,hrmax),2:zbpm(2,cfg.lthr,hrmax),3:zbpm(3,cfg.lthr,hrmax),4:zbpm(4,cfg.lthr,hrmax),5:zbpm(5,cfg.lthr,hrmax)}:null};
   analysis.tuneList=tune.map(t=>{const wi=Math.floor(dDiff(t.d,start)/7);
     return {iso:dISO(t.d),dist:t.dist,name:distName(t.dist),pred:Math.round(timeFor(t.dist,lerp(anchorVd,achGoalVd,clamp(wi/buildEnd,0,1))))};});
@@ -1482,12 +1517,18 @@ function renderStepsEditor(){
   updateNotePreview();
 }
 function isRaceEffort(steps){
-  return steps.some(s=>(s.end==='distance'&&s.v>=9500)||(s.t==='repeat'&&s.steps.some(x=>x.end==='distance'&&x.v>=9500)));
+  // порог синхронизирован с raceLong в buildPlan(): фуэлинг в самой гонке нужен только от полумарафона (21,1 км) и длиннее —
+  // 10 км/5 км пробегаются быстрее ~1ч, мид-рейс углеводы там не нужны (и раньше по ошибке добавлялись при >=9500 м)
+  return steps.some(s=>(s.end==='distance'&&s.v>=21000)||(s.t==='repeat'&&s.steps.some(x=>x.end==='distance'&&x.v>=21000)));
 }
 function fuelForWorkout(w,cfgRef){
   if(!w||w.kind!=='run'||!w.steps)return null;
   const weight=(cfgRef&&cfgRef.weight)||60;
-  return fuelFor(sesMinNoR(w.steps),weight,isRaceEffort(w.steps));
+  const long21=isRaceEffort(w.steps);
+  // сама гонка короче полумарафона — без фуэлинга вообще (10к/5к добегаются быстрее ~1ч), синхронно с buildPlan():
+  // там это отдельный ранний return, здесь тот же эффект даёт полный skip, а не просто понижение тарифа г/ч.
+  if(zoneOfW(w)==='race'&&!long21)return null;
+  return fuelFor(sesMinNoR(w.steps),weight,long21);
 }
 function updateNotePreview(){
   const cfgRef=(LAST&&LAST.cfg)||(META&&META.cfg)||null;
@@ -2056,7 +2097,8 @@ function keyPrinciplesHtml(p){
     const nm=a.tuneList.length>1?'Промежуточные старты':'Промежуточный старт';
     items.push(`<p><b>${nm}.</b> ${a.tuneList.map(t=>`${fmtDM(dParse(t.iso))} — ${t.name}${t.pred?' · прогноз ≈'+fmtT(t.pred):''}`).join('; ')}. Используй как калибровку темпа и заострение перед главным стартом.</p>`);
   }
-  items.push(`<p><b>Питание на длинных.</b> У длинных и качественных тренировок указана рекомендуемая доза углеводов (г/ч, всего и ≈ число гелей по 25 г) — это «тренировка кишечника»: норма растёт по ходу цикла к марафонской. Используй гель 2:1 (глюкоза:фруктоза), запивай водой; короткие/восстановительные — по самочувствию.</p>`);
+  const carbTarget=a.goalDist>=42000?'марафонской':a.goalDist>=21000?'полумарафонской':'гоночной';
+  items.push(`<p><b>Питание на длинных.</b> У длинных и качественных тренировок указана рекомендуемая доза углеводов (г/ч, всего и ≈ число гелей по 25 г) — это «тренировка кишечника»: норма растёт по ходу цикла к ${carbTarget}. Используй гель 2:1 (глюкоза:фруктоза), запивай водой; короткие/восстановительные — по самочувствию.</p>`);
   const kms=(p.weeks||[]).map(w=>w.km).filter(k=>k>0);
   const mins=(p.weeks||[]).map(w=>w.min).filter(m=>m>0);
   if(kms.length){

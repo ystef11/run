@@ -1326,7 +1326,7 @@ const ZPACE_DEF={1:380,2:330,3:280,4:255,5:235}; // Z1..Z5, сек/км
 let ZPACE={...ZPACE_DEF};
 function setZPaceFrom(cfgRef){
   try{
-    if(cfgRef&&cfgRef.cur10){
+    if(cfgRef&&cfgRef.cur10){ // старый формат cfg (cur10/curMar/tgt10/tgtMar) — оставлен для совместимости
       const curM=cfgRef.curMar||Math.round(cfgRef.cur10*4.61); // Ригель 10к→марафон
       const R0=paceSet(curM,cfgRef.cur10);
       let R=R0;
@@ -1336,6 +1336,23 @@ function setZPaceFrom(cfgRef){
       }
       ZPACE={1:mid(R.rec),2:mid(R.easy),3:mid(R.mp),4:mid(R.thr),5:mid(R.vo2)};
       return;
+    }
+    // актуальный формат cfg (cfg.results=[{dist,sec}]) — тот же путь, что и в projectFitness/buildPlan,
+    // иначе (без cur10) ZPACE тихо откатывался на общие дефолты (Z2≈5:30/км), сильно быстрее реального
+    // темпа медленных бегунов — km в редакторе/экспортированной таблице считались с завышением на 30-40%
+    // относительно того, что действительно заложено в самих неделях (там используется недельный R, не ZPACE).
+    if(cfgRef&&cfgRef.results&&cfgRef.results.length){
+      const proj=projectFitness(cfgRef);
+      if(proj&&proj.anchorVd!=null){
+        const R0=paceSet(timeFor(42195,proj.anchorVd),timeFor(10000,proj.anchorVd));
+        let R=R0;
+        if(proj.achGoalVd!=null){
+          const R1=paceSet(timeFor(42195,proj.achGoalVd),timeFor(10000,proj.achGoalVd));
+          R={}; for(const k in R0)R[k]=lerpR(R0[k],R1[k],0.5);
+        }
+        ZPACE={1:mid(R.rec),2:mid(R.easy),3:mid(R.mp),4:mid(R.thr),5:mid(R.vo2)};
+        return;
+      }
     }
   }catch(e){}
   ZPACE={...ZPACE_DEF};

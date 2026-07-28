@@ -761,7 +761,8 @@ function buildPlan(cfg){
     easyMin:[25,75],      // клампы лёгкого дня, мин
     recMin:[25,45],       // клампы восстановительного дня, мин
     tuneVol:{m:.70,h:.80,t:.85},// объём недели промеж. старта: марафон/половинка/10к
-    peakRestore:.95       // мин. доля пика при переносе пиковой недели (коллизия со стартом)
+    peakRestore:.95,      // мин. доля пика при переносе пиковой недели (коллизия со стартом)
+    easyStretchCap:1.35   // насколько можно растянуть лёгкий/восст. день сверх обычного клэмпа при нехватке гибких дней (безопасный потолок роста)
   };
   // ---- восстановление и структура ----
   const elevGain=+cfg.elevGain||0;
@@ -1114,9 +1115,26 @@ function buildPlan(cfg){
       const flex=days.flatMap(d=>d.items.filter(x=>x.kind==='run'&&(x.z==='easy'||x.z==='rec')&&!x.fixed));
       let rest=Math.max(0,wkm-fixedKm);
       const wsum=flex.reduce((a,x)=>a+(x.z==='easy'?1:0.7),0)||1;
+      // базовый клэмп масштабируем по фазе роста этой недели (0.8 у старта роста → 1.0 к пику) — чтобы дефицит
+      // гибких дней не «телепортировал» раннюю неделю к пиковым длительностям в обход общей рамп-кривой недели.
+      const phaseCapMult=lerp(0.8,1.0,prog);
+      const easyMaxBase=TUNE.easyMin[1]*phaseCapMult, recMaxBase=TUNE.recMin[1]*phaseCapMult;
+      const paceOf=z=>z==='easy'?mid(R.easy):mid(R.rec);
+      const cappedKm=flex.reduce((a,x)=>a+(x.z==='easy'?easyMaxBase:recMaxBase)*60/paceOf(x.z),0);
+      const deficitKm=Math.max(0,rest-cappedKm);
+      // при нехватке гибких дней разрешаем клэмпу расти пропорционально дефициту, но не выше easyStretchCap —
+      // это тот же принцип "безопасного роста", что и в общей рамп-кривой объёма (RAMP_GROW_CAP), только для одного дня.
+      const stretchMult=deficitKm>0?clamp(1+deficitKm/Math.max(1,cappedKm),1,TUNE.easyStretchCap):1;
+      const easyMax=easyMaxBase*stretchMult, recMax=recMaxBase*stretchMult;
+      if(stretchMult>1.02)notes.push(`Неделя ${i+1}: гибких (лёгких/восст.) дней мало для целевого объёма ≈${Math.round(wkm)} км — длительность увеличена до ${Math.round(easyMax)} мин вместо обычных ${Math.round(easyMaxBase)} (в пределах безопасного потолка растяжения).`);
+      // км ускорений в конце лёгкого дня — не «бесплатные»: вычитаем их из бюджета блока, иначе они накапливаются
+      // сверх недельной цели (при 2 лёгких днях/нед — систематическое превышение на ~2-3 км/нед).
+      const strideKm=(phase!=='taper')?stepKm(strides(strideN,R),R):0;
       flex.forEach(x=>{const share=rest*(x.z==='easy'?1:0.7)/wsum;
-        const p=x.z==='easy'?mid(R.easy):mid(R.rec);
-        let m=r5(clamp(Math.round(share*p/60),x.z==='easy'?TUNE.easyMin[0]:TUNE.recMin[0],x.z==='easy'?TUNE.easyMin[1]:TUNE.recMin[1]));
+        const p=paceOf(x.z);
+        const addKm=(x.z==='easy'&&phase!=='taper')?strideKm:0;
+        const blockKm=Math.max(0,share-addKm);
+        let m=r5(clamp(Math.round(blockKm*p/60),x.z==='easy'?TUNE.easyMin[0]:TUNE.recMin[0],x.z==='easy'?easyMax:recMax));
         x.steps=[x.z==='easy'?easyS(m):recS(m)];
         if(x.z==='easy'&&phase!=='taper')x.steps.push(strides(strideN,R));
         x.name=x.z==='easy'?'Лёгкий':(x.dbl2?'Восстановительный (2-я трен.)':'Восстановительный');});

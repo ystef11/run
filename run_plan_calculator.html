@@ -700,7 +700,11 @@ const describe=steps=>steps.map(_prose).join(' · ');
 
 // ================= силовые =================
 const STR_A={name:'Силовая A',mins:25,desc:'Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.'};
-const STR_B={name:'Силовая B',mins:20,desc:'Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Выпрыгивания 3×6; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.'};
+// Выпрыгивания (плиометрика) убраны из Силовой B: в недельном шаблоне этот день почти всегда стоит вплотную
+// к пороговой/специфической тренировке (день до или после Q1/Q2/L) — прыжковая нагрузка там мешает свежести
+// ног перед ключевой тренировкой или восстановлению после неё (см. ревью плана). Оставлены только силовые/
+// техничные элементы; лёгкие беговые дрилы (skip/захлёст) — не ударная плиометрика, безопасны в любой день.
+const STR_B={name:'Силовая B',mins:20,desc:'Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.'};
 const STR_COR={name:'Кор',mins:15,desc:'Кор. Планка 3×45с; боковая 3×30с/сторона; мёртвый жук 3×10; супермен 3×12.'};
 const STR_C={name:'Силовая C',mins:20,desc:'Силовая C. Становая на одной ноге 3×8/ногу; Зашагивания на опору 3×8/ногу; Подъёмы таза на одной ноге 3×10/ногу; Скакалка 3×40; Кор: боковая планка 3×30с/сторона, антиротация 3×10/сторона.'};
 
@@ -992,6 +996,13 @@ function buildPlan(cfg){
       // ВАЖНО: названия не должны содержать "Порог" или голое "Темп" (без "10к" сразу после) — классификатор зон
       // (zoneOfW) по регэкспу принял бы их за пороговые, хотя по факту это vo2; используем безопасные ключевые
       // слова из его же vo2-ветки ("МПК"/"Ступени"/"Быстрые" и т.п., см. комментарий у марафонской ветки выше).
+      // короткая быстрая работа (300 м, полное восстановление) в ротации ниже почти не выпадает при коротких
+      // циклах (мало spec/peak недель) — гарантируем её хотя бы раз, в пиковую неделю перед стартом (см. ревью плана)
+      if(phase==='peak'){
+        const sp=Math.max(5,n+2);
+        return {nm:`Быстрые ${sp}x300`,z:'vo2',steps:[warm(15),repsD(sp,300,R.rep,90),cool(10)],
+          note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'};
+      }
       const rot=[{nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90)},
                  {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120)},
                  {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150)},
@@ -1009,6 +1020,13 @@ function buildPlan(cfg){
       // ВАЖНО: названия не должны содержать "Порог" или голое "Темп" (без "10к" сразу после) — классификатор зон
       // (zoneOfW) по регэкспу принял бы их за пороговые/лёгкие, хотя по факту это vo2; используем безопасные
       // ключевые слова из его же vo2-ветки ("МПК"/"Ступени"/"Быстрые" и т.п.).
+      // короткая быстрая работа (200 м, полное восстановление) в ротации ниже почти не выпадает при коротких
+      // циклах (мало spec/peak недель) — гарантируем её хотя бы раз, в пиковую неделю перед стартом (см. ревью плана)
+      if(phase==='peak'){
+        const sp=Math.max(6,n+3);
+        return {nm:`Быстрые ${sp}x200`,z:'vo2',steps:[warm(15),repsD(sp,200,R.rep,90),cool(10)],
+          note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'};
+      }
       const rot=[{nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90)},
                  {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120)},
                  {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150)},
@@ -1300,11 +1318,28 @@ function buildPlan(cfg){
             items=[{kind:'run',z:'long',name:v.nm,steps:v.st}];
           } else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)}`,steps:[longE(Math.round(lrMin)),strides(4,R)]}];
         } else {
-          const tFin=(phase==='spec'||phase==='peak')&&i%2===1&&phase!=='down';
-          if(tFin){const fm=Math.round(lerp(10,15,prog));
-            items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} концовка порог ${fm}'`,
-              steps:[longE(Math.round(lrMin-fm)),st('interval','time',fm*60,PCT(R.thr),'Концовка порог')]}];}
-          else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)}`,steps:[longE(Math.round(lrMin)),strides(4,R)]}];
+          const tSpec=(phase==='spec'||phase==='peak')&&phase!=='down';
+          // разнообразие длинных для 10к/5к вместо единственного формата "концовка порог" (см. ревью плана):
+          // концовка порог / блок порога в середине / прогрессивная (легко → средне → порог); частота — как у ПМ выше
+          const doSpecific10=tSpec&&(s>0.65?true:s<0.35?(i%3!==0):(i%2===0));
+          if(doSpecific10){
+            const fm=Math.round(lerp(10,15,prog));
+            const MID10=[(R.easy[0]+R.thr[0])/2,(R.easy[1]+R.thr[1])/2];
+            const variants10=[
+              {nm:`Длинная ${hm(lrMin)} концовка порог ${fm}'`,
+                st:[longE(Math.round(lrMin-fm)),st('interval','time',fm*60,PCT(R.thr),'Концовка порог')]},
+              {nm:`Длинная ${hm(lrMin)} 2x${Math.round(fm*0.6)}' порог`,
+                st:[longE(Math.round(lrMin*0.35)),
+                    rp(2,[st('interval','time',Math.round(fm*0.6)*60,PCT(R.thr),'Порог блок'),st('recovery','time',240,HRZ(2))]),
+                    longE(Math.max(15,Math.round(lrMin-lrMin*0.35-fm*1.2)))]},
+              {nm:`Длинная ${hm(lrMin)} прогрессивная`,
+                st:[longE(Math.round(lrMin*0.5)),
+                    st('interval','time',Math.round(lrMin*0.3)*60,PCT(MID10),'Средний темп'),
+                    st('interval','time',Math.round(lrMin*0.2)*60,PCT(R.thr),'Ускорение к финишу')]}
+            ];
+            const v=variants10[i%variants10.length];
+            items=[{kind:'run',z:'long',name:v.nm,steps:v.st}];
+          } else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)}`,steps:[longE(Math.round(lrMin)),strides(4,R)]}];
         }}
       else if(slot==='R'||easyDay){items=[{kind:'run',z:'rec',name:'Восстановительный',steps:[recS(35)]}];}
       else {items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(45)]}];} // placeholder, длит. подгоним ниже
@@ -1336,7 +1371,7 @@ function buildPlan(cfg){
     if(!raceHere){
       const fixedKm=days.reduce((a,d)=>a+d.items.filter(x=>x.kind==='run'&&x.z!=='easy'&&x.z!=='rec')
         .reduce((b,x)=>b+sesKm(x.steps,R),0),0);
-      const flex=days.flatMap(d=>d.items.filter(x=>x.kind==='run'&&(x.z==='easy'||x.z==='rec')&&!x.fixed));
+      const flex=days.flatMap((d,di)=>d.items.filter(x=>x.kind==='run'&&(x.z==='easy'||x.z==='rec')&&!x.fixed).map(x=>{x._di=di;return x;}));
       let rest=Math.max(0,wkm-fixedKm);
       const wsum=flex.reduce((a,x)=>a+(x.z==='easy'?1:0.7),0)||1;
       // базовый клэмп масштабируем по фазе роста этой недели (0.8 у старта роста → 1.0 к пику) — чтобы дефицит
@@ -1362,7 +1397,13 @@ function buildPlan(cfg){
         // разнообразим лёгкие дни: не всегда «объём + страйды» — раз в 3 такой день делаем прогрессивным
         // (последняя треть быстрее, ближе к МР), иначе они все выполняют одну и ту же функцию.
         if(x.z==='easy'&&phase!=='taper'&&m>=40){
-          const v=easyVarCounter++%3;
+          const rawV=easyVarCounter++%3;
+          // не ставим прогрессивную концовку, если на следующий день порог/МПК/МР/длинная/гонка — иначе
+          // получается два повышенно-нагрузочных дня подряд перед ключевой тренировкой (см. ревью плана
+          // про кластеризацию качественных дней); в этом случае откатываемся к обычному лёгкому.
+          const nd=days[(x._di+1)%7];
+          const nextHard=!!(nd&&nd.items.some(it=>it.kind==='run'&&(it.z==='thr'||it.z==='vo2'||it.z==='mp'||it.z==='long'||it.z==='race')));
+          const v=(rawV===1&&nextHard)?0:rawV;
           if(v===1){ const fin=clamp(r5(Math.round(m/3)),8,15);
             x.steps=[easyS(m-fin),st('interval','time',fin*60,PCT(R.mp),'Прогрессивно быстрее')];
             x.name='Лёгкий прогрессивный';

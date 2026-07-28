@@ -747,6 +747,16 @@ function buildPlan(cfg){
   const vdAt=i=>lerp(anchorVd,achGoalVd,clamp(i/buildEnd,0,1));
 
   const peakKm=cfg.peakKm;
+  // восстановительный день не должен быть жёстко "не длиннее 45 мин" при любом объёме — при большом недельном
+  // километраже (60+ км/нед) короткое восстановление съедает слишком мало объёма и перегружает лёгкие/качественные
+  // дни. Верхний клэмп растёт вместе с пиковым объёмом (35 мин при ~50 км/нед → 60 мин при ~120 км/нед), но не выше
+  // 60 — дольше восстановительный по времени на ногах уже сам создаёт усталость и теряет смысл разгрузки.
+  const recCapByVol=Math.round(clamp(lerp(35,60,clamp((peakKm-50)/70,0,1)),35,60));
+  // нижний пол тоже должен расти с объёмом — иначе при большом недельном километраже "гибкого" бюджета часто не
+  // хватает, и восстановительный всё равно упирается в старые фиксированные 25 мин (см. ревью плана: 25 мин при
+  // 85-93 км/нед — мало). 25 мин при ~50 км/нед → 40 мин при ~120 км/нед; дополнительный объём в среднем полезнее,
+  // чем вреден (при условии, что пульс реально держится низким).
+  const recFloorByVol=Math.round(clamp(lerp(25,40,clamp((peakKm-50)/70,0,1)),25,40));
   // ---- настроечные коэффициенты генератора (все "магические числа" здесь) ----
   const TUNE={
     startShare:RAMP_START_SHARE, // старт объёма, доля пика
@@ -759,7 +769,7 @@ function buildPlan(cfg){
     maxLongMin:GM.maxLongMin,// потолок длинной, мин (из модели дистанции)
     qDiv:16,qMin:3,qMax:7,// повторы качественной: ~км/нед / qDiv, кламп
     easyMin:[25,75],      // клампы лёгкого дня, мин
-    recMin:[25,45],       // клампы восстановительного дня, мин
+    recMin:[recFloorByVol,recCapByVol], // клампы восстановительного дня, мин — обе границы масштабируются объёмом
     tuneVol:{m:.70,h:.80,t:.85},// объём недели промеж. старта: марафон/половинка/10к
     peakRestore:.95,      // мин. доля пика при переносе пиковой недели (коллизия со стартом)
     easyStretchCap:1.35   // насколько можно растянуть лёгкий/восст. день сверх обычного клэмпа при нехватке гибких дней (безопасный потолок роста)
@@ -785,8 +795,9 @@ function buildPlan(cfg){
   const nQual=(function(){ let q=2;                                              // число качественных/нед от объёма и опыта
     if(peakKm<45||(cfg.exp==='novice'&&peakKm<70))q=1;
     if(peakKm>110&&cfg.exp==='adv'&&runs>=6)q=3; return q; })();
-  if(nQual===1){ TPLr=TPLr.map(v=>v==='Q2'?'E':v); }
-  else if(nQual===3){ const qi=TPLr.map((v,i)=>({v,i})).filter(x=>x.v==='Q1'||x.v==='Q2'||x.v==='L').map(x=>x.i);
+  // nQual===1 (низкий объём/новичок): Q2 не убираем совсем — иначе порог пропадает из плана целиком;
+  // вместо этого ниже (в ветке Q2) чередуем облегчённый порог через неделю с лёгким бегом.
+  if(nQual===3){ const qi=TPLr.map((v,i)=>({v,i})).filter(x=>x.v==='Q1'||x.v==='Q2'||x.v==='L').map(x=>x.i);
     let best=-1,bd=-1; for(let i=0;i<7;i++){ if(TPLr[i]!=='E')continue; const dmin=Math.min.apply(null,qi.map(q=>Math.min((i-q+7)%7,(q-i+7)%7))); if(dmin>bd){bd=dmin;best=i;} }
     if(best>=0)TPLr[best]='Q3'; }
   // силовые дни выбираем не просто по порядку, а по максимальной дистанции до ближайшей качественной/длинной —
@@ -835,8 +846,25 @@ function buildPlan(cfg){
   const tune=(cfg.tuneRaces||(cfg.tuneISO||[]).map(x=>({iso:x,dist:10000})))
     .map(t=>({d:dParse(t.iso),dist:+t.dist||10000}))
     .filter(t=>t.d>start&&t.d<marD).sort((a,b)=>a.d-b.d).slice(0,8);
-  const tuneIdx=tune.map(t=>Math.floor(dDiff(t.d,start)/7));
   const distName=x=>x>=160000?'160 КМ':x>=120000?'120 КМ':x>=100000?'100 КМ':x>=80000?'80 КМ':x>=60000?'60 КМ':x>=42000?'42,2 КМ':x>=21000?'21,1 КМ':x>=10000?'10 КМ':'5 КМ';
+  // ---- авто-контрольный тест: если в окне 3–4 нед. до старта нет ни одного промежуточного старта — добавляем
+  // самостоятельный контрольный тест (паркран/соло-ТТ, без регистрации) для калибровки темпа под саму дистанцию
+  // цели (см. ревью плана — без него негде свериться со специфическим темпом перед финишем, кроме дальнего тюна).
+  if(!isUltra&&cfg.autoTest!==false){
+    const winStart=dAdd(marD,-28),winEnd=dAdd(marD,-21);
+    if(!tune.some(t=>t.d>=winStart&&t.d<=winEnd)){
+      let td=dAdd(marD,-24);                                          // ориентир ~3.5 нед. до старта
+      while(td.getDay()!==6&&td<winEnd)td=dAdd(td,1);                 // подвинуть на субботу (паркран-традиция), если рамки позволяют
+      if(td<winStart||td>winEnd)td=dAdd(marD,-24);                    // иначе — просто дата-ориентир без привязки ко дню недели
+      if(td>start&&td<marD){
+        const testDist=goalDist<=5000?3000:goalDist<10000?5000:goalDist<42000?10000:21097;
+        tune.push({d:td,dist:testDist,auto:true});
+        notes.push(`Добавлен контрольный тест (самостоятельный, без регистрации) за ~${Math.round(dDiff(marD,td)/7)} нед. до старта — ${distName(testDist)} для калибровки темпа перед главным стартом.`);
+      }
+    }
+  }
+  tune.sort((a,b)=>a.d-b.d);
+  const tuneIdx=tune.map(t=>Math.floor(dDiff(t.d,start)/7));
   const distPace=(R,x)=>x>=42000?R.mp:x>=21000?[(R.mp[0]+R.thr[0])/2,(R.mp[1]+R.thr[1])/2]:R.race10;
   const tuneVolF=x=>x>=60000?TUNE.tuneVol.m*clamp(1-0.15*clamp((x-42195)/(160000-42195),0,1),0.5,1):x>=42000?TUNE.tuneVol.m:x>=21000?TUNE.tuneVol.h:TUNE.tuneVol.t;
   const tuneRecDays=x=>Math.ceil(postRaceEasy*(x>=60000?3+2*clamp((x-42195)/(160000-42195),0,1):x>=42000?3:x>=21000?1.7:1));
@@ -891,9 +919,104 @@ function buildPlan(cfg){
     return {nm:`Подъёмы ${m}x${dur}'`,z:'thr',
       steps:[warm(12),rp(m,[st('interval','time',dur*60,HRZ(3),'Затяжной подъём'),st('recovery','time',180,HRZ(1),'Вниз трусцой')]),cool(8)],
       note:'Затяжные подъёмы по пульсу Z3 — силовая выносливость под рельеф трассы; вниз — трусцой восстановительно.'};};
-  const q1For=(i,w,R,phase)=>{const n=nQ(w),k=i%4;
+  // МАРАФОН: единая "неделя МР" — определяет, будет ли на этой неделе Q2 сам марафонский темп (а не порог).
+  const marMpTurn=(i,prog)=>{const inSp=i>=Math.round(N*GM.specFrac);
+    return (inSp&&prog>0.6)?true:(s>0.65?(i%2===1):s<0.35?(i%3===2):(i%2===0));};
+  // МАРАФОН: будет ли Q2 в эту неделю порогом — учитывает ВСЕ ветки логики Q2 (обычную q2For/marMpTurn
+  // и урезанную для nQual===1, где Q2 чередует порог/лёгкий просто по чётности недели, без marMpTurn).
+  // Используется, чтобы Q1 переключался на порог ТОЛЬКО когда Q2 сам этой недели порогом не будет —
+  // иначе неделя получает два порога подряд (см. ревью плана про избыток пороговой работы).
+  const q2WillBeThr=(i,phase,prog)=>{
+    if(phase==='down'||phase==='taper')return false;
+    if(nQual===1)return i%2===0;
+    const inSp=i>=Math.round(N*GM.specFrac);
+    return !(inSp&&marMpTurn(i,prog));
+  };
+  // ПОЛУМАРАФОН: аналог marMpTurn для Q1 — как часто в spec/peak Q1 уходит с МПК на ПМ-темп/порог
+  // (см. q1For). Частота — от акцента s, той же логикой, что и default-ротации ниже (s<0.35/s>0.65):
+  // выносливость уходит с МПК чаще (через неделю), скорость реже (раз в 3 недели), середина — через неделю.
+  const hmTurn=i=>s>0.65?(i%2===1):s<0.35?(i%3===2):(i%2===0);
+  const q1For=(i,w,R,phase,prog)=>{const n=nQ(w),k=i%4;
     if(phase==='taper')return {nm:`Острая ${Math.max(3,n-2)}x1000`,z:'vo2',
       steps:[warm(12),repsD(Math.max(3,n-2),1000,R.vo2,90),cool(10)]};
+    // УЛЬТРА: без этой ветки Q1 проваливался бы в дефолтную ротацию ниже (МПК n×1000/x400 на R.vo2/R.rep) во ВСЕЙ
+    // базовой фазе (~40% цикла) — для 60–160 км это лишний акцент на VO2max, который практически не переносится в
+    // результат (см. замечания по плану для ультры: «значительно больше времени в Z1–Z2 и меньше тренировок МПК»).
+    // Q1 ультра держит аэробную силу и специфику рельефа: горки — приоритет при заметном профиле трассы (hillTier),
+    // иначе порог/устойчивый темп, и лишь раз в ~3 недели короткая быстрая работа на экономичность бега (не на
+    // выносливость — полное восстановление между отрезками). Ставим ДО ветки goalDist>=42000, которая иначе тоже
+    // сработала бы на ультра (isUltra ⇒ goalDist>42195).
+    if(isUltra){
+      if(hillTier>=1)return hillOpt(w,phase);
+      const rot=[{nm:"Порог 2x12'",st:repsT(2,12,R.thr,2)},
+                 {nm:`Круизные ${Math.max(3,n-1)}x1200`,st:repsD(Math.max(3,n-1),1200,R.t10,120)},
+                 {nm:`Экономичность ${n+2}x400`,st:repsD(n+2,400,R.rep,90),
+                   note:'Короткие быстрые повторы — на экономичность бега, не на выносливость; полное восстановление между.'}][i%3];
+      return {nm:rot.nm,z:/Экономичность/.test(rot.nm)?'vo2':'thr',steps:[warm(15),rot.st,cool(10)],note:rot.note};
+    }
+    // МАРАФОН, спец./пиковая фаза: чем ближе старт, тем меньше пользы от чистого VO2max и больше — от пороговой/
+    // марафонски-специфичной работы (см. ревью плана — весь цикл МПК до конца ослабляет специфичность). Q1 уходит
+    // с VO2max на порог именно в недели, когда Q2 порогом НЕ будет — так неделя получает ровно один порог.
+    // ВАЖНО: названия и темп здесь должны реально быть пороговыми — классификатор зон (zoneOfW/analyzeZones)
+    // определяет тип ПО НАЗВАНИЮ регэкспом, а не по полю z; "Темп10к"/"Круизные" в нём жёстко = vo2 (это их
+    // смысл в дефолтной ротации ниже), а не thr — при переиспользовании этих слов тут аналитика насчитала бы
+    // лишний МПК, которого по факту нет. Поэтому здесь только "Темп ..." (без "10к") и "Порог ..." + пейс R.thr.
+    if(goalDist>=42000&&(phase==='spec'||phase==='peak')&&!q2WillBeThr(i,phase,prog||0)){
+      const rot=[{nm:`Темп ${n}x1200`,st:repsD(n,1200,R.thr,90)},
+                 {nm:"Порог 3x10'",st:repsT(3,10,R.thr,2)},
+                 {nm:`Темп непрерывно ${Math.round(lerp(20,32,prog||0))}'`,
+                   st:st('interval','time',Math.round(lerp(20,32,prog||0))*60,PCT(R.thr),'Темп')}][Math.floor(i/2)%3];
+      return {nm:rot.nm,z:'thr',steps:[warm(15),rot.st,cool(10)]};
+    }
+    // ПОЛУМАРАФОН: без переключения Q1 держал бы МПК каждую неделю в spec/peak (см. ревью плана про избыток
+    // МПК) — периодически (hmTurn, частота от акцента s) переключаем Q1 на ПМ-темп/порог вместо МПК.
+    // Порог внутри прогрессирует по мере приближения к старту: 3x10' → 3x15' → 2x20'/40' непрерывно
+    // (см. ревью плана про удлинение порога ближе к гонке).
+    if(goalDist>=21000&&goalDist<42000&&(phase==='spec'||phase==='peak')&&hmTurn(i)){
+      const H=hmp(R);
+      const thrOpt=prog>=0.65?(Math.floor(i/2)%2===0?{nm:"Порог 2x20'",st:repsT(2,20,R.thr,3)}:{nm:"Порог 40' непрерывно",st:st('interval','time',2400,PCT(R.thr),'Порог')})
+                  :prog>=0.35?{nm:"Порог 3x15'",st:repsT(3,15,R.thr,2)}
+                  :{nm:"Порог 3x10'",st:repsT(3,10,R.thr,2)};
+      const hmDist=Math.round(lerp(3,4,prog||0));            // отрезки ПМ-темпа растут к старту: 3км → 4км
+      const rot=[{nm:`ПМ-темп ${Math.max(2,n-2)}x${hmDist}км`,st:repsD(Math.max(2,n-2),hmDist*1000,H,150)},
+                 thrOpt,
+                 {nm:`ПМ-темп непрерывно ${Math.round(lerp(15,25,prog||0))}'`,
+                   st:st('interval','time',Math.round(lerp(15,25,prog||0))*60,PCT(H),'ПМ-темп')}][Math.floor(i/2)%3];
+      return {nm:rot.nm,z:'thr',steps:[warm(15),rot.st,cool(10)]};
+    }
+    // 10 КМ, спец./пиковая фаза: у марафона/полумарафона своя специфика в Q1 уже есть (МР/ПМ-темп выше), у 5 км —
+    // ниже; 10 км без своей ветки крутил бы тот же общий МПК-набор, не завязанный на 10-к темп (см. ревью плана).
+    // Ротация: 10к-темп на 800/1200/1600 + отрезок чуть быстрее порога + короткие быстрые повторы 300 м — реже.
+    if(goalDist>=10000&&goalDist<21000&&(phase==='spec'||phase==='peak')){
+      const fastThr10=[lerp(R.thr[0],R.vo2[0],0.3),lerp(R.thr[1],R.vo2[1],0.3)];
+      // ВАЖНО: названия не должны содержать "Порог" или голое "Темп" (без "10к" сразу после) — классификатор зон
+      // (zoneOfW) по регэкспу принял бы их за пороговые, хотя по факту это vo2; используем безопасные ключевые
+      // слова из его же vo2-ветки ("МПК"/"Ступени"/"Быстрые" и т.п., см. комментарий у марафонской ветки выше).
+      const rot=[{nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90)},
+                 {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120)},
+                 {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150)},
+                 {nm:`МПК ${n}x800 @10к`,st:repsD(n,800,R.t10,75)},
+                 {nm:`Быстрые ${Math.max(5,n+2)}x300`,st:repsD(Math.max(5,n+2),300,R.rep,90),
+                   note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'}][i%5];
+      return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)],note:rot.note};
+    }
+    // 5 КМ, спец./пиковая фаза: без переключения Q1 крутил бы чистый МПК/повторы каждую неделю (темп быстрее
+    // гоночного) — не хватает работы ИМЕННО на темпе 5 км и коротких быстрых повторов на экономичность/каденс
+    // (см. ревью плана). Ротация: 5к-темп на 600/1000/400 + отрезок чуть быстрее порога (не доходя до МПК) +
+    // короткие быстрые повторы 200 м (техника/экономичность) — реже, раз в 5 недель.
+    if(goalDist===5000&&(phase==='spec'||phase==='peak')){
+      const fastThr=[lerp(R.thr[0],R.vo2[0],0.3),lerp(R.thr[1],R.vo2[1],0.3)]; // чуть быстрее порога, но медленнее МПК
+      // ВАЖНО: названия не должны содержать "Порог" или голое "Темп" (без "10к" сразу после) — классификатор зон
+      // (zoneOfW) по регэкспу принял бы их за пороговые/лёгкие, хотя по факту это vo2; используем безопасные
+      // ключевые слова из его же vo2-ветки ("МПК"/"Ступени"/"Быстрые" и т.п.).
+      const rot=[{nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90)},
+                 {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120)},
+                 {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150)},
+                 {nm:`МПК ${Math.min(12,n+5)}x400 @5к`,st:repsD(Math.min(12,n+5),400,R.race5,75)},
+                 {nm:`Быстрые ${Math.max(6,n+3)}x200`,st:repsD(Math.max(6,n+3),200,R.rep,90),
+                   note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'}][i%5];
+      return {nm:rot.nm,z:'vo2',steps:[warm(15),rot.st,cool(10)],note:rot.note};
+    }
     let rots;
     if(s<0.35){ // акцент скорость: короче и быстрее
       rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
@@ -925,7 +1048,7 @@ function buildPlan(cfg){
     const rot=[{nm:'Порог 2x8\'',z:'thr',st:repsT(2,8,R.thr,2)},
                {nm:`МПК ${Math.max(3,n-2)}x600`,z:'vo2',st:repsD(Math.max(3,n-2),600,R.vo2,90)}][k];
     return {nm:rot.nm,z:rot.z,steps:[warm(12),rot.st,cool(8)]};};
-  const q2Thr=(i,R)=>{const rot=[{nm:"Порог 2x15'",st:repsT(2,15,R.thr,3)},{nm:"Порог 3x10'",st:repsT(3,10,R.thr,2)},{nm:"Порог 2x12'",st:repsT(2,12,R.thr,2)},{nm:"Порог 4x8'",st:repsT(4,8,R.thr,1.5)}][i%4];return {nm:rot.nm,z:'thr',steps:[warm(12),rot.st,cool(8)]};};
+  const q2Thr=(i,R)=>{const rot=[{nm:"Порог 2x15'",st:repsT(2,15,R.thr,3)},{nm:"Порог 3x10'",st:repsT(3,10,R.thr,2)},{nm:"Порог 2x12'",st:repsT(2,12,R.thr,2)},{nm:"Порог 4x8'",st:repsT(4,8,R.thr,1.5)},{nm:"Порог 20' непрерывно",st:st('interval','time',1200,PCT(R.thr),'Порог')},{nm:"Порог 5x6'",st:repsT(5,6,R.thr,1)}][i%6];return {nm:rot.nm,z:'thr',steps:[warm(12),rot.st,cool(8)]};};
   const q2For=(i,w,R,phase,prog)=>{
     const inSpec=i>=Math.round(N*GM.specFrac);
     if(isUltra){                             // УЛЬТРА: аэробные стабильные блоки + МР
@@ -938,7 +1061,9 @@ function buildPlan(cfg){
     }
     if(goalDist>=42000){                     // МАРАФОН: специфика — МР
       if(phase==='taper')return {nm:"МР 40' одна трен.",z:'mp',steps:[warm(12),mpCont(40,{mp:R.mp}),cool(10)]};
-      const mpTurn=s>0.65?(i%2===1):s<0.35?(i%3===2):(i%2===0);
+      // marMpTurn — общая с q1For "неделя МР"; в последней трети сборки (prog>0.6) марафонский темп важнее порога
+      // почти каждую неделю — специфичность растёт по мере приближения к старту (см. ревью плана)
+      const mpTurn=marMpTurn(i,prog);
       if(inSpec&&mpTurn){const m=Math.round(lerp(40,s>0.5?75:60,prog));
         if(m>55){const half=Math.round(m/2);return {nm:`МР 2x${half}' одна трен.`,z:'mp',steps:[warm(15),mpReps(2,half,3,{mp:R.mp}),cool(10)]};}
         return {nm:`МР ${m}' одна трен.`,z:'mp',steps:[warm(15),mpCont(m,{mp:R.mp}),cool(10)]};}
@@ -947,9 +1072,19 @@ function buildPlan(cfg){
     if(goalDist>=21000){                     // ПОЛУМАРАФОН: ПМ-темп + порог
       const H=hmp(R);
       if(phase==='taper')return {nm:"ПМ-темп 2x10'",z:'thr',steps:[warm(12),rp(2,[st('interval','time',600,PCT(H),'ПМ-темп'),st('recovery','time',120,HRZ(1))]),cool(8)]};
-      if(inSpec){const m=Math.round(lerp(24,s>0.5?42:34,prog));
-        if(m>26){const half=Math.round(m/2);return {nm:`ПМ-темп 2x${half}'`,z:'thr',steps:[warm(15),rp(2,[st('interval','time',half*60,PCT(H),'ПМ-темп'),st('recovery','time',180,HRZ(2))]),cool(10)]};}
-        return {nm:`ПМ-темп ${m}' непрерывно`,z:'thr',steps:[warm(15),st('interval','time',m*60,PCT(H),'ПМ-темп'),cool(10)]};}
+      if(inSpec){
+        const m=Math.round(lerp(24,s>0.5?42:34,prog));
+        // формат интервального варианта тоже от акцента s: выносливость -> длиннее и реже (2x4км), скорость -> короче и чаще (3x3км)
+        const repDist=s>0.65?4:s<0.35?3:Math.round(lerp(3,4,prog||0));
+        const repN=s>0.65?2:3;
+        const contVariant=m>26
+          ?{nm:`ПМ-темп 2x${Math.round(m/2)}'`,st:rp(2,[st('interval','time',Math.round(m/2)*60,PCT(H),'ПМ-темп'),st('recovery','time',180,HRZ(2))])}
+          :{nm:`ПМ-темп ${m}' непрерывно`,st:st('interval','time',m*60,PCT(H),'ПМ-темп')};
+        const repVariant={nm:`ПМ-темп ${repN}x${repDist}км`,st:repsD(repN,repDist*1000,H,150)};
+        // чередуем непрерывный/сплит формат с интервалами по дистанции — недостающая специфика ПМ-темпа (см. ревью плана)
+        const rot=[contVariant,repVariant][i%2];
+        return {nm:rot.nm,z:'thr',steps:[warm(15),rot.st,cool(10)]};
+      }
       return q2Thr(i,R);
     }
     if(goalDist>=10000){                     // 10 КМ: круизные @10к + порог
@@ -980,6 +1115,7 @@ function buildPlan(cfg){
   if(cfg.maxLongCap>0)maxLongMin=Math.min(maxLongMin,cfg.maxLongCap);   // потолок безопасной длинной
   const noQualUntil={};                                          // дата -> лёгкие дни после промежуточного старта
   tune.forEach(t=>{const n=tuneRecDays(t.dist);for(let k=1;k<=n;k++)noQualUntil[dISO(dAdd(t.d,k))]=1;});
+  let easyVarCounter=0; // счётчик для ротации структуры лёгких дней по всему плану (не только "объём + страйды")
 
   for(let i=0;i<N;i++){
     const wStart=dAdd(start,i*7);
@@ -993,7 +1129,17 @@ function buildPlan(cfg){
 
     // целевые км длинной этой недели
     let lrKm=clamp(Math.round(wkm*longShare),12,isUltra?70:33);  // ультре — выше, чтобы работал maxLongMin (время на ногах)
-    let lrMin=lrKm*mid(R.longp)/60; if(lrMin>maxLongMin){lrMin=maxLongMin;lrKm=Math.round(lrMin*60/mid(R.longp));}
+    let lrMin=lrKm*mid(R.longp)/60;
+    if(lrMin>maxLongMin){lrMin=maxLongMin;lrKm=Math.round(lrMin*60/mid(R.longp));}
+    if(!isUltra&&(phase==='base'||phase==='spec')){
+      // небольшая волнообразность длинной неделя-к-неделе — без неё длинная почти всегда упирается в один и тот
+      // же безопасный потолок и получается «одна и та же» (см. ревью плана). Множитель ≤1 — применяем ПОСЛЕ
+      // клампа по потолку, иначе волна просто «съедается» им же (потолок часто уже достигнут целевым км/нед);
+      // 'peak'-неделю не трогаем — там длинная должна оставаться настоящим пиком цикла.
+      const LR_WAVE=[1,0.85,0.93,1,0.80,0.96];
+      lrMin=Math.max(lrMin*LR_WAVE[i%LR_WAVE.length],maxLongMin*0.55,30);
+      lrKm=Math.round(lrMin*60/mid(R.longp));
+    }
     if(cfg.curLong>0&&(phase==='base'||phase==='spec'||phase==='peak')){ // не опускать длинную ниже привычной
       const fl=Math.min(cfg.curLong,maxLongMin); if(lrMin<fl){lrMin=fl;lrKm=Math.round(lrMin*60/mid(R.longp));} }
     if(phase==='taper'){lrMin=Math.min(lrMin,95);lrKm=Math.round(lrMin*60/mid(R.longp));}
@@ -1059,10 +1205,11 @@ function buildPlan(cfg){
           const predP=predT/(tr.dist/1000);
           const rpace=[predP-2,predP+3];
           const stps=[warm(12),strides(3,R),
-            st('interval','distance',tr.dist,PCT(rpace),`Гонка ${distName(tr.dist)}`)];
+            st('interval','distance',tr.dist,PCT(rpace),`${tr.auto?'Тест':'Гонка'} ${distName(tr.dist)}`)];
           if(tr.dist<42000)stps.push(cool(10));
-          items=[{kind:'run',z:'race',name:`СТАРТ ${distName(tr.dist)} ${fmtT(predT)}`,steps:stps,
-            note:`Ориентир по прогнозу формы на эту дату: ≈${fmtT(predT)} (темп ${fmtP(predP)}/км). Это оценка, а не план — бегите по самочувствию.`}];
+          items=[{kind:'run',z:'race',name:`${tr.auto?'КОНТРОЛЬНЫЙ ТЕСТ':'СТАРТ'} ${distName(tr.dist)} ${fmtT(predT)}`,steps:stps,
+            note:tr.auto?`Самостоятельный контрольный тест (паркран или соло на ровной трассе/треке) — без регистрации. Ориентир по прогнозу формы: ≈${fmtT(predT)} (темп ${fmtP(predP)}/км). Сверься с темпом и при необходимости скорректируй зоны перед главным стартом.`
+              :`Ориентир по прогнозу формы на эту дату: ≈${fmtT(predT)} (темп ${fmtP(predP)}/км). Это оценка, а не план — бегите по самочувствию.`}];
           days.push({date:dt,items});continue;}
         if(dd===1){items=[{kind:'run',z:'rec',name:'Восстановительный шейкаут',steps:[easyS(20),strides(3,R)],fixed:1}];
           days.push({date:dt,items});continue;}
@@ -1077,15 +1224,32 @@ function buildPlan(cfg){
       // --- обычные недели по шаблону ---
       const slot=(i===0?TPL0:TPLr)[di];
       if(slot==='-'){days.push({date:dt,items:[{kind:'rest',label:'Отдых'}]});continue;}
-      if(slot==='Q1'&&!easyDay&&phase!=='down'){const q=q1For(i,wkm,R,phase);
+      if(slot==='Q1'&&!easyDay&&phase!=='down'){const q=q1For(i,wkm,R,phase,prog);
         items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}]; if(q.note)items[0].note=q.note;}
       else if(slot==='Q3'&&!easyDay&&phase!=='down'){                     // 3-я качественная — порог (поддерживающая); на рельефе — затяжные подъёмы
         const useHill=hillTier>=2||(hillTier===1&&i%2===0);
-        const q=useHill?hillSupport(wkm,phase):q2Thr(i,R);
+        let q;
+        if(useHill)q=hillSupport(wkm,phase);
+        else if(goalDist>=42000){
+          // марафон: Q1 и Q2 каждую неделю УЖЕ покрывают связку "интервалы + порог/МР" (см. marMpTurn) — третьей
+          // хардовой (Q3=порог) не остаётся места без риска коллизии с одной из них. Поэтому Q3 у марафона —
+          // всегда аэробная: средняя длинная в спец./пиковой фазе, длинный лёгкий в базе (без пересечения с порогом).
+          if(phase==='spec'||phase==='peak'){
+            const mlm=r5(clamp(lrMin*0.55,60,110));
+            q={nm:`Средне-длинная ${hm(mlm)}`,z:'long',steps:[longE(mlm)]};
+          } else {
+            const em=clamp(r5(Math.round(wkm*0.12*60/mid(R.easy))),40,70);
+            q={nm:'Лёгкий увеличенный',z:'easy',steps:[easyS(em)]}; // не "длинный" — иначе zoneOfW примет за long
+          }
+        } else q=q2Thr(i,R);
         items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}]; if(q.note)items[0].note=q.note;}
       else if(slot==='Q2'&&!easyDay&&!(phase==='down'&&recF>1.25)){
         if(phase==='down'){const q=downQ(i,wkm,R);items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];}
-        else {const q=q2For(i,wkm,R,phase,prog);items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];if(q.note)items[0].note=q.note;}}
+        else if(nQual===1&&i%2!==0){ // низкий объём: полноценную 2-ю качественную не тянем каждую неделю — через раз лёгкий
+          items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(45)]}];
+        } else if(nQual===1){ // но и совсем убирать порог нельзя — раз в 2 недели короткий поддерживающий порог
+          const q=q2Thr(i,R);items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];
+        } else {const q=q2For(i,wkm,R,phase,prog);items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];if(q.note)items[0].note=q.note;}}
       else if(slot==='L'){
         if(isUltra){
           const mpFin=(phase==='spec'||phase==='peak')&&i%2===0&&phase!=='down';
@@ -1094,20 +1258,47 @@ function buildPlan(cfg){
           else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} (время на ногах)`,steps:[longE(Math.round(lrMin))]}];
         } else if(goalDist>=42000){
           const mpFin=(phase==='spec'||phase==='peak'||(phase==='base'&&i%2===1&&s<0.7));
-          const everyN=s>0.65?1:s<0.35?3:2;
-          if(phase==='peak'&&s>=0.35){const blocks=3,bm=20;const wmin=Math.max(30,Math.round(lrMin-blocks*(bm+5)));
-            items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} ПИК ${blocks}x${bm} МР`,
-              steps:[longE(wmin),rp(blocks,[st('interval','time',bm*60,PCT(R.mp),'МР'),st('recovery','time',300,HRZ(2))])]}];}
-          else if(mpFin&&i%everyN===0&&phase!=='down'){const mpm=Math.round(lerp(20,45,prog));
+          // ближе к старту марафонская концовка длинной должна быть почти каждую неделю (в пиковой фазе — всегда),
+          // а не раз в 2-3 недели — именно такие тренировки сильнее всего коррелируют с результатом (см. ревью плана)
+          const everyN=(phase==='peak')?1:(s>0.65?1:s<0.35?3:2);
+          if(phase==='peak'&&s>=0.35){
+            // контрольная тренировка цикла (3-4 нед. до старта): НЕПРЕРЫВНЫЙ блок МР в конце длинной, а не рваные
+            // интервалы с отдыхом — именно такой формат (30-32 км из них 14-16 км МР, либо 36 км с 12-14 км МР
+            // в конце) даёт честную проверку готовности к целевому темпу и питанию (см. ревью плана).
+            const mpm=Math.round(clamp(lrMin*0.42,55,75));
+            // название НЕ должно содержать "КОНТРОЛ" — regex зон (zoneOfW) проверяет /КОНТРОЛ/i раньше проверки
+            // на "Длинн" и классифицировал бы эту длинную как гонку (race), а не long.
+            items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} КЛЮЧЕВАЯ МР ${mpm}'`,
+              steps:[longE(Math.round(lrMin-mpm)),st('interval','time',mpm*60,PCT(R.mp),'Контрольная МР непрерывно')]}];}
+          else if(mpFin&&i%everyN===0&&phase!=='down'){const mpm=Math.round(lerp(20,55,prog));
             items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} концовка МР`,
               steps:[longE(Math.round(lrMin-mpm)),st('interval','time',mpm*60,PCT(R.mp),'Концовка МР')]}];}
           else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)}`,steps:[longE(Math.round(lrMin))]}];
         } else if(goalDist>=21000){
-          const H=hmp(R); const hFin=(phase==='spec'||phase==='peak')&&i%2===0&&phase!=='down';
-          if(hFin){const fm=Math.round(lerp(15,25,prog));
-            items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} концовка ПМ ${fm}'`,
-              steps:[longE(Math.round(lrMin-fm)),st('interval','time',fm*60,PCT(H),'Концовка ПМ')]}];}
-          else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)}`,steps:[longE(Math.round(lrMin)),strides(4,R)]}];
+          const H=hmp(R);
+          const MID=[(R.easy[0]+H[0])/2,(R.easy[1]+H[1])/2];       // средний темп между лёгким и ПМ — для прогрессивной длинной
+          const hmSpec=(phase==='spec'||phase==='peak')&&phase!=='down';
+          // частота специфичной длинной — от акцента s (та же логика, что hmTurn выше): выносливость чаще, скорость реже
+          const doSpecific=hmSpec&&(s>0.65?true:s<0.35?(i%3!==0):(i%2===0));
+          if(doSpecific){
+            const fm=Math.round(lerp(15,25,prog));
+            // разнообразие длинных вместо единственного формата "концовка ПМ" (см. ревью плана): концовка непрерывно,
+            // блоки ПМ-темпа в середине, прогрессивная (легко → средне → ПМ) — недостающая специфика ПМ на длинной
+            const variants=[
+              {nm:`Длинная ${hm(lrMin)} концовка ПМ ${fm}'`,
+                st:[longE(Math.round(lrMin-fm)),st('interval','time',fm*60,PCT(H),'Концовка ПМ')]},
+              {nm:`Длинная ${hm(lrMin)} 2x${Math.round(fm*0.6)}' ПМ`,
+                st:[longE(Math.round(lrMin*0.35)),
+                    rp(2,[st('interval','time',Math.round(fm*0.6)*60,PCT(H),'ПМ-темп блок'),st('recovery','time',300,HRZ(2))]),
+                    longE(Math.max(15,Math.round(lrMin-lrMin*0.35-fm*1.2)))]},
+              {nm:`Длинная ${hm(lrMin)} прогрессивная`,
+                st:[longE(Math.round(lrMin*0.5)),
+                    st('interval','time',Math.round(lrMin*0.3)*60,PCT(MID),'Средний темп'),
+                    st('interval','time',Math.round(lrMin*0.2)*60,PCT(H),'Ускорение к финишу')]}
+            ];
+            const v=variants[i%variants.length];
+            items=[{kind:'run',z:'long',name:v.nm,steps:v.st}];
+          } else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)}`,steps:[longE(Math.round(lrMin)),strides(4,R)]}];
         } else {
           const tFin=(phase==='spec'||phase==='peak')&&i%2===1&&phase!=='down';
           if(tFin){const fm=Math.round(lerp(10,15,prog));
@@ -1117,9 +1308,12 @@ function buildPlan(cfg){
         }}
       else if(slot==='R'||easyDay){items=[{kind:'run',z:'rec',name:'Восстановительный',steps:[recS(35)]}];}
       else {items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(45)]}];} // placeholder, длит. подгоним ниже
-      if(isUltra&&di===sparkDow&&(phase==='spec'||phase==='peak')&&items[0]&&items[0].kind==='run'&&(items[0].z==='easy'||items[0].z==='rec')){
-        const ml=r5(clamp(lrMin*0.55,70,180));
-        items=[{kind:'run',z:'long',name:`Средне-длинная ${hm(ml)} (спарка)`,steps:[longE(ml)]}];
+      if((isUltra||goalDist>=42000)&&di===sparkDow&&(phase==='spec'||phase==='peak')&&items[0]&&items[0].kind==='run'&&(items[0].z==='easy'||items[0].z==='rec')){
+        // марафон: без средней длинной (16-20 км спокойно раз в неделю) в фазе специфики недостаёт объёма
+        // именно марафонской выносливости — не только длинная в воскресенье (см. ревью плана)
+        const mlBounds=isUltra?[70,180]:[70,115];
+        const ml=r5(clamp(lrMin*0.55,mlBounds[0],mlBounds[1]));
+        items=[{kind:'run',z:'long',name:`Средне-длинная ${hm(ml)}${isUltra?' (спарка)':''}`,steps:[longE(ml)]}];
       }
       // горный старт (hillTier=2): встраиваем блок подъёмов в длинную на спец./пиковой фазе — под профиль трассы
       if(hillTier>=2&&items[0]&&items[0].kind==='run'&&items[0].z==='long'&&(phase==='spec'||phase==='peak')){
@@ -1165,9 +1359,23 @@ function buildPlan(cfg){
         const addKm=(x.z==='easy'&&phase!=='taper')?strideKm:0;
         const blockKm=Math.max(0,share-addKm);
         let m=r5(clamp(Math.round(blockKm*p/60),x.z==='easy'?TUNE.easyMin[0]:TUNE.recMin[0],x.z==='easy'?easyMax:recMax));
-        x.steps=[x.z==='easy'?easyS(m):recS(m)];
-        if(x.z==='easy'&&phase!=='taper')x.steps.push(strides(strideN,R));
-        x.name=x.z==='easy'?'Лёгкий':(x.dbl2?'Восстановительный (2-я трен.)':'Восстановительный');});
+        // разнообразим лёгкие дни: не всегда «объём + страйды» — раз в 3 такой день делаем прогрессивным
+        // (последняя треть быстрее, ближе к МР), иначе они все выполняют одну и ту же функцию.
+        if(x.z==='easy'&&phase!=='taper'&&m>=40){
+          const v=easyVarCounter++%3;
+          if(v===1){ const fin=clamp(r5(Math.round(m/3)),8,15);
+            x.steps=[easyS(m-fin),st('interval','time',fin*60,PCT(R.mp),'Прогрессивно быстрее')];
+            x.name='Лёгкий прогрессивный';
+          } else {
+            x.steps=[easyS(m),strides(strideN,R)];
+            x.name='Лёгкий';
+            if(hilly&&v===2)x.note='Если рядом есть некрутой подъём — сделай ускорения на нём вместо ровного участка.';
+          }
+        } else {
+          x.steps=[x.z==='easy'?easyS(m):recS(m)];
+          if(x.z==='easy'&&phase!=='taper')x.steps.push(strides(strideN,R));
+          x.name=x.z==='easy'?'Лёгкий':(x.dbl2?'Восстановительный (2-я трен.)':'Восстановительный');
+        }});
     }
 
     // --- силовые ---
@@ -1235,7 +1443,7 @@ function buildPlan(cfg){
     peakReal:Math.round(Math.max(...weeks.map(w=>w.km))),hrmax,lthr:cfg.lthr||null,
     zbpm:cfg.lthr?{1:zbpm(1,cfg.lthr,hrmax),2:zbpm(2,cfg.lthr,hrmax),3:zbpm(3,cfg.lthr,hrmax),4:zbpm(4,cfg.lthr,hrmax),5:zbpm(5,cfg.lthr,hrmax)}:null};
   analysis.tuneList=tune.map(t=>{const wi=Math.floor(dDiff(t.d,start)/7);
-    return {iso:dISO(t.d),dist:t.dist,name:distName(t.dist),pred:Math.round(timeFor(t.dist,lerp(anchorVd,achGoalVd,clamp(wi/buildEnd,0,1))))};});
+    return {iso:dISO(t.d),dist:t.dist,name:distName(t.dist)+(t.auto?' (тест)':''),pred:Math.round(timeFor(t.dist,lerp(anchorVd,achGoalVd,clamp(wi/buildEnd,0,1))))};});
   return {weeks,workouts,analysis,P0,P1,cfg,start,marD};
 }
 /*GEN-END*/

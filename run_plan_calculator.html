@@ -272,13 +272,13 @@
       <div class="fld" style="grid-column:1/-1"><label>Текущие результаты (недавние гонки/прикидки)</label>
         <div id="resList"></div>
         <button type="button" class="btn sec" id="addResBtn" style="padding:5px 12px;font-size:12px;margin-top:4px">+ добавить результат</button>
-        <div class="hint">добавьте что есть: 5 / 10 км, 21,1 / 42,2 км. Форма (VDOT) берётся по лучшему результату; остальные уточняют.</div></div>
+        <div class="hint">добавьте что есть: 5 / 10 км, 21,1 / 42,2 км. Форма (VDOT) берётся по лучшему результату; остальные уточняют. Совсем нет результатов (например, бег «с нуля») — оставьте список пустым, форма оценится по недельному объёму и опыту ниже (менее точно, чем от гонки).</div></div>
       <div class="fld"><label>Возраст</label><input type="number" id="age" value="38" min="16" max="80"></div>
       <div class="fld"><label>Вес, кг</label><input type="number" id="weight" value="60" min="40" max="130"><div class="hint">для расчёта питания/гелей</div></div>
       <div class="fld"><label>ПАНО: пульс, уд/мин</label><input type="number" id="lthr" value="178" min="120" max="210"><div class="hint">пусто — зоны Garmin Z1–Z5</div></div>
       <div class="fld"><label>ПАНО: темп, мин/км</label><input type="text" id="ltpace" placeholder="м:сс"><div class="hint" id="ltpaceHint">подставлен из результатов — можно изменить</div></div>
       <div class="fld"><label>Текущий недельный объём</label>
-        <div class="volrow"><input type="number" id="curVol" value="70" min="10" max="260" step="1">
+        <div class="volrow"><input type="number" id="curVol" value="70" min="0" max="260" step="1">
         <select id="volUnit"><option value="km">км/нед</option><option value="h">ч/нед</option></select></div></div>
       <div class="fld"><label>Опыт</label><select id="exp"><option value="novice">Новичок</option><option value="inter" selected>Средний</option><option value="adv">Опытный</option></select><div class="hint" style="max-width:230px">новичок — до ~2 лет бега / первый старт на дистанции; средний — бегает регулярно 2–4 года; опытный — многолетний стаж, высокая переносимость объёма. Влияет на темп роста формы и число тренировок.</div></div>
       <div class="fld"><label>Начало плана</label><input type="date" id="startD"><div class="hint">сдвинем на понедельник</div></div>
@@ -608,15 +608,36 @@ function normalizeCfg(cfg){
   if(c.cross)c.cross=c.cross.map(x=>Object.assign({},x));
   return c;}
 function bestVdot(results){const v=(results||[]).filter(r=>r&&r.sec>0&&r.dist>0).map(r=>vdot(r.dist,r.sec));return v.length?Math.max(...v):null;}
+// Оценка формы без гонок: новичок «с нуля» не даст текущий результат, но у него есть недельный объём и
+// самооценка опыта — из них можно грубо восстановить VDOT (насыщение с ростом объёма; опытный при том же
+// объёме эффективнее за счёт экономичности бега). Точность ниже, чем от реальной гонки/прикидки — это лишь
+// стартовая точка, которую заменит первый введённый результат.
+function estimateVdotFromVolume(curVolKm,exp){
+  const v=Math.max(0,+curVolKm||0);
+  const base=24+9*Math.log(1+v/10);
+  const expF={novice:0.94,inter:1.0,adv:1.08}[exp]||1;
+  return clamp(base*expF,20,55);
+}
 function projectFitness(cfgIn){
   const cfg=normalizeCfg(cfgIn);          // работаем с копией — внешний cfg не мутируем
-  let anchorVd=bestVdot(cfg.results); if(anchorVd==null)return null;
   const notes=[];
+  let anchorVd=bestVdot(cfg.results);
+  const noRaceResults=anchorVd==null;     // нет ни одного результата — типично для полного новичка «с нуля»
+  if(noRaceResults){
+    const FALLBACK_PACE=327;              // сек/км — тот же дефолтный лёгкий темп, что и в recalcEstimate, пока форма неизвестна
+    const curVolKm0=cfg.curVol>0?(cfg.volUnit==='h'?cfg.curVol*3600/FALLBACK_PACE:cfg.curVol):0;
+    anchorVd=estimateVdotFromVolume(curVolKm0,cfg.exp);
+    const expName={novice:'новичок',inter:'средний',adv:'опытный'}[cfg.exp]||'средний';
+    notes.push(`Текущих результатов нет — форма оценена по недельному объёму (${curVolKm0?Math.round(curVolKm0)+' км/нед':'0 км/нед'}) и опыту (${expName}): VDOT ≈${anchorVd.toFixed(1)}. Это грубая стартовая оценка — при первой прикидке/старте введите результат, и форма/план пересчитаются точнее.`);
+  }
   const ca=courseAdjust(cfg);
   // cfg.tgtGoal — цель, как её вводит/видит пользователь (реальное, курс-дисконтированное время);
   // для VDOT-расчётов (vdTarget/verdict/endGoal-клампа) нужен «чистый» эквивалент.
   const tgtGoalClean=cfg.tgtGoal?ca.toClean(cfg.tgtGoal):null;
-  if(cfg.ltPace){const vdLT=vdot(3600/cfg.ltPace*1000,3600);
+  // Темп ПАНО блендим только к РЕАЛЬНОЙ гоночной форме: к оценке «по объёму/опыту» его не подмешиваем —
+  // иначе задержавшееся в поле старое авто-значение темпа (см. recalcEstimate) молча искажает грубую
+  // оценку новичка сильнее, чем сам объём/опыт, которые он и вводил осознанно.
+  if(cfg.ltPace&&!noRaceResults){const vdLT=vdot(3600/cfg.ltPace*1000,3600);
     if(Math.abs(vdLT-anchorVd)>2.5)notes.push(`Темп ПАНО ${fmtP(cfg.ltPace)} даёт VDOT ${vdLT.toFixed(1)} — форма усреднена с гоночной.`);
     anchorVd=0.75*anchorVd+0.25*vdLT;}
   const start=toMonday(dParse(cfg.startISO)), marD=dParse(cfg.goalISO||cfg.marathonISO);
@@ -3011,23 +3032,30 @@ function recalcEstimate(){
   try{
     const gd=+$('goalDist').value; const tg=$('tgtGoal'); if(tg)tg.placeholder=phShort(gd);
     const results=readResRows();
-    if(!results.length||!$('goalD').value||!$('startD').value){el.innerHTML='добавьте результаты и даты — покажу прогноз';return;}
-    // авто ПАНО-темп из лучшего результата
-    const anchor0=bestVdot(results);
+    if(!$('goalD').value||!$('startD').value){el.innerHTML='добавьте даты — покажу прогноз';return;}
+    const curVol=+$('curVol').value||0, volUnit=$('volUnit').value;
+    const exp=($('exp')&&$('exp').value)||'inter';
+    // авто ПАНО-темп из лучшего результата — ТОЛЬКО когда результат реально есть; по грубой оценке от
+    // объёма/опыта подставлять конкретный темп ПАНО было бы ложной точностью.
+    const anchorReal=bestVdot(results);
     let autoLtPaceRaw=null;
-    if(anchor0&&!ltpaceTouched){const th=paceSet(timeFor(42195,anchor0),timeFor(10000,anchor0)).thr;
+    // результаты убрали (например, очистили строку) — сбрасываем ранее авто-подставленный темп ПАНО,
+    // иначе устаревшее значение молча остаётся в поле и потом подмешивается в оценку формы новичка
+    if(!anchorReal&&!ltpaceTouched&&$('ltpace').value){$('ltpace').value=''; if($('ltpaceHint'))$('ltpaceHint').textContent='подставлен из результатов — можно изменить';}
+    if(anchorReal&&!ltpaceTouched){const th=paceSet(timeFor(42195,anchorReal),timeFor(10000,anchorReal)).thr;
       autoLtPaceRaw=(th[0]+th[1])/2;                              // неокруглённое значение — для расчётов; в поле показываем округлённое (только отображение)
       $('ltpace').value=fmtP(autoLtPaceRaw); if($('ltpaceHint'))$('ltpaceHint').textContent='подставлен из результатов — можно изменить';}
     // недели/восстановление/объём — для рекомендаций
     const N=Math.max(1,Math.floor(dDiff(dParse($('goalD').value),dParse($('startD').value))/7)+1);
     const recF=1+Math.max(0,(+$('age').value||35)-35)*0.015;
-    const curVol=+$('curVol').value||0, volUnit=$('volUnit').value;
     // часы → км считаем через РЕАЛЬНЫЙ лёгкий темп бегуна, как это делают projectFitness/buildPlan.
     // Раньше здесь стояли жёсткие 11 км/ч, и рекомендации (тренировки/нед, силовые, объём) считались
     // от другого числа, чем сам план (см. ревью, D3).
-    const easyPaceRec=anchor0?mid(paceSet(timeFor(42195,anchor0),timeFor(10000,anchor0)).easy):327;
+    const easyPaceRec=anchorReal?mid(paceSet(timeFor(42195,anchorReal),timeFor(10000,anchorReal)).easy):327;
     const volKm=volUnit==='h'?Math.round(curVol*3600/easyPaceRec):curVol;
-    const exp=($('exp')&&$('exp').value)||'inter';
+    // без гонок форму оцениваем по объёму/опыту (те же вводные, что уйдут в сам план — projectFitness/estimateVdotFromVolume);
+    // разница с anchorReal: там держим null-семантику отдельно для ПАНО-автоподстановки выше.
+    const anchor0=anchorReal!=null?anchorReal:estimateVdotFromVolume(volKm,exp);
     const maxVolEver=+(($('maxVolEver')&&$('maxVolEver').value)||0)||0;
     const ca=courseAdjust({elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked)}); // рельеф/жара/высота: только для перевода реального времени в «чистое» и обратно
     const corrBase=VOLCORRIDOR[gd]||VOLCORRIDOR[42195];          // базовый корридор дистанции — для «под цель» (физиология, от опыта не зависит)
@@ -3185,7 +3213,7 @@ function readCfg(){
   if(!$('goalD').value)throw 'Укажите дату главного старта.';
   if(!$('startD').value)throw 'Укажите дату начала плана.';
   const results=readResRows();
-  if(!results.length)throw 'Добавьте хотя бы один текущий результат (дистанция + время).';
+  // без результатов — не блокируем: форма оценивается в projectFitness по объёму/опыту (см. estimateVdotFromVolume)
   const cross=readCross();
   const cfg={startISO:$('startD').value,goalISO:$('goalD').value,goalDist:+$('goalDist').value,
     tuneRaces:readTuneRows(),results,

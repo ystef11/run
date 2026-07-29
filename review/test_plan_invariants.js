@@ -13,7 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const HTML = path.join(__dirname, 'run_plan_calculator.html');
+const HTML = path.join(__dirname, '..', 'run_plan_calculator.html');
 const VERBOSE = process.argv.includes('--verbose');
 const ONLY = (process.argv.find(a => a.startsWith('--only=')) || '').split('=')[1] || null;
 
@@ -240,13 +240,17 @@ const INVARIANTS = [
     n: 3, name: 'Длинная не больше допустимой доли недельного объёма',
     check(p, cfg) {
       // для ультры доля выше: там длинная (время на ногах) и есть главный смысл недели
-      const base = cfg.goalDist > 42195 ? 0.46 : cfg.goalDist >= 42000 ? 0.37 : 0.35;
+      // порог синхронизирован с lrShareCapFor в buildPlan: для среднего/опытного уровня строже
+      const seasoned = cfg.exp !== 'novice';
+      const base = cfg.goalDist > 42195 ? (seasoned ? 0.42 : 0.46)
+                 : cfg.goalDist >= 42000 ? (seasoned ? 0.34 : 0.38)
+                 : (seasoned ? 0.32 : 0.36);
       for (const w of p.weeks) {
         if (w.type === 'race' || !w.km) continue;
         if (w.days.some(d => d.items.some(x => x.label === 'Отдых (до старта плана)'))) continue;  // обрезанная неделя 1
         // при очень малом недельном объёме доля неизбежно выше: длинная короче 40 мин уже не длинная
         // с 3 пробежками в неделю длинная неизбежно занимает половину объёма — делить её не на что
-        const lim = (cfg.runs || 5) <= 3 ? Math.max(base, 0.52) : (w.km < 35 ? Math.max(base, 0.45) : base);
+        const lim = (cfg.runs || 5) <= 3 ? Math.max(base, 0.52) : (w.km < 35 ? Math.max(base, 0.47) : base);
         const long = Math.max(0, ...wkActs(w).filter(x => isRun(x) && x.z === 'long').map(x => x.km || 0));
         if (long > w.km * lim) return `нед. ${w.n}: длинная ${long.toFixed(1)} км из ${w.km} (${Math.round(long / w.km * 100)}%, лимит ${Math.round(lim * 100)}%)`;
       }
@@ -282,14 +286,16 @@ const INVARIANTS = [
     },
   },
   {
-    n: 6, name: 'Силовая не в день качественной и не более одной в день',
+    n: 6, name: 'Силовая: не более одной в день, не в день длинной и не в день старта',
     check(p) {
+      // Силовая В ОДИН ДЕНЬ с интервалами/порогом — это норма и предпочтительнее, чем накануне
+      // (принцип «тяжёлые дни тяжёлыми»). Запрещены день длинной и день гонки/теста.
       for (const w of p.weeks) for (const d of w.days) {
         const str = d.items.filter(x => x.kind === 'str');
         if (str.length > 1) return `${C.dISO(d.date)}: ${str.length} силовых в один день`;
         const full = str.filter(x => x.name !== 'Кор').length;
-        const hard = d.items.some(x => isRun(x) && HARD.has(x.z));
-        if (full && hard) return `${C.dISO(d.date)}: полновесная силовая в день качественной/длинной`;
+        const bad = d.items.some(x => isRun(x) && (x.z === 'long' || x.z === 'race'));
+        if (full && bad) return `${C.dISO(d.date)}: полновесная силовая в день длинной/старта`;
       }
     },
   },
@@ -493,15 +499,19 @@ const INVARIANTS = [
     },
   },
   {
-    n: 22, name: 'Кросс не в день качественной/длинной и не в окне восстановления',
+    n: 22, name: 'Кросс: ударный — не в нагрузочный день, любой — не в день длинной и не в окне восстановления',
     check(p, cfg) {
       if (!cfg.cross || !cfg.cross.length) return null;
+      const LOW = { pool: 1, bike: 1 };   // низкоударный кросс в день интервалов допустим — лучше, чем накануне
       const races = (cfg.tuneRaces || []).map(t => C.dParse(t.iso));
       for (const w of p.weeks) for (const d of w.days) {
         const cross = d.items.filter(x => x.kind === 'cross');
         if (!cross.length) continue;
-        const hard = d.items.some(x => isRun(x) && HARD.has(x.z));
-        if (hard) return `${C.dISO(d.date)}: кросс в день ${d.items.find(x => isRun(x) && HARD.has(x.z)).name}`;
+        const longOrRace = d.items.find(x => isRun(x) && (x.z === 'long' || x.z === 'race'));
+        if (longOrRace) return `${C.dISO(d.date)}: кросс в день ${longOrRace.name}`;
+        const hard = d.items.find(x => isRun(x) && HARD.has(x.z));
+        const impact = cross.find(x => !LOW[x.sport]);
+        if (hard && impact) return `${C.dISO(d.date)}: ударный кросс (${impact.name}) в день ${hard.name}`;
         const dd = Math.min(...races.map(r => C.dDiff(d.date, r)).filter(x => x > 0).concat([1e9]));
         if (dd <= 2) return `${C.dISO(d.date)}: кросс на ${dd}-й день после старта`;
       }
@@ -516,6 +526,100 @@ const INVARIANTS = [
         const q = d.items.find(x => isRun(x) && (x.z === 'thr' || x.z === 'vo2' || x.z === 'mp'));
         if (q) return `${s}: план начинается с качественной «${q.name}»`;
         return null;
+      }
+    },
+  },
+  {
+    n: 24, name: 'Силовая/кросс не в день ПЕРЕД качественной или длинной',
+    check(p, cfg) {
+      // День перед качественной — худший из возможных: ноги не свежие к ключевой тренировке. День ПОСЛЕ
+      // качественной допустим (мышцы уже утомлены, добавочный вред меньше).
+      const flat = [];
+      p.weeks.forEach(w => w.days.forEach(d => flat.push({
+        iso: C.dISO(d.date), wn: w.n, type: w.type,
+        hard: d.items.some(x => isRun(x) && HARD.has(x.z)),
+        str: d.items.filter(x => x.kind === 'str' && x.name !== 'Кор').map(x => x.name),
+        cross: d.items.filter(x => x.kind === 'cross').map(x => x.name),
+      })));
+      // «Неизбежный» случай: в неделе не осталось ни одного дня, где до следующей качественной ≥2 дней
+      // и который при этом свободен. Такие случаи не считаем дефектом — считаем только когда лучший
+      // вариант существовал, но выбран худший.
+      const bad = [];
+      for (let i = 0; i < flat.length - 1; i++) {
+        if (!flat[i + 1].hard) continue;
+        if (flat[i].type === 'race' || flat[i + 1].type === 'race') continue;
+        if (flat[i].hard) continue;                      // сам день нагрузочный — это «тяжёлый день», не дефект
+        const load = flat[i].str.concat(flat[i].cross);
+        if (!load.length) continue;
+        // Дефект — только если в ЭТОЙ ЖЕ неделе был свободный день с запасом ≥2 дней до следующей нагрузки:
+        // при 3 силовых + 4 кросса + 6 пробежек на 7 дней часть размещений неизбежна, и это не ошибка кода.
+        const wk = p.weeks.find(x => x.n === flat[i].wn);
+        const wkDays = wk ? wk.days : [];
+        const hardIdx = wkDays.map((d, ix) => d.items.some(x => isRun(x) && HARD.has(x.z)) ? ix : -1).filter(ix => ix >= 0);
+        const gapNext = ix => { for (let k = 1; k <= 7; k++) if (hardIdx.indexOf((ix + k) % 7) >= 0) return k; return 7; };
+        // дни недели, зарезервированные под средне-длинную/спарку, свободными не считаются: в базовой фазе
+        // такой день пуст, но занимать его кроссом нельзя — в фазе специфики там появится длинная
+        const midLongDows = new Set();
+        p.weeks.forEach(x => x.days.forEach((d, ix) => {
+          if (d.items.some(y => isRun(y) && /Средне-длинная/.test(y.name || ''))) midLongDows.add(ix);
+        }));
+        const betterFree = wkDays.some((d, ix) =>
+          gapNext(ix) >= 2 && !midLongDows.has(ix) &&
+          !d.items.some(x => x.kind === 'str' || x.kind === 'cross') &&
+          !d.items.some(x => isRun(x) && (x.z === 'long' || x.z === 'race')));
+        if (betterFree) bad.push(`${flat[i].iso} ${load.join('+')} → на следующий день качественная (нед. ${flat[i].wn}), при свободном дне с запасом`);
+      }
+      if (bad.length) return `${bad.length} шт., напр.: ${bad[0]}`;
+    },
+  },
+  {
+    n: 25, name: 'Неделя, помеченная «Пиковая», — реально максимальная по объёму',
+    check(p, cfg) {
+      // На рельефе километраж недели закономерно падает при появлении горочной работы (в гору та же нагрузка
+      // «стоит» меньше км при том же времени) — там сравниваем недели по ВРЕМЕНИ.
+      const hilly = (cfg.elevGain || 0) / Math.max(1, cfg.goalDist / 1000) >= 8;
+      const metric = w => hilly ? w.min : w.km;
+      // при 3 пробежках в неделю разгрузочная неделя структурно объёмнее рабочей (Q1 становится лёгким днём,
+      // и гибких дней становится больше) — сжимать нечем, отклонение структурное
+      if ((cfg.runs || 5) <= 3) return null;
+      const peak = p.weeks.find(w => w.type === 'peak');
+      if (!peak) return null;
+      const build = p.weeks.filter(w => w.type !== 'race' && w.type !== 'taper');
+      const maxKm = Math.max(...build.map(metric));
+      if (metric(peak) < maxKm * 0.95) {
+        const bigger = build.filter(w => metric(w) > metric(peak) * 1.05).map(w => `нед. ${w.n} (${w.phase}) = ${metric(w)}`);
+        return `«Пиковая» нед. ${peak.n} = ${metric(peak)}${hilly ? ' мин' : ' км'}, но выше: ${bigger.slice(0, 2).join(', ')}`;
+      }
+    },
+  },
+  {
+    n: 26, name: 'Отскок после разгрузки в пределах ~10% от преддеклоадного уровня',
+    check(p, cfg) {
+      // при 3 пробежках в неделю гибкий день всего один — сжимать неделю нечем, отклонения структурные
+      if ((cfg.runs || 5) <= 3) return null;
+      const hilly = (cfg.elevGain || 0) / Math.max(1, cfg.goalDist / 1000) >= 8;
+      const metric = w => hilly ? w.min : w.km;   // на рельефе км недели не сопоставимы между фазами
+      // Разгрузка не должна открывать «окно» для скачка: неделя после down не может превышать уровень
+      // за 2 недели до неё больше, чем позволяет правило ~10%/нед (с абсолютным полом +4 км).
+      for (let i = 2; i < p.weeks.length; i++) {
+        if (p.weeks[i - 1].type !== 'down') continue;
+        if (p.weeks[i].type === 'race' || p.weeks[i].type === 'taper' || p.weeks[i].type === 'tune') continue;
+        const base = metric(p.weeks[i - 2]), now = metric(p.weeks[i]);
+        if (base < 10) continue;
+        const lim = Math.max(base * 1.12, base + 4);
+        if (now > lim) return `нед. ${p.weeks[i].n} = ${now} после разгрузки ${metric(p.weeks[i - 1])}, до неё было ${base} (лимит ${Math.round(lim)})`;
+      }
+    },
+  },
+  {
+    n: 27, name: 'В неделю промежуточного старта длинная урезана вместе с объёмом',
+    check(p, cfg) {
+      const lim = cfg.goalDist > 42195 ? 0.46 : cfg.goalDist >= 42000 ? 0.37 : 0.35;
+      for (const w of p.weeks) {
+        if (w.type !== 'tune' || !w.km) continue;
+        const longs = wkActs(w).filter(x => isRun(x) && x.z === 'long');
+        const long = Math.max(0, ...longs.map(x => x.km || 0));
+        if (long > w.km * lim) return `нед. ${w.n}: длинная ${long.toFixed(1)} км из ${w.km} (${Math.round(long / w.km * 100)}%, лимит ${Math.round(lim * 100)}%)`;
       }
     },
   },

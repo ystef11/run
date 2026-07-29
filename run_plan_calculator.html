@@ -887,12 +887,73 @@ function buildPlan(cfgIn){
   if(nQual===3){ const qi=TPLr.map((v,i)=>({v,i})).filter(x=>x.v==='Q1'||x.v==='Q2'||x.v==='L').map(x=>x.i);
     let best=-1,bd=-1; for(let i=0;i<7;i++){ if(TPLr[i]!=='E')continue; const dmin=Math.min.apply(null,qi.map(q=>Math.min((i-q+7)%7,(q-i+7)%7))); if(dmin>bd){bd=dmin;best=i;} }
     if(best>=0)TPLr[best]='Q3'; }
-  // силовые дни выбираем не просто по порядку, а по максимальной дистанции до ближайшей качественной/длинной —
-  // иначе силовая систематически ложится вплотную (день до/после) к Q1/Q2/Q3/L, что вредно для восстановления
-  const qlIdxForStr=TPLr.map((v,i)=>({v,i})).filter(x=>x.v==='Q1'||x.v==='Q2'||x.v==='Q3'||x.v==='L').map(x=>x.i);
+  // ---- выбор дней для «второстепенной» нагрузки (силовая, кросс) ----
+  // Сортировка «по удалённости от Q/L» была недостаточной: в плотных шаблонах (5 пробежек — `-,Q1,E,Q2,-,E,L`)
+  // ВСЕ свободные дни находятся на расстоянии 1 от какой-нибудь качественной, и tie-break по индексу всегда
+  // выбирал день 0 — то есть ровно день ПЕРЕД первой качественной. Код делал то, от чего сам предостерегал.
+  // Правильная иерархия (день ПЕРЕД качественной — худший вариант, ноги должны быть свежими):
+  //   1. свободный день, до следующей качественной ≥2 дней — лучший; среди таких предпочитаем сразу ПОСЛЕ
+  //      качественной/длинной (мышцы уже утомлены, добавочный вред минимален);
+  //   2. сам день качественной — принцип «тяжёлые дни тяжёлыми, лёгкие лёгкими»: лучше добавить нагрузку
+  //      к уже тяжёлому дню, чем испортить свежесть перед ним;
+  //   3. день ПЕРЕД качественной — только если больше некуда;
+  //   никогда: день длинной.
+  const isQLv=v=>v==='Q1'||v==='Q2'||v==='Q3'||v==='L';
+  const isQv2=v=>v==='Q1'||v==='Q2'||v==='Q3';
+  // ВАЖНО: средне-длинная (marathon) / спарка (ultra) создаётся на этапе генерации дня, а не в шаблоне TPLr —
+  // без её учёта день перед ней считался «свободным», и силовая систематически ложилась накануне (см. замечания).
+  // midLongDow объявлен ниже, поэтому набор нагрузочных дней собираем лениво, через функцию.
+  let midLongDowRef=-1;   // заполняется ниже, как только midLongDow посчитан
+  const extraHardDows=()=>midLongDowRef>=0?[midLongDowRef]:[];
+  const qlIdxForStr=TPLr.map((v,i)=>({v,i})).filter(x=>isQLv(x.v)).map(x=>x.i);
   const distFromQL=idx=>qlIdxForStr.length?Math.min.apply(null,qlIdxForStr.map(q=>Math.min((idx-q+7)%7,(q-idx+7)%7))):7;
-  const strDays=TPLr.map((v,idx)=>({v:v,idx:idx})).filter(o=>o.v==='E'||o.v==='R'||o.v==='-').map(o=>o.idx)
-    .sort((a,b)=>distFromQL(b)-distFromQL(a)||a-b);
+  // расстояние ВПЕРЁД до следующей качественной/длинной и НАЗАД до предыдущей (циклически по неделе)
+  const hardDows=tpl=>tpl.map((v,i)=>({v,i})).filter(o=>isQLv(o.v)).map(o=>o.i).concat(extraHardDows());
+  const gapNextQL=(tpl,idx)=>{const qi=hardDows(tpl);
+    if(!qi.length)return 7; for(let k=1;k<=7;k++)if(qi.indexOf((idx+k)%7)>=0)return k; return 7;};
+  const gapPrevQL=(tpl,idx)=>{const qi=hardDows(tpl);
+    if(!qi.length)return 7; for(let k=1;k<=7;k++)if(qi.indexOf((idx-k+7)%7)>=0)return k; return 7;};
+  // allowSameDayQ: можно ли ставить нагрузку в один день с качественной (для силовой — да, для ударного
+  // кросса вроде лыж — нет: 70 мин лыж поверх интервалов это уже не «тяжёлый день», а перегруз)
+  // Совмещать нагрузку можно только с НАСТОЯЩЕЙ качественной (Q1/Q2). Q3 у марафона в базовой фазе — это
+  // «Лёгкий увеличенный», а в спец./пиковой — средне-длинная; считать его «тяжёлым днём» нельзя, иначе силовая
+  // садилась на такой день и оказывалась ровно накануне настоящего порога (замер: Ср силовая → Чт порог).
+  const isQSame=v=>v==='Q1'||v==='Q2';
+  const loadDayScore=(tpl,idx,allowSameDayQ)=>{
+    const v=tpl[idx];
+    if(v==='L')return -1e6;                                   // день длинной не занимаем никогда
+    const next=gapNextQL(tpl,idx), prev=gapPrevQL(tpl,idx);
+    if(isQSame(v))return allowSameDayQ?(500-prev):-1e6;         // в один день с качественной
+    if(isQv2(v))return next>=2?(900+next*10-prev):(90-prev);    // Q3 — сам по себе не «тяжёлый день»
+    if(next>=2)return 1000+next*10-prev;                       // есть запас до следующей качественной
+    return 100-prev;                                           // день ПЕРЕД качественной — последний вариант
+  };
+  const rankLoadDays=(tpl,allowSameDayQ,filterFn)=>tpl.map((v,idx)=>idx)
+    .filter(idx=>!filterFn||filterFn(tpl[idx],idx))
+    .map(idx=>({idx,sc:loadDayScore(tpl,idx,allowSameDayQ)}))
+    .filter(o=>o.sc>-1e5)
+    .sort((a,b)=>b.sc-a.sc||a.idx-b.idx)
+    .map(o=>o.idx);
+  const sparkDow=(longDow+6)%7;                                                    // день перед длинной (спарка ультры)
+  // средне-длинная (16–20 км спокойно) для марафона — НЕ в день перед длинной: спарка back-to-back это
+  // ультра-приём, а для марафона 2 ч в субботу + 2,5–3 ч в воскресенье режут качество главной длинной.
+  // Для ультры спарка остаётся намеренно — там смежные длинные и есть тренировочная цель.
+  // ВАЖНО: вычисляем ДО strDays, потому что этот день тоже нагрузочный и должен участвовать в оценке дней
+  // силовой/кросса (иначе силовая систематически ложится накануне спарки — см. замечания).
+  // Выбор дня средне-длинной по той же иерархии, что для силовой: `distFromQL` берёт МИНИМУМ из расстояний
+  // вперёд и назад и потому не различает «день перед качественной» и «день после» — при плотных шаблонах
+  // средне-длинная садилась вплотную к Q1, и анти-кластеризация её тут же снимала (сессия тратилась впустую).
+  // Если дня с запасом ≥2 суток до следующей нагрузки нет — средне-длинную не добавляем вовсе.
+  const midLongPick=(function(){
+    if(isUltra)return {dow:sparkDow,ok:true};
+    const cand=rankLoadDays(TPLr,false,v=>v==='E'||v==='R');
+    if(!cand.length)return {dow:sparkDow,ok:false};
+    const best=cand[0];
+    return {dow:best,ok:gapNextQL(TPLr,best)>=2};
+  })();
+  const midLongDow=midLongPick.dow, midLongOk=midLongPick.ok;
+  midLongDowRef=midLongOk?midLongDow:-1;
+  const strDays=rankLoadDays(TPLr,true,v=>v==='E'||v==='R'||v==='-'||isQv2(v));
   if(!strDays.length)strDays.push((longDow+1)%7);
   // ---- неделя 1: адаптационные дни до факт. даты старта ----
   // Три дефекта старой версии (см. ревью, F):
@@ -944,29 +1005,21 @@ function buildPlan(cfgIn){
   // Силовые A/B/C — строго В РАЗНЫЕ дни: при нехватке кандидатов лишние сессии просто не ставятся
   // (дублировать две силовые в один день хуже, чем сделать одну).
   const sdA0=strDays0[0], sdB0=(strDays0.length>1?strDays0[1]:null), sdC0=(strDays0.length>2?strDays0[2]:null);
-  const sparkDow=(longDow+6)%7;                                                    // день перед длинной (спарка ультры)
-  // средне-длинная (16–20 км спокойно) для марафона — НЕ в день перед длинной: спарка back-to-back это
-  // ультра-приём, а для марафона 2 ч в субботу + 2,5–3 ч в воскресенье режут качество главной длинной
-  // (см. ревью, C2). Ставим на самый удалённый от Q/L лёгкий день середины недели. Для ультры спарка
-  // остаётся намеренно — там смежные длинные и есть тренировочная цель.
-  const midLongDow=(function(){
-    if(isUltra)return sparkDow;
-    let best=-1,bd=-1;
-    for(let i=0;i<7;i++){ if(TPLr[i]!=='E'&&TPLr[i]!=='R')continue;
-      const d=distFromQL(i); if(d>bd){bd=d;best=i;} }
-    return best>=0?best:sparkDow;
-  })();
   // авто-подбор дней кросса. Раньше брался ПЕРВЫЙ по индексу свободный день (rest[0]) — из-за этого кросс
   // систематически садился вплотную к качественной (см. ревью, B2). Теперь та же сортировка по удалённости
   // от Q/L, что и у силовых, и дни, уже занятые кроссом, тоже учитываются.
   const CROSS_RESERVED=new Set([longDow,sparkDow,midLongDow]);
   (function(){ if(!cfg.cross)return; var used=new Set(CROSS_RESERVED);
     cfg.cross.forEach(function(c){c._days=(c.days||[]).slice(); c._days.forEach(function(i){used.add(i);});});
-    cfg.cross.forEach(function(c){ if(!c.auto)return; var cand=[];
-      for(var i=0;i<7;i++){ if(used.has(i))continue; if(TPLr[i]==='R'||TPLr[i]==='-'||TPLr[i]==='E')cand.push(i); }
-      cand.sort(function(a,b){
-        var ra=(TPLr[a]==='R'||TPLr[a]==='-')?0:1, rb=(TPLr[b]==='R'||TPLr[b]==='-')?0:1;  // сперва дни отдыха
-        return ra-rb || distFromQL(b)-distFromQL(a) || a-b; });
+    // Низкоударный кросс (бассейн/велосипед) можно ставить и в день качественной — это лучше, чем накануне.
+    // Ударный (лыжи/фитнес) — только на свободный день: 70 мин лыж поверх интервалов это перегруз.
+    var LOW_IMPACT={pool:1,bike:1};
+    cfg.cross.forEach(function(c){ if(!c.auto)return;
+      var allowQ=!!LOW_IMPACT[c.sport];
+      var cand=rankLoadDays(TPLr,allowQ,function(v,idx){
+        if(used.has(idx))return false;
+        return v==='R'||v==='-'||v==='E'||(allowQ&&isQSame(v));
+      });
       if(cand.length){c._days.push(cand[0]);used.add(cand[0]);} }); })();
 
   // ---- недельные объёмы: старт ~72% пика, рост ≤10%/нед, разгрузки, тейпер ----
@@ -994,6 +1047,17 @@ function buildPlan(cfgIn){
       let td=dAdd(marD,-24);                                          // ориентир ~3.5 нед. до старта
       while(td.getDay()!==6&&td<winEnd)td=dAdd(td,1);                 // подвинуть на субботу (паркран-традиция), если рамки позволяют
       if(td<winStart||td>winEnd)td=dAdd(marD,-24);                    // иначе — просто дата-ориентир без привязки ко дню недели
+      // Окно восстановления после теста (tuneRecDays) не должно накрывать пиковую неделю: иначе «Пиковая»
+      // состоит из восстановительных дней и оказывается меньше обычных рабочих (замер: нед. 13 «Пиковая»
+      // 69 км против нед. 11 «Специфика» 74 км). Если тест попадает в неделю пика или в предыдущую —
+      // сдвигаем его на неделю позже, в подводку: контрольный тест за 2–3 нед. до старта — обычная практика.
+      {
+        const twIdx=Math.floor(dDiff(td,start)/7);
+        if(twIdx>=peakIdx-1&&twIdx<=peakIdx){
+          const later=dAdd(td,7);
+          if(dDiff(marD,later)>=14)td=later; else td=dAdd(td,-7);
+        }
+      }
       if(td>start&&td<marD){
         // для марафона тоже 10 км: контрольный полумарафон за ~3,5 нед. до старта делает свою неделю
         // объёмнее пиковой и съедает ~6 дней подводки на восстановление (см. ревью). 10 км калибруют темп
@@ -1045,6 +1109,24 @@ function buildPlan(cfgIn){
     let j=peakIdx-1; while(j>0&&types[j])j--;
     if(j>0){types[j]='peak';kms[j]=Math.max(kms[j],Math.max.apply(null,kms.slice(0,peakIdx+1))*TUNE.peakRestore);
       notes.push(`Промежуточный старт попал на пиковую неделю — пик объёма перенесён на неделю ${j+1}.`);}
+  }
+  // ---- «Пиковая неделя» обязана быть РЕАЛЬНО максимальной по объёму ----
+  // peakIdx — это позиция в расписании (N-2-taperW), а не индекс максимума кривой. Из-за разгрузок и тюн-стартов
+  // на пути к пику более ранняя «базовая» неделя иногда оказывалась объёмнее недели с лейблом «Пиковая»
+  // (замер: нед. 7 «База» 42 км против нед. 10 «Пиковая» 34 км) — пользователь видел необъяснимую просадку
+  // объёма перед номинальным пиком. Приподнимаем целевой объём пиковой недели до максимума уже достигнутого:
+  // это не нарушает правило ~10%, потому что такой объём в цикле УЖЕ был освоен.
+  {
+    const pIdx=types.indexOf('peak');
+    if(pIdx>=0){
+      const maxBefore=Math.max.apply(null,kms.slice(0,pIdx+1).concat([0]));
+      if(kms[pIdx]<maxBefore*1.02)kms[pIdx]=maxBefore*1.02;
+      // и ни одна неделя до пика не должна его превышать: если превышает — она и есть пик по факту,
+      // но переносить лейбл нельзя (ключевая тренировка цикла привязана к phase==='peak'), поэтому
+      // подтягиваем пиковую неделю, а не понижаем рабочую
+      const over=kms.slice(0,pIdx).filter(x=>x>kms[pIdx]);
+      if(over.length)kms[pIdx]=Math.max.apply(null,over)*1.02;
+    }
   }
   // ПРОХОД 2 — подводка и неделя гонки от достигнутого пика, строго монотонно вниз.
   const peakReached=Math.max.apply(null,kms.slice(0,peakIdx+1).filter(x=>x>0).concat([startKm0]));
@@ -1359,10 +1441,25 @@ function buildPlan(cfgIn){
   const weeks=[]; const workouts=[];
   const strideN=s<0.35?6:4;
   const longShare=lerp(TUNE.longShare[0],TUNE.longShare[1],s); let maxLongMin=maxLongMinCap;
+  // ---- допустимая доля длинной от недельного объёма ----
+  // Для среднего/опытного уровня методики держат длинную ближе к 30–35% недели; для новичка на низком объёме
+  // 40–45% — норма и соответствует известным программам (длинная короче 40 мин уже не длинная, делить её не на
+  // что). Ужесточаем только там, где есть чем поделиться. Объём недели при этом НЕ поднимается — если упираемся
+  // в безопасный потолок роста, длинная просто укорачивается, а неделя остаётся какой есть.
+  const lrShareCapFor=w=>{
+    if(!(w>0)||w<35)return isUltra?0.46:0.45;                     // малые объёмы — доля неизбежно высокая
+    const seasoned=(cfg.exp!=='novice');
+    if(isUltra)return seasoned?0.40:0.44;
+    if(goalDist>=42000)return seasoned?0.32:0.36;
+    return seasoned?0.30:0.34;
+  };
+  if(hillTier>=1)notes.push('Трасса с заметным набором высоты: в неделях с горочной работой недельный КИЛОМЕТРАЖ закономерно ниже — в гору та же нагрузка «стоит» меньше километров при том же (или большем) времени на ногах и усилии. Ориентируйтесь на время недели и пульс, а не на км: просадка км в фазе специфики здесь не ошибка плана.');
   const noQualUntil={};                                          // дата -> лёгкие дни после промежуточного старта
   tune.forEach(t=>{const n=tuneRecDays(t.dist);for(let k=1;k<=n;k++)noQualUntil[dISO(dAdd(t.d,k))]=1;});
   let easyVarCounter=0; // счётчик для ротации структуры лёгких дней по всему плану (не только "объём + страйды")
   let prevActualKm=0;   // фактический объём предыдущей недели — им ограничиваем разгрузку/подводку
+  let preDownActualKm=0; // фактический объём последней рабочей недели ПЕРЕД разгрузкой — им ограничиваем отскок
+  let maxActualKm=0;     // максимум фактического объёма среди рабочих недель — им подтягиваем пиковую неделю
 
   for(let i=0;i<N;i++){
     const wStart=dAdd(start,i*7);
@@ -1380,7 +1477,7 @@ function buildPlan(cfgIn){
     // ПОТОЛОК ОТ НЕДЕЛЬНОГО ОБЪЁМА: длинная не должна быть больше LR_MAX_SHARE недели — иначе на малых объёмах
     // абсолютные полы ниже выдавливали её до 40–70% недельного километража (см. ревью, C1: заявлено 40 км/нед →
     // факт 60, длинная 40% недели). Для ультры доля выше — там длинная и есть главный смысл недели.
-    const LR_MAX_SHARE=isUltra?0.42:(goalDist>=42000?0.34:0.32);
+    const LR_MAX_SHARE=lrShareCapFor(wkm);
     const lrCapByVol=Math.max(30,wkm*LR_MAX_SHARE*mid(R.longp)/60);       // мин, длинная не больше доли недели
     const lrCap=Math.min(maxLongMin,lrCapByVol);
     if(lrMin>lrCap){lrMin=lrCap;lrKm=Math.round(lrMin*60/mid(R.longp));}
@@ -1400,6 +1497,14 @@ function buildPlan(cfgIn){
       const fl=Math.min(cfg.curLong,maxLongMin,Math.max(lrCap,cfg.curLong*0.8));
       if(lrMin<fl){lrMin=fl;lrKm=Math.round(lrMin*60/mid(R.longp));} }
     if(phase==='taper'){lrMin=Math.min(lrMin,95);lrKm=Math.round(lrMin*60/mid(R.longp));}
+    // Неделя промежуточного старта/контрольного теста — разгрузочная по смыслу: сам старт и есть главная
+    // работа недели. Раньше длинная в такую неделю считалась независимо от дисконтированного объёма, и её
+    // доля доходила до 44% (замер: неделя теста 59 км, длинная 26 км) — неделя перед контрольным стартом
+    // оказывалась «длинной неделей» вместо разгрузочной. Режем так же, как в подводке.
+    if(phase==='tune'){
+      const tuneLrCap=Math.min(lrCap*0.6,90,Math.max(30,wkm*0.28*mid(R.longp)/60));
+      if(lrMin>tuneLrCap){lrMin=tuneLrCap;lrKm=Math.round(lrMin*60/mid(R.longp));}
+    }
     lrMin=r5(lrMin);                                                      // длинную — до ближайших 5 минут
 
     for(let di=0;di<7;di++){
@@ -1610,7 +1715,7 @@ function buildPlan(cfgIn){
         }}
       else if(slot==='R'||easyDay){items=[{kind:'run',z:'rec',name:'Восстановительный',steps:[recS(35)]}];}
       else {items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(45)]}];} // placeholder, длит. подгоним ниже
-      if((isUltra||goalDist>=42000)&&di===midLongDow&&!easyDay&&(phase==='spec'||phase==='peak')&&items[0]&&items[0].kind==='run'&&(items[0].z==='easy'||items[0].z==='rec')){
+      if((isUltra||goalDist>=42000)&&midLongOk&&di===midLongDow&&!easyDay&&(phase==='spec'||phase==='peak')&&items[0]&&items[0].kind==='run'&&(items[0].z==='easy'||items[0].z==='rec')){
         // марафон: без средней длинной (16-20 км спокойно раз в неделю) в фазе специфики недостаёт объёма
         // именно марафонской выносливости — не только длинная в воскресенье (см. ревью плана).
         // Верхняя граница привязана к недельному объёму: длинная + средне-длинная вместе не должны съедать
@@ -1646,10 +1751,13 @@ function buildPlan(cfgIn){
     // Вызывается ДВА раза — после подгонки объёма и после бюджета интенсивности: второй проход обязателен,
     // потому что бюджет интенсивности может сократить другие сессии и доля длинной снова вырастет.
     const capLongByShare=()=>{
-      const lrShareCap=isUltra?0.44:(goalDist>=42000?0.36:0.34);
+      // Долю считаем от ФАКТИЧЕСКОГО объёма недели: раньше порог брался по ЦЕЛИ, и если неделя превышала цель
+      // (структурные полы), то для цели <35 км включалось «послабление для малых объёмов» 0.45, хотя по факту
+      // неделя была 38–40 км и должна была подчиняться строгому порогу (замер: длинная 45% недели).
       const runKm=()=>days.reduce((a,d)=>a+d.items.filter(x=>x.kind==='run'&&x.steps).reduce((b,x)=>b+sesKm(x.steps,R),0),0);
       days.flatMap(d=>d.items.filter(x=>x.kind==='run'&&x.z==='long'&&x.steps)).forEach(it=>{
         for(let g=0;g<150;g++){
+          const lrShareCap=lrShareCapFor(runKm());
           if(sesKm(it.steps,R)<=runKm()*lrShareCap)break;
           if(sesMin(it.steps,R)<=40)break;
           let tgt=null;
@@ -1665,6 +1773,10 @@ function buildPlan(cfgIn){
         it.name=it.name.replace(/\d+:\d{2}/,hm(r5(sesMin(it.steps,R))));
       });
     };
+    // ссылки для повторного добора объёма после пост-проходов (бюджет интенсивности, кэп длинной):
+    // те проходы только УМЕНЬШАЮТ объём, из-за чего неделя (в частности пиковая) могла оказаться ниже цели
+    // и ниже уже достигнутого максимума — тогда «Пиковая неделя» выглядела просадкой (см. замечания).
+    let _flex=null,_mins=null,_wkmT=0,_easyMax=0,_recMax=0,_paceOf=null,_strideKm=0,_applyMins=null,_shrink=null,_tol=1.05;
     // --- подгонка объёма: лёгкие/восст. дни заполняют остаток недели ---
     if(!raceHere){
       // Целевой объём недели дополнительно ограничиваем ФАКТИЧЕСКИМ объёмом предыдущей недели: на разгрузочной
@@ -1674,9 +1786,20 @@ function buildPlan(cfgIn){
       // после разгрузки/тюна рабочая неделя обязана вернуться выше — иначе кэп «замораживает» план на
       // разгрузочном уровне и пиковая неделя выходит ниже обычной рабочей
       const prevT=i>0?types[i-1]:'';
-      const capF=types[i]==='down'?0.85:(types[i]==='taper'?0.92:(types[i]==='tune'?0.95
+      // множитель кэпа для недели промежуточного старта берём из tuneVolF по фактической дистанции старта:
+      // жёстко зашитые 0.95 давали неделю теста почти на уровне рабочей (замер: 73 км против пиковых 91)
+      const tuneCapF=(types[i]==='tune'&&tr)?tuneVolF(tr.dist):0.9;
+      const capF=types[i]==='down'?0.85:(types[i]==='taper'?0.92:(types[i]==='tune'?tuneCapF
         :((prevT==='down'||prevT==='tune')?1.35:1.12)));
-      const wkmT=prevActualKm>0?Math.min(wkm,prevActualKm*capF):wkm;
+      let wkmT=prevActualKm>0?Math.min(wkm,prevActualKm*capF):wkm;
+      // ОТСКОК ПОСЛЕ РАЗГРУЗКИ. В цикле объёмов `prev` намеренно не обновляется на разгрузочной неделе (рост
+      // считается от преддеклоадного уровня), но из-за структурных полов ФАКТ мог выскочить существенно выше
+      // правила ~10% относительно уровня до разгрузки (замер: до +24%). Ограничиваем факт явно.
+      if(prevT==='down'&&preDownActualKm>0)
+        wkmT=Math.min(wkmT,Math.max(preDownActualKm*1.10,preDownActualKm+TUNE.growFloorKm));
+      // пиковая неделя не должна оказаться ниже уже достигнутого максимума — иначе перед номинальным «пиком»
+      // видна необъяснимая просадка объёма (см. правку лейбла пиковой недели в расчёте kms[])
+      if(types[i]==='peak'&&maxActualKm>0)wkmT=Math.max(wkmT,maxActualKm*1.02);
       const fixedKm=days.reduce((a,d)=>a+d.items.filter(x=>x.kind==='run'&&x.z!=='easy'&&x.z!=='rec')
         .reduce((b,x)=>b+sesKm(x.steps,R),0),0);
       const flex=days.flatMap((d,di)=>d.items.filter(x=>x.kind==='run'&&(x.z==='easy'||x.z==='rec')&&!x.fixed).map(x=>{x._di=di;return x;}));
@@ -1718,47 +1841,7 @@ function buildPlan(cfgIn){
         return clamp(r5(Math.round(blockKm*p/60)),x.z==='easy'?TUNE.easyMin[0]:TUNE.recMin[0],x.z==='easy'?easyMax:recMax);
       });
       const flexKmOf=(x,m)=>m*60/paceOf(x.z)+((x.z==='easy')?strideKm:0);
-      const totalKm=()=>fixedKm+flex.reduce((a,x,k)=>a+(mins[k]>0?flexKmOf(x,mins[k]):0),0);
-      const dropped=[];
-      // рычаг №2 — сама длинная/средне-длинная: в подводке и на малых объёмах «жёсткая» часть недели одна
-      // может превышать целевой объём, и тогда никакое сжатие лёгких дней не помогает (подводка получалась
-      // немонотонной — см. ревью, A2/A3). Пол длинной — не ниже 40 мин и не ниже 28% недели.
-      const longItems=days.flatMap(d=>d.items.filter(x=>x.kind==='run'&&x.z==='long'&&x.steps));
-      const longFloorMin=Math.max(40,Math.min(90,wkmT*0.28*mid(R.longp)/60));
-      const shortenLong=()=>{
-        // берём самую длинную сессию и её самый долгий непрерывный шаг по времени
-        let best=null,bestStep=null,bestV=-1;
-        longItems.forEach(it=>{
-          const tot=sesMin(it.steps,R); if(tot<=longFloorMin)return;
-          it.steps.forEach(st0=>{ if(st0.t==='repeat'||st0.end!=='time')return;
-            if(st0.v>bestV&&st0.v>600){bestV=st0.v;best=it;bestStep=st0;} });
-        });
-        if(!bestStep)return false;
-        bestStep.v=Math.max(600,bestStep.v-300);
-        // имя длинной содержит её длительность — обновляем, иначе название разойдётся с содержимым
-        const tot=r5(sesMin(best.steps,R));
-        best.name=best.name.replace(/\d+:\d{2}/,hm(tot));
-        return true;
-      };
-      for(let guard=0;guard<400&&totalKm()>wkmT*1.05;guard++){
-        // 1) укорачиваем самый длинный гибкий день, пока он выше жёсткого пола
-        let bi=-1,bv=-1;
-        flex.forEach((x,k)=>{if(mins[k]>HARD_FLOOR_MIN&&mins[k]>bv){bv=mins[k];bi=k;}});
-        if(bi>=0){mins[bi]=Math.max(HARD_FLOOR_MIN,mins[bi]-5);continue;}
-        // 2) укорачиваем длинную/средне-длинную
-        if(shortenLong())continue;
-        // 3) убираем восстановительный день целиком — но только если после этого неделя не провалится
-        //    сильно НИЖЕ цели (иначе вместо перебора получаем недобор)
-        let ri=flex.findIndex((x,k)=>x.dbl2&&mins[k]>0);
-        if(ri<0&&days[/*любой*/0]){ // затем — восстановительный день, если в этот день есть ещё бег
-          ri=flex.findIndex((x,k)=>x.z==='rec'&&mins[k]>0&&days[x._di].items.filter(y=>y.kind==='run').length>1);
-        }
-        if(ri<0)break;   // основную пробежку дня не выбрасываем — иначе кривая объёма становится пилообразной
-        if(totalKm()-flexKmOf(flex[ri],mins[ri])<wkmT*0.88)break;
-        mins[ri]=0;dropped.push(flex[ri]._di);
-      }
-
-      if(dropped.length&&phase!=='taper')notes.push(`Неделя ${i+1}: ${dropped.length} восстановительн${dropped.length===1?'ый день':'ых дня'} превращ${dropped.length===1?'ён':'ены'} в отдых — иначе неделя вышла бы за целевой объём ≈${Math.round(wkmT)} км. Это норма: объём задают качественные и длинная, а не добор трусцой.`);
+      const applyMins=()=>{
       flex.forEach((x,_k)=>{
         let m=mins[_k];
         if(m<=0){x._drop=true;return;}
@@ -1784,7 +1867,64 @@ function buildPlan(cfgIn){
           x.steps=[x.z==='easy'?easyS(m):recS(m)];
           if(x.z==='easy')x.steps.push(strides(strideNW,R));
           x.name=x.z==='easy'?'Лёгкий':(x.dbl2?'Восстановительный (2-я трен.)':'Восстановительный');
-        }});
+        }});};
+      // ФАКТИЧЕСКИЙ километраж недели: оценка по mins расходилась с фактом, потому что «Лёгкий прогрессивный»
+      // часть времени бежится в МР-темпе (быстрее лёгкого) и даёт больше километров. Из-за этого рычаги сжатия
+      // останавливались раньше времени, и неделя после разгрузки выходила выше кэпа (замер: 59 км при кэпе 53).
+      const totalKm=()=>{const save=easyVarCounter; applyMins(); easyVarCounter=save;
+        return days.reduce((a,d)=>a+d.items.filter(x=>x.kind==='run'&&x.steps&&!x._drop).reduce((b,x)=>b+sesKm(x.steps,R),0),0);};
+      const dropped=[];
+      // рычаг №2 — сама длинная/средне-длинная: в подводке и на малых объёмах «жёсткая» часть недели одна
+      // может превышать целевой объём, и тогда никакое сжатие лёгких дней не помогает (подводка получалась
+      // немонотонной — см. ревью, A2/A3). Пол длинной — не ниже 40 мин и не ниже 28% недели.
+      const longItems=days.flatMap(d=>d.items.filter(x=>x.kind==='run'&&x.z==='long'&&x.steps));
+      // Пол длинной — доля недели, ПОДЕЛЁННАЯ на число длинных сессий: в неделе со спаркой (ультра) или
+      // со средне-длинной их две, и общий пол «28% недели на каждую» блокировал сжатие вовсе — рычаг не
+      // срабатывал, и неделя после разгрузки оставалась выше кэпа (замер: 41 км при кэпе 35).
+      const nLongSes=Math.max(1,longItems.length);
+      const longFloorMin=Math.max(40,Math.min(90,wkmT*0.28*mid(R.longp)/60/nLongSes));
+      const shortenLong=()=>{
+        // берём самую длинную сессию и её самый долгий непрерывный шаг по времени
+        let best=null,bestStep=null,bestV=-1;
+        longItems.forEach(it=>{
+          const tot=sesMin(it.steps,R); if(tot<=longFloorMin)return;
+          it.steps.forEach(st0=>{ if(st0.t==='repeat'||st0.end!=='time')return;
+            if(st0.v>bestV&&st0.v>600){bestV=st0.v;best=it;bestStep=st0;} });
+        });
+        if(!bestStep)return false;
+        bestStep.v=Math.max(600,bestStep.v-300);
+        // имя длинной содержит её длительность — обновляем, иначе название разойдётся с содержимым
+        const tot=r5(sesMin(best.steps,R));
+        best.name=best.name.replace(/\d+:\d{2}/,hm(tot));
+        return true;
+      };
+      // после разгрузки целимся точно в кэп (без запаса 5%): именно там запас превращался в отскок >10%
+      const tol=(prevT==='down')?1.0:1.05;
+      const shrinkToTarget=()=>{
+      for(let guard=0;guard<400&&totalKm()>wkmT*tol;guard++){
+        // 1) укорачиваем самый длинный гибкий день, пока он выше жёсткого пола
+        let bi=-1,bv=-1;
+        flex.forEach((x,k)=>{if(mins[k]>HARD_FLOOR_MIN&&mins[k]>bv){bv=mins[k];bi=k;}});
+        if(bi>=0){mins[bi]=Math.max(HARD_FLOOR_MIN,mins[bi]-5);continue;}
+        // 2) укорачиваем длинную/средне-длинную
+        if(shortenLong())continue;
+        // 3) убираем восстановительный день целиком — но только если после этого неделя не провалится
+        //    сильно НИЖЕ цели (иначе вместо перебора получаем недобор)
+        let ri=flex.findIndex((x,k)=>x.dbl2&&mins[k]>0);
+        if(ri<0&&days[/*любой*/0]){ // затем — восстановительный день, если в этот день есть ещё бег
+          ri=flex.findIndex((x,k)=>x.z==='rec'&&mins[k]>0&&days[x._di].items.filter(y=>y.kind==='run').length>1);
+        }
+        if(ri<0)break;   // основную пробежку дня не выбрасываем — иначе кривая объёма становится пилообразной
+        if(totalKm()-flexKmOf(flex[ri],mins[ri])<wkmT*0.88)break;
+        mins[ri]=0;dropped.push(flex[ri]._di);
+      }};
+      shrinkToTarget();
+
+      if(dropped.length&&phase!=='taper')notes.push(`Неделя ${i+1}: ${dropped.length} восстановительн${dropped.length===1?'ый день':'ых дня'} превращ${dropped.length===1?'ён':'ены'} в отдых — иначе неделя вышла бы за целевой объём ≈${Math.round(wkmT)} км. Это норма: объём задают качественные и длинная, а не добор трусцой.`);
+
+      applyMins();
+      _flex=flex;_mins=mins;_wkmT=wkmT;_easyMax=easyMax;_recMax=recMax;_paceOf=paceOf;_strideKm=strideKm;_applyMins=applyMins;
+      _shrink=shrinkToTarget;_tol=tol;
       // физически убираем дни, помеченные к удалению нормализацией объёма
       days.forEach(d=>{const keep=d.items.filter(x=>!x._drop);
         d.items=keep.length?keep:[{kind:'rest',label:'Отдых'}];});
@@ -1950,6 +2090,29 @@ function buildPlan(cfgIn){
 
     if(!raceHere)capLongByShare();
 
+    // --- ФИНАЛЬНОЕ ПРИВЕДЕНИЕ ОБЪЁМА К ЦЕЛИ ---
+    // Пост-проходы (анти-кластеризация, бюджет интенсивности) заменяют качественные лёгким бегом и тем самым
+    // МЕНЯЮТ километраж недели уже после подгонки. Без повторного прохода неделя после разгрузки выходила
+    // выше кэпа (замер: 45 км при кэпе 36,5), а пиковая — ниже уже достигнутого максимума.
+    if(!raceHere&&_shrink){_shrink();}
+    // --- ДОБОР ОБЪЁМА: возвращаем неделю к цели, если пост-проходы её срезали ---
+    if(!raceHere&&_flex&&_flex.length){
+      const runKmNow=()=>days.reduce((a,d)=>a+d.items.filter(x=>x.kind==='run'&&x.steps).reduce((b,x)=>b+sesKm(x.steps,R),0),0);
+      let guard=0;
+      while(runKmNow()<_wkmT*0.97&&guard++<200){
+        // удлиняем самый короткий гибкий день, пока он ниже своего потолка
+        let bi=-1,bv=1e9;
+        _flex.forEach((x,k)=>{ if(_mins[k]<=0)return;
+          const cap=x.z==='easy'?_easyMax:_recMax;
+          if(_mins[k]<cap-2&&_mins[k]<bv){bv=_mins[k];bi=k;} });
+        if(bi<0)break;
+        _mins[bi]+=5;
+        _applyMins();
+      }
+      if(_shrink)_shrink();
+      capLongByShare();     // доля длинной считается от факта — финальный факт известен только здесь
+    }
+
     // --- силовые ---
     const strN=Math.max(0,Math.min(3,+cfg.strength||0));
     // Силовые всегда в РАЗНЫЕ дни: null означает «места нет — сессию не ставим» (см. ревью, F1: раньше
@@ -1962,7 +2125,12 @@ function buildPlan(cfgIn){
     const isRecoveryDay=idx=>!!noQualUntil[dISO(days[idx].date)];
     const pushStr=(idx,item)=>{ if(idx==null||!days[idx])return;
       if(days[idx].items.some(x=>x.kind==='str'))return;                       // не больше одной силовой в день
-      if(days[idx].items.some(x=>x.kind==='run'&&(x.z==='thr'||x.z==='vo2'||x.z==='mp'||x.z==='long'||x.z==='race')))return; // не в день качественной/длинной
+      // Силовая В ОДИН ДЕНЬ с интервалами/порогом — это норма и даже предпочтительнее, чем накануне:
+      // принцип «тяжёлые дни тяжёлыми, лёгкие лёгкими». Запрещены только длинная и гонка/тест —
+      // там силовая либо мешает выполнить работу, либо непомерно удлиняет восстановление.
+      if(days[idx].items.some(x=>x.kind==='run'&&(x.z==='long'||x.z==='race')))return;
+      if(days[idx].items.some(x=>x.fixed))return;                              // день протокольной подводки к старту
+      if(tuneDow>=0&&idx<tuneDow&&tuneDow-idx<=2)return;                       // 1–2 дня до промежуточного старта
       if(i===0&&idx<leadDays)return;                                           // не в адаптационный день до старта
       if(isRecoveryDay(idx))days[idx].items.push({kind:'str',...STR_COR});
       else days[idx].items.push({kind:'str',...item}); };
@@ -1990,7 +2158,11 @@ function buildPlan(cfgIn){
       // восстановлению так, как кросс 60–75 мин). Раньше учитывались только дни с одним 'rest',
       // поэтому день, куда уже попала силовая, считался занятым и защита не срабатывала (см. ревью, B4).
       const restIdx=()=>days.map((d,ix)=>({d,ix})).filter(o=>o.d.items.every(x=>x.kind==='rest'||x.kind==='str')).map(o=>o.ix);
-      const isHardDay=ix=>days[ix].items.some(x=>x.kind==='run'&&(x.z==='thr'||x.z==='vo2'||x.z==='mp'||x.z==='long'||x.z==='race'));
+      // Ударный кросс не ставим в нагрузочный день вообще; низкоударный (бассейн/велосипед) допустим в день
+      // интервалов/порога — это лучше, чем накануне качественной, — но не в день длинной и не в день старта.
+      const LOW_IMPACT={pool:1,bike:1};
+      const isHardDay=(ix,sport)=>days[ix].items.some(x=>x.kind==='run'&&(
+        x.z==='long'||x.z==='race'||(!LOW_IMPACT[sport]&&(x.z==='thr'||x.z==='vo2'||x.z==='mp'))));
       // менее ударные виды размещаем первыми — если места не хватит, отсеются лыжи/фитнес, а не бассейн
       const order={pool:0,bike:1,ski:2,fitness:3};
       const list=cfg.cross.slice().sort((a,b)=>(order[a.sport]==null?9:order[a.sport])-(order[b.sport]==null?9:order[b.sport]));
@@ -1998,8 +2170,10 @@ function buildPlan(cfgIn){
       list.forEach(function(c){ var dd=c._days||c.days||[]; dd.forEach(function(dj0){
         var dj=clamp(+dj0,0,6); var d=days[dj]; if(!d)return;
         if(i===0&&dj<leadDays){skipped++;return;}                        // адаптационные дни до факт. старта
-        if(isHardDay(dj)){skipped++;return;}                             // не в день качественной/длинной/старта
+        if(isHardDay(dj,c.sport)){skipped++;return;}                     // не в день длинной/старта (и не в качественную для ударного кросса)
         if(dj===tuneDow){skipped++;return;}                              // не в день промежуточного старта
+        if(tuneDow>=0&&dj<tuneDow&&tuneDow-dj<=2){skipped++;return;}      // 1–2 дня до промежуточного старта
+        if(d.items.some(x=>x.fixed)){skipped++;return;}                   // день протокольной подводки
         if(noQualUntil[dISO(d.date)]){skipped++;return;}                 // не в окно восстановления после старта
         const free=restIdx();
         const wouldTakeLastRest=free.length<=1&&free.indexOf(dj)>=0;
@@ -2009,6 +2183,57 @@ function buildPlan(cfgIn){
         if(d.items.length===1&&d.items[0].kind==='rest')d.items=[item]; else d.items.push(item); }); });
       if(skipped>0&&i===0)notes.push(`Часть кросс-тренировок (${skipped} в неделю 1) не поставлена: они попадали на качественную/длинную, в окно восстановления после старта или забрали бы последний день полного отдыха. Кросс — дополнение к плану, он не должен вытеснять восстановление.`);
       if(crossF2<1&&i===0)notes.push('Длительность кросса масштабируется по фазе (разгрузка ×0,7 · неделя промежуточного старта ×0,55) и по восстановлению — иначе в разгрузочную неделю беговой объём падает, а кросс остаётся полным.');
+    }
+
+    // --- перенос «второстепенной» нагрузки с дня ПЕРЕД нагрузочным ---
+    // Дни силовой и кросса выбираются по ШАБЛОНУ недели, но фактический набор нагрузочных дней отличается:
+    // на разгрузочной неделе Q1 становится лёгким, после промежуточного старта качественные снимаются,
+    // средне-длинная появляется только в спец./пиковой фазе. Поэтому здесь проверяем ФАКТ и, если рядом
+    // есть день с запасом ≥2 суток до следующей нагрузки, переносим туда (см. замечания по тестам).
+    if(!raceHere){
+      const hardIdxA=()=>days.map((d,ix)=>d.items.some(x=>x.kind==='run'&&(x.z==='thr'||x.z==='vo2'||x.z==='mp'||x.z==='long'||x.z==='race'))?ix:-1).filter(ix=>ix>=0);
+      const nextHardA=(hi,ix)=>{ if(!hi.length)return 7; for(let k=1;k<=7;k++)if(hi.indexOf((ix+k)%7)>=0)return k; return 7; };
+      const LOW_IMP={pool:1,bike:1};
+      // сколько дней в неделе полностью свободны от бега и кросса (силовая/кор не мешают) — минимум один
+      // такой день обязателен, поэтому перенос не должен его отнимать
+      const freeDays=()=>days.map((d,ix)=>({d,ix})).filter(o=>o.d.items.every(x=>x.kind==='rest'||x.kind==='str')).map(o=>o.ix);
+      const canHost=(ix,item)=>{ const d=days[ix]; if(!d)return false;
+        if(i===0&&ix<leadDays)return false;
+        if(ix===tuneDow)return false;
+        if(tuneDow>=0&&ix<tuneDow&&tuneDow-ix<=2)return false;
+        if(noQualUntil[dISO(d.date)])return false;
+        if(d.items.some(x=>x.fixed))return false;
+        if(d.items.some(x=>x.kind===item.kind))return false;          // не больше одной силовой / одного кросса в день
+        if(d.items.some(x=>x.kind==='run'&&(x.z==='long'||x.z==='race')))return false;
+        if(ix===midLongDow&&midLongOk)return false;                   // зарезервирован под средне-длинную
+        if(item.kind==='cross'){
+          // ударный кросс — только на ненагрузочный день; любой кросс не должен забрать последний свободный день
+          const hard=d.items.some(x=>x.kind==='run'&&(x.z==='thr'||x.z==='vo2'||x.z==='mp'));
+          if(hard&&!LOW_IMP[item.sport])return false;
+          const free=freeDays();
+          if(free.length<=1&&free.indexOf(ix)>=0)return false;
+        }
+        return true; };
+      for(let pass=0;pass<6;pass++){
+        const hi=hardIdxA(); let moved=false;
+        for(let ix=0;ix<7&&!moved;ix++){
+          const d=days[ix]; if(!d)continue;
+          if(nextHardA(hi,ix)!==1)continue;                          // день не перед нагрузочным — ок
+          if(hi.indexOf(ix)>=0)continue;                             // сам день нагрузочный — «тяжёлый день», ок
+          const load=d.items.filter(x=>x.kind==='str'||x.kind==='cross');
+          for(const x of load){
+            let target=-1;
+            for(let k=0;k<7;k++)if(k!==ix&&nextHardA(hi,k)>=2&&canHost(k,x)){target=k;break;}
+            if(target<0)continue;
+            d.items=d.items.filter(y=>y!==x);
+            if(days[target].items.length===1&&days[target].items[0].kind==='rest')days[target].items=[x];
+            else days[target].items.push(x);
+            if(!d.items.length)d.items=[{kind:'rest',label:'Отдых'}];
+            moved=true; break;
+          }
+        }
+        if(!moved)break;
+      }
     }
 
     // --- питание (по длительности ≥75 мин, единое правило с редактором); разбор шагов собирает garmin_plan_import.py ---
@@ -2053,7 +2278,15 @@ function buildPlan(cfgIn){
     // подводочная неделя получает физически недостижимую цель и «превышает» её (см. ревью, A2/A3).
     // Если неделя структурно НЕ ДОБРАЛА до цели (мало пробежек), её факт нельзя брать за базу кэпа: иначе
     // кэп «защёлкивается» на низком уровне и план перестаёт расти вообще (замер: пик 23 км при цели 57).
-    if(!raceHere&&types[i]!=='tune')prevActualKm=Math.max(wKm,kms[i]*0.9);
+    if(!raceHere&&types[i]!=='tune'){
+      // prevActualKm — база для кэпа роста; не даём ей «защёлкнуться» на структурно недобравшей неделе
+      prevActualKm=Math.max(wKm,kms[i]*0.9);
+      // preDownActualKm — база для правила отскока после разгрузки; здесь нужен ИМЕННО ФАКТ, иначе отскок
+      // считается от завышенной цели и превышает ~10% от реального преддеклоадного объёма
+      // (замер: факт до разгрузки 44 км, но база бралась 53 → неделя после разгрузки уходила на 53 км)
+      if(types[i]!=='down'&&types[i]!=='taper')preDownActualKm=wKm;
+      if(types[i]!=='taper')maxActualKm=Math.max(maxActualKm,wKm);
+    }
     weeks.push({n:i+1,start:wStart,end:dAdd(wStart,6),phase:phName,type:types[i],km:Math.round(wKm),
       min:Math.round(wMin),lrKm:raceHere?null:lrKm,days,R});
   }

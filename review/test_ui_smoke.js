@@ -15,7 +15,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const HTML_PATH = path.join(__dirname, 'run_plan_calculator.html');
+const HTML_PATH = path.join(__dirname, '..', 'run_plan_calculator.html');
 const src = fs.readFileSync(HTML_PATH, 'utf8');
 let fails = 0;
 const ok = (cond, msg, extra) => { console.log((cond ? '  ok   ' : '  FAIL ') + msg + (cond || !extra ? '' : ' — ' + extra)); if (!cond) fails++; };

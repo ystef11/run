@@ -1340,13 +1340,31 @@ function buildPlan(cfgIn){
         return {nm:`Быстрые ${sp}x300`,z:'vo2',steps:[warmV(15),repsD(sp,300,R.rep,90),coolV(10)],
           note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'};
       }
-      const rot=[{nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90)},
-                 {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120)},
-                 {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150)},
-                 {nm:`МПК ${n}x800 @10к`,st:repsD(n,800,R.t10,75)},
-                 {nm:`Быстрые ${Math.max(5,n+2)}x300`,st:repsD(Math.max(5,n+2),300,R.rep,90),
-                   note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'}][i%5];
-      return {nm:rot.nm,z:'vo2',steps:[warmV(15),rot.st,coolV(10)],note:rot.note};
+      // Ползунок s влияет и здесь: акцент скорость — разбавляем короткими быстрыми, порог/ступени почти не
+      // ставим; акцент выносливость — чаще ступени/порог, реже голая скорость 300 м (см. ревью — раньше s
+      // учитывался только в общей ротации ниже, а эта 10к-специфичная ветка его игнорировала целиком).
+      const rot = s<0.35 ? [
+                   {nm:`МПК ${n}x800 @10к`,st:repsD(n,800,R.t10,75)},
+                   {nm:`Быстрые ${Math.max(6,n+3)}x300`,st:repsD(Math.max(6,n+3),300,R.rep,90),
+                     note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
+                   {nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90)},
+                   {nm:`Быстрые ${Math.max(5,n+2)}x300`,st:repsD(Math.max(5,n+2),300,R.rep,90),
+                     note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
+                 ][i%4]
+               : s>0.65 ? [
+                   {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150)},
+                   {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120)},
+                   {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
+                 ][i%3]
+               : [
+                   {nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90)},
+                   {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120)},
+                   {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150)},
+                   {nm:`МПК ${n}x800 @10к`,st:repsD(n,800,R.t10,75)},
+                   {nm:`Быстрые ${Math.max(5,n+2)}x300`,st:repsD(Math.max(5,n+2),300,R.rep,90),
+                     note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
+                 ][i%5];
+      return {nm:rot.nm,z:rot.z||'vo2',steps:[warmV(15),rot.st,coolV(10)],note:rot.note};
     }
     // 5 КМ, спец./пиковая фаза: без переключения Q1 крутил бы чистый МПК/повторы каждую неделю (темп быстрее
     // гоночного) — не хватает работы ИМЕННО на темпе 5 км и коротких быстрых повторов на экономичность/каденс
@@ -1364,13 +1382,30 @@ function buildPlan(cfgIn){
         return {nm:`Быстрые ${sp}x200`,z:'vo2',steps:[warmV(15),repsD(sp,200,R.rep,90),coolV(10)],
           note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'};
       }
-      const rot=[{nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90)},
-                 {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120)},
-                 {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150)},
-                 {nm:`МПК ${Math.min(12,n+5)}x400 @5к`,st:repsD(Math.min(12,n+5),400,R.race5,75)},
-                 {nm:`Быстрые ${Math.max(6,n+3)}x200`,st:repsD(Math.max(6,n+3),200,R.rep,90),
-                   note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'}][i%5];
-      return {nm:rot.nm,z:'vo2',steps:[warmV(15),rot.st,coolV(10)],note:rot.note};
+      // Ползунок s: то же самое, что и для 10 км выше — акцент скорость даёт больше коротких быстрых повторов
+      // и почти не заходит в ступени/порог; акцент выносливость — наоборот, чаще ступени и явный порог.
+      const rot = s<0.35 ? [
+                   {nm:`МПК ${Math.min(12,n+5)}x400 @5к`,st:repsD(Math.min(12,n+5),400,R.race5,75)},
+                   {nm:`Быстрые ${Math.max(7,n+4)}x200`,st:repsD(Math.max(7,n+4),200,R.rep,90),
+                     note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
+                   {nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90)},
+                   {nm:`Быстрые ${Math.max(6,n+3)}x200`,st:repsD(Math.max(6,n+3),200,R.rep,90),
+                     note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
+                 ][i%4]
+               : s>0.65 ? [
+                   {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150)},
+                   {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120)},
+                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
+                 ][i%3]
+               : [
+                   {nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90)},
+                   {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120)},
+                   {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150)},
+                   {nm:`МПК ${Math.min(12,n+5)}x400 @5к`,st:repsD(Math.min(12,n+5),400,R.race5,75)},
+                   {nm:`Быстрые ${Math.max(6,n+3)}x200`,st:repsD(Math.max(6,n+3),200,R.rep,90),
+                     note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
+                 ][i%5];
+      return {nm:rot.nm,z:rot.z||'vo2',steps:[warmV(15),rot.st,coolV(10)],note:rot.note};
     }
     let rots;
     if(s<0.35){ // акцент скорость: короче и быстрее
@@ -1472,20 +1507,50 @@ function buildPlan(cfgIn){
     if(goalDist>=10000){                     // 10 КМ: круизные @10к + порог
       if(phase==='taper')return {nm:"Порог 2x8'",z:'thr',steps:[warmV(12),repsT(2,8,R.thr,2),coolV(8)]};
       if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv),3,6);
-        const rot=[{nm:`Круизные ${n}x1000 @10к`,z:'vo2',st:repsD(n,1000,R.t10,90)},
-                   {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
-                   {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
-                   {nm:`Быстрые ${n+1}x600 @10к`,z:'vo2',st:repsD(n+1,600,R.t10,75)}][i%4];
+        // Ползунок s задаёт долю порога в Q2: акцент скорость — порог редкий (1 из 5, разбавлен короткой
+        // быстрой работой); акцент выносливость — порог чаще (2 из 3); баланс — как раньше, 1 из 4.
+        const rot = s<0.35 ? [
+                     {nm:`Круизные ${n}x1000 @10к`,z:'vo2',st:repsD(n,1000,R.t10,90)},
+                     {nm:`Быстрые ${n+1}x600 @10к`,z:'vo2',st:repsD(n+1,600,R.t10,75)},
+                     {nm:`Быстрые ${Math.max(5,n+2)}x400 @10к`,z:'vo2',st:repsD(Math.max(5,n+2),400,R.rep,90)},
+                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
+                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
+                   ][i%5]
+                 : s>0.65 ? [
+                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
+                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
+                     {nm:"Порог 2x15'",z:'thr',st:repsT(2,15,R.thr,2)},
+                   ][i%3]
+                 : [
+                     {nm:`Круизные ${n}x1000 @10к`,z:'vo2',st:repsD(n,1000,R.t10,90)},
+                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
+                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
+                     {nm:`Быстрые ${n+1}x600 @10к`,z:'vo2',st:repsD(n+1,600,R.t10,75)},
+                   ][i%4];
         return {nm:rot.nm,z:rot.z,steps:[warmV(15),rot.st,coolV(10)]};}
       return q2Thr(i,R,prog);
     }
     // 5 КМ: МПК/скорость @5к + короткий порог — короче отрезки, больше повторов, акцент на VO2max
     if(phase==='taper')return {nm:"Острая 4x400 @5к",z:'vo2',steps:[warmV(12),repsD(4,400,R.race5,75),coolV(8)]};
     if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv)+1,4,8);
-      const rot=[{nm:`МПК ${n}x400 @5к`,z:'vo2',st:repsD(n,400,R.race5,75)},
-                 {nm:`Быстрые ${Math.max(4,n-1)}x600 @5к`,z:'vo2',st:repsD(Math.max(4,n-1),600,R.race5,90)},
-                 {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
-                 {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105)}][i%4];
+      const rot = s<0.35 ? [
+                   {nm:`МПК ${n}x400 @5к`,z:'vo2',st:repsD(n,400,R.race5,75)},
+                   {nm:`Быстрые ${Math.max(4,n-1)}x600 @5к`,z:'vo2',st:repsD(Math.max(4,n-1),600,R.race5,90)},
+                   {nm:`Быстрые ${Math.max(7,n+3)}x300 @5к`,z:'vo2',st:repsD(Math.max(7,n+3),300,R.rep,90)},
+                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105)},
+                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
+                 ][i%5]
+               : s>0.65 ? [
+                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
+                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105)},
+                   {nm:"Порог 3x8'",z:'thr',st:repsT(3,8,R.thr,2)},
+                 ][i%3]
+               : [
+                   {nm:`МПК ${n}x400 @5к`,z:'vo2',st:repsD(n,400,R.race5,75)},
+                   {nm:`Быстрые ${Math.max(4,n-1)}x600 @5к`,z:'vo2',st:repsD(Math.max(4,n-1),600,R.race5,90)},
+                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
+                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105)},
+                 ][i%4];
       return {nm:rot.nm,z:rot.z,steps:[warmV(15),rot.st,coolV(10)]};}
     return q2Thr(i,R,prog);
   };

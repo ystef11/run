@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор темпа бега</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:660px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content;}
+  .stepper button{border:none;background:#f0eee9;color:var(--ink);font-size:26px;font-weight:700;width:54px;height:58px;cursor:pointer;line-height:1;}
+  .stepper button:active{background:var(--accent);color:#fff;}
+  .stepper input{border:none;width:120px;height:58px;text-align:center;font-size:30px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .stepper .unit{font-size:13px;color:var(--muted);padding:0 14px;}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .quick button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--ink);}
+  .quick button:hover{border-color:var(--accent);color:var(--accent);}
+  .quick button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .triofields{display:flex;gap:10px;flex-wrap:wrap;}
+  .field{flex:1;min-width:80px;}
+  .field .fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .field .box{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .field input{flex:1;width:100%;border:none;height:52px;text-align:center;font-size:22px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;min-width:0;}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field input:focus{outline:none;}
+  .field .arrows{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .field .arrows button{border:none;background:#f0eee9;color:var(--ink);width:26px;height:26px;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .field .arrows button:first-child{border-bottom:1px solid var(--line);}
+  .field .arrows button:active{background:var(--accent);color:#fff;}
+  .field .arrows svg{width:10px;height:10px;}
+  .colon{align-self:flex-end;font-size:22px;font-weight:800;color:var(--muted);padding-bottom:14px;}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:26px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:14px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  th.r,td.r{text-align:right;}
+  td{padding:9px 8px;border-bottom:1px solid var(--line);font-size:14px;}
+  tr:last-child td{border-bottom:none;}
+  td .amt{font-weight:800;font-size:15px;}
+
+  .tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+
+  .savebar{display:flex;justify-content:flex-end;margin:-4px 0 16px;}
+  .btn{border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:20px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;}
+  .btn:hover{background:var(--accent);border-color:var(--accent);}
+  .del{border:none;background:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;}
+  .del:hover{color:var(--accent);}
+  .empty{color:var(--muted);font-size:13px;padding:10px 8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Дистанция · время · темп</div>
+    <h1>Калькулятор темпа</h1>
+    <div class="sub">Измени любое значение — остальные пересчитаются автоматически</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Дистанция</div>
+    <div class="stepper">
+      <button onclick="bumpDist(-100)">−</button>
+      <input id="dist" class="mono" type="number" min="50" max="500000" step="1" value="10000" inputmode="numeric">
+      <button onclick="bumpDist(100)">+</button>
+      <span class="unit">метров</span>
+    </div>
+    <div class="quick">
+      <button data-d="1000" onclick="setDist(1000)">1 000 м</button>
+      <button data-d="3000" onclick="setDist(3000)">3 000 м</button>
+      <button data-d="5000" onclick="setDist(5000)">5 000 м</button>
+      <button data-d="10000" onclick="setDist(10000)">10 000 м</button>
+      <button data-d="21097" onclick="setDist(21097)">Полумарафон</button>
+      <button data-d="42195" onclick="setDist(42195)">Марафон</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Результат (время дистанции)</div>
+    <div class="triofields">
+      <div class="field"><div class="fl">Часы</div><div class="box"><input id="t_h" class="mono" type="number" min="0" max="99" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_h',1,99)">▲</button><button onclick="bumpField('t_h',-1,99)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Минуты</div><div class="box"><input id="t_m" class="mono" type="number" min="0" max="59" value="50" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_m',1,59)">▲</button><button onclick="bumpField('t_m',-1,59)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Секунды</div><div class="box"><input id="t_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_s',1,59)">▲</button><button onclick="bumpField('t_s',-1,59)">▼</button></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Темп (мин/км)</div>
+    <div class="triofields">
+      <div class="field"><div class="fl">Минуты</div><div class="box"><input id="p_m" class="mono" type="number" min="0" max="59" value="5" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('p_m',1,59)">▲</button><button onclick="bumpField('p_m',-1,59)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Секунды</div><div class="box"><input id="p_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('p_s',1,59)">▲</button><button onclick="bumpField('p_s',-1,59)">▼</button></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Скорость (км/ч)</div>
+    <div class="stepper">
+      <button onclick="bumpSpeed(-0.1)">−</button>
+      <input id="spd" class="mono" type="number" min="0.1" max="40" step="0.1" value="12.0" inputmode="decimal">
+      <button onclick="bumpSpeed(0.1)">+</button>
+      <span class="unit">км/ч</span>
+    </div>
+  </div>
+
+  <div class="outs">
+    <div class="out hl"><div class="k">Время на дистанции</div><div class="v" id="o_time">0:50:00</div></div>
+    <div class="out hl"><div class="k">Темп</div><div class="v"><span id="o_pace">5:00</span><small> /км</small></div></div>
+    <div class="out"><div class="k">Скорость</div><div class="v"><span id="o_speed">12.0</span><small> км/ч</small></div></div>
+    <div class="out"><div class="k">Темп на милю</div><div class="v"><span id="o_pacemi">8:03</span><small> /миля</small></div></div>
+    <div class="out"><div class="k">Круг (400 м)</div><div class="v"><span id="o_lap">2:00</span></div></div>
+    <div class="out"><div class="k">Круг (200 м)</div><div class="v"><span id="o_lap200">1:00</span></div></div>
+  </div>
+
+  <div class="savebar"><button class="btn" onclick="saveResult()">Сохранить результат</button></div>
+
+  <div class="panel">
+    <div class="label">Сохранённые результаты</div>
+    <table>
+      <thead><tr><th>Дистанция</th><th class="r">Результат</th><th class="r">Темп</th><th></th></tr></thead>
+      <tbody id="saved"></tbody>
+    </table>
+  </div>
+
+  <div class="panel" style="margin-top:16px;">
+    <div class="label">Раскладка по дистанции</div>
+    <div class="tabs">
+      <button id="tab_km" class="on" onclick="setSplitMode('km')">Километры</button>
+      <button id="tab_mi" onclick="setSplitMode('mi')">Мили</button>
+    </div>
+    <table>
+      <thead><tr><th id="th_unit">Км</th><th class="r">Время круга</th><th class="r">Нарастающим итогом</th></tr></thead>
+      <tbody id="splits"></tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><b>Как пользоваться.</b> Впиши дистанцию (или нажми кнопку с готовой), затем впиши результат ИЛИ темп — второе пересчитается само.</p>
+    <p><b>Круг на стадионе.</b> Значения для 400 м и 200 м считаются из того же темпа — удобно сверяться на интервалах на дорожке.</p>
+    <p><b>Раскладка.</b> Показывает время прохождения каждого км/мили при равномерном темпе — ориентир для контроля по часам на дистанции.</p>
+  </div>
+
+  <footer>Темп и время связаны через дистанцию: темп = время ÷ дистанцию</footer>
+</div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  let splitMode='km';
+  let updating=false;
+
+  function fmtTime(totalSec){
+    totalSec=Math.max(0,Math.round(totalSec));
+    const h=Math.floor(totalSec/3600), m=Math.floor((totalSec%3600)/60), s=totalSec%60;
+    if(h>0) return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    return m+':'+String(s).padStart(2,'0');
+  }
+  function fmtMS(totalSec){
+    totalSec=Math.max(0,Math.round(totalSec));
+    const m=Math.floor(totalSec/60), s=totalSec%60;
+    return m+':'+String(s).padStart(2,'0');
+  }
+
+  function getDist(){ let d=parseFloat($('dist').value); if(isNaN(d)||d<1)d=1; return d; }
+  function getTimeSec(){
+    let h=parseInt($('t_h').value,10)||0, m=parseInt($('t_m').value,10)||0, s=parseInt($('t_s').value,10)||0;
+    return h*3600+m*60+s;
+  }
+  function getPaceSec(){
+    let m=parseInt($('p_m').value,10)||0, s=parseInt($('p_s').value,10)||0;
+    return m*60+s;
+  }
+  function getSpeedVal(){
+    let v=parseFloat($('spd').value);
+    if(isNaN(v)||v<=0) v=0.1;
+    return v;
+  }
+  function setTimeFields(sec){
+    sec=Math.max(0,Math.round(sec));
+    const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
+    $('t_h').value=h; $('t_m').value=m; $('t_s').value=s;
+  }
+  function setPaceFields(sec){
+    sec=Math.max(0,Math.round(sec));
+    const m=Math.floor(sec/60), s=sec%60;
+    $('p_m').value=m; $('p_s').value=s;
+  }
+  function setSpeedField(spd){
+    $('spd').value = (Math.round(spd*100)/100);
+  }
+
+  function markQuick(d){
+    document.querySelectorAll('.quick button').forEach(b=>{
+      b.classList.toggle('on', parseInt(b.dataset.d,10)===d);
+    });
+  }
+
+  function fromDistTime(){
+    if(updating) return; updating=true;
+    const d=getDist(), t=getTimeSec();
+    const paceSec = t / (d/1000);
+    setPaceFields(paceSec);
+    setSpeedField(paceSec>0 ? 3600/paceSec : 0);
+    render(d,t,paceSec);
+    updating=false;
+  }
+  function fromDistPace(){
+    if(updating) return; updating=true;
+    const d=getDist(), p=getPaceSec();
+    const t = p * (d/1000);
+    setTimeFields(t);
+    setSpeedField(p>0 ? 3600/p : 0);
+    render(d,t,p);
+    updating=false;
+  }
+  function fromTime(){
+    if(updating) return; updating=true;
+    const d=getDist(), t=getTimeSec();
+    const paceSec = t / (d/1000);
+    setPaceFields(paceSec);
+    setSpeedField(paceSec>0 ? 3600/paceSec : 0);
+    render(d,t,paceSec);
+    updating=false;
+  }
+  function fromPace(){
+    if(updating) return; updating=true;
+    const d=getDist(), p=getPaceSec();
+    const t = p * (d/1000);
+    setTimeFields(t);
+    setSpeedField(p>0 ? 3600/p : 0);
+    render(d,t,p);
+    updating=false;
+  }
+  function fromSpeed(){
+    if(updating) return; updating=true;
+    const d=getDist(), spd=getSpeedVal();
+    const paceSec = 3600/spd;
+    const t = paceSec * (d/1000);
+    setTimeFields(t);
+    setPaceFields(paceSec);
+    render(d,t,paceSec);
+    updating=false;
+  }
+
+  function render(d,t,paceSec){
+    markQuick(d);
+    $('o_time').textContent=fmtTime(t);
+    $('o_pace').textContent=fmtMS(paceSec);
+    const speed = (d/1000) / (t/3600);
+    $('o_speed').textContent = isFinite(speed) ? speed.toFixed(1) : '0.0';
+    const paceMi = paceSec * 1.60934;
+    $('o_pacemi').textContent=fmtMS(paceMi);
+    $('o_lap').textContent=fmtMS(paceSec*0.4);
+    $('o_lap200').textContent=fmtMS(paceSec*0.2);
+    renderSplits(d,paceSec);
+  }
+
+  function renderSplits(d,paceSec){
+    const tbody=$('splits');
+    tbody.innerHTML='';
+    const unitLen = splitMode==='km' ? 1000 : 1609.34;
+    const unitPace = splitMode==='km' ? paceSec : paceSec*1.60934;
+    const fullUnits = Math.floor(d/unitLen);
+    let rows='';
+    let cum=0;
+    for(let i=1;i<=fullUnits;i++){
+      cum += unitPace;
+      rows += `<tr><td>${i}</td><td class="r mono">${fmtMS(unitPace)}</td><td class="r mono">${fmtTime(cum)}</td></tr>`;
+    }
+    const remM = d - fullUnits*unitLen;
+    if(remM > 1){
+      const remSec = unitPace * (remM/unitLen);
+      cum += remSec;
+      const label = splitMode==='km' ? (remM/1000).toFixed(2)+' км' : (remM/1609.34).toFixed(2)+' ми';
+      rows += `<tr><td>Финиш · ${label}</td><td class="r mono">${fmtMS(remSec)}</td><td class="r mono">${fmtTime(cum)}</td></tr>`;
+    }
+    tbody.innerHTML = rows || '<tr><td colspan="3" style="color:var(--muted)">Слишком короткая дистанция</td></tr>';
+  }
+
+  function setSplitMode(mode){
+    splitMode=mode;
+    $('tab_km').classList.toggle('on', mode==='km');
+    $('tab_mi').classList.toggle('on', mode==='mi');
+    $('th_unit').textContent = mode==='km' ? 'Км' : 'Миля';
+    fromDistPace_render();
+  }
+  function fromDistPace_render(){
+    const d=getDist(), p=getPaceSec();
+    renderSplits(d,p);
+  }
+
+  function bumpDist(x){ $('dist').value=(parseFloat($('dist').value)||0)+x; fromDistPace(); }
+  function setDist(v){ $('dist').value=v; fromDistPace(); }
+  function bumpSpeed(x){ $('spd').value=(Math.round(((parseFloat($('spd').value)||0)+x)*10)/10).toFixed(1); fromSpeed(); }
+
+  function bumpField(id,x,max){
+    const el=$(id);
+    let v=(parseInt(el.value,10)||0)+x;
+    if(v<0)v=max; if(v>max)v=0;
+    el.value=v;
+    el.dispatchEvent(new Event('input'));
+  }
+
+  $('dist').addEventListener('input', fromDistPace);
+  ['t_h','t_m','t_s'].forEach(id=>$(id).addEventListener('input', fromTime));
+  ['p_m','p_s'].forEach(id=>$(id).addEventListener('input', fromPace));
+  $('spd').addEventListener('input', fromSpeed);
+
+  // Сохранённые результаты (localStorage)
+  const LS_KEY='pace_calc_saved_results';
+  function loadSaved(){
+    try{ return JSON.parse(localStorage.getItem(LS_KEY))||[]; }catch(e){ return []; }
+  }
+  function persistSaved(list){
+    localStorage.setItem(LS_KEY, JSON.stringify(list));
+  }
+  function distLabel(d){
+    if(d===21097 || d===21100) return 'Полумарафон';
+    if(d===42195 || d===42200) return 'Марафон';
+    if(d>=1000) return (d/1000)+' км';
+    return d+' м';
+  }
+  function renderSaved(){
+    const list=loadSaved();
+    const tbody=$('saved');
+    if(!list.length){
+      tbody.innerHTML='<tr><td colspan="4" class="empty">Пока нет сохранённых результатов</td></tr>';
+      return;
+    }
+    tbody.innerHTML=list.map((r,i)=>
+      `<tr><td>${distLabel(r.d)}</td><td class="r mono">${fmtTime(r.t)}</td><td class="r mono">${fmtMS(r.p)} /км</td>`+
+      `<td class="r"><button class="del" onclick="removeSaved(${i})" title="Удалить">✕</button></td></tr>`
+    ).join('');
+  }
+  function saveResult(){
+    const d=getDist(), t=getTimeSec(), p=getPaceSec();
+    const list=loadSaved();
+    list.push({d,t,p});
+    persistSaved(list);
+    renderSaved();
+  }
+  function removeSaved(i){
+    const list=loadSaved();
+    list.splice(i,1);
+    persistSaved(list);
+    renderSaved();
+  }
+
+  fromDistTime();
+  renderSaved();
+</script>
+</body>
+</html>

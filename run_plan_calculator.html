@@ -2437,7 +2437,7 @@ function buildPlan(cfgIn){
     anchorVd:+anchorVd.toFixed(1),achGoalVd:+achGoalVd.toFixed(1),
     vdTarget:proj.vdTarget!=null?+proj.vdTarget.toFixed(1):null,vG,
     curGoalTime,endGoal,tgtGoal:cfg.tgtGoal||null,
-    equiv:proj.eq.map(e=>({dist:e.dist,name:distName(e.dist),sec:e.sec})),
+    equiv:proj.eq.map(e=>({dist:e.dist,name:distName(e.dist),sec:e.sec,curSec:e.curSec})),
     endMar,end10,recF:+recF.toFixed(2),taperW,downEvery,postRaceEasy,notes,N,
     // пик считаем по ТРЕНИРОВОЧНЫМ неделям: в неделе гонки км складываются из самой дистанции старта и
     // фиксированной по протоколу подводки, это не тренировочный объём и не должно показываться как «пик» (см. ревью, A4)
@@ -3318,6 +3318,10 @@ function recalcEstimate(){
     if(prR.eq.length)html+=`<div style="margin-top:4px">Эквивалент формы:</div><table style="margin:3px 0 0;border-collapse:collapse;font-size:12.5px">`+
       `<tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Дистанция</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Целевая форма</td></tr>`+
       prR.eq.map(e=>`<tr><td style="padding:1px 10px 1px 0">${distName(e.dist)}</td><td style="padding:1px 10px">${fmtT(e.curSec)}</td><td style="padding:1px 0"><b>${fmtT(e.sec)}</b></td></tr>`).join('')+
+      `</table>`+
+      `<table style="margin:6px 0 0;border-collapse:collapse;font-size:12.5px">`+
+      `<tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Показатель</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Целевая форма</td></tr>`+
+      `<tr><td style="padding:1px 10px 1px 0">VDOT (≈VO₂max, мл/кг/мин)</td><td style="padding:1px 10px">${prR.anchorVd.toFixed(1)}</td><td style="padding:1px 0"><b>${prR.achGoalVd.toFixed(1)}</b></td></tr>`+
       `</table>`;
     const rec=recommendAccent(results,gd); const acc=rec.val>0.6?'выносливость':rec.val<0.4?'скорость':'баланс';
     html+=`<div style="margin-top:6px;color:var(--muted)">Рекомендуемый акцент: <b>${acc}</b> — ${rec.reason}${sliderTouched?' <span style="opacity:.7">(ползунок задан вручную)</span>':''}</div>`;
@@ -3445,7 +3449,14 @@ function render(p){
   <div class="verdicts">
     <div class="vcard ${vcls(a.vG)}"><div class="t">${a.goalName} · цель ${a.tgtGoal?fmtT(a.tgtGoal):'—'}</div>
       <div class="big">${vTxt(a.vG)}</div>
-      <div class="sm">сейчас ≈${fmtT(a.curGoalTime)} (VDOT ${a.anchorVd}) → достижимо к старту ≈<b>${fmtT(a.endGoal)}</b> (VDOT ${a.achGoalVd}).${a.equiv.length?`<br>Эквивалент формы:<ul style="margin:3px 0 0 16px;padding:0">${a.equiv.map(e=>`<li>${e.name} — ${fmtT(e.sec)}</li>`).join('')}</ul>`:''}</div></div>
+      <div class="sm">сейчас ≈${fmtT(a.curGoalTime)} → достижимо к старту ≈<b>${fmtT(a.endGoal)}</b>.<br>Эквивалент формы:<table style="margin:3px 0 0;border-collapse:collapse;font-size:12.5px">
+        <tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Дистанция</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Целевая форма</td></tr>
+        ${a.equiv.map(e=>`<tr><td style="padding:1px 10px 1px 0">${e.name}</td><td style="padding:1px 10px">${e.curSec!=null?fmtT(e.curSec):'—'}</td><td style="padding:1px 0"><b>${fmtT(e.sec)}</b></td></tr>`).join('')}
+        </table>
+        <table style="margin:6px 0 0;border-collapse:collapse;font-size:12.5px">
+        <tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Показатель</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Целевая форма</td></tr>
+        <tr><td style="padding:1px 10px 1px 0">VDOT (≈VO₂max, мл/кг/мин)</td><td style="padding:1px 10px">${a.anchorVd}</td><td style="padding:1px 0"><b>${a.achGoalVd}</b></td></tr>
+        </table></div></div>
     <div class="vcard"><div class="t">Восстановление и подводка</div>
       <div class="big">разгрузка кажд. ${a.downEvery}-ю нед.</div>
       <div class="sm">возраст ${cfg.age} (HRmax ≈${a.hrmax}) · подводка ${a.taperW+1} нед. с гонкой · после промеж. старта ${a.postRaceEasy} лёгких дн.</div></div>

@@ -100,8 +100,8 @@
     <div class="label">Состав углеводов</div>
     <div class="slider">
       <div class="row"><span class="nm">Глюкоза : фруктоза</span><span class="vv" id="v_ratio">2.0 : 1</span></div>
-      <input type="range" id="ratio" min="2" max="3" step="0.05" value="2">
-      <div class="hint">2:1 — максимум усвоения (до ~90 г/ч). 3:1 — больше глюкозы, мягче по сладости/фруктозе.</div>
+      <input type="range" id="ratio" min="1.5" max="3" step="0.05" value="2">
+      <div class="hint">2:1 — усреднённый максимум усвоения (до ~90 г/ч), у разных людей усвоение отличается. От 1,5:1 — больше фруктозы, если она заходит лучше. 3:1 — больше глюкозы, мягче по сладости/фруктозе.</div>
     </div>
     <div class="slider">
       <div class="row"><span class="nm">Декстроза в глюкозной части</span><span class="vv" id="v_dex">30 %</span></div>
@@ -208,6 +208,22 @@
   function bump(x){ $('serv').value=(parseInt($('serv').value,10)||0)+x; calc(); }
   function setServ(v){ $('serv').value=v; calc(); }
   ['serv','ratio','dex'].forEach(id=>$(id).addEventListener('input',calc));
+
+  // Разрешаем перемещение ползунка только перетягиванием точки, клик по полосе — без эффекта
+  function onlyDragThumb(input){
+    const THUMB=24;
+    input.addEventListener('pointerdown', function(e){
+      const rect=input.getBoundingClientRect();
+      const min=parseFloat(input.min), max=parseFloat(input.max), val=parseFloat(input.value);
+      const frac=(val-min)/(max-min);
+      const usable=rect.width-THUMB;
+      const thumbX=THUMB/2+frac*usable;
+      const clickX=e.clientX-rect.left;
+      if(Math.abs(clickX-thumbX) > THUMB/2+4){ e.preventDefault(); }
+    });
+  }
+  ['ratio','dex'].forEach(id=>onlyDragThumb($(id)));
+
   calc();
 </script>
 </body>

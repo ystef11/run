@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест Купера · калькулятор VO2max</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:660px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content;}
+  .stepper button{border:none;background:#f0eee9;color:var(--ink);font-size:26px;font-weight:700;width:54px;height:58px;cursor:pointer;line-height:1;}
+  .stepper button:active{background:var(--accent);color:#fff;}
+  .stepper input{border:none;width:120px;height:58px;text-align:center;font-size:30px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .stepper .unit{font-size:13px;color:var(--muted);padding:0 14px;}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .quick button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--ink);}
+  .quick button:hover{border-color:var(--accent);color:var(--accent);}
+  .quick button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:26px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:14px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+  .out.full{grid-column:1 / -1;}
+
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  th.r,td.r{text-align:right;}
+  td{padding:9px 8px;border-bottom:1px solid var(--line);font-size:14px;}
+  tr:last-child td{border-bottom:none;}
+  tr.cur td{background:#fbeee9;font-weight:700;color:var(--ink);}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+
+  .savebar{display:flex;justify-content:flex-end;margin:-4px 0 16px;}
+  .btn{border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:20px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;}
+  .btn:hover{background:var(--accent);border-color:var(--accent);}
+  .del{border:none;background:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;}
+  .del:hover{color:var(--accent);}
+  .empty{color:var(--muted);font-size:13px;padding:10px 8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">12 минут · дистанция · VO2max</div>
+    <h1>Тест Купера</h1>
+    <div class="sub">Оценка максимального потребления кислорода (VO2max) по дистанции, пробеганной за 12 минут</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Пол</div>
+    <div class="tabs">
+      <button id="tab_m" class="on" onclick="setSex('m')">Мужчина</button>
+      <button id="tab_f" onclick="setSex('f')">Женщина</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Возраст</div>
+    <div class="stepper">
+      <button onclick="bumpAge(-1)">−</button>
+      <input id="age" class="mono" type="number" min="11" max="110" step="1" value="30" inputmode="numeric">
+      <button onclick="bumpAge(1)">+</button>
+      <span class="unit">лет</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Дистанция за 12 минут</div>
+    <div class="stepper">
+      <button onclick="bumpDist(-50)">−</button>
+      <input id="dist" class="mono" type="number" min="500" max="6000" step="1" value="2400" inputmode="numeric">
+      <button onclick="bumpDist(50)">+</button>
+      <span class="unit">метров</span>
+    </div>
+    <div class="quick">
+      <button data-d="2000" onclick="setDist(2000)">2000 м</button>
+      <button data-d="2400" onclick="setDist(2400)">2400 м</button>
+      <button data-d="2800" onclick="setDist(2800)">2800 м</button>
+      <button data-d="3200" onclick="setDist(3200)">3200 м</button>
+      <button data-d="3600" onclick="setDist(3600)">3600 м</button>
+    </div>
+  </div>
+
+  <div class="outs">
+    <div class="out hl"><div class="k">VO2max</div><div class="v"><span id="o_vo2">0.0</span><small> мл/кг/мин</small></div></div>
+    <div class="out hl"><div class="k">Уровень подготовки</div><div class="v" id="o_level" style="font-size:19px;">—</div></div>
+  </div>
+
+  <div class="savebar"><button class="btn" onclick="saveResult()">Сохранить результат</button></div>
+
+  <div class="panel">
+    <div class="label">Сохранённые результаты</div>
+    <table>
+      <thead><tr><th>Дата</th><th class="r">Дистанция</th><th class="r">VO2max</th><th></th></tr></thead>
+      <tbody id="saved"></tbody>
+    </table>
+  </div>
+
+  <div class="panel" style="margin-top:16px;">
+    <div class="label">Расшифровка результатов (<span id="lvl_sex_label">мужчины</span>, возрастная группа <span id="lvl_age_label"></span>)</div>
+    <table>
+      <thead><tr><th>Низкий</th><th>Ниже среднего</th><th>Средний</th><th>Хорошо</th><th>Отлично</th></tr></thead>
+      <tbody id="levels"></tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><b>Как проводить тест.</b> Разогрейся, затем беги непрерывно 12 минут в максимально возможном равномерном темпе и замерь пройденную дистанцию. Лучше на стадионе или беговой дорожке — без резких подъёмов и спусков.</p>
+    <p><b>Формула.</b> VO2max (мл/кг/мин) = (дистанция в метрах − 504.9) ÷ 44.73 — классическая формула Купера (1968).</p>
+    <p><b>Уровень.</b> Оценка приведена по общепринятым возрастно-половым нормам VO2max и носит справочный характер — она не заменяет лабораторное тестирование.</p>
+  </div>
+
+  <footer>Тест Купера — простой полевой способ оценить аэробную выносливость без лаборатории</footer>
+</div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  let sex='m';
+
+  // VO2max normative table (ml/kg/min), 5 categories, by age bracket & sex
+  // ranges: [lowMax, belowMax, avgMax, goodMax] -> above goodMax = "Отлично"
+  const NORMS = {
+    m: [
+      {label:'18–25', r:[25.0,33.7,42.5,51.5]},
+      {label:'26–35', r:[23.6,30.1,39.7,48.0]},
+      {label:'36–45', r:[22.1,26.4,35.4,44.9]},
+      {label:'46–55', r:[21.6,24.9,33.6,42.7]},
+      {label:'56–65', r:[20.1,22.7,31.3,40.1]},
+      {label:'66+',   r:[17.3,20.0,28.2,36.8]}
+    ],
+    f: [
+      {label:'18–25', r:[23.5,28.8,38.9,48.4]},
+      {label:'26–35', r:[22.7,26.4,35.6,45.5]},
+      {label:'36–45', r:[20.9,24.5,33.7,43.9]},
+      {label:'46–55', r:[20.0,22.7,31.4,40.9]},
+      {label:'56–65', r:[17.9,20.7,29.4,38.5]},
+      {label:'66+',   r:[15.4,18.5,26.9,35.5]}
+    ]
+  };
+  const LEVELS=['Низкий','Ниже среднего','Средний','Хорошо','Отлично'];
+
+  function ageBracket(age){
+    if(age<26) return 0;
+    if(age<36) return 1;
+    if(age<46) return 2;
+    if(age<56) return 3;
+    if(age<66) return 4;
+    return 5;
+  }
+
+  function getAge(){ let a=parseInt($('age').value,10); if(isNaN(a)||a<11)a=11; if(a>110)a=110; return a; }
+  function getDist(){ let d=parseFloat($('dist').value); if(isNaN(d)||d<1)d=1; return d; }
+
+  function vo2fromDist(d){ return (d-504.9)/44.73; }
+
+  function levelForVo2(vo2, bracket, s){
+    const r = NORMS[s][bracket].r;
+    if(vo2 < r[0]) return 0;
+    if(vo2 < r[1]) return 1;
+    if(vo2 < r[2]) return 2;
+    if(vo2 < r[3]) return 3;
+    return 4;
+  }
+
+  function markQuick(d){
+    document.querySelectorAll('.quick button').forEach(b=>{
+      b.classList.toggle('on', parseInt(b.dataset.d,10)===d);
+    });
+  }
+
+  function setSex(s){
+    sex=s;
+    $('tab_m').classList.toggle('on', s==='m');
+    $('tab_f').classList.toggle('on', s==='f');
+    $('lvl_sex_label').textContent = s==='m' ? 'мужчины' : 'женщины';
+    render();
+  }
+
+  function renderLevelsTable(bracket){
+    const r = NORMS[sex][bracket].r;
+    const bounds = [
+      '< '+r[0].toFixed(1),
+      r[0].toFixed(1)+'–'+r[1].toFixed(1),
+      r[1].toFixed(1)+'–'+r[2].toFixed(1),
+      r[2].toFixed(1)+'–'+r[3].toFixed(1),
+      '> '+r[3].toFixed(1)
+    ];
+    $('levels').innerHTML = '<tr>'+bounds.map(b=>'<td class="mono">'+b+'</td>').join('')+'</tr>';
+    $('lvl_age_label').textContent = NORMS[sex][bracket].label;
+  }
+
+  function render(){
+    const age=getAge(), d=getDist();
+    const bracket=ageBracket(age);
+    const vo2=vo2fromDist(d);
+    markQuick(d);
+    $('o_vo2').textContent = vo2>0 ? vo2.toFixed(1) : '0.0';
+    const lvlIdx = levelForVo2(vo2, bracket, sex);
+    $('o_level').textContent = LEVELS[lvlIdx];
+    renderLevelsTable(bracket);
+    // highlight current level column via row emphasis (single row, mark cell)
+    const cells = $('levels').querySelectorAll('td');
+    cells.forEach((c,i)=>c.style.background = i===lvlIdx ? '#fbeee9' : '');
+    cells.forEach((c,i)=>c.style.fontWeight = i===lvlIdx ? '800' : '400');
+  }
+
+  function bumpAge(x){ $('age').value=(parseInt($('age').value,10)||0)+x; render(); }
+  function bumpDist(x){ $('dist').value=(parseFloat($('dist').value)||0)+x; render(); }
+  function setDist(v){ $('dist').value=v; render(); }
+
+  $('age').addEventListener('input', render);
+  $('dist').addEventListener('input', render);
+
+  // Сохранённые результаты (localStorage)
+  const LS_KEY='vo2max_calc_saved_results';
+  function loadSaved(){
+    try{ return JSON.parse(localStorage.getItem(LS_KEY))||[]; }catch(e){ return []; }
+  }
+  function persistSaved(list){
+    localStorage.setItem(LS_KEY, JSON.stringify(list));
+  }
+  function renderSaved(){
+    const list=loadSaved();
+    const tbody=$('saved');
+    if(!list.length){
+      tbody.innerHTML='<tr><td colspan="4" class="empty">Пока нет сохранённых результатов</td></tr>';
+      return;
+    }
+    tbody.innerHTML=list.map((r,i)=>
+      `<tr><td>${r.date}</td><td class="r mono">${r.d} м</td><td class="r mono">${r.vo2.toFixed(1)}</td>`+
+      `<td class="r"><button class="del" onclick="removeSaved(${i})" title="Удалить">✕</button></td></tr>`
+    ).join('');
+  }
+  function saveResult(){
+    const d=getDist(), vo2=vo2fromDist(d);
+    const list=loadSaved();
+    const now=new Date();
+    const date = String(now.getDate()).padStart(2,'0')+'.'+String(now.getMonth()+1).padStart(2,'0')+'.'+now.getFullYear();
+    list.push({date,d,vo2});
+    persistSaved(list);
+    renderSaved();
+  }
+  function removeSaved(i){
+    const list=loadSaved();
+    list.splice(i,1);
+    persistSaved(list);
+    renderSaved();
+  }
+
+  render();
+  renderSaved();
+</script>
+</body>
+</html>

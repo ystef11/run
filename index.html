@@ -102,6 +102,24 @@
     box-shadow:0 3px 0 var(--line), 0 6px 14px rgba(27,30,34,.08);
   }
 
+  .app-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;
+    box-shadow:0 3px 0 var(--line), 0 6px 14px rgba(27,30,34,.08);}
+  .app-card + .app-card{margin-top:14px;}
+  .app-card .app-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .app-card .icon{font-size:24px;}
+  .app-card .title{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+  .app-card .desc{font-size:13.5px;color:var(--muted);margin:6px 0 16px;line-height:1.55;}
+  .app-card .dl-btn{display:inline-flex;align-items:center;gap:8px;appearance:none;border:none;
+    background:var(--accent);color:#fff;font-weight:700;font-size:14px;letter-spacing:.02em;
+    padding:12px 22px;border-radius:8px;cursor:pointer;text-decoration:none;
+    box-shadow:0 2px 0 #b53a1e, 0 2px 8px rgba(223,74,46,.25);
+    transition:transform .1s,box-shadow .1s,background .12s;}
+  .app-card .dl-btn:hover{background:#c8401f;transform:translateY(-1px);box-shadow:0 3px 0 #b53a1e, 0 4px 10px rgba(223,74,46,.3);}
+  .app-card .dl-btn:active{transform:translateY(1px);box-shadow:0 1px 0 #b53a1e;}
+  .app-shots{display:flex;gap:12px;margin-top:16px;overflow-x:auto;padding-bottom:4px;}
+  .app-shots img{height:280px;border-radius:14px;border:1px solid var(--line);
+    box-shadow:0 3px 0 var(--line), 0 6px 14px rgba(27,30,34,.08);flex-shrink:0;}
+
 </style>
 </head>
 <body>
@@ -175,6 +193,32 @@
       </div>
     </div>
   </div>
+  <div class="section-title">Скачать приложения</div>
+  <div class="app-card">
+    <div class="app-head">
+      <span class="icon">📱</span>
+      <span class="title">Runstef для Android</span>
+    </div>
+    <div class="desc">Мобильное приложение: беговые калькуляторы офлайн, планы тренировок и экспорт в Garmin / intervals.icu прямо с телефона.</div>
+    <a class="dl-btn" href="android/runstef.apk" download>⬇ Скачать APK</a>
+    <div class="app-shots">
+      <img src="android/screenshots/shot1.jpg" alt="Главный экран приложения Runstef">
+      <img src="android/screenshots/shot2.jpg" alt="Мои планы в приложении Runstef">
+      <img src="android/screenshots/shot3.jpg" alt="Экспорт плана в приложении Runstef">
+    </div>
+  </div>
+  <div class="app-card">
+    <div class="app-head">
+      <span class="icon">💻</span>
+      <span class="title">Plan Uploader для Windows</span>
+    </div>
+    <div class="desc">Настольное приложение для загрузки беговых планов в Garmin Connect и intervals.icu.</div>
+    <a class="dl-btn" href="windows/plan_uploader_gui.exe" download>⬇ Скачать EXE</a>
+    <div class="app-shots">
+      <img src="windows/screenshots/shot1.png" alt="Окно загрузки плана в Garmin / intervals.icu">
+    </div>
+  </div>
+
   <div class="qr-section">
     <h3>Откройте на телефоне</h3>
     <img

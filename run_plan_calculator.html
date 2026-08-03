@@ -3646,8 +3646,13 @@ $('recBtn').onclick=()=>{
   if($('out').firstChild)$('out').scrollIntoView({behavior:'smooth'});
 };
 
-function dl(name,text,mime){const b=new Blob([text],{type:mime});const u=URL.createObjectURL(b);
-  const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),3000);}
+function dl(name,text,mime){
+  // data:-URI, а не blob: — Android-приложение (см. ToolWebViewScreen.kt) перехватывает скачивание
+  // файлов только по data:-ссылкам (у blob: контента не видно без доп. фетча), поэтому кнопки
+  // «Скачать HTML плана» / «Скачать plan.json» не работали внутри приложения.
+  const b64=btoa(unescape(encodeURIComponent(text)));
+  const u='data:'+mime+';base64,'+b64;
+  const a=document.createElement('a');a.href=u;a.download=name;a.click();}
 
 $('jsonBtn').onclick=()=>{
   if(!EDIT||!EDIT.length){alert('Нет тренировок для экспорта.');return;}
@@ -3690,9 +3695,9 @@ if(b){b.textContent=next?('→ Ближайшая тренировка · '+d[2]
 var w=target.closest('.week');if(w)w.classList.add('hastoday');})();
 window.__PLAN__=JSON.parse(${planStr});
 function dlPlanJSON(){var t=JSON.stringify(window.__PLAN__,null,1);
-var b=new Blob([t],{type:'application/json'});var u=URL.createObjectURL(b);
-var a=document.createElement('a');a.href=u;a.download='plan.json';a.click();
-setTimeout(function(){URL.revokeObjectURL(u);},3000);}<\/script></body></html>`;
+var b64=btoa(unescape(encodeURIComponent(t)));
+var u='data:application/json;base64,'+b64;
+var a=document.createElement('a');a.href=u;a.download='plan.json';a.click();}<\/script></body></html>`;
   dl('run_plan.html',doc,'text/html');};
 
 $('printBtn').onclick=()=>window.print();

@@ -320,9 +320,9 @@ function _amt(s){var v=+s.v;
   if(s.end==='time'){ if(v<60)return v+'с'; return (v%60===0)?(v/60+' мин'):(Math.floor(v/60)+':'+pad(v%60)); }
   return (v/1000)+' км';}
 function _tgt(s){var t=s.tg||{};
-  if('pace'in t)return t.pace[0]+'-'+t.pace[1]+'/км';
-  if('hr'in t)return 'Z'+t.hr;
-  if('bpm'in t)return t.bpm[0]+'–'+t.bpm[1]+' уд';
+  if(t.pace)return t.pace[0]+'-'+t.pace[1]+'/км';
+  if(t.hr)return 'Z'+t.hr;
+  if(t.bpm)return t.bpm[0]+'–'+t.bpm[1]+' уд';
   return '';}
 function _prose(s){ if(s.t==='repeat')return s.n+'×('+s.steps.map(_prose).join('; ')+')';
   var b=[_amt(s),_tgt(s)].filter(Boolean).join(' '); return s.d?(s.d+' '+b).trim():b; }

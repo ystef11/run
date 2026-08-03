@@ -118,7 +118,18 @@
   .app-card .dl-btn:active{transform:translateY(1px);box-shadow:0 1px 0 #b53a1e;}
   .app-shots{display:flex;gap:12px;margin-top:16px;overflow-x:auto;padding-bottom:4px;}
   .app-shots img{height:280px;border-radius:14px;border:1px solid var(--line);
-    box-shadow:0 3px 0 var(--line), 0 6px 14px rgba(27,30,34,.08);flex-shrink:0;}
+    box-shadow:0 3px 0 var(--line), 0 6px 14px rgba(27,30,34,.08);flex-shrink:0;cursor:zoom-in;
+    transition:transform .12s ease;}
+  .app-shots img:hover{transform:translateY(-2px);}
+
+  .lightbox{position:fixed;inset:0;background:rgba(20,18,16,.88);display:none;
+    align-items:center;justify-content:center;z-index:1000;padding:32px;cursor:zoom-out;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:min(90vw,900px);max-height:90vh;border-radius:14px;
+    box-shadow:0 12px 40px rgba(0,0,0,.4);}
+  .lightbox .lb-close{position:absolute;top:20px;right:26px;color:#fff;font-size:32px;
+    background:none;border:none;cursor:pointer;line-height:1;opacity:.85;}
+  .lightbox .lb-close:hover{opacity:1;}
 
 </style>
 </head>
@@ -229,6 +240,11 @@
   <footer>Беговые инструменты · личный кабинет защищён паролем на стороне браузера</footer>
 </div>
 
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox(event)">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
 <script>
   // Простая клиентская защита — меняйте пароль здесь.
   const CABINET_PASSWORD = "beg2026";
@@ -297,6 +313,28 @@
 
   document.getElementById("pwd").addEventListener("keydown", function(e){
     if(e.key === "Enter") tryUnlock();
+  });
+
+  function openLightbox(src, alt){
+    const lb = document.getElementById("lightbox");
+    document.getElementById("lightbox-img").src = src;
+    document.getElementById("lightbox-img").alt = alt || "";
+    lb.classList.add("open");
+  }
+
+  function closeLightbox(e){
+    if(e) e.stopPropagation();
+    document.getElementById("lightbox").classList.remove("open");
+  }
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") closeLightbox();
+  });
+
+  document.querySelectorAll(".app-shots img").forEach(function(img){
+    img.addEventListener("click", function(){
+      openLightbox(img.src, img.alt);
+    });
   });
 
   render();

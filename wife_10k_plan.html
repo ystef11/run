@@ -292,9 +292,12 @@ const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
 function dateFor(wi,di){const d=new Date(START);d.setDate(START.getDate()+wi*7+di);return pad(d.getDate())+'.'+pad(d.getMonth()+1);}
 function hm(min){return Math.floor(min/60)+':'+pad(min%60);}
-function _dl(name,text,mime){const b=new Blob([text],{type:mime||'application/json'});
-  const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();
-  setTimeout(()=>URL.revokeObjectURL(u),3000);}
+function _dl(name,text,mime){
+  // data:-URI, а не blob: — Android-приложение (см. PlanViewScreen.kt) перехватывает скачивание
+  // файлов только по data:-ссылкам (аналогично dl() в run_plan_calculator.html) — с blob: не работало.
+  const b64=btoa(unescape(encodeURIComponent(text)));
+  const u='data:'+(mime||'application/json')+';base64,'+b64;
+  const a=document.createElement('a');a.href=u;a.download=name;a.click();}
 function exportPlanJSON(){ _dl('plan_w10k.json',JSON.stringify(PLAN_W10K,null,1),'application/json'); }
 
 $('zones').innerHTML=ZONES.map(z=>

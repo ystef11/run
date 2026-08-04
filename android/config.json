@@ -35,7 +35,7 @@
         "id": "hr_pace",
         "title": "Темп по пульсовым зонам",
         "description": "Соотношение зон пульса к диапазонам темпа",
-        "icon": "heart",
+        "icon": "zones",
         "url": "https://ystef11.github.io/run/hr_pace_calculator.html"
       }
     ]

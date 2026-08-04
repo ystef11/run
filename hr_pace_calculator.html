@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Темп по пульсовым зонам</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --z-rec:#7f95a3;--z-easy:#5b8c5a;--z-mp:#df4a2e;--z-thr:#d98a1f;--z-vo2:#7d5bd6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:660px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content;}
+  .stepper button{border:none;background:#f0eee9;color:var(--ink);font-size:26px;font-weight:700;width:54px;height:58px;cursor:pointer;line-height:1;}
+  .stepper button:active{background:var(--accent);color:#fff;}
+  .stepper input{border:none;width:120px;height:58px;text-align:center;font-size:30px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .stepper.sm input{height:52px;font-size:24px;width:100px;}
+  .stepper.sm button{width:44px;height:52px;font-size:22px;}
+  .stepper .unit{font-size:13px;color:var(--muted);padding:0 14px;}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .quick button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--ink);}
+  .quick button:hover{border-color:var(--accent);color:var(--accent);}
+  .quick button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .triofields{display:flex;gap:10px;flex-wrap:wrap;}
+  .field{flex:1;min-width:80px;}
+  .field .fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .field .box{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .field input{flex:1;width:100%;border:none;height:52px;text-align:center;font-size:22px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;min-width:0;}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field input:focus{outline:none;}
+  .field .arrows{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .field .arrows button{border:none;background:#f0eee9;color:var(--ink);width:26px;height:26px;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .field .arrows button:first-child{border-bottom:1px solid var(--line);}
+  .field .arrows button:active{background:var(--accent);color:#fff;}
+  .field .arrows svg{width:10px;height:10px;}
+  .colon{align-self:flex-end;font-size:22px;font-weight:800;color:var(--muted);padding-bottom:14px;}
+
+  .row2{display:flex;gap:16px;flex-wrap:wrap;}
+  .row2>div{flex:1;min-width:160px;}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:22px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:13px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  th.r,td.r{text-align:right;}
+  td{padding:11px 8px;border-bottom:1px solid var(--line);font-size:14.5px;}
+  tr:last-child td{border-bottom:none;}
+  .zdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:middle;}
+  .zname{font-weight:700;}
+  .zsub{font-size:12px;color:var(--muted);display:block;margin-top:1px;}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Результат гонки · пульсовые зоны · темп</div>
+    <h1>Темп по пульсовым зонам</h1>
+    <div class="sub">По дистанции и результату гонки — оценка формы (VDOT) и таблица «зона пульса → диапазон темпа»</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Дистанция гонки</div>
+    <div class="stepper">
+      <button onclick="bumpDist(-100)">−</button>
+      <input id="dist" class="mono" type="number" min="800" max="500000" step="1" value="10000" inputmode="numeric">
+      <button onclick="bumpDist(100)">+</button>
+      <span class="unit">метров</span>
+    </div>
+    <div class="quick">
+      <button data-d="1000" onclick="setDist(1000)">1 000 м</button>
+      <button data-d="3000" onclick="setDist(3000)">3 000 м</button>
+      <button data-d="5000" onclick="setDist(5000)">5 000 м</button>
+      <button data-d="10000" onclick="setDist(10000)">10 000 м</button>
+      <button data-d="21097" onclick="setDist(21097)">Полумарафон</button>
+      <button data-d="42195" onclick="setDist(42195)">Марафон</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Результат на этой дистанции</div>
+    <div class="triofields">
+      <div class="field"><div class="fl">Часы</div><div class="box"><input id="t_h" class="mono" type="number" min="0" max="99" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_h',1,99)">▲</button><button onclick="bumpField('t_h',-1,99)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Минуты</div><div class="box"><input id="t_m" class="mono" type="number" min="0" max="59" value="50" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_m',1,59)">▲</button><button onclick="bumpField('t_m',-1,59)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Секунды</div><div class="box"><input id="t_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_s',1,59)">▲</button><button onclick="bumpField('t_s',-1,59)">▼</button></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Пол</div>
+    <div class="tabs">
+      <button id="tab_m" class="on" onclick="setSex('m')">Мужчина</button>
+      <button id="tab_f" onclick="setSex('f')">Женщина</button>
+    </div>
+    <div class="row2" style="margin-top:14px;">
+      <div>
+        <div class="fl" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Возраст</div>
+        <div class="stepper sm">
+          <button onclick="bumpAge(-1)">−</button>
+          <input id="age" class="mono" type="number" min="11" max="100" value="35" inputmode="numeric">
+          <button onclick="bumpAge(1)">+</button>
+        </div>
+      </div>
+      <div>
+        <div class="fl" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">ПАНО, уд/мин (необязательно)</div>
+        <div class="stepper sm">
+          <button onclick="bumpLthr(-1)">−</button>
+          <input id="lthr" class="mono" type="number" min="100" max="220" placeholder="—" inputmode="numeric">
+          <button onclick="bumpLthr(1)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="hint">Пусто — ПАНО оценивается как ~90% от расчётного максимального пульса (по возрасту и полу). Точнее — впишите реальный порог, если знаете (например, по тесту или полумарафону).</div>
+  </div>
+
+  <div class="outs">
+    <div class="out hl"><div class="k">VDOT</div><div class="v"><span id="o_vdot">0.0</span></div></div>
+    <div class="out"><div class="k">HRmax (оценка)</div><div class="v"><span id="o_hrmax">0</span><small> уд/мин</small></div></div>
+    <div class="out"><div class="k">ПАНО</div><div class="v"><span id="o_lthr">0</span><small> уд/мин</small></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Зоны пульса и соответствующий темп</div>
+    <table>
+      <thead><tr><th>Зона</th><th class="r">Пульс, уд/мин</th><th class="r">Темп, мин/км</th><th class="r">Темп как гоночный — дистанция</th></tr></thead>
+      <tbody id="zones"></tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><b>Как считается.</b> По дистанции и времени гонки оценивается VDOT (модель Дэниелса) — показатель текущей беговой формы. От него прогнозируются эквивалентные результаты на 10 км и марафоне, а из них — диапазоны темпа для каждой зоны.</p>
+    <p><b>Границы зон пульса</b> заданы как доля от ПАНО (порога): Z1 65–81%, Z2 81–89%, Z3 88–92%, Z4 95–100%, Z5 100–106% от ПАНО, с потолком по расчётному HRmax.</p>
+    <p><b>Столбец «темп как гоночный».</b> Для каждой зоны показано, на какой дистанции и за какое время темп середины зоны стал бы вашим реальным гоночным (при вашей текущей форме) — то есть на какой по длительности гонке пульс окажется именно в этой зоне. Для Z1–Z2 (восстановительный и лёгкий темп) прочерк «—»: по модели такой темп не имеет предела выносливости — его можно держать неограниченно долго, это не гоночная, а базовая тренировочная интенсивность. У Z3–Z5, наоборот, всегда есть конечный ответ: например, Z5 обычно соответствует не спринту, а гонке на 5–10 км — именно поэтому пульс на быстро пробегаемых 10 км уходит в верхнюю зону, а не остаётся в четвёртой.</p>
+    <p><b>Точность.</b> Чем ближе дистанция и свежесть результата к вашей цели (5–21 км), тем точнее прогноз. Тёплая погода, рельеф или давний результат смещают реальный темп относительно расчётного — ориентируйтесь и на пульс, и на самочувствие.</p>
+  </div>
+
+  <footer>Модель: VDOT (Дэниелс) · зоны пульса — % от ПАНО (порога), как в калькуляторе беговых планов</footer>
+</div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  let sex='m';
+
+  // ================= физиология: VDOT (Дэниелс) — та же модель, что в run_plan_calculator =================
+  function vo2At(v){return -4.60+0.182258*v+0.000104*v*v;} // v: м/мин
+  function pctAt(t){return 0.8+0.1894393*Math.exp(-0.012778*t)+0.2989558*Math.exp(-0.1932605*t);} // t: мин
+  function vdot(distM,sec){const t=sec/60;return vo2At(distM/t)/pctAt(t);}
+  function timeFor(distM,vd){let lo=distM/8,hi=distM/1.4;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;(vdot(distM,mid)>vd)?lo=mid:hi=mid;}return (lo+hi)/2;}
+
+  // ================= набор темпов (сек/км) из пары результатов (10к + марафон) =================
+  function paceSet(marSec,t10){const MP=marSec/42.195,P10=t10/10;
+    return {mp:[MP-2,MP+3],thr:[P10+12,P10+20],vo2:[P10-8,P10+2],
+      easy:[MP+38,MP+68],rec:[MP+93,MP+113]};}
+
+  // ================= пульсовые зоны: % от ПАНО, потолок — HRmax =================
+  function zbpm(z,lt,hrmax){const r={1:[0.65,0.81],2:[0.81,0.89],3:[0.88,0.92],4:[0.95,1.00],5:[1.00,1.06]}[z];
+    const cap=hrmax>lt?hrmax:Math.round(lt*1.08);
+    const lo=Math.max(90,Math.round(r[0]*lt)), hi=Math.min(cap,Math.round(r[1]*lt));
+    return [Math.min(lo,hi),Math.max(lo,hi)];}
+
+  const ZONES=[
+    {z:1,key:'rec', name:'Z1 · Восстановление', cls:'z-rec'},
+    {z:2,key:'easy',name:'Z2 · Лёгкий (аэробный)', cls:'z-easy'},
+    {z:3,key:'mp',  name:'Z3 · Темповый / марафонский', cls:'z-mp'},
+    {z:4,key:'thr', name:'Z4 · Порог (ПАНО)', cls:'z-thr'},
+    {z:5,key:'vo2', name:'Z5 · МПК / скорость', cls:'z-vo2'}
+  ];
+
+  function fmtMS(totalSec){
+    totalSec=Math.max(0,Math.round(totalSec));
+    const m=Math.floor(totalSec/60), s=totalSec%60;
+    return m+':'+String(s).padStart(2,'0');
+  }
+  function fmtTime(totalSec){
+    totalSec=Math.max(0,Math.round(totalSec));
+    const h=Math.floor(totalSec/3600), m=Math.floor((totalSec%3600)/60), s=totalSec%60;
+    if(h>0) return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    return m+':'+String(s).padStart(2,'0');
+  }
+  function fmtDist(m){
+    if(m>=1000){ const km=m/1000; return (km>=10?km.toFixed(0):km.toFixed(1))+' км'; }
+    return Math.round(m/50)*50+' м';
+  }
+
+  // ================= эквивалент темпа зоны как гоночного (та же VDOT, другая длительность) =================
+  // Смысл: скорость v фиксирована (темп середины зоны), vo2At(v) — постоянная величина.
+  // vdot(distM,sec)=vo2At(v)/pctAt(t) — значит нужная доля МПК targetPct=vo2At(v)/vd,
+  // а дальше просто инвертируем pctAt(t) (она монотонно убывает с t) методом бисекции.
+  function raceEquivFromPace(paceSecKm, vd){
+    const v=60000/paceSecKm; // м/мин
+    const targetPct=vo2At(v)/vd;
+    const floorPct=0.8;          // асимптота pctAt при t→∞: темп можно держать неограниченно долго (не гоночная зона)
+    const ceilPct=pctAt(0.3);    // около верхней границы применимости модели (очень короткие отрезки)
+    if(targetPct<=floorPct+0.0005) return {kind:'unlimited'};
+    if(targetPct>=ceilPct) return {kind:'toofast'};
+    let lo=0.3, hi=400; // минуты
+    for(let i=0;i<80;i++){
+      const mid=(lo+hi)/2;
+      if(pctAt(mid)>targetPct) lo=mid; else hi=mid;
+    }
+    const tMin=(lo+hi)/2;
+    return {kind:'ok', distM:v*tMin, sec:tMin*60};
+  }
+  function raceEquivLabel(paceSecKm, vd){
+    const eq=raceEquivFromPace(paceSecKm, vd);
+    if(eq.kind!=='ok') return '—';
+    return fmtDist(eq.distM)+' <span class="zsub" style="display:inline">('+fmtTime(eq.sec)+')</span>';
+  }
+
+  function getDist(){ let d=parseFloat($('dist').value); if(isNaN(d)||d<50)d=50; return d; }
+  function getTimeSec(){
+    let h=parseInt($('t_h').value,10)||0, m=parseInt($('t_m').value,10)||0, s=parseInt($('t_s').value,10)||0;
+    return h*3600+m*60+s;
+  }
+  function getAge(){ let a=parseInt($('age').value,10); if(isNaN(a)||a<11)a=11; if(a>100)a=100; return a; }
+  function getLthrInput(){ const v=$('lthr').value; return v? +v : null; }
+
+  function markQuick(d){
+    document.querySelectorAll('.quick button').forEach(b=>{
+      b.classList.toggle('on', parseInt(b.dataset.d,10)===d);
+    });
+  }
+
+  function setSex(s){
+    sex=s;
+    $('tab_m').classList.toggle('on', s==='m');
+    $('tab_f').classList.toggle('on', s==='f');
+    render();
+  }
+
+  function render(){
+    const d=getDist(), t=getTimeSec(), age=getAge();
+    markQuick(d);
+    if(t<=0){
+      $('o_vdot').textContent='0.0';
+      $('zones').innerHTML='<tr><td colspan="4" style="color:var(--muted)">Впишите результат гонки</td></tr>';
+      return;
+    }
+    const vd=vdot(d,t);
+    $('o_vdot').textContent=vd.toFixed(1);
+
+    const hrmax = sex==='f' ? Math.round(206-0.88*age) : Math.round(208-0.7*age);
+    $('o_hrmax').textContent=hrmax;
+
+    const lthrInput=getLthrInput();
+    const lthr = lthrInput || Math.round(hrmax*0.90);
+    $('o_lthr').textContent=lthr + (lthrInput? '' : ' (оценка)');
+
+    const marSec=timeFor(42195,vd), t10=timeFor(10000,vd);
+    const R=paceSet(marSec,t10);
+
+    $('zones').innerHTML = ZONES.map(z=>{
+      const hr=zbpm(z.z,lthr,hrmax);
+      const p=R[z.key];
+      const midPace=(p[0]+p[1])/2;
+      return `<tr><td><span class="zdot" style="background:var(--${z.cls})"></span><span class="zname">${z.name}</span></td>`+
+        `<td class="r mono">${hr[0]}–${hr[1]}</td>`+
+        `<td class="r mono">${fmtMS(p[1])}–${fmtMS(p[0])} /км</td>`+
+        `<td class="r mono">${raceEquivLabel(midPace, vd)}</td></tr>`;
+    }).join('');
+  }
+
+  function bumpAge(x){ $('age').value=(parseInt($('age').value,10)||0)+x; render(); }
+  function bumpLthr(x){ const cur=parseInt($('lthr').value,10)||0; $('lthr').value=Math.max(0,cur+x)||''; render(); }
+  function bumpDist(x){ $('dist').value=(parseFloat($('dist').value)||0)+x; render(); }
+  function setDist(v){ $('dist').value=v; render(); }
+  function bumpField(id,x,max){
+    const el=$(id);
+    let v=(parseInt(el.value,10)||0)+x;
+    if(v<0)v=max; if(v>max)v=0;
+    el.value=v;
+    el.dispatchEvent(new Event('input'));
+  }
+
+  $('dist').addEventListener('input', render);
+  $('age').addEventListener('input', render);
+  $('lthr').addEventListener('input', render);
+  ['t_h','t_m','t_s'].forEach(id=>$(id).addEventListener('input', render));
+
+  render();
+</script>
+</body>
+</html>

@@ -515,8 +515,27 @@ const cool=(m=10)=>st('cooldown','time',m*60,HRZ(1),'Заминка');
 const recS=m=>st('interval','time',m*60,HRZ(1),'Восстановительный');
 const easyS=m=>st('interval','time',m*60,HRZ(2),'Лёгкий');
 const strides=(n,R)=>rp(n,[st('interval','time',20,PCT(R.str),'Ускорение'),st('recovery','time',60,HRZ(1))]);
-const repsD=(n,dist,r,rec)=>rp(n,[st('interval','distance',dist,PCT(r)),st('recovery','time',rec,HRZ(1))]);
-const repsT=(n,min,r,recM)=>rp(n,[st('interval','time',min*60,PCT(r)),st('recovery','time',recM*60,HRZ(1))]);
+// Клэмп на суммарный объём "жёсткой" работы качественной сессии (без разминки/заминки/восстановления) — раньше
+// число повторов клэмпилось само по себе (обычно 3..7), одинаково независимо от длины отрезка: 7×200 м — это
+// неполные 2 мин работы, а 7×1000 м на пороге — уже отдельная тяжёлая тренировка (см. правки #5, обсуждение
+// нерелевантности коэффициента qDiv/клэмпа реповов без учёта длительности отрезка). Здесь оба базовых хелпера,
+// через которые строится подавляющее большинство интервальных повторов в плане, подгоняют переданное сверху
+// число повторов так, чтобы СУММАРНОЕ время работы держалось в разумном диапазоне одной сессии — это не
+// замена существующим (уже неплохо откалиброванным для конкретных дистанций) поправкам вида n±k в ротациях
+// выше по цепочке, а защитный потолок/пол ПОВЕРХ них на случай сочетаний объёма/дистанции, для которых те
+// поправки не рассчитаны.
+const QWORK_MIN_MIN=6, QWORK_MAX_MIN=32;
+const clampRepsToWorkMin=(n,perRepMin)=>{
+  n=Math.max(1,Math.round(n||1));
+  if(!(perRepMin>0))return n;
+  const lo=Math.max(1,Math.round(QWORK_MIN_MIN/perRepMin));
+  const hi=Math.max(lo,Math.round(QWORK_MAX_MIN/perRepMin));
+  return clamp(n,lo,hi);
+};
+const repsD=(n,dist,r,rec)=>{n=clampRepsToWorkMin(n,(dist/1000)*mid(r)/60);
+  return rp(n,[st('interval','distance',dist,PCT(r)),st('recovery','time',rec,HRZ(1))]);};
+const repsT=(n,min,r,recM)=>{n=clampRepsToWorkMin(n,min);
+  return rp(n,[st('interval','time',min*60,PCT(r)),st('recovery','time',recM*60,HRZ(1))]);};
 const mpCont=(min,R)=>st('interval','time',min*60,PCT(R.mp),'Марафонский');
 const mpReps=(n,min,recM,R)=>rp(n,[st('interval','time',min*60,PCT(R.mp)),st('recovery','time',recM*60,HRZ(2))]);
 // Длинная: цель по умолчанию Z2, но для очень долгих сессий (ультра, время на ногах 2,5 ч+) верх Z2 (≈89% ПАНО)
@@ -618,7 +637,13 @@ function estimateVdotFromVolume(curVolKm,exp){
   const expF={novice:0.94,inter:1.0,adv:1.08}[exp]||1;
   return clamp(base*expF,20,55);
 }
-function projectFitness(cfgIn){
+function projectFitness(cfgIn,peakKmActual){
+  // peakKmActual (необязательный): РЕАЛЬНО достигнутый пик недельного объёма из уже построенной понедельной
+  // кривой buildPlan (kms[]/peakReached) — если передан, используем его вместо грубой оценки achievablePeakKm()
+  // внутри этой функции. Так прогноз формы/времени считается ОДИН раз, от той же кривой, что и сам план
+  // (см. правки #1/#3): первый вызов (без peakKmActual) нужен buildPlan только для предварительных величин
+  // (текущий темп P0, заявленный пик) ДО построения кривой; второй вызов (с peakKmActual) даёт финальный,
+  // авторитетный прогноз — именно его показываем пользователю и используем для целевых темпов недель.
   const cfg=normalizeCfg(cfgIn);          // работаем с копией — внешний cfg не мутируем
   const notes=[];
   let anchorVd=bestVdot(cfg.results);
@@ -686,9 +711,13 @@ function projectFitness(cfgIn){
   // фактическая стартовая точка роста — введённый текущий объём (в км-эквиваленте, как и peakKm0), а не доля пика;
   // если объём не введён — achievablePeakKm сама откатится к старому поведению (доля пика/корридор).
   const curVolKm=(cfg.curVol>0)?(cfg.volUnit==='h'?cfg.curVol*3600/mid(paceSet(curMarEq,t10cur).easy):cfg.curVol):null;
-  const peakKmAch=achievablePeakKm(peakKm0,peakIdxP,curVolKm,RAMPEXP[cfg.exp]||1);
+  // если реальный пик уже известен (второй, авторитетный вызов из buildPlan) — используем его напрямую и не
+  // гадаем заново по грубому правилу ~10%/нед; иначе (первый, предварительный вызов) считаем как раньше.
+  const peakKmAch=(peakKmActual>0)?peakKmActual:achievablePeakKm(peakKm0,peakIdxP,curVolKm,RAMPEXP[cfg.exp]||1);
   const peakKmEff=Math.min(peakKm0,peakKmAch);
-  if(peakKmEff<peakKm0-3)notes.push(`Заявленный пик ${Math.round(peakKm0)} км/нед недостижим по правилу ~10% прироста за ${peakIdxP} нед. роста — прогноз формы считаем от фактически достижимого ≈${Math.round(peakKmEff)} км.`);
+  if(peakKmEff<peakKm0-3)notes.push(peakKmActual>0
+    ?`Фактический пик плана ≈${Math.round(peakKmEff)} км/нед вместо заявленных ${Math.round(peakKm0)}: прогноз формы и целевые темпы недель посчитаны от реально достигнутого объёма, а не от заявленного.`
+    :`Заявленный пик ${Math.round(peakKm0)} км/нед недостижим по правилу ~10% прироста за ${peakIdxP} нед. роста — прогноз формы считаем от фактически достижимого ≈${Math.round(peakKmEff)} км.`);
   const volPivot=VOLPIVOT[goalDist]||90;                      // порог объёма масштабируется под дистанцию
   // в прогноз формы идёт достижимый беговой объём + аэробный эквивалент кросса
   const volF=clamp((peakKmEff+Math.max(0,peakKmForFitness-peakKm0))/volPivot,0.7,1.15);
@@ -809,27 +838,20 @@ function buildPlan(cfgIn){
   // ---- физиология: единая цель + автоэквиваленты ----
   const goalDist=+cfg.goalDist||42195, GM=MODELS[goalDist]||MODELS[42195];
   const isUltra=goalDist>42195;
+  // ПРЕДВАРИТЕЛЬНЫЙ вызов projectFitness — только чтобы узнать текущий темп (P0) и заявленный пик (peakKm0)
+  // ДО построения реальной понедельной кривой. Его achGoalVd/endGoal/notes здесь НЕ используются и НЕ
+  // показываются пользователю — грубая оценка достижимого пика (achievablePeakKm) внутри него не учитывает
+  // разгрузочные недели, тюн-старты и неполную неделю 1, поэтому её прогноз времени может отличаться от
+  // прогноза, который реально соответствует построенному плану. Авторитетный прогноз считается ПОВТОРНО,
+  // ниже, от РЕАЛЬНО достигнутого пика (peakReached) — см. правки #1/#3.
   const proj=projectFitness(cfg);
   if(!proj)return {error:'Добавьте хотя бы один текущий результат (дистанция + время).'};
-  proj.notes.forEach(n=>notes.push(n));
-  const anchorVd=proj.anchorVd, achGoalVd=proj.achGoalVd, vG=proj.vG;
-  const endGoal=proj.endGoalDisp, curGoalTime=proj.curGoalTimeDisp; // отображаемые (курс-дисконтированные) времена — для сообщений/тега/гоночного темпа в плане
+  const anchorVd=proj.anchorVd;
   const recF=proj.recF; cfg.peakKm=proj.peakKm0;
-  if(vG==='нереалистично')notes.push(`${GM.name} ${fmtT(cfg.tgtGoal)} к ${fmtDM(marD)} недостижим от текущей формы; темпы построены под реалистичный ≈${fmtT(endGoal)}.`);
-  const curMar=Math.round(proj.curMarEq), end10=Math.round(timeFor(10000,achGoalVd)), endMar=Math.round(timeFor(42195,achGoalVd));
+  const curMar=Math.round(proj.curMarEq);
   const peakKm0=proj.peakKm0;
-  const P0=paceSet(curMar,Math.round(proj.t10cur)), P1=paceSet(endMar,end10);
+  const P0=paceSet(curMar,Math.round(proj.t10cur));   // текущий темп зависит только от анкера формы, не от цели/пика — можно считать сразу
   if(cfg.ltPace)P0.thr=[cfg.ltPace-2,cfg.ltPace+8];
-  const buildEnd=Math.max(1,N-3);
-  const vdAt=i=>lerp(anchorVd,achGoalVd,clamp(i/buildEnd,0,1));
-  const setFor=i=>{const f=clamp(i/buildEnd,0,1);const o={};for(const k in P0)o[k]=lerpR(P0[k],P1[k],f);
-    o._lt=+cfg.lthr||0;                       // для paceOfStep: вывести зону, если цель задана в уд/мин
-    // ЦЕЛЕВОЙ ТЕМП УЛЬТРЫ: марафонский темп для 60–160 км на 10–30% быстрее реального гоночного, и тренировать
-    // «концовку МР» на 100 км — методическая ошибка (см. ревью, C8). Считаем темп цели через Ригеля от
-    // марафон-эквивалента формы ЭТОЙ недели, поэтому он прогрессирует вместе с формой.
-    if(isUltra){const up=riegel(timeFor(42195,vdAt(i)),goalDist)/(goalDist/1000);
-      o.ultra=[Math.round(up-8),Math.round(up+12)];}
-    return o;};
 
   // Структурный минимум: при заданном числе пробежек и цели «жёсткая» часть недели (качественные + длинная)
   // может сама превышать заявленный объём. Раньше нормализация в этом случае выбрасывала запланированные
@@ -1113,6 +1135,34 @@ function buildPlan(cfgIn){
   const tuneIdx=tune.map(t=>Math.floor(dDiff(t.d,start)/7));
   const tuneVolF=x=>x>=60000?TUNE.tuneVol.m*clamp(1-0.15*clamp((x-42195)/(160000-42195),0,1),0.5,1):x>=42000?TUNE.tuneVol.m:x>=21000?TUNE.tuneVol.h:TUNE.tuneVol.t;
   const tuneRecDays=x=>Math.ceil(postRaceEasy*(x>=60000?3+2*clamp((x-42195)/(160000-42195),0,1):x>=42000?3:x>=21000?1.7:1));
+  // Окно восстановления после тюн-старта (tuneRecDays) может уходить в СЛЕДУЮЩУЮ неделю после недели самого
+  // старта — раньше это снижало интенсивность только КОНКРЕТНЫХ ДНЕЙ (через noQualUntil, качественная →
+  // восстановительный бег), но не целевой ОБЪЁМ этой недели в кривой kms[]: неделя продолжала требовать полный
+  // ненормированный километраж, просто сминая его в оставшиеся дни, а следующий шаг роста считал prev так,
+  // будто неделя была отработана полностью (см. правки #2). Здесь заранее считаем долю дней недели, попадающих
+  // в чужое окно восстановления (не в неделю самого старта — её объём отдельно режет tuneVolF), и снижаем
+  // целевой объём такой недели пропорционально, ДО того как эта неделя станет базой (prev) для следующего шага.
+  const tuneRecShareByWeek=new Array(N).fill(0);
+  tune.forEach(t=>{
+    const ti=Math.floor(dDiff(t.d,start)/7);
+    const n=tuneRecDays(t.dist);
+    for(let k=1;k<=n;k++){
+      const wi=Math.floor(dDiff(dAdd(t.d,k),start)/7);
+      if(wi===ti||wi<0||wi>=N)continue;
+      tuneRecShareByWeek[wi]=(tuneRecShareByWeek[wi]||0)+1/7;
+    }
+  });
+  const applyTuneRecCut=(i,k)=>{
+    const sh=tuneRecShareByWeek[i];
+    if(!(sh>0))return k;
+    // восстановительный день — не полный отдых (в отличие от адаптационных дней недели 1), а укороченный лёгкий
+    // бег, поэтому просадка объёма мягче, чем прямая пропорция дней: макс. -40% при полностью «восстановительной» неделе.
+    const availShare=Math.max(1-sh*0.6,0.6);
+    const kBefore=k;
+    const kAfter=k*availShare;
+    notes.push(`Неделя ${i+1}: в неё попадает окно восстановления после промежуточного старта — целевой объём снижен с ≈${Math.round(kBefore)} до ≈${Math.round(kAfter)} км, чтобы реально хватило времени на восстановление.`);
+    return kAfter;
+  };
   // ---- предстартовый контекст «переход с другой программы»: не даём неделе 1 резко провалиться ниже недавней пиковой нагрузки ----
   let preStartAnchorKm=null;
   if(cfg.preCtx==='transition'&&cfg.transPeakVol>0){
@@ -1151,7 +1201,14 @@ function buildPlan(cfgIn){
     const growCapAbs=Math.max(prev*growCapEff,prev+TUNE.growFloorKm); // на малых объёмах % даёт слишком мелкий шаг — берём больший из (10%×опыт, +3 км)
     if(k>growCapAbs&&i>0)k=growCapAbs; // правило ~10% (масштабировано опытом), не менее growFloorKm км/нед (недостижимость пика уже отмечена в прогнозе — см. projectFitness)
     if(i===peakIdx)types[i]='peak';
-    if(i>0&&i<peakIdx&&(i+1)%downEvery===0){k*=TUNE.downF;types[i]='down';}
+    const isDownWeek=i>0&&i<peakIdx&&(i+1)%downEvery===0;
+    const isRecWeek=tuneRecShareByWeek[i]>0;
+    // ВАЖНО: обрезку от окна восстановления применяем ПОСЛЕ клампа по правилу ~10% — это не часть обычной
+    // рамп-кривой, а разовая просадка. И, как и разгрузочную неделю, её нельзя пускать в `prev`: иначе
+    // разовое снижение объёма одной недели навсегда утаскивает вниз потолок роста ВСЕХ последующих недель
+    // (см. переписку — план переставал восстанавливать темп роста после недели с восстановительным окном).
+    if(isDownWeek){k*=TUNE.downF;types[i]='down';k=applyTuneRecCut(i,k);}
+    else if(isRecWeek){k=applyTuneRecCut(i,k);}
     else prev=k;
     kms[i]=k;
   }
@@ -1198,6 +1255,31 @@ function buildPlan(cfgIn){
   tuneIdx.forEach((ti,j)=>{if(ti>peakIdx&&ti<N-1){kms[ti]=Math.min(kms[ti],kms[ti]*tuneVolF(tune[j].dist));types[ti]='tune';}});
   // жёсткая монотонность подводки: каждая неделя после пика не больше предыдущей (тюн/округления не должны её ломать)
   for(let i=peakIdx+1;i<N;i++)if(kms[i]>kms[i-1])kms[i]=kms[i-1]*0.95;
+
+  // ---- АВТОРИТЕТНЫЙ прогноз формы/времени — от РЕАЛЬНО достигнутого пика (peakReached), а не от грубой оценки ----
+  // Это единственное место, где считается достижимая форма/финишное время и целевые темпы недель (P1/setFor):
+  // кривая объёма к этому моменту уже учитывает разгрузки, тюн-старты и неполную неделю 1, поэтому прогноз
+  // соответствует именно тому плану, который реально строится (см. правки #1/#3).
+  const proj2=projectFitness(cfg,peakReached);
+  if(!proj2)return {error:'Добавьте хотя бы один текущий результат (дистанция + время).'};
+  // «Фактический пик плана...» от proj2 дублирует note, которую buildPlan уже вывел на строке выше (peakReached<cfg.peakKm-3) —
+  // не показываем его дважды.
+  proj2.notes.filter(n=>!/^Фактический пик плана/.test(n)).forEach(n=>notes.push(n));
+  const achGoalVd=proj2.achGoalVd, vG=proj2.vG;
+  const endGoal=proj2.endGoalDisp, curGoalTime=proj2.curGoalTimeDisp; // отображаемые (курс-дисконтированные) времена — для сообщений/тега/гоночного темпа в плане
+  if(vG==='нереалистично')notes.push(`${GM.name} ${fmtT(cfg.tgtGoal)} к ${fmtDM(marD)} недостижим от текущей формы; темпы построены под реалистичный ≈${fmtT(endGoal)}.`);
+  const end10=Math.round(timeFor(10000,achGoalVd)), endMar=Math.round(timeFor(42195,achGoalVd));
+  const P1=paceSet(endMar,end10);
+  const buildEnd=Math.max(1,N-3);
+  const vdAt=i=>lerp(anchorVd,achGoalVd,clamp(i/buildEnd,0,1));
+  const setFor=i=>{const f=clamp(i/buildEnd,0,1);const o={};for(const k in P0)o[k]=lerpR(P0[k],P1[k],f);
+    o._lt=+cfg.lthr||0;                       // для paceOfStep: вывести зону, если цель задана в уд/мин
+    // ЦЕЛЕВОЙ ТЕМП УЛЬТРЫ: марафонский темп для 60–160 км на 10–30% быстрее реального гоночного, и тренировать
+    // «концовку МР» на 100 км — методическая ошибка (см. ревью, C8). Считаем темп цели через Ригеля от
+    // марафон-эквивалента формы ЭТОЙ недели, поэтому он прогрессирует вместе с формой.
+    if(isUltra){const up=riegel(timeFor(42195,vdAt(i)),goalDist)/(goalDist/1000);
+      o.ultra=[Math.round(up-8),Math.round(up+12)];}
+    return o;};
 
   // ---- ротации качественных работ (зависят от бегунка) ----
   const nQ=w=>clamp(Math.round(w/TUNE.qDiv),TUNE.qMin,TUNE.qMax);
@@ -1613,7 +1695,25 @@ function buildPlan(cfgIn){
       // но и привычная длинная не должна выходить за долю недели больше чем на 15% — иначе введённый curLong
       // (например 150 мин при 40 км/нед) снова делает из недели одну сверхдлинную тренировку
       const fl=Math.min(cfg.curLong,maxLongMin,Math.max(lrCap,cfg.curLong*0.8));
-      if(lrMin<fl){lrMin=fl;lrKm=Math.round(lrMin*60/mid(R.longp));} }
+      if(lrMin<fl){
+        // ШАГ #4: поднимать длинную к желаемому полу можно только на то, что реально можно «одолжить» у
+        // остальных гибких (лёгких/восст.) дней этой недели, не роняя их ниже их собственного пола (иначе
+        // рост длинной либо тихо раздувает неделю сверх её цели по объёму, либо ниже — в remainder-бюджете
+        // (см. блок «НОРМАЛИЗАЦИЯ ПОД ЦЕЛЕВОЙ ОБЪЁМ НЕДЕЛИ») — выдавливает другие лёгкие дни ниже разумного
+        // минимума). Оценка гибких дней и их «запаса» здесь грубая (без точного шаблона недели), но достаточная
+        // как защитный потолок на рост.
+        const deltaMin=fl-lrMin;
+        const deltaKm=deltaMin*mid(R.longp)/60;
+        const flexDaysApprox=Math.max(0,baseRuns-(nQual+1)); // пробежек в шаблоне минус качественные и сама длинная
+        const giveKmPerDay=Math.max(0,(TUNE.easyMin[1]-TUNE.easyMin[0]))*60/mid(R.easy); // сколько км может уступить один лёгкий день, не проваливаясь ниже своего пола
+        const availableKm=flexDaysApprox*giveKmPerDay;
+        let flEff=fl;
+        if(deltaKm>availableKm){
+          flEff=lrMin+availableKm*60/mid(R.longp);
+          notes.push(`Неделя ${i+1}: желаемая длительность длинной (${hm(Math.round(fl))}) недостижима без чрезмерного урезания остальных лёгких дней при ${runs} тренировках в неделю — длинная поднята только до ≈${hm(Math.round(Math.max(lrMin,flEff)))}.`);
+        }
+        lrMin=Math.max(lrMin,flEff);lrKm=Math.round(lrMin*60/mid(R.longp));
+      } }
     if(phase==='taper'){lrMin=Math.min(lrMin,95);lrKm=Math.round(lrMin*60/mid(R.longp));}
     // Неделя промежуточного старта/контрольного теста — разгрузочная по смыслу: сам старт и есть главная
     // работа недели. Раньше длинная в такую неделю считалась независимо от дисконтированного объёма, и её
@@ -2435,9 +2535,9 @@ function buildPlan(cfgIn){
 
   const analysis={goalDist,goalName:GM.name,goalShort:GM.short,
     anchorVd:+anchorVd.toFixed(1),achGoalVd:+achGoalVd.toFixed(1),
-    vdTarget:proj.vdTarget!=null?+proj.vdTarget.toFixed(1):null,vG,
+    vdTarget:proj2.vdTarget!=null?+proj2.vdTarget.toFixed(1):null,vG,
     curGoalTime,endGoal,tgtGoal:cfg.tgtGoal||null,
-    equiv:proj.eq.map(e=>({dist:e.dist,name:distName(e.dist),sec:e.sec,curSec:e.curSec})),
+    equiv:proj2.eq.map(e=>({dist:e.dist,name:distName(e.dist),sec:e.sec,curSec:e.curSec})),
     endMar,end10,recF:+recF.toFixed(2),taperW,downEvery,postRaceEasy,notes,N,
     // пик считаем по ТРЕНИРОВОЧНЫМ неделям: в неделе гонки км складываются из самой дистанции старта и
     // фиксированной по протоколу подводки, это не тренировочный объём и не должно показываться как «пик» (см. ревью, A4)

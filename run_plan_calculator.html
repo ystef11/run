@@ -790,7 +790,11 @@ const sesMin=(steps,R)=>steps.reduce((a,s)=>a+stepMin(s,R),0);
 const sesKm =(steps,R)=>steps.reduce((a,s)=>a+stepKm(s,R),0);
 
 // ---- человекочитаемое описание из шагов ----
-function _amt(s){if(s.end==='time'){const v=s.v;if(v<60)return `${v}с`;return v%60===0?`${v/60} мин`:`${v}с`;}
+function _amt(s){if(s.end==='time'){const v=s.v;if(v<60)return `${v}с`;
+    // ИСПРАВЛЕНО: если длительность после конвертации км↔мин (округление до 5 мин, потом обратно в сек по темпу)
+    // не попадает РОВНО на кратное 60 секунд, старый код проваливался в ветку секунд и показывал «4590с»
+    // вместо «76 мин» — секунды здесь не несут смысла, всегда округляем до ближайшей минуты.
+    return `${Math.round(v/60)} мин`;}
   return `${s.v/1000} км`.replace('.',',');}
 function _tgt(s){if(s.tg&&s.tg.bpm)return `${s.tg.bpm[0]}\u2013${s.tg.bpm[1]} уд`;
   if(s.tg&&s.tg.hr)return `Z${s.tg.hr}`;
@@ -894,7 +898,13 @@ function buildPlan(cfgIn){
     raceShare:.42,        // объём недели гонки (вкл. марафон)
     longShare:GM.longShare,// доля длинной от недели (из модели дистанции)
     maxLongMin:GM.maxLongMin,// потолок длинной, мин (из модели дистанции)
-    qDiv:16,qMin:3,qMax:7,// повторы качественной: ~км/нед / qDiv, кламп
+    // ИСПРАВЛЕНО: при qDiv=16 round(w/16) даёт ОДНО И ТО ЖЕ число повторов для почти любого реалистичного
+    // объёма — напр. и 34, и 47 км/нед округляются к 3 повторам (клэмп 3 не даёт разницы почувствоваться
+    // раньше 56 км/нед). Из-за этого качественная тренировка не растёт вместе с ростом недельного объёма —
+    // а раз качественная (часть недели, которая НЕ зависит от единственного гибкого дня при малой частоте)
+    // не растёт, весь недельный километраж и застревает ниже цели даже когда кривая объёма просит больше.
+    // qDiv=11 даёт заметно более плавный отклик (34→3, 40→4, 47→4, 55→5) в том же реалистичном диапазоне.
+    qDiv:11,qMin:3,qMax:7,// повторы качественной: ~км/нед / qDiv, кламп
     easyMin:[25,75],      // клампы лёгкого дня, мин
     recMin:[recFloorByVol,recCapByVol], // клампы восстановительного дня, мин — обе границы масштабируются объёмом
     tuneVol:{m:.70,h:.80,t:.85},// объём недели промеж. старта: марафон/половинка/10к
@@ -1672,7 +1682,12 @@ function buildPlan(cfgIn){
     const tuneDow=tr?(tr.d.getDay()+6)%7:-1;
 
     // целевые км длинной этой недели
-    let lrKm=clamp(Math.round(wkm*longShare),12,isUltra?70:33);  // ультре — выше, чтобы работал maxLongMin (время на ногах)
+    // На разгрузке/тюне нижний пол длинной ниже, чем в рабочие недели: раньше общий пол 12 км действовал
+    // одинаково на все недели, и в паре с потолком (см. Step4/maxLongMin) длинная разгрузочной недели
+    // выходила той же ДЛИТЕЛЬНОСТИ, что и в обычную рабочую (замер: 1:30 что на разгрузке, что на обычной
+    // неделе) — разгрузка «на глаз» становилась неотличима от рабочей недели по самой заметной тренировке.
+    const lrFloorKm=(phase==='down'||phase==='tune')?9:12;
+    let lrKm=clamp(Math.round(wkm*longShare),lrFloorKm,isUltra?70:33);  // ультре — выше, чтобы работал maxLongMin (время на ногах)
     let lrMin=lrKm*mid(R.longp)/60;
     // ПОТОЛОК ОТ НЕДЕЛЬНОГО ОБЪЁМА: длинная не должна быть больше LR_MAX_SHARE недели — иначе на малых объёмах
     // абсолютные полы ниже выдавливали её до 40–70% недельного километража (см. ревью, C1: заявлено 40 км/нед →
@@ -1703,18 +1718,32 @@ function buildPlan(cfgIn){
         // минимума). Оценка гибких дней и их «запаса» здесь грубая (без точного шаблона недели), но достаточная
         // как защитный потолок на рост.
         const deltaMin=fl-lrMin;
-        const deltaKm=deltaMin*mid(R.longp)/60;
+        // ИСПРАВЛЕНО: км = минуты×60/темп(сек/км), а не минуты×темп/60 — старая формула завышала deltaKm
+        // на порядок (напр. 12 мин разницы при темпе 350 с/км давали «70 км» вместо честных ≈2 км), из-за
+        // чего delta почти всегда «превышал» availableKm и длинная искусственно не дотягивала до желаемой.
+        const deltaKm=deltaMin*60/mid(R.longp);
         const flexDaysApprox=Math.max(0,baseRuns-(nQual+1)); // пробежек в шаблоне минус качественные и сама длинная
         const giveKmPerDay=Math.max(0,(TUNE.easyMin[1]-TUNE.easyMin[0]))*60/mid(R.easy); // сколько км может уступить один лёгкий день, не проваливаясь ниже своего пола
         const availableKm=flexDaysApprox*giveKmPerDay;
         let flEff=fl;
         if(deltaKm>availableKm){
-          flEff=lrMin+availableKm*60/mid(R.longp);
+          // ИСПРАВЛЕНО: обратная конвертация км→минуты — тоже была перепутана (см. комментарий выше про deltaKm).
+          flEff=lrMin+availableKm*mid(R.longp)/60;
           notes.push(`Неделя ${i+1}: желаемая длительность длинной (${hm(Math.round(fl))}) недостижима без чрезмерного урезания остальных лёгких дней при ${runs} тренировках в неделю — длинная поднята только до ≈${hm(Math.round(Math.max(lrMin,flEff)))}.`);
         }
         lrMin=Math.max(lrMin,flEff);lrKm=Math.round(lrMin*60/mid(R.longp));
       } }
-    if(phase==='taper'){lrMin=Math.min(lrMin,95);lrKm=Math.round(lrMin*60/mid(R.longp));}
+    if(phase==='taper'){
+      // Раньше подводка резала длинную только абсолютным потолком в 95 мин — при заданном cfg.curLong
+      // (напр. 120) обычная рабочая неделя и так упиралась в ~88-95 мин (см. Step4/maxLongMin), и подводка
+      // выходила НЕОТЛИЧИМА от рабочей недели по самой заметной тренировке (замер: 1:35 что в подводку,
+      // что в обычную неделю). Теперь режем длинную в ТОЙ ЖЕ пропорции, что и весь недельный объём этой
+      // недели подводки относительно достигнутого пика (см. taperShares/kms[i]=peakReached*sh) — подводка
+      // становится заметна и на длинной, а не только на количестве лёгких дней.
+      const taperLrRatio=peakReached>0?clamp(wkm/peakReached,0.4,1):0.6;
+      lrMin=Math.min(lrMin,95,maxLongMin*taperLrRatio);
+      lrKm=Math.round(lrMin*60/mid(R.longp));
+    }
     // Неделя промежуточного старта/контрольного теста — разгрузочная по смыслу: сам старт и есть главная
     // работа недели. Раньше длинная в такую неделю считалась независимо от дисконтированного объёма, и её
     // доля доходила до 44% (замер: неделя теста 59 км, длинная 26 км) — неделя перед контрольным стартом
@@ -1968,6 +1997,12 @@ function buildPlan(cfgIn){
     // случай, когда концовка бежится в МР/ПМ-темпе: те же минуты дают заметно больше километров.
     // Вызывается ДВА раза — после подгонки объёма и после бюджета интенсивности: второй проход обязателен,
     // потому что бюджет интенсивности может сократить другие сессии и доля длинной снова вырастет.
+    // Пол длинной от cfg.curLong (тот же расчёт, что и в ШАГЕ #4 выше) — capLongByShare() работает от ФАКТИЧЕСКОГО
+    // объёма недели уже ПОСЛЕ подгонки/бюджета, и без этого пола он тихо срезал длинную обратно ниже явно
+    // заданного пользователем порога curLong, игнорируя его (см. разбор: curLong=120, по факту 75–90 мин).
+    const curLongFloorKm=(cfg.curLong>0&&(phase==='base'||phase==='spec'||phase==='peak'))
+      ?Math.min(cfg.curLong,maxLongMin,Math.max(lrCap,cfg.curLong*0.8))*mid(R.longp)/60
+      :0;
     const capLongByShare=()=>{
       // Долю считаем от ФАКТИЧЕСКОГО объёма недели: раньше порог брался по ЦЕЛИ, и если неделя превышала цель
       // (структурные полы), то для цели <35 км включалось «послабление для малых объёмов» 0.45, хотя по факту
@@ -1976,7 +2011,7 @@ function buildPlan(cfgIn){
       days.flatMap(d=>d.items.filter(x=>x.kind==='run'&&x.z==='long'&&x.steps)).forEach(it=>{
         for(let g=0;g<150;g++){
           const lrShareCap=lrShareCapFor(runKm());
-          if(sesKm(it.steps,R)<=runKm()*lrShareCap)break;
+          if(sesKm(it.steps,R)<=Math.max(runKm()*lrShareCap,curLongFloorKm))break;
           if(sesMin(it.steps,R)<=40)break;
           let tgt=null;
           it.steps.forEach(st0=>{ if(st0.t==='repeat'||st0.end!=='time')return; if(!tgt||st0.v>tgt.v)tgt=st0; });
@@ -2023,9 +2058,15 @@ function buildPlan(cfgIn){
       // правила ~10% относительно уровня до разгрузки (замер: до +24%). Ограничиваем факт явно.
       if(prevT==='down'&&preDownActualKm>0)
         wkmT=Math.min(wkmT,Math.max(preDownActualKm*1.10,preDownActualKm+TUNE.growFloorKm));
-      // пиковая неделя не должна оказаться ниже уже достигнутого максимума — иначе перед номинальным «пиком»
-      // видна необъяснимая просадка объёма (см. правку лейбла пиковой недели в расчёте kms[])
-      if(types[i]==='peak'&&maxActualKm>0)wkmT=Math.max(wkmT,maxActualKm*1.02);
+      // ПИКОВАЯ НЕДЕЛЯ ДОЛЖНА РЕАЛЬНО ДОСТИГАТЬ ЗАЯВЛЕННОГО ПИКА. Раньше здесь стоял только +2% над уже
+      // достигнутым максимумом — если пик шёл сразу после разгрузочной/тюновой недели (по плану так и задумано:
+      // подвести к пику через кратковременный откат объёма), то prevActualKm было низким, capF=1.12 резал
+      // цель почти вдвое ниже заявленного пика, и «пик» цикла оказывался НИЖЕ обычной рабочей недели
+      // (замер: цель кривой 47.9 км/нед → факт 41-42). Пик — единственная неделя цикла, где допустим более
+      // резкий скачок относительно последнего рабочего уровня (а не относительно случайно попавшей рядом
+      // разгрузки/тюна): 15% от уже достигнутого максимума — тот же принцип "безопасного роста", но взятый от
+      // лучшей ранее выдержанной недели, а не от соседней проваленной. Сверху всё равно ограничено целью кривой (wkm).
+      if(types[i]==='peak'&&maxActualKm>0)wkmT=Math.max(wkmT,Math.min(wkm,maxActualKm*1.15));
       const fixedKm=days.reduce((a,d)=>a+d.items.filter(x=>x.kind==='run'&&x.z!=='easy'&&x.z!=='rec')
         .reduce((b,x)=>b+sesKm(x.steps,R),0),0);
       const flex=days.flatMap((d,di)=>d.items.filter(x=>x.kind==='run'&&(x.z==='easy'||x.z==='rec')&&!x.fixed).map(x=>{x._di=di;return x;}));
@@ -2037,6 +2078,36 @@ function buildPlan(cfgIn){
       const easyMaxBase=TUNE.easyMin[1]*phaseCapMult, recMaxBase=TUNE.recMin[1]*phaseCapMult;
       const paceOf=z=>z==='easy'?mid(R.easy):mid(R.rec);
       const cappedKm=flex.reduce((a,x)=>a+(x.z==='easy'?easyMaxBase:recMaxBase)*60/paceOf(x.z),0);
+      // ПРИОРИТЕТ ПРИ НЕХВАТКЕ ГИБКИХ ДНЕЙ: сначала пробуем добрать недостающий объём ростом ДЛИННОЙ (до
+      // её собственного безопасного потолка lrCap) — это безопаснее, чем растягивать лёгкие дни сверх
+      // привычной длительности (см. предупреждение ниже). Раньше было наоборот: лёгкие уже растягивались/
+      // клэмпились, а длинная (даже с запасом до потолка) не трогалась — план недобирал объём и сразу
+      // писал предупреждение, хотя резерв всё ещё был в длинной.
+      // ТОЛЬКО на неделях роста/пика — на разгрузке/тюне/подводке длинная и так уже урезана по смыслу
+      // фазы (см. волну LR_WAVE, tuneLrCap, taper-кэп выше), и «добор объёма» через неё здесь же свёл бы
+      // на нет саму идею разгрузки (замер: разгрузочная неделя 29 км при обычных 35, но с длинной 1:30 —
+      // такой же, как в рабочую неделю, потому что вся недостача объёма ушла именно в неё).
+      if(rest>cappedKm&&lrMin>0&&(phase==='base'||phase==='spec'||phase==='peak')){
+        const longItem=days.flatMap(d=>d.items).find(x=>x.kind==='run'&&x.z==='long'&&x.steps);
+        if(longItem){
+          const curLrMin=sesMin(longItem.steps,R);
+          const lrHeadroomMin=Math.max(0,lrCap-curLrMin);
+          if(lrHeadroomMin>1){
+            const lrHeadroomKm=lrHeadroomMin*60/mid(R.longp);
+            const addKm=Math.min(rest-cappedKm,lrHeadroomKm);
+            if(addKm>0.3){
+              const addMin=addKm*mid(R.longp)/60;
+              let tgt=null;
+              longItem.steps.forEach(st0=>{if(st0.t==='repeat'||st0.end!=='time')return;if(!tgt||st0.v>tgt.v)tgt=st0;});
+              if(tgt){
+                tgt.v+=Math.round(addMin*60);
+                longItem.name=longItem.name.replace(/\d+:\d{2}/,hm(r5(sesMin(longItem.steps,R))));
+                rest-=addKm;lrMin+=addMin;lrKm=Math.round(lrMin*60/mid(R.longp));
+              }
+            }
+          }
+        }
+      }
       const deficitKm=Math.max(0,rest-cappedKm);
       // при нехватке гибких дней разрешаем клэмпу расти пропорционально дефициту, но не выше easyStretchCap —
       // это тот же принцип "безопасного роста", что и в общей рамп-кривой объёма (RAMP_GROW_CAP), только для одного дня.

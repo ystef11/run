@@ -755,10 +755,10 @@ function projectFitness(cfgIn,peakKmActual){
   const expF={novice:0.82,inter:1.0,adv:1.12}[cfg.exp]||1;            // опыт влияет на скорость прогресса
   // частота пробежек: тот же объём реже = меньше стимула; ниже оптимума для объёма — штраф к приросту
   const runsN=clamp(+cfg.runs||5,3,12);
-  const runsBaseVol=cfg.volUnit==='h'?peakKm0:(cfg.curVol||peakKm0);
-  let runsOpt=4+runsBaseVol/18+(goalDist>=42195?1:0)+(goalDist>42195?1:0)-(recF>1.2?1:0);
-  if(cfg.exp==='novice')runsOpt-=1;
-  runsOpt=clamp(Math.round(runsOpt),4,12);
+  // «оптимум» частоты — ТА ЖЕ функция, что рекомендует частоту в самом плане (recommendRuns, ~3492), а не
+  // отдельная линейная формула от объёма: раньше здесь считалось независимо (4+объём/18+…) и могло штрафовать
+  // ровно то число пробежек, которое recommendRuns только что сам поставил по умолчанию (см. ревью, 2026-08-10).
+  const runsOpt=recommendRuns(peakKmEff,goalDist,recF,cfg.exp,clamp(cfg.slider==null?0.5:cfg.slider,0,1));
   const runsF=clamp(1-0.06*Math.max(0,runsOpt-runsN),0.75,1);  // каждая пробежка ниже оптимума ≈ −6% прироста, пол 0.75
   if(runsF<0.995)notes.push('Частота '+runsN+' пробежек/нед ниже оптимальной (~'+runsOpt+') для этого объёма: при том же километраже реже = меньше тренировочного стимула — прирост формы снижен ×'+runsF.toFixed(2)+'. Добавь пробежек или прими более консервативную цель.');
   // цена кросса для восстановления теперь учитывает ВИД спорта, а не только число дней
@@ -925,12 +925,12 @@ function buildPlan(cfgIn){
   // километраже (60+ км/нед) короткое восстановление съедает слишком мало объёма и перегружает лёгкие/качественные
   // дни. Верхний клэмп растёт вместе с пиковым объёмом (35 мин при ~50 км/нед → 60 мин при ~120 км/нед), но не выше
   // 60 — дольше восстановительный по времени на ногах уже сам создаёт усталость и теряет смысл разгрузки.
-  const recCapByVol=Math.round(clamp(lerp(35,60,clamp((peakKm-50)/70,0,1)),35,60));
+  const recCapByVol=r5(clamp(lerp(35,60,clamp((peakKm-50)/70,0,1)),35,60));
   // нижний пол тоже должен расти с объёмом — иначе при большом недельном километраже "гибкого" бюджета часто не
   // хватает, и восстановительный всё равно упирается в старые фиксированные 25 мин (см. ревью плана: 25 мин при
   // 85-93 км/нед — мало). 25 мин при ~50 км/нед → 40 мин при ~120 км/нед; дополнительный объём в среднем полезнее,
   // чем вреден (при условии, что пульс реально держится низким).
-  const recFloorByVol=Math.round(clamp(lerp(25,40,clamp((peakKm-50)/70,0,1)),25,40));
+  const recFloorByVol=r5(clamp(lerp(25,40,clamp((peakKm-50)/70,0,1)),25,40));
   // ---- настроечные коэффициенты генератора (все "магические числа" здесь) ----
   const TUNE={
     startShare:RAMP_START_SHARE, // старт объёма, доля пика
@@ -1360,7 +1360,16 @@ function buildPlan(cfgIn){
     return o;};
 
   // ---- ротации качественных работ (зависят от бегунка) ----
-  const nQ=w=>clamp(Math.round(w/TUNE.qDiv),TUNE.qMin,TUNE.qMax);
+  // БЮДЖЕТ-FIRST: Q1 (от объёма недели, nQ/qDiv) и Q2 (от прогресса цикла, см. q2Thr) исторически считались
+  // каждый сам по себе, не зная о существовании друг друга — их СУММА почти всегда превышала долю жёсткой/
+  // умеренной нагрузки недели (HARD_SHARE/MODHARD_SHARE, см. пост-проход «бюджет интенсивности недели» ниже),
+  // и уже готовый план приходилось резать постфактум (trimOnce) практически каждую неделю с nQual===2.
+  // qBudgetScale — грубая ОЦЕНКА нужного множителя, посчитанная ДО генерации Q1/Q2 этой недели (см. цикл
+  // недель ниже, сразу после того как известны wkm/phase/raceHere) — уменьшает размер обеих качественных
+  // сразу на этапе построения, а не после. trimOnce остаётся как редкий предохранитель для того, что эта
+  // грубая прикидка не поймала (разная точность оценки минут недели, hillTier, ползунок s и т.п.).
+  let qBudgetScale=1;
+  const nQ=w=>clamp(Math.round(w/TUNE.qDiv*qBudgetScale),TUNE.qMin,TUNE.qMax);
   // Разминка/заминка масштабируются по недельному объёму: фиксированные 15+10 мин на каждой качественной
   // при 25–35 км/нед съедали почти всю неделю, и «жёсткая» часть выходила за целевой объём ещё до лёгких
   // дней (см. ревью, C1). wuScale выставляется в цикле недель.
@@ -1447,9 +1456,9 @@ function buildPlan(cfgIn){
       if(goalDist>=21000){const H=hmp(R);
         return {nm:`ПМ-темп ${Math.round(um*0.8)}' непрерывно`,z:'thr',
           steps:[warmV(12),st('interval','time',Math.round(um*0.8)*60,PCT(H),'ПМ-темп'),coolV(8)]};}
-      if(goalDist>=10000){const n0=clamp(Math.round(w/TUNE.qDiv),3,6);
+      if(goalDist>=10000){const n0=clamp(Math.round(w/TUNE.qDiv*qBudgetScale),3,6);
         return {nm:`Круизные ${n0}x1000 @10к`,z:'vo2',steps:[warmV(12),repsD(n0,1000,R.t10,90,null,cfg.exp),coolV(8)]};}
-      const n5=clamp(Math.round(w/TUNE.qDiv)+1,4,8);
+      const n5=clamp(Math.round(w/TUNE.qDiv*qBudgetScale)+1,4,8);
       return {nm:`МПК ${n5}x600 @5к`,z:'vo2',steps:[warmV(12),repsD(n5,600,R.race5,90,null,cfg.exp),coolV(8)]};
     }
     if(isUltra){
@@ -1619,7 +1628,10 @@ function buildPlan(cfgIn){
   // а формат (дробный/длинные куски/непрерывно) по-прежнему чередуется.
   const q2Thr=(i,R,prog)=>{
     const pg=clamp(prog==null?0.35:prog,0,1);
-    const total=Math.round(lerp(20,40,pg));                     // суммарные минуты в пороге
+    // qBudgetScale (см. комментарий у nQ выше) — та же budget-first поправка: раньше эти минуты считались
+    // ТОЛЬКО от прогресса цикла, не зная про параллельно растущий по объёму Q1 — сумма обеих качественных
+    // регулярно превышала долю жёсткой нагрузки недели.
+    const total=Math.round(lerp(20,40,pg)*qBudgetScale);         // суммарные минуты в пороге
     const rots=[
       ()=>{const n=clamp(Math.round(total/10),2,4),m=Math.max(6,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,2,cfg.exp)};},
       ()=>{const n=clamp(Math.round(total/13),2,3),m=Math.max(8,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,3,cfg.exp)};},
@@ -1673,7 +1685,7 @@ function buildPlan(cfgIn){
     }
     if(goalDist>=10000){                     // 10 КМ: круизные @10к + порог
       if(phase==='taper')return {nm:"Порог 2x8'",z:'thr',steps:[warmV(12),repsT(2,8,R.thr,2,cfg.exp),coolV(8)]};
-      if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv),3,6);
+      if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv*qBudgetScale),3,6);
         // Ползунок s задаёт долю порога в Q2: акцент скорость — порог редкий (1 из 5, разбавлен короткой
         // быстрой работой); акцент выносливость — порог чаще (2 из 3); баланс — как раньше, 1 из 4.
         const rot = s<0.35 ? [
@@ -1699,7 +1711,7 @@ function buildPlan(cfgIn){
     }
     // 5 КМ: МПК/скорость @5к + короткий порог — короче отрезки, больше повторов, акцент на VO2max
     if(phase==='taper')return {nm:"Острая 4x400 @5к",z:'vo2',steps:[warmV(12),repsD(4,400,R.race5,75,null,cfg.exp),coolV(8)]};
-    if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv)+1,4,8);
+    if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv*qBudgetScale)+1,4,8);
       const rot = s<0.35 ? [
                    {nm:`МПК ${n}x400 @5к`,z:'vo2',st:repsD(n,400,R.race5,75,null,cfg.exp)},
                    {nm:`Быстрые ${Math.max(4,n-1)}x600 @5к`,z:'vo2',st:repsD(Math.max(4,n-1),600,R.race5,90,null,cfg.exp)},
@@ -1755,6 +1767,26 @@ function buildPlan(cfgIn){
     const raceHere=types[i]==='race';
     const tr=tuneIdx.includes(i)?tune[tuneIdx.indexOf(i)]:null;
     const tuneDow=tr?(tr.d.getDay()+6)%7:-1;
+
+    // --- бюджет интенсивности: ОЦЕНКА ДО построения качественных сессий (budget-first cap, см. qBudgetScale
+    // у объявления nQ выше) — та же граница (HARD_SHARE/MODHARD_SHARE), что и в пост-проходе «бюджет
+    // интенсивности недели» ниже (~строка 2400), посчитанная сейчас, ДО генерации Q1/Q2, чтобы обе качественные
+    // сразу выходили размером под неделю, а не резались постфактум. Условие совпадает с условием пост-прохода
+    // (не гонка), плюс включается только когда качественных в неделе реально ДВЕ (nQual>=2) — при nQual===1
+    // с бюджетом конкурирует только одна сессия, там прежняя логика уже была верна.
+    qBudgetScale=1;
+    if(!raceHere&&phase!=='race'&&nQual>=2){
+      const specPhaseEarly=(phase==='spec'||phase==='peak')&&(isUltra||goalDist>=21000);
+      const specPhase10kEarly=(phase==='spec'||phase==='peak')&&goalDist>=10000&&goalDist<21000;
+      const HARD_SHARE_EARLY=0.12, MODHARD_SHARE_EARLY=(baseRuns<=3?0.42:((specPhaseEarly||specPhase10kEarly)?0.36:0.30));
+      const estWMin=Math.max(45,kms[i]*mid(R.easy)/60);
+      const hardBudgetMin=estWMin*HARD_SHARE_EARLY;
+      // грубая прикидка «сколько минут жёсткой работы дали бы Q1+Q2 БЕЗ поправки» — те же формулы, что у самих
+      // генераторов (nQ×типичная длина отрезка ~4 мин для Q1; q2Thr считает свои минуты напрямую для Q2).
+      const naiveQ1HardMin=clamp(Math.round(kms[i]/TUNE.qDiv),TUNE.qMin,TUNE.qMax)*5.2;
+      const naiveQ2HardMin=Math.round(lerp(20,40,prog));
+      qBudgetScale=clamp(hardBudgetMin/Math.max(1,naiveQ1HardMin+naiveQ2HardMin),0.45,1);
+    }
 
     // целевые км длинной этой недели
     // На разгрузке/тюне нижний пол длинной ниже, чем в рабочие недели: раньше общий пол 12 км действовал
@@ -1963,7 +1995,7 @@ function buildPlan(cfgIn){
           if(mpFin){const mpm=Math.round(Math.min(lerp(20,40,prog),lrMin*0.35));
             // для ультры концовка идёт в ЦЕЛЕВОМ темпе дистанции (R.ultra), а не в марафонском — см. ревью, C8
             items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} концовка в целевом темпе ${mpm}'`,
-              steps:[longE(Math.round(lrMin-mpm)),st('interval','time',mpm*60,PCT(R.ultra),'Концовка в целевом темпе')],
+              steps:[longE(r5(lrMin-mpm)),st('interval','time',mpm*60,PCT(R.ultra),'Концовка в целевом темпе')],
               note:`Концовка — в темпе цели на ${GM.short} (≈${fmtP(mid(R.ultra))}/км), это заметно медленнее марафонского. Смысл — научиться держать целевой темп на уставших ногах, а не бежать быстро.`}];}
           else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} (время на ногах)`,steps:[longE(Math.round(lrMin))]}];
         } else if(goalDist>=42000){
@@ -1981,10 +2013,10 @@ function buildPlan(cfgIn){
             // название НЕ должно содержать "КОНТРОЛ" — regex зон (zoneOfW) проверяет /КОНТРОЛ/i раньше проверки
             // на "Длинн" и классифицировал бы эту длинную как гонку (race), а не long.
             items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} КЛЮЧЕВАЯ МР ${mpm}'`,
-              steps:[longE(Math.round(lrMin-mpm)),st('interval','time',mpm*60,PCT(R.mp),'Контрольная МР непрерывно')]}];}
+              steps:[longE(r5(lrMin-mpm)),st('interval','time',mpm*60,PCT(R.mp),'Контрольная МР непрерывно')]}];}
           else if(mpFin&&i%everyN===0&&phase!=='down'){const mpm=Math.round(Math.min(lerp(20,55,prog),lrMin*0.40));
             items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)} концовка МР`,
-              steps:[longE(Math.round(lrMin-mpm)),st('interval','time',mpm*60,PCT(R.mp),'Концовка МР')]}];}
+              steps:[longE(r5(lrMin-mpm)),st('interval','time',mpm*60,PCT(R.mp),'Концовка МР')]}];}
           else items=[{kind:'run',z:'long',name:`Длинная ${hm(lrMin)}`,steps:[longE(Math.round(lrMin))]}];
         } else if(goalDist>=21000){
           const H=hmp(R);
@@ -1998,13 +2030,13 @@ function buildPlan(cfgIn){
             // блоки ПМ-темпа в середине, прогрессивная (легко → средне → ПМ) — недостающая специфика ПМ на длинной
             const variants=[
               {nm:`Длинная ${hm(lrMin)} концовка ПМ ${fm}'`,
-                st:[longE(Math.round(lrMin-fm)),st('interval','time',fm*60,PCT(H),'Концовка ПМ')]},
+                st:[longE(r5(lrMin-fm)),st('interval','time',fm*60,PCT(H),'Концовка ПМ')]},
               {nm:`Длинная ${hm(lrMin)} 2x${Math.round(fm*0.6)}' ПМ`,
-                st:[longE(Math.round(lrMin*0.35)),
+                st:[longE(r5(lrMin*0.35)),
                     rp(2,[st('interval','time',Math.round(fm*0.6)*60,PCT(H),'ПМ-темп блок'),st('recovery','time',300,HRZ(2))]),
-                    longE(Math.max(15,Math.round(lrMin-lrMin*0.35-fm*1.2)))]},
+                    longE(Math.max(15,r5(lrMin-lrMin*0.35-fm*1.2)))]},
               {nm:`Длинная ${hm(lrMin)} прогрессивная`,
-                st:[longE(Math.round(lrMin*0.5)),
+                st:[longE(r5(lrMin*0.5)),
                     st('interval','time',Math.round(lrMin*0.3)*60,PCT(MID),'Средний темп'),
                     st('interval','time',Math.round(lrMin*0.2)*60,PCT(H),'Ускорение к финишу')]}
             ];
@@ -2021,13 +2053,13 @@ function buildPlan(cfgIn){
             const MID10=[(R.easy[0]+R.thr[0])/2,(R.easy[1]+R.thr[1])/2];
             const variants10=[
               {nm:`Длинная ${hm(lrMin)} концовка порог ${fm}'`,
-                st:[longE(Math.round(lrMin-fm)),st('interval','time',fm*60,PCT(R.thr),'Концовка порог')]},
+                st:[longE(r5(lrMin-fm)),st('interval','time',fm*60,PCT(R.thr),'Концовка порог')]},
               {nm:`Длинная ${hm(lrMin)} 2x${Math.round(fm*0.6)}' порог`,
-                st:[longE(Math.round(lrMin*0.35)),
+                st:[longE(r5(lrMin*0.35)),
                     rp(2,[st('interval','time',Math.round(fm*0.6)*60,PCT(R.thr),'Порог блок'),st('recovery','time',240,HRZ(2))]),
-                    longE(Math.max(15,Math.round(lrMin-lrMin*0.35-fm*1.2)))]},
+                    longE(Math.max(15,r5(lrMin-lrMin*0.35-fm*1.2)))]},
               {nm:`Длинная ${hm(lrMin)} прогрессивная`,
-                st:[longE(Math.round(lrMin*0.5)),
+                st:[longE(r5(lrMin*0.5)),
                     st('interval','time',Math.round(lrMin*0.3)*60,PCT(MID10),'Средний темп'),
                     st('interval','time',Math.round(lrMin*0.2)*60,PCT(R.thr),'Ускорение к финишу')]}
             ];
@@ -2146,7 +2178,16 @@ function buildPlan(cfgIn){
         .reduce((b,x)=>b+sesKm(x.steps,R),0),0);
       const flex=days.flatMap((d,di)=>d.items.filter(x=>x.kind==='run'&&(x.z==='easy'||x.z==='rec')&&!x.fixed).map(x=>{x._di=di;return x;}));
       let rest=Math.max(0,wkmT-fixedKm);
-      const wsum=flex.reduce((a,x)=>a+(x.z==='easy'?1:0.7),0)||1;
+      // ДЕНЬ ПЕРЕД ДЛИННОЙ: раньше вес в распределении остатка объёма был одинаков для всех лёгких/восст.
+      // дней недели независимо от их позиции — лёгкий день, который календарно стоит прямо перед длинной,
+      // получал ту же долю, что и любой другой лёгкий день, и мог выйти почти такой же нагрузкой (напр.
+      // 60 мин лёгкой в субботу при 70–75 мин длинной в воскресенье — два нагруженных дня подряд без
+      // полноценного отдыха между ними, см. разбор плана). Понижаем вес именно этого дня — освободившийся
+      // объём автоматически перейдёт на другие гибкие дни недели (а не в длинную — рост длинной остаётся
+      // отдельным, ограниченным lrCap рычагом выше, п. «ПРИОРИТЕТ ПРИ НЕХВАТКЕ ГИБКИХ ДНЕЙ»).
+      const preLongDi=(longDow+6)%7;
+      const PRE_LONG_WEIGHT=0.6;
+      const wsum=flex.reduce((a,x)=>a+((x._di===preLongDi&&x.z==='easy')?PRE_LONG_WEIGHT:(x.z==='easy'?1:0.7)),0)||1;
       // базовый клэмп масштабируем по фазе роста этой недели (0.8 у старта роста → 1.0 к пику) — чтобы дефицит
       // гибких дней не «телепортировал» раннюю неделю к пиковым длительностям в обход общей рамп-кривой недели.
       const phaseCapMult=lerp(0.8,1.0,prog);
@@ -2175,7 +2216,9 @@ function buildPlan(cfgIn){
               let tgt=null;
               longItem.steps.forEach(st0=>{if(st0.t==='repeat'||st0.end!=='time')return;if(!tgt||st0.v>tgt.v)tgt=st0;});
               if(tgt){
-                tgt.v+=Math.round(addMin*60);
+                // аэробный шаг длинной — кратно 5 мин (см. правило округления): округляем ИТОГ в минутах,
+                // а не просто прибавляем дробные секунды поверх целого шага.
+                tgt.v=r5(tgt.v/60+addMin)*60;
                 longItem.name=longItem.name.replace(/\d+:\d{2}/,hm(r5(sesMin(longItem.steps,R))));
                 rest-=addKm;lrMin+=addMin;lrKm=Math.round(lrMin*60/mid(R.longp));
               }
@@ -2187,7 +2230,10 @@ function buildPlan(cfgIn){
       // при нехватке гибких дней разрешаем клэмпу расти пропорционально дефициту, но не выше easyStretchCap —
       // это тот же принцип "безопасного роста", что и в общей рамп-кривой объёма (RAMP_GROW_CAP), только для одного дня.
       const stretchMult=deficitKm>0?clamp(1+deficitKm/Math.max(1,cappedKm),1,TUNE.easyStretchCap):1;
-      let easyMax=easyMaxBase*stretchMult; const recMax=recMaxBase*stretchMult;
+      // r5 сразу здесь: easyMax/recMax — это потолки, которые дальше участвуют в clamp() вместе с уже
+      // округрёнными до 5 минутами (см. ниже) — нецелый потолок мог "перебить" аккуратное округление и
+      // просочиться в шаг тренировки как дробная минута (напр. 61.88 мин → 3713 сек в JSON).
+      let easyMax=r5(easyMaxBase*stretchMult); const recMax=r5(recMaxBase*stretchMult);
       // ПОТОЛОК ОТ ДЛИННОЙ ЭТОЙ ЖЕ НЕДЕЛИ: при малом числе гибких дней (например, неделя 1 — перенос
       // качественной с адаптационного дня «съедает» один из обычных лёгких дней, см. relocate()) весь
       // остаток объёма садится на единственный оставшийся лёгкий день, и растяжение (stretchMult) может
@@ -2195,13 +2241,31 @@ function buildPlan(cfgIn){
       // воскресенья и не даёт восстановиться перед ней. Не даём лёгкому дню приближаться к длинной ближе
       // чем на 15% (и держим тот же зазор, что и обычно между ними на других неделях).
       if(lrMin>0){
-        const easyCapByLong=Math.max(TUNE.easyMin[0],lrMin*0.85);
-        if(easyMax>easyCapByLong){
-          if(stretchMult>1.02)notes.push(`Неделя ${i+1}: гибких (лёгких/восст.) дней мало для целевого объёма ≈${Math.round(wkmT)} км, но длительность лёгкого дня НЕ растянута до общего потолка — держим её заметно короче длинной этой недели (≈${Math.round(easyCapByLong)} мин вместо ${Math.round(easyMax)}), неделя выйдет чуть ниже цели.`);
+        const easyCapByLong=r5(Math.max(TUNE.easyMin[0],lrMin*0.85));
+        // порог значимости: срезка меньше 10 минут — это шум округления, а не решение, о котором стоит
+        // писать в предупреждениях (замер: сообщения о разнице в 1 мин/≈1-2% захламляли список правок).
+        if(easyMax-easyCapByLong>=10){
+          if(stretchMult>1.02)notes.push(`Неделя ${i+1}: гибких (лёгких/восст.) дней мало для целевого объёма ≈${Math.round(wkmT)} км, но длительность лёгкого дня НЕ растянута до общего потолка — держим её заметно короче длинной этой недели (≈${easyCapByLong} мин вместо ${easyMax}), неделя выйдет чуть ниже цели.`);
+          easyMax=easyCapByLong;
+        } else if(easyMax>easyCapByLong){
           easyMax=easyCapByLong;
         }
       }
-      if(stretchMult>1.02&&easyMax>=easyMaxBase*stretchMult-0.01)notes.push(`Неделя ${i+1}: гибких (лёгких/восст.) дней мало для целевого объёма ≈${Math.round(wkmT)} км — длительность увеличена до ${Math.round(easyMax)} мин вместо обычных ${Math.round(easyMaxBase)} (в пределах безопасного потолка растяжения).`);
+      if(stretchMult>1.02&&easyMax-easyMaxBase>=10)notes.push(`Неделя ${i+1}: гибких (лёгких/восст.) дней мало для целевого объёма ≈${Math.round(wkmT)} км — длительность увеличена до ${easyMax} мин вместо обычных ${Math.round(easyMaxBase)} (в пределах безопасного потолка растяжения).`);
+      // ДЕНЬ ПЕРЕД ДЛИННОЙ (продолжение правки выше, wsum/PRE_LONG_WEIGHT): easyCapByLong (0.85 от длинной)
+      // защищает от «лёгкий почти равен длинной по длительности», но не от «лёгкий и длинная — два
+      // нагруженных дня подряд без отдыха между ними» — это про КАЛЕНДАРНОЕ соседство, не про пропорцию
+      // длительностей. Держим именно предлонговый лёгкий день заметно короче (≈65% от длинной, а не 85%) —
+      // отдельно от общего потолка выше. Не растягиваем стретчем (deficit) этот день сверх его пониженного
+      // потолка — освободившийся объём при дефиците уходит в длинную (см. п. «ПРИОРИТЕТ ПРИ НЕХВАТКЕ...» выше)
+      // или в другие гибкие дни, не в этот.
+      let preLongCap=easyMax;
+      if(lrMin>0){
+        preLongCap=r5(Math.max(TUNE.easyMin[0],Math.min(easyMax,lrMin*0.65)));
+        // порог значимости: как и выше, срезка < 10 мин — это округление, не решение; в предупреждение
+        // выносим только заметную (≥10 мин) разницу.
+        if(easyMax-preLongCap>=10)notes.push(`Неделя ${i+1}: лёгкий день перед длинной укорочен до ≈${preLongCap} мин (вместо обычных ≈${easyMax}) — не даём двум нагруженным дням идти подряд без полноценного восстановления перед главной длинной тренировкой недели.`);
+      }
       // Ускорения нужны И в подводке: при падающем объёме именно они держат нейромышечную стимуляцию и
       // экономичность бега (см. ревью, C7). Раньше в taper страйды полностью выключались. В подводке их
       // меньше (страйдов 3 вместо strideN) — задача поддержать, а не нагрузить.
@@ -2217,13 +2281,14 @@ function buildPlan(cfgIn){
       // фактический остаток бюджета, вплоть до превращения лишних восстановительных дней в отдых.
       const HARD_FLOOR_MIN=20;                        // короче — бег теряет смысл, лучше отдых
       const mins=flex.map(x=>{
-        const share=rest*(x.z==='easy'?1:0.7)/wsum;
+        const isPreLong=x._di===preLongDi&&x.z==='easy';
+        const share=rest*(isPreLong?PRE_LONG_WEIGHT:(x.z==='easy'?1:0.7))/wsum;
         const p=paceOf(x.z);
         const addKm=(x.z==='easy')?strideKm:0;
         const blockKm=Math.max(0,share-addKm);
         // r5 применяем ДО clamp: раньше округление до 5 шло после ограничения и пробивало потолок
         // (замер: лёгкие дни до 105 мин при потолке 101 — см. ревью, G1)
-        return clamp(r5(Math.round(blockKm*p/60)),x.z==='easy'?TUNE.easyMin[0]:TUNE.recMin[0],x.z==='easy'?easyMax:recMax);
+        return clamp(r5(Math.round(blockKm*p/60)),x.z==='easy'?TUNE.easyMin[0]:TUNE.recMin[0],isPreLong?preLongCap:(x.z==='easy'?easyMax:recMax));
       });
       const flexKmOf=(x,m)=>m*60/paceOf(x.z)+((x.z==='easy')?strideKm:0);
       const applyMins=()=>{
@@ -2882,7 +2947,7 @@ function adaptRecovery(list, fromISO, weeks, reason){
   const from=dParse(fromISO), endWin=dAdd(from, weeks*7);
   const impact=(reason==='shin'||reason==='achilles'||reason==='postrace');      // ударные травмы и после-гоночный стресс — мягче
   const kf=impact?0.8:1;
-  const longCap=ri=>Math.round((40+ri*15)*kf), easyCap=ri=>Math.round((35+ri*8)*kf), recCap=ri=>Math.round((25+ri*8)*kf);
+  const longCap=ri=>r5((40+ri*15)*kf), easyCap=ri=>r5((35+ri*8)*kf), recCap=ri=>r5((25+ri*8)*kf);
   const reasonNote={break:'Перерыв: возвращайся постепенно — 1-я неделя только лёгкий бег, интенсивность добавляй со 2–3-й недели по самочувствию.',
     illness:'После болезни: без интенсивности до полного исчезновения симптомов; следите за пульсом покоя, при повышении — доп. отдых.',
     back:'Спина: без осевой нагрузки (приседы/тяги/прыжки), упор на кор и гибкость.',
@@ -3472,9 +3537,46 @@ function fmtHuman(sec){if(!sec)return '';sec=Math.round(sec);const h=Math.floor(
 function recommendVolume(curVol,goalDist,weeks,recF){ if(!curVol)return null;
   const ramp=clamp(1+Math.min(weeks,20)*0.012/Math.sqrt(recF||1),1.05,1.5);
   return Math.round(clamp(curVol*ramp,curVol,curVol*1.5)); }
-function recommendRuns(volKm,goalDist,recF){
-  let r=4+volKm/18+(goalDist>=42195?1:0)+(goalDist>42195?1:0)-(recF>1.2?1:0);
-  return clamp(Math.round(r),4,12); }
+// Частота тренировок в неделю — СЛЕДСТВИЕ композиции недели (качественные + длинная + остаток на лёгкие),
+// а не отдельная линейная формула от объёма/дистанции. Раньше recommendRuns считал число тренировок в
+// изоляции от того, что реально должно поместиться в неделю (nQual/длинная/бюджет интенсивности в buildPlan),
+// из-за чего заявленная частота не вмещала нужный контент и buildPlan тихо резал план под неё (см. обсуждение).
+// Здесь повторяем ту же логику «снизу вверх», что и buildPlan, в упрощённом виде (без пересчёта минут по
+// реальному темпу — это лишь ориентир для дефолта, сам генератор считает точнее и остаётся страховкой).
+//   1) nQual        — число качественных сессий/нед, как в buildPlan (без гейта peakKm>110&&runs>=6 — runs
+//                      на этом шаге ещё не известен, это лишь оценка для дефолта).
+//   2) longShare(s) — доля недельного объёма на длинную (+ спец. концовка), из модели дистанции, лерпится
+//                      акцентом s (0 скорость … 1 выносливость) — выносливостный акцент даёт длиннее/чаще
+//                      специфику, скоростной — короче (та же пара GM.longShare, что использует buildPlan).
+//   3) qShare(s)    — доля недельного объёма на качественные (тот же порядок величин, что бюджет интенсивности
+//                      MODHARD_SHARE в buildPlan: 0.30 обычная фаза / 0.36 спец.-фаза для 10к+), с небольшим
+//                      сдвигом по акценту: выносливость — пороговые сессии длиннее (доля выше), скорость —
+//                      VO2/повторы короче даже с учётом восстановления между ними (доля ниже).
+//   4) остаток      — на лёгкие/восстановительные; делим на потолок одной пробежки по опыту → число дней.
+//   5) итог         — nQual + 1 (длинная) + число лёгких/восст., клампится полом/потолком по опыту.
+function recommendRuns(peakKm,goalDist,recF,exp,s){
+  exp=exp||'inter'; s=clamp(s==null?0.5:s,0,1); peakKm=Math.max(0,+peakKm||0);
+  const GM=MODELS[goalDist]||MODELS[42195];
+  let nQual=2;
+  if(peakKm<45||(exp==='novice'&&peakKm<70))nQual=1;
+  if(peakKm>110&&exp==='adv')nQual=3;
+  const longShareFrac=lerp(GM.longShare[0],GM.longShare[1],s);
+  const specGoal=goalDist>=10000;                                  // 10к и длиннее — расширенный бюджет специфики (как specPhase/specPhase10k в buildPlan)
+  const qShareBase=specGoal?0.36:0.30;
+  const qShare=clamp(qShareBase+(s-0.5)*0.08,0.22,0.42);            // акцент выносливость → доля выше (пороговые длиннее), скорость → ниже
+  const easyShare=Math.max(0.15,1-longShareFrac-qShare);
+  const easyKm=peakKm*easyShare;
+  // потолок одной лёгкой/восст. пробежки убывает с ростом объёма (при очень большом объёме бегают чаще и
+  // короче, в т.ч. вторыми пробежками, а не растягивают один лёгкий день) — иначе на ультра-объёмах (150+
+  // км/нед) формула давала слишком мало сессий по сравнению со старым clamp(...,12).
+  const easyMaxKm=({novice:9,inter:13,adv:17}[exp]||13)/(1+Math.max(0,peakKm-90)/180);
+  const easyRuns=Math.max(1,Math.ceil(easyKm/easyMaxKm));
+  let r=nQual+1+easyRuns;
+  if(recF>1.2)r-=1;                                                 // возрастное восстановление — не тянуть частоту в максимум
+  const floorCeil={novice:[4,5],inter:[4,6],adv:[4,7]}[exp]||[4,6];
+  let ceil=floorCeil[1];
+  if(peakKm>140)ceil=12; else if(peakKm>100)ceil=Math.max(ceil,8);  // высокий объём (ультра/двойные пробежки) — тот же простор, что был в старом clamp(...,12)
+  return clamp(Math.round(r),floorCeil[0],ceil); }
 function recommendStrength(goalDist,volKm,recF,exp){
   let r=2;                                              // база: 2/нед полезны бегунам всех дистанций
   if(goalDist>42195||volKm>120) r=1;                    // ультра / очень большой объём → беречь восстановление (в т.ч. у возрастных)
@@ -3627,139 +3729,100 @@ function recalcEstimate(){
     const anchor0=anchorReal!=null?anchorReal:estimateVdotFromVolume(volKm,exp);
     const maxVolEver=+(($('maxVolEver')&&$('maxVolEver').value)||0)||0;
     const ca=courseAdjust({elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked)}); // рельеф/жара/высота: только для перевода реального времени в «чистое» и обратно
-    const corrBase=VOLCORRIDOR[gd]||VOLCORRIDOR[42195];          // базовый корридор дистанции — для «под цель» (физиология, от опыта не зависит)
+    const corrBase=VOLCORRIDOR[gd]||VOLCORRIDOR[42195];          // базовый корридор дистанции — верх идёт в safeMax, физиология для «под цель» (диагностика)
     const EXPVOL={novice:0.7,inter:1.0,adv:1.15};                // масштаб корридора объёма по опыту
-    const corr=[Math.round(corrBase[0]*(EXPVOL[exp]||1)), Math.round(corrBase[1]*(EXPVOL[exp]||1))]; // корридор опыта — для safeMax и границ рекомендованного
+    const corr=[Math.round(corrBase[0]*(EXPVOL[exp]||1)), Math.round(corrBase[1]*(EXPVOL[exp]||1))]; // корридор опыта — верх идёт в safeMax
     // введённый текущий объём — прямое свидетельство уже освоенной нагрузки (факт), тогда как корридор опыта — лишь
     // оценка по самоотчёту («новичок»/«средний»/...). Если факт выше потолка корридора, доверяем факту и поднимаем
-    // потолок до него (+запас на округление) — иначе safeMin (=curVol) окажется выше safeMax и диапазон инвертируется.
+    // потолок до него (+запас на округление) — иначе диапазон безопасного роста окажется у́же факта.
     if(curVol&&curVol>corr[1])corr[1]=Math.round(curVol*1.03);
-    const accV=(+$('slider').value||50)/100;                      // 0 скорость … 1 выносливость (item3: акцент → объём)
-    const rampRec=recommendVolume(curVol,gd,N,recF)||0;           // безопасный рост от текущего (~×1.2)
+    const accV=(+$('slider').value||50)/100;                      // 0 скорость … 1 выносливость (влияет на частоту/акцент, объём не трогает)
+    // ============================================================================================
+    // ПОСЛЕДОВАТЕЛЬНОСТЬ ПРИЧИННОСТИ (согласована с пользователем — см. память
+    // run-calc-sequence-recommended-vs-podcel, не менять порядок без явного запроса):
+    //   1) «рекомендовано» = безопасный РОСТ ОБЪЁМА ОТ ТЕКУЩЕГО (curVol) по методичке прироста.
+    //      Цель/«под цель» в этом расчёте НЕ участвуют.
+    //   2) целевое время — СЛЕДСТВИЕ этого объёма (прогноз формы при уже определённом объёме), не наоборот.
+    //   3) «под цель» — производная ИЗ исходного (текущая форма) и целевого времени: сколько объёма нужно
+    //      было бы под эту цель. Это диагностика для пользователя, она НЕ подаётся обратно в «рекомендовано».
+    //   4) нижний предел объёма = объём ПОДДЕРЖАНИЯ текущей формы (maintainMin), а не низ корридора/curVol.
+    //   5) верхний предел = safeMax — объём, после которого риск травм растёт быстрее пользы (рейт-лимит
+    //      роста от факта, возврат к прежнему пику, новая территория, верх корридора опыта).
+    // ============================================================================================
+    const rampRec=recommendVolume(curVol,gd,N,recF)||0;           // умеренный оптимальный рост от текущего (методичка прироста, ×1.05–1.5)
     const workWeeks=Math.max(1,N-2);                              // рабочие недели без подводки
     const rampMult=clamp(1+workWeeks*0.04/Math.sqrt(recF),1.1,2.2); // потолок роста растёт с длительностью плана (~10%/нед с разгрузками)
-    const rampMax=curVol?Math.round(curVol*rampMult):Infinity;    // безопасный рост от текущего за цикл (рейт-лимит)
+    const rampMax=curVol?Math.round(curVol*rampMult):Infinity;    // предельно допустимый рост от текущего за цикл (рейт-лимит, часть safeMax)
     const regain=maxVolEver||0;                                  // «макс. ранее» = ёмкость: к прежнему пику можно безопасно вернуться (а не потолок)
     const newTerr=maxVolEver?Math.round(maxVolEver*(1+0.02*workWeeks)):Infinity; // выше all-time — осторожно, запас растёт с длиной плана
-    const safeMax=Math.min(Math.max(rampMax,regain), newTerr, corr[1]||Infinity); // ёмкость (возврат к пику), но не выше новой территории и верха корридора опыта
+    const safeMax=Math.min(Math.max(rampMax,regain), newTerr, corr[1]||Infinity); // «потолок максимума»: за этим объёмом риск травм растёт быстрее пользы
     const safeMin=curVol||Math.round(corr[0]*0.8);
-    // целевой VDOT (для ультры — марафон-эквивалент по Ригелю); амбициозность — насколько цель выше текущей формы (~6% VDOT ≈ потолок за цикл)
-    let ambition=0, vdGoal=null;
-    const tgtSecNow=parseT(($('tgtGoal').value||'').trim());
-    // ИСПРАВЛЕНО: раньше vdGoal (и, соответственно, «под цель») считался только если поле цели тронуто руками
-    // (tgtTouched). Но в авто-режиме поле НЕ пустое — в конце предыдущего пересчёта туда уже записано
-    // самосогласованное значение (realistic, из объёма/формы, см. запись в поле ниже: `if(!tgtTouched)...`).
-    // Из-за старого условия «под цель» в авто-режиме игнорировало эту самосогласованную цель и откатывалось
-    // на голый корридор по дистанции (corrBase) — расходясь с фактическим объёмом, от которого эта же цель
-    // была посчитана. Теперь используем tgtSecNow независимо от touched-состояния: в авто-режиме оно уже
-    // само по себе выведено из объёма/формы, а в ручном — это явный ввод пользователя. Разовое устаревание
-    // на один пересчёт при смене курс-поправок (рельеф/жара/высота) самокорректируется следующим пересчётом
-    // (поле перезаписывается ниже каждый раз, когда !tgtTouched).
-    if(tgtSecNow){
-      const tgtSecNowClean=ca.toClean(tgtSecNow);               // поле хранит реальное (курс-дисконтированное) время — под VDOT берём чистый эквивалент
-      vdGoal=gd>42195?vdot(42195,riegelInv(tgtSecNowClean,gd)):vdot(gd,tgtSecNowClean);
-      if(anchor0)ambition=clamp((vdGoal-anchor0)/(anchor0*0.06),0,1);
-    }
-    const goalTarget=Math.round(corr[0]+(corr[1]-corr[0])*clamp(0.6*clamp(accV,0,1)+0.4*ambition,0,1)); // корридорный ориентир (fallback, если цель не задана)
-    const expFloor=corr[0];                                       // низ корридора опыта — минимальная разумная база для дистанции/опыта
-    // «под цель» — фактически требуемый объём: VDOT-класс цели × надбавка за разрыв с формой (podcelRange, на БАЗОВОМ корридоре — физиология, от опыта не зависит).
-    let glo=corrBase[0], ghi=corrBase[1], gloHard=corrBase[0];
-    if(volUnit!=='h'&&vdGoal){ const r=podcelRange(vdGoal,corrBase,anchor0); glo=r.lo; ghi=r.hi; gloHard=r.loHard; }
-    // «под цель» — это МИНИМУМ, физиологически достаточный для скромной/поддерживающей цели, а не потолок и не оптимум.
-    // Если человек уже безопасно бегает больше верха этого диапазона (curVol), нет причины советовать снижать объём —
-    // расширяем верх «под цель» до уже освоенного факта, иначе «рекомендовано» окажется выше показанного диапазона
-    // «под цель», и это будет выглядеть как внутреннее противоречие (советуем больше, чем «нужно»).
-    const volFloor=curVol?Math.min(Math.max(expFloor,curVol),safeMax):expFloor;
-    if(volUnit!=='h'&&ghi<volFloor)ghi=volFloor;
-    // «рекомендовано» = физиологическая потребность («под цель»), не ниже низа корридора опыта / уже освоенного объёма, не выше безопасного роста (при конфликте приоритет безопасности)
-    const podPoint=(volUnit!=='h'&&vdGoal)?Math.round(glo+(ghi-glo)*clamp(accV,0,1)):goalTarget; // точка в «под цель» по акценту
-    let baseUnreachable=(volUnit!=='h')&&isFinite(safeMax)&&glo>safeMax+1; // «под цель» выше безопасно достижимого больше чем на 1 км (запас на округление) — цель пока нереалистична (пересчитывается ниже от финальной цели)
+    // «потолок минимума» = объём ПОДДЕРЖАНИЯ текущей формы (не низ корридора и не факт) — «под цель» текущего VDOT.
+    const maintainMin=(volUnit!=='h'&&anchor0)?podcelRange(anchor0,corrBase,anchor0).lo:0;
+    // «рекомендовано» = рост от факта (rampRec), зажатый между поддержанием формы и безопасным потолком.
+    // Целевое время/«под цель» здесь НЕ участвуют — причинность идёт от объёма к времени, не наоборот.
     let recPeak;
     if(volUnit==='h'){ recPeak=rampRec||null; }
-    else { recPeak=Math.round(clamp(podPoint, volFloor, isFinite(safeMax)?safeMax:9999)); }
-    // объём в поле пока НЕ перезаписываем этим предварительным recPeak (для км/нед): он посчитан от значения цели
-    // на начало пересчёта (могло остаться от прошлого цикла с другими курс-поправками) и участвует ниже как cfg.peakVol
-    // в прогнозе достижимого времени — если перезаписать поле сейчас, эта неточность попадёт в сам прогноз и будет
-    // «протаскиваться» дальше при каждом пересчёте (не возвращаясь к исходному значению при смене жары/рельефа и т.п.).
-    // Для «ч/нед» такой раскрутки нет (rampRec не зависит от цели) — обновляем сразу, как раньше.
-    if(recPeak&&!peakTouched&&volUnit==='h')$('peakVol').value=recPeak;
+    else { recPeak=Math.round(clamp(rampRec||safeMin, maintainMin||0, isFinite(safeMax)?safeMax:9999)); }
+    if(!peakTouched)$('peakVol').value=recPeak;                   // объём больше не зависит от цели — можно писать сразу, без риска «протаскивания»
     const curPeak=+$('peakVol').value||recPeak||0;
     const over=isFinite(safeMax)&&curPeak>safeMax;
-    const maintainMin=(volUnit!=='h'&&anchor0)?podcelRange(anchor0,corrBase,anchor0).lo:0;   // минимум объёма для поддержания текущей формы («под цель» текущего VDOT)
+    const maintainMinDisp=maintainMin;
     const volLow=(volUnit!=='h')&&maintainMin>0&&curPeak>0&&curPeak<maintainMin;          // объём ниже поддержания — прогресс не работает, прогноз недостоверен
     const unit=volUnit==='h'?'ч':'км';
-    let volLimited=(volUnit!=='h')&&isFinite(safeMax)&&(glo>safeMax+1); // «под цель» выше безопасно достижимого больше чем на 1 км (запас на округление) — цель недостижима (пересчитывается ниже от финальной цели)
-    if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед';
-      if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax;
-      if(volUnit!=='h')t+=' · под цель ~'+glo+'–'+ghi+' км';
-      $('peakRec').textContent=t; }
     const pv=$('peakVol');
     if(pv){ if(over||volLow){pv.style.borderColor='#d33';pv.style.background='#fff5f5';} else {pv.style.borderColor='';pv.style.background='';} }
-    let recRuns=recommendRuns(volKm,gd,recF); if(exp==='novice')recRuns=Math.max(4,recRuns-1); if(!runsTouched)$('runs').value=recRuns;
+    // объём, от которого дальше считаем прогноз времени: ручной ввод — по нему, авто — по «рекомендовано»
+    const planVol=peakTouched?curPeak:recPeak;
+    // Раньше частоту считали от ТЕКУЩЕГО объёма (volKm) без учёта опыта и акцента — при разгоне к пиковому
+    // объёму частота отставала от того, что реально понадобится buildPlan в пиковые недели (см. обсуждение).
+    let recRuns=recommendRuns(recPeak||volKm,gd,recF,exp,accV); if(!runsTouched)$('runs').value=recRuns;
     if($('runsRec'))$('runsRec').textContent='рекомендовано '+recRuns+(runsTouched?' · задано вручную':'');
     const recStr=recommendStrength(gd,volKm,recF,exp); if(!strTouched)$('strength').value=recStr;
     if($('strRec'))$('strRec').textContent='рекомендовано '+recStr+(strTouched?' · задано вручную':'');
     // прогноз
     const ltp=ltpaceTouched?(()=>{const v=($('ltpace').value||'').trim();if(!v)return null;const q=v.split(':').map(Number);return q.length===2&&!q.some(isNaN)?q[0]*60+q[1]:null;})():autoLtPaceRaw; // вручную — из поля (как ввели); авто — неокруглённое значение, без потери точности из-за отображения
-    // Объём («рекомендовано») и достижимое время влияют друг на друга (больше объёма → быстрее форма → другая цель →
-    // другой нужный объём), поэтому при авто-объёме сходимся к устойчивой точке в НЕСКОЛЬКО итераций внутри одного
-    // пересчёта — иначе результат «доезжает» до правильного значения только через несколько переключений чекбоксов/полей.
-    // затравка для итерации — НЕ берём старое значение поля (оно могло остаться от предыдущего цикла с другими
-    // курс-поправками/вводными и «утаскивало» бы сходимость в сторону прошлого состояния); берём независимую
-    // от истории оценку (physiология по текущим вводным).
-    let peakSeed=recPeak||80;
-    let cfg, prR, realistic, ambitious, midT, tgtSec;
-    const maxIter=(volUnit!=='h'&&!peakTouched&&anchor0)?5:1;
-    for(let iter=0; iter<maxIter; iter++){
-      cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,
-        age:+$('age').value||35,peakVol:peakTouched?curPeak:peakSeed,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp,
-        exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m',
-        runs:+$('runs').value||5,curVol:curVol||null,tuneRaces:readTuneRows(),
-        strength:+$('strength').value,cross:readCross()};
-      prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели
-      if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
-      realistic=prR.endGoal;
-      if(volUnit!=='h' && anchor0){                              // коррекция авто-цели по «под цель» (нижняя граница) и фактическому пику; итог = медленнее из (физиология, объём)
-        const capVol=peakTouched?curPeak:safeMax;                // ручной пик — по нему; авто — по безопасному потолку
-        if(isFinite(capVol)&&capVol>0){
-          const podLo=ts=>podcelRange(gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts),corrBase,anchor0).lo;
-          let fast=Math.max(1,Math.round(prR.endGoal*0.5)), slow=Math.round(prR.curGoalTime*1.8);  // fast: слишком быстро (не укладывается), slow: сильный регресс
-          if(podLo(slow)>capVol){                                // объём ниже пола «под цель» (поддержание невозможно) — регресс, тем сильнее, чем меньше объём
-            realistic=Math.max(realistic, Math.round(prR.curGoalTime*clamp(maintainMin/capVol,1,1.8)));
-          } else {
-            for(let i=0;i<46;i++){const m=(fast+slow)/2; podLo(m)<=capVol?slow=m:fast=m;}
-            realistic=Math.max(realistic, Math.round(slow));     // цель не быстрее, чем позволяет доступный объём
-          }
-        }
+    // Целевое время — СЛЕДСТВИЕ объёма (planVol). Итерация по кругу «объём↔время» больше не нужна: объём
+    // (recPeak/planVol) от цели не зависит, поэтому одного прохода достаточно.
+    const cfg={results,goalDist:gd,goalISO:$('goalD').value,startISO:$('startD').value,
+      age:+$('age').value||35,peakVol:planVol,volUnit,lthr:$('lthr').value?+$('lthr').value:null,ltPace:ltp,
+      exp:exp,elevGain:+(($('elevGain')&&$('elevGain').value)||0)||0,altitude:+(($('altitude')&&$('altitude').value)||0)||0,heat:!!($('heat')&&$('heat').checked),maxVolEver:maxVolEver||null,sex:($('sex')&&$('sex').value)||'m',
+      runs:+$('runs').value||5,curVol:curVol||null,tuneRaces:readTuneRows(),
+      strength:+$('strength').value,cross:readCross()};
+    const prR=projectFitness(Object.assign({},cfg,{tgtGoal:null}));           // диапазон/достижимость без цели, при объёме planVol
+    if(!prR){el.innerHTML='нужен хотя бы один результат';return;}
+    let realistic=prR.endGoal;
+    if(volUnit!=='h' && anchor0 && isFinite(planVol) && planVol>0){          // сверка с физиологической моделью: время не может быть быстрее, чем позволяет ФАКТИЧЕСКИЙ (уже определённый) объём planVol
+      const podLo=ts=>podcelRange(gd>42195?vdot(42195,riegelInv(ts,gd)):vdot(gd,ts),corrBase,anchor0).lo;
+      let fast=Math.max(1,Math.round(prR.endGoal*0.5)), slow=Math.round(prR.curGoalTime*1.8);  // fast: слишком быстро (не укладывается), slow: сильный регресс
+      if(podLo(slow)>planVol){                                // объём ниже пола поддержания — регресс, тем сильнее, чем меньше объём
+        realistic=Math.max(realistic, Math.round(prR.curGoalTime*clamp(maintainMin/planVol,1,1.8)));
+      } else {
+        for(let i=0;i<46;i++){const m=(fast+slow)/2; podLo(m)<=planVol?slow=m:fast=m;}
+        realistic=Math.max(realistic, Math.round(slow));     // цель не быстрее, чем позволяет объём
       }
-      // «амбициозно» = граница вердикта r=1.05 (из модели достижимости), а не фикс. −2.5% — чтобы цель внутри диапазона не была «вне досягаемости»
-      const cVd = gd>42195 ? vdot(42195, riegelInv(prR.curGoalTime, gd)) : vdot(gd, prR.curGoalTime);
-      const ambVd = cVd + 1.05*(prR.achGoalVd - cVd);
-      const rawEnd = gd>42195 ? riegel(timeFor(42195,prR.achGoalVd),gd) : timeFor(gd,prR.achGoalVd);
-      const rawAmb = gd>42195 ? riegel(timeFor(42195,ambVd),gd) : timeFor(gd,ambVd);
-      ambitious = rawEnd>0 ? Math.round(prR.endGoal * rawAmb / rawEnd) : Math.round(realistic*0.975);
-      ambitious = Math.min(ambitious, realistic);                // амбициозно не медленнее реалистичного
-      midT=Math.round((realistic+ambitious)/2);
-      // цель для ЭТОЙ итерации: реалистичное время (если не задано вручную) — не трогаем DOM внутри цикла, чтобы не «протаскивать» промежуточные значения
-      tgtSec=tgtTouched?(parseT($('tgtGoal').value)||ca.toDisp(realistic)):ca.toDisp(realistic);
-      if(volUnit!=='h'){                                          // «под цель» считаем от ФИНАЛЬНОЙ (отображаемой) цели, но VDOT — от её чистого эквивалента: жара/рельеф/высота не должны занижать нужный объём
-        const tgtSecClean=ca.toClean(tgtSec);
-        const vdF=gd>42195?vdot(42195,riegelInv(tgtSecClean,gd)):vdot(gd,tgtSecClean);
-        const rF=podcelRange(vdF,corrBase,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
-        if(ghi<volFloor)ghi=volFloor;                              // тот же довод: не показываем «под цель» уже верхнюю границу ниже освоенного безопасного объёма
-        volLimited=isFinite(safeMax)&&(glo>safeMax+1);
-        baseUnreachable=isFinite(safeMax)&&(glo>safeMax+1);
-        // «рекомендовано» пересчитываем от ФИНАЛЬНОЙ (согласованной) цели, а не от значения поля на начало пересчёта —
-        // иначе при смене курс-поправок (жара/рельеф/высота) и любых других вводных цифра «зависает» на переходном значении
-        // и не возвращается обратно при отмене изменения.
-        const podPointF=glo+(ghi-glo)*clamp(accV,0,1);
-        recPeak=Math.round(clamp(podPointF, volFloor, isFinite(safeMax)?safeMax:9999));
-      }
-      if(peakTouched||Math.abs(recPeak-peakSeed)<1)break;         // сошлись — дальше не итерируем
-      peakSeed=recPeak;
     }
-    if(!tgtTouched)$('tgtGoal').value=fmtT(tgtSec);                // цель = реалистичное из диапазона (уже сошедшееся), показываем реальное (курс-дисконтированное) время
-    if(!peakTouched)$('peakVol').value=recPeak;
+    // «амбициозно» = граница вердикта r=1.05 (из модели достижимости), а не фикс. −2.5% — чтобы цель внутри диапазона не была «вне досягаемости»
+    const cVd = gd>42195 ? vdot(42195, riegelInv(prR.curGoalTime, gd)) : vdot(gd, prR.curGoalTime);
+    const ambVd = cVd + 1.05*(prR.achGoalVd - cVd);
+    const rawEnd = gd>42195 ? riegel(timeFor(42195,prR.achGoalVd),gd) : timeFor(gd,prR.achGoalVd);
+    const rawAmb = gd>42195 ? riegel(timeFor(42195,ambVd),gd) : timeFor(gd,ambVd);
+    let ambitious = rawEnd>0 ? Math.round(prR.endGoal * rawAmb / rawEnd) : Math.round(realistic*0.975);
+    ambitious = Math.min(ambitious, realistic);                // амбициозно не медленнее реалистичного
+    const midT=Math.round((realistic+ambitious)/2);
+    // цель = реалистичное время (если не задано вручную)
+    const tgtSec=tgtTouched?(parseT($('tgtGoal').value)||ca.toDisp(realistic)):ca.toDisp(realistic);
+    // «под цель» — ТЕПЕРЬ ТОЛЬКО ДИАГНОСТИКА: сколько объёма нужно было бы под ИСХОДНОЕ (anchor0) и ЦЕЛЕВОЕ (tgtSec)
+    // время. В recPeak/planVol эта величина не участвует (см. блок причинности выше).
+    let glo=corrBase[0], ghi=corrBase[1], gloHard=corrBase[0];
+    if(volUnit!=='h'){
+      const tgtSecClean=ca.toClean(tgtSec);                    // «под цель» считаем от ФИНАЛЬНОЙ (отображаемой) цели, но VDOT — от её чистого эквивалента: жара/рельеф/высота не должны занижать нужный объём
+      const vdF=gd>42195?vdot(42195,riegelInv(tgtSecClean,gd)):vdot(gd,tgtSecClean);
+      const rF=podcelRange(vdF,corrBase,anchor0); glo=rF.lo; ghi=rF.hi; gloHard=rF.loHard;
+    }
+    const baseUnreachable=(volUnit!=='h')&&isFinite(safeMax)&&glo>safeMax+1; // «под цель» выше безопасно достижимого больше чем на 1 км — цель нереалистична при любом безопасном объёме
+    const volLimited=baseUnreachable;
+    if(!tgtTouched)$('tgtGoal').value=fmtT(tgtSec);                // цель = реалистичное из диапазона, показываем реальное (курс-дисконтированное) время
     if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед'; if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax; if(volUnit!=='h')t+=' · под цель ~'+glo+'–'+ghi+' км'; $('peakRec').textContent=t; }
     if($('peakWarn'))$('peakWarn').textContent=over?('⚠ '+curPeak+' '+unit+'/нед выше безопасного максимума (~'+safeMax+'): резкий рост объёма повышает риск травм'+(maxVolEver&&curPeak>maxVolEver?' — выше твоего прежнего максимума':'')):(volLow?('⚠ '+curPeak+' '+unit+'/нед ниже минимума для поддержания формы (~'+maintainMin+' '+unit+'/нед): при таком объёме прогресс не работает, прогноз недостоверен'):(baseUnreachable?('⚠ под цель нужно ≥'+glo+' '+unit+'/нед, но от текущего объёма безопасно наберёшь только ~'+safeMax+' — цель пока нереалистична, наращивай базу дольше'):''));
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';

@@ -256,6 +256,7 @@
   .stepsToolbar{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
   .btn.sm{padding:7px 14px;font-size:12.5px;}
   .edbtn.tiny{padding:2px 6px;font-size:12px;}
+  .offOnly{display:none;}
 </style>
 </head>
 <body>
@@ -269,24 +270,29 @@
   <section class="panel" id="srcPanel">
     <h2>Исходные данные</h2>
     <div class="fgrid">
-      <div class="fld" style="grid-column:1/-1"><label>Текущие результаты (недавние гонки/прикидки)</label>
+      <div class="fld" style="grid-column:1/-1;background:#f5f7fb;border:1px solid var(--line);border-radius:8px;padding:10px 12px"><label>Тип плана</label>
+        <select id="planMode"><option value="goal" selected>Под цель</option><option value="offseason">Межсезонье</option></select>
+        <div class="hint">«Под цель» — обычный план подготовки к старту (5к…ультра). «Межсезонье» — переходный период после сезона: 2–6 недель сниженного бега и акцента на силу, без гонки.</div></div>
+      <div class="fld goalOnly" style="grid-column:1/-1"><label>Текущие результаты (недавние гонки/прикидки)</label>
         <div id="resList"></div>
         <button type="button" class="btn sec" id="addResBtn" style="padding:5px 12px;font-size:12px;margin-top:4px">+ добавить результат</button>
         <div class="hint">добавьте что есть: 5 / 10 км, 21,1 / 42,2 км. Форма (VDOT) берётся по лучшему результату; остальные уточняют. Совсем нет результатов (например, бег «с нуля») — оставьте список пустым, форма оценится по недельному объёму и опыту ниже (менее точно, чем от гонки).</div></div>
       <div class="fld"><label>Возраст</label><input type="number" id="age" value="38" min="16" max="80"></div>
       <div class="fld"><label>Вес, кг</label><input type="number" id="weight" value="60" min="40" max="130"><div class="hint">для расчёта питания/гелей</div></div>
-      <div class="fld"><label>ПАНО: пульс, уд/мин</label><input type="number" id="lthr" value="178" min="120" max="210"><div class="hint">пусто — зоны Garmin Z1–Z5</div></div>
-      <div class="fld"><label>ПАНО: темп, мин/км</label><input type="text" id="ltpace" placeholder="м:сс"><div class="hint" id="ltpaceHint">подставлен из результатов — можно изменить</div></div>
+      <div class="fld goalOnly"><label>ПАНО: пульс, уд/мин</label><input type="number" id="lthr" value="178" min="120" max="210"><div class="hint">пусто — зоны Garmin Z1–Z5</div></div>
+      <div class="fld goalOnly"><label>ПАНО: темп, мин/км</label><input type="text" id="ltpace" placeholder="м:сс"><div class="hint" id="ltpaceHint">подставлен из результатов — можно изменить</div></div>
       <div class="fld"><label>Текущий недельный объём</label>
         <div class="volrow"><input type="number" id="curVol" value="70" min="0" max="260" step="1">
         <select id="volUnit"><option value="km">км/нед</option><option value="h">ч/нед</option></select></div></div>
       <div class="fld"><label>Опыт</label><select id="exp"><option value="novice">Новичок</option><option value="inter" selected>Средний</option><option value="adv">Опытный</option></select><div class="hint" style="max-width:230px">новичок — до ~2 лет бега / первый старт на дистанции; средний — бегает регулярно 2–4 года; опытный — многолетний стаж, высокая переносимость объёма. Влияет на темп роста формы и число тренировок.</div></div>
       <div class="fld"><label>Начало плана</label><input type="date" id="startD"><div class="hint">сдвинем на понедельник</div></div>
-      <div class="fld"><label>Дистанция старта</label>
+      <div class="fld goalOnly"><label>Дистанция старта</label>
         <select id="goalDist"><option value="5000">5 км</option><option value="10000">10 км</option><option value="21097">21,1 км</option><option value="42195" selected>Марафон 42,2</option><option value="60000">Ультра 60 км</option><option value="80000">Ультра 80 км</option><option value="100000">Ультра 100 км</option><option value="120000">Ультра 120 км</option><option value="160000">Ультра 160 км</option></select></div>
-      <div class="fld"><label>Длительность плана</label><select id="planWeeks"></select><div class="hint">недель; меняет дату старта</div></div>
-      <div class="fld"><label>Дата старта</label><input type="date" id="goalD"><div class="hint">меняет длительность</div></div>
-      <div class="fld" style="grid-column:1/-1"><label>Промежуточные старты</label>
+      <div class="fld goalOnly"><label>Длительность плана</label><select id="planWeeks"></select><div class="hint">недель; меняет дату старта</div></div>
+      <div class="fld goalOnly"><label>Дата старта</label><input type="date" id="goalD"><div class="hint">меняет длительность</div></div>
+      <div class="fld offOnly"><label>Длительность межсезонья</label><input type="number" id="owWeeks" min="2" max="8" step="1"><div class="hint" id="owWeeksRec">рекомендовано по опыту и текущему объёму</div></div>
+      <div class="fld offOnly"><label>Поддерживающий объём бега</label><input type="number" id="owVol" min="0" max="160" step="1"><div class="hint" id="owVolRec">в тех же единицах, что текущий объём</div></div>
+      <div class="fld goalOnly" style="grid-column:1/-1"><label>Промежуточные старты</label>
         <div id="tuneList"></div>
         <button type="button" class="btn sec" id="addTuneBtn" style="padding:5px 12px;font-size:12px;margin-top:4px">+ добавить старт</button>
         <div class="hint">необязательно; добавляйте сколько нужно, лишние удаляйте «×». Учитываются старты строго между началом плана и датой старта.</div></div>
@@ -300,11 +306,11 @@
             <div class="fld" style="margin:0"><label>Макс. длительная</label><input type="text" id="maxLongCap" placeholder="напр. 2:30" style="width:120px"><div class="hint" style="max-width:200px">верхняя граница: план НЕ сделает длинные длиннее этого (ограничение по травмам)</div></div>
           </div>
           <div style="border-top:1px dashed var(--line);padding-top:12px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;padding-bottom:12px">
-            <div class="fld" style="margin:0"><label>Набор высоты трассы, м</label><input type="number" id="elevGain" placeholder="0" style="width:120px"><div class="hint" style="max-width:190px">суммарный подъём на дистанции (рельеф)</div></div>
-            <div class="fld" style="margin:0"><label>Высота старта над ур. моря, м</label><input type="number" id="altitude" placeholder="0" style="width:120px"><div class="hint" style="max-width:190px">для высокогорных стартов (снижает аэробные возможности)</div></div>
-            <div class="fld" style="margin:0"><label style="display:block">&nbsp;</label><label style="font-weight:400;font-size:13px;white-space:nowrap"><input type="checkbox" id="heat"> Жаркий/сложный старт</label></div>
+            <div class="fld goalOnly" style="margin:0"><label>Набор высоты трассы, м</label><input type="number" id="elevGain" placeholder="0" style="width:120px"><div class="hint" style="max-width:190px">суммарный подъём на дистанции (рельеф)</div></div>
+            <div class="fld goalOnly" style="margin:0"><label>Высота старта над ур. моря, м</label><input type="number" id="altitude" placeholder="0" style="width:120px"><div class="hint" style="max-width:190px">для высокогорных стартов (снижает аэробные возможности)</div></div>
+            <div class="fld goalOnly" style="margin:0"><label style="display:block">&nbsp;</label><label style="font-weight:400;font-size:13px;white-space:nowrap"><input type="checkbox" id="heat"> Жаркий/сложный старт</label></div>
           </div>
-          <div style="border-top:1px dashed var(--line);padding-top:12px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;padding-bottom:12px">
+          <div class="goalOnly" style="border-top:1px dashed var(--line);padding-top:12px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;padding-bottom:12px">
             <div class="fld" style="margin:0"><label>Перед стартом плана</label>
               <select id="preCtx" style="width:210px">
                 <option value="none" selected>Ничего особого</option>
@@ -344,7 +350,7 @@
   <section class="panel">
     <h2>Параметры плана <span style="font-weight:400;font-size:13px;color:var(--muted)">— предзаполнено по исходным данным, можно менять</span></h2>
     <div class="fgrid">
-      <div class="fld" style="grid-column:1/-1;background:#fff8ec;border:1px solid var(--accent);border-radius:8px;padding:10px 12px">
+      <div class="fld goalOnly" style="grid-column:1/-1;background:#fff8ec;border:1px solid var(--accent);border-radius:8px;padding:10px 12px">
         <label style="font-size:13px">🎯 Целевое время на дистанции</label>
         <div style="display:flex;gap:8px;align-items:stretch">
           <input type="text" id="tgtGoal" value="3:15" placeholder="ч:мм[:сс] или мм:сс" style="font-size:16px;font-weight:700;flex:1">
@@ -361,7 +367,7 @@
       <div class="fld"><label>Силовых / ОФП в нед.</label>
         <select id="strength"><option value="0">0 — без силовых</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select>
         <div class="hint" id="strRec"></div></div>
-      <div class="fld wide"><label>Акцент подготовки</label>
+      <div class="fld wide goalOnly"><label>Акцент подготовки</label>
         <div class="sliderbox"><span class="sl">Скорость</span>
           <input type="range" id="slider" min="0" max="100" value="50">
           <span class="sl">Выносливость</span></div>
@@ -838,6 +844,18 @@ const STR_A={name:'Силовая A',mins:25,desc:'Силовая A. Присе�
 const STR_B={name:'Силовая B',mins:20,desc:'Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.'};
 const STR_COR={name:'Кор',mins:15,desc:'Кор. Планка 3×45с; боковая 3×30с/сторона; мёртвый жук 3×10; супермен 3×12.'};
 const STR_C={name:'Силовая C',mins:20,desc:'Силовая C. Становая на одной ноге 3×8/ногу; Зашагивания на опору 3×8/ногу; Подъёмы таза на одной ноге 3×10/ногу; Скакалка 3×40; Кор: боковая планка 3×30с/сторона, антиротация 3×10/сторона.'};
+
+// ================= межсезонье / переходный период: силовая (см. buildOffseasonPlan) =================
+// Новые константы — независимы от STR_A/B/C/COR (те не трогаем): в межсезонье силовая переходит из
+// вспомогательной роли в основной акцент, поэтому набор упражнений и под-фазы (Втягивание → Максимальная
+// сила → Сила-мощность) описаны отдельно, в том же формате {name,mins,desc}.
+const OFF_INTRO_A={name:'Межсезонье: Втягивание A',mins:35,desc:'Втягивание A. Активация ягодиц: моллюск на резинке 3×12/сторона; Приседания с собственным весом 3×15; Отжимания от пола (можно с колен) 3×10-12; Подъём таза лёжа на спине 3×15; Мобильность голеностопа: подъёмы на носки на возвышении 3×15; Кор-финишер: планка 3×30-40с.'};
+const OFF_INTRO_B={name:'Межсезонье: Втягивание B',mins:35,desc:'Втягивание B. Приставные шаги на резинке 3×12/сторона; Обратные выпады 3×12/ногу; Тяга к поясу в наклоне с лёгким весом или резинкой 3×12; Инвертированная тяга (кольца/низкий турник) 3×8-10; Стабильность стопы: ходьба на носках и на пятках 2×20м; Кор-финишер: боковая планка 3×20-25с/сторона.'};
+const OFF_MAX_A={name:'Межсезонье: Сила A (присед)',mins:55,desc:'Сила A. Приседания со штангой 4×5 (полное восстановление между подходами); Жим штанги или гантелей лёжа (либо отжимания с отягощением) 4×6; Болгарские сплит-приседания с гантелями 3×6/ногу; Тяга верхнего блока или подтягивания 3×6-8; Кор-финишер: антиротация на блоке (Paloff press) 3×10/сторону.'};
+const OFF_MAX_B={name:'Межсезонье: Сила B (тяга)',mins:55,desc:'Сила B. Румынская тяга со штангой 4×5; Тяга штанги в наклоне 4×6; Жим гантелей стоя (плечи) 3×6; Подтягивания или тяга верхнего блока широким хватом 3×6-8; Ягодичный мостик со штангой 3×8; Кор-финишер: ролик для пресса (или планка с отягощением) 3×8-10.'};
+const OFF_MAX_C={name:'Межсезонье: Сила C (унилатеральная)',mins:45,desc:'Сила C. Присед на одной ноге у опоры (пистолет-прогрессия) 3×5/ногу; Зашагивания на высокую опору с гантелями 3×6/ногу; Тяга гантели одной рукой в наклоне 3×8/сторону; Прыжки на возвышение (box jump, мягкое приземление) 3×5; Кор-финишер: боковая планка с подъёмом верхней ноги 3×8/сторону.'};
+const OFF_POWER_A={name:'Межсезонье: Мощность A',mins:40,desc:'Мощность A. Прыжки в длину с места 3×5; Приседания с выпрыгиванием (легкая нагрузка) 3×6; Приседания со штангой в скоростной манере (40-50% от 1ПМ) 3×5; Бросок медбола от груди в стену 3×8; Кор-финишер: планка с попеременным подъёмом руки и ноги 3×10.'};
+const OFF_POWER_B={name:'Межсезонье: Мощность B',mins:40,desc:'Мощность B. Скачки на одной ноге вперёд (bounds) 3×6/ногу; Взрывной подъём колена на месте 3×15с; Тяга гантелей рывковым движением (power clean-подобное) 3×5; Ротационный бросок медбола 3×8/сторону; Кор-финишер: русские скручивания с медболом 3×15.'};
 
 // ---- питание на длинных: г/ч углеводов от длительности и веса, гель ≈ 25 г ----
 function fuelFor(min,weight,isRace){
@@ -2706,6 +2724,85 @@ function buildPlan(cfgIn){
 }
 /*GEN-END*/
 
+// ================= межсезонье / переходный период: построение плана =================
+// Полностью независим от VDOT/модели темпа (MODELS/paceSet/projectFitness) — бег здесь только по времени
+// и пульсовой зоне (HRZ), силовая — по фиксированным наборам OFF_*. Формат недель/тренировок (workouts) —
+// тот же плоский список {date,kind,name,steps|desc+mins}, что отдаёт buildPlan, поэтому редактор
+// (groupEditByWeek/renderStaticFromEdit), экспорт plan.json/HTML и разгрузка EDIT работают без переделок.
+function buildOffseasonPlan(cfgIn){
+  const cfg=cfgIn||{};
+  if(!cfg.startISO)return {error:'Укажите дату начала плана.'};
+  const exp=cfg.exp||'inter';
+  const volUnit=cfg.volUnit||'km';
+  const OFF_EASY_SEC=330, OFF_REC_SEC=380;   // сек/км — те же дефолтные зональные темпы (Z2/Z1), что и в редакторе (ZPACE_DEF), пока форма неизвестна
+  const curVolRaw=(+cfg.curVol)>0?+cfg.curVol:0;
+  const curVolKm=curVolRaw>0?(volUnit==='h'?Math.round(curVolRaw*3600/OFF_EASY_SEC):curVolRaw):0;
+  const totalWeeks=clamp(Math.round(+cfg.owWeeks)||recommendOffseasonWeeks(exp,curVolKm),2,8);
+  const maintVolKm=Math.max(6,Math.round(+cfg.owVol)||recommendOffseasonVolume(curVolKm));
+  const runsPerWeek=exp==='novice'?2:(curVolKm>0&&curVolKm<25?3:4);
+  const strPerWeek=offseasonStrengthPerWeek(exp);
+  const subPhases=offseasonSubPhases(totalWeeks);
+  const start=toMonday(dParse(cfg.startISO));
+  const tag=(cfg.tag||'[OFF]').trim()||'[OFF]';
+  const STR_SETS={intro:[OFF_INTRO_A,OFF_INTRO_B],max:(exp==='novice'?[OFF_MAX_A,OFF_MAX_B]:[OFF_MAX_A,OFF_MAX_B,OFF_MAX_C]),power:[OFF_POWER_A,OFF_POWER_B]};
+  const PHLABEL={intro:'Втягивание',max:'Максимальная сила',power:'Сила-мощность'};
+  // силовые дни недели (0=Пн...6=Вс): 2/нед — Пн/Чт, 3/нед — Пн/Ср/Пт (без повторов подряд, т.к. между ними ≥1 день)
+  const STR_DOW={2:[0,3],3:[0,2,4]}[strPerWeek]||[0,3];
+  const freeDow=[0,1,2,3,4,5,6].filter(d=>!STR_DOW.includes(d));
+  const pickRunDow=n=>{ n=Math.min(n,freeDow.length); if(n<=0)return [];
+    const step=freeDow.length/n; const set=new Set();
+    for(let i=0;i<n;i++)set.add(freeDow[Math.min(freeDow.length-1,Math.round(i*step))]);
+    return Array.from(set).sort((a,b)=>a-b); };
+  const runDow=pickRunDow(runsPerWeek);
+  const longDow=runDow.length?runDow[0]:null;             // первый беговой день недели — под (укороченную) длинную
+  const strideDow=runDow.length>1?runDow[runDow.length-1]:null; // последний беговой день — под страйды (не длинная)
+  let strCounter=0;
+  const weeks=[], workouts=[];
+  for(let wi=0; wi<totalWeeks; wi++){
+    const sub=subPhases[wi];
+    const sets=STR_SETS[sub];
+    let wkVol=maintVolKm;
+    if(sub==='intro')wkVol=Math.round(maintVolKm*(wi===0?0.85:0.95));
+    if(sub==='power'){
+      const powerStart=subPhases.indexOf('power');
+      wkVol=Math.round(maintVolKm*Math.pow(1.125,wi-powerStart+1));   // бридж обратно в базу: +~12.5%/нед
+    }
+    const weekStart=dAdd(start,wi*7);
+    const nRuns=runDow.length;
+    const longShare=nRuns>1?1.4:1;                          // длинная (укороченная) ≈ 1.4× среднего
+    const otherShare=nRuns>1?(nRuns-longShare)/(nRuns-1):0;
+    const days=[];
+    for(let di=0; di<7; di++){
+      const date=dAdd(weekStart,di);
+      let item=null;
+      if(STR_DOW.includes(di)){
+        const s=sets[strCounter%sets.length]; strCounter++;
+        item={kind:'str',name:s.name,mins:s.mins,desc:s.desc};
+      } else if(runDow.includes(di)){
+        const isLong=di===longDow&&nRuns>1;
+        const shareKm=isLong?(wkVol*longShare/nRuns):(nRuns>1?(wkVol*otherShare/nRuns):wkVol/nRuns);
+        const km=Math.max(2,shareKm);
+        const withStrides=sub!=='intro'&&di===strideDow&&!isLong;
+        const runMin=Math.max(15,Math.round(km*OFF_EASY_SEC/60));
+        const steps=[st('interval','time',runMin*60,HRZ(2),'Лёгкий')];
+        if(withStrides)steps.push(rp(4,[st('interval','time',20,HRZ(4),'Ускорение'),st('recovery','time',60,HRZ(1))]));
+        item={kind:'run',name:isLong?'Лёгкий (длинная укороч.)':(withStrides?'Лёгкий + ускорения':'Лёгкий'),steps};
+      }
+      days.push({date,item});
+    }
+    days.forEach((d,di)=>{
+      if(!d.item)return;
+      const dn=di+1;
+      if(d.item.kind==='run')workouts.push({date:dISO(d.date),kind:'run',name:`${tag} OW${wi+1}D${dn} ${d.item.name}`,steps:d.item.steps});
+      else if(d.item.kind==='str')workouts.push({date:dISO(d.date),kind:'str',name:`${tag} OW${wi+1}D${dn} ${d.item.name}`,desc:d.item.desc,mins:d.item.mins});
+    });
+    weeks.push({n:wi+1,start:weekStart,end:dAdd(weekStart,6),phase:sub,phaseLabel:PHLABEL[sub],km:wkVol,days});
+  }
+  const analysis={totalWeeks,maintVolKm,curVolKm,runsPerWeek,strPerWeek,exp,subPhases,
+    notes:(curVolRaw>0&&maintVolKm>=curVolKm)?['Заданный/рекомендованный поддерживающий объём не ниже текущего — если это межсезонье после насыщенного цикла, стоит снизить объём вручную.']:[]};
+  return {weeks,workouts,analysis,cfg,start};
+}
+
 
 // ---- предстартовый контекст «недавняя гонка»: сколько дней после гонки нужно на восстановление, прежде чем план идёт как обычно ----
 // опыт и возраст — вторичные модификаторы (эффект дистанции и «в полную силу» сильнее): опытные восстанавливаются
@@ -3216,9 +3313,17 @@ function renderStaticFromEdit(cfgRef,forExport){
 // флаги ручного ввода объявляем ДО initDates (иначе TDZ при первом recalcEstimate)
 let sliderTouched=false;
 let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false, tagTouched=false, tgtTouched=false;
+let owWeeksTouched=false, owVolTouched=false;   // межсезонье: те же флаги ручного ввода, что у peakVol/runs/strength выше
+// показать/скрыть поля, специфичные для режима плана («Под цель» vs «Межсезонье»); DOM не удаляется — только display
+function updatePlanModeUI(){
+  const mode=($('planMode')&&$('planMode').value)||'goal';
+  const isOff=mode==='offseason';
+  document.querySelectorAll('.goalOnly').forEach(el=>{el.style.display=isOff?'none':'';});
+  document.querySelectorAll('.offOnly').forEach(el=>{el.style.display=isOff?'':'none';});
+}
 // любое изменение в блоке «Исходные данные» сбрасывает ручной ввод в «Параметрах плана»,
 // чтобы авто-вычисляемые поля (цель, объём, тренировки/нед, силовые, тег) пересчитались от новых вводных
-function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouched=false; tagTouched=false; tgtTouched=false;}
+function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouched=false; tagTouched=false; tgtTouched=false; owWeeksTouched=false; owVolTouched=false;}
 (function initDates(){
   const t=new Date();t.setHours(0,0,0,0);
   const nm=dAdd(t,((8-t.getDay())%7)||7);
@@ -3246,6 +3351,11 @@ function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouch
   $('strength').addEventListener('change',()=>{strTouched=true; recalcEstimate();});
   $('tag').addEventListener('input',()=>{tagTouched=true;});
   const sl=$('slider'); if(sl)sl.addEventListener('input',()=>{sliderTouched=true;recalcEstimate();});
+  // межсезонье: переключатель режима + флаги ручного ввода owWeeks/owVol (тот же паттерн, что peakVol/runs выше)
+  const pm=$('planMode'); if(pm)pm.addEventListener('change',()=>{updatePlanModeUI(); recalcEstimate();});
+  const owW=$('owWeeks'); if(owW)owW.addEventListener('input',()=>{owWeeksTouched=true; recalcEstimate();});
+  const owV=$('owVol'); if(owV)owV.addEventListener('input',()=>{owVolTouched=true; recalcEstimate();});
+  updatePlanModeUI();
   // делегирование на весь блок «Исходные данные» (в т.ч. динамические строки результатов/промежуточных стартов,
   // день длинной, кросс-тренировки) — capture:true, чтобы флаги сбросились ДО обработчиков конкретных полей выше
   const srcPanelEl=$('srcPanel');
@@ -3324,6 +3434,40 @@ function recommendStrength(goalDist,volKm,recF,exp){
   return Math.max(1,r);                                 // возрастным силовые важны — не ниже 1
 }
 function recommendDuration(goalDist){ return {5000:8,10000:10,21097:12,42195:16,60000:18,80000:20,100000:22,120000:24,160000:24}[goalDist]||16; }
+
+// ================= межсезонье / переходный период =================
+// Длительность — от опыта (новичок 2–3, средний 3–4, опытный 4–6 нед.) + запас неделю, если недавний
+// объём был очень высоким (тяжелее «выйти» из цикла — заслуживает более длинной разгрузки/базы).
+function recommendOffseasonWeeks(exp,curVolKm){
+  const base={novice:[2,3],inter:[3,4],adv:[4,6]}[exp]||[3,4];
+  let w=Math.round((base[0]+base[1])/2);
+  const highThresh={novice:55,inter:90,adv:130}[exp]||90;
+  if(curVolKm>0&&curVolKm>=highThresh)w+=1;
+  return clamp(w,base[0],base[1]+1);
+}
+// Поддерживающий объём бега ≈ 50–65% от текущего, с полом ~15–20 км/нед (если текущий объём и так ниже — не
+// задираем его вверх, просто чуть снижаем относительно факта).
+function recommendOffseasonVolume(curVolKm){
+  const cv=curVolKm>0?curVolKm:20;
+  if(cv<=20)return Math.max(Math.round(cv*0.8),Math.min(cv,15));
+  const target=Math.round(cv*0.575);           // середина диапазона 50–65%
+  return Math.max(target,15);
+}
+// Частота силовых в межсезонье: опытный/средний — 3 раза/нед, новичок — 2 (восстановление важнее объёма силовой).
+function offseasonStrengthPerWeek(exp){ return exp==='novice'?2:3; }
+// Под-фазы силовой внутри межсезонья по неделям: Втягивание (~25-30%, мин. 1 нед.) → Максимальная сила
+// (~45-55%) → Сила-мощность (~20-25%, бридж обратно в обычную базу). Для очень коротких циклов (2-3 нед.)
+// фазы ужимаются, но каждая, где это возможно, сохраняет хотя бы одну неделю.
+function offseasonSubPhases(totalWeeks){
+  const n=Math.max(2,Math.round(totalWeeks)||2);
+  let introN=Math.max(1,Math.round(n*0.275));
+  let powerN=Math.max(1,Math.round(n*0.225));
+  if(introN+powerN>=n){ if(n>=3){introN=1;powerN=1;} else {introN=1;powerN=0;} }
+  const maxN=Math.max(0,n-introN-powerN);
+  const arr=[];
+  for(let i=0;i<n;i++){ if(i<introN)arr.push('intro'); else if(i<introN+maxN)arr.push('max'); else arr.push('power'); }
+  return arr;
+}
 function genTag(goalDist,tgtSec){                         // 3–4 символа: дистанция + время
   if(goalDist>42195) return 'U'+Math.round(goalDist/10000);        // U6 U8 U10 U12 U16
   const L=goalDist>=42195?'M':goalDist>=21097?'H':'T';
@@ -3377,7 +3521,24 @@ function readResRows(){return Array.from(document.querySelectorAll('#resList .re
 function setResRows(list){$('resList').innerHTML='';
   const arr=(list&&list.length?list:[{dist:10000,time:'41:30'}]);
   arr.forEach(r=>addResRow(r.dist,r.time||(r.sec?fmtT(r.sec):'')));}
+// живой пересчёт авто-полей межсезонья (owWeeks/owVol) — тот же паттерн «авто, пока не тронуто руками», что
+// recalcEstimate() использует для peakVol/runs/strength; никакого VDOT/прогноза здесь не считаем.
+function recalcOffseasonEstimate(){
+  try{
+    const curVol=+($('curVol')&&$('curVol').value)||0, volUnit=($('volUnit')&&$('volUnit').value)||'km';
+    const exp=($('exp')&&$('exp').value)||'inter';
+    const OFF_EASY_SEC=330;
+    const curVolKm=curVol>0?(volUnit==='h'?Math.round(curVol*3600/OFF_EASY_SEC):curVol):0;
+    const recW=recommendOffseasonWeeks(exp,curVolKm);
+    const recV=recommendOffseasonVolume(curVolKm);
+    if($('owWeeks')&&!owWeeksTouched)$('owWeeks').value=recW;
+    if($('owVol')&&!owVolTouched)$('owVol').value=recV;
+    if($('owWeeksRec'))$('owWeeksRec').textContent='рекомендовано ≈'+recW+' нед.'+(owWeeksTouched?' · задано вручную':'');
+    if($('owVolRec'))$('owVolRec').textContent='рекомендовано ≈'+recV+' км/нед'+(volUnit==='h'?' (оценочно из ч/нед)':'')+(owVolTouched?' · задано вручную':'');
+  }catch(e){}
+}
 function recalcEstimate(){
+  if((($('planMode')&&$('planMode').value)||'goal')==='offseason'){recalcOffseasonEstimate();return;}
   const el=$('goalEstimate'); if(!el)return;
   try{
     const gd=+$('goalDist').value; const tg=$('tgtGoal'); if(tg)tg.placeholder=phShort(gd);
@@ -3563,6 +3724,8 @@ function readCross(){
   return defs.map(function(d){var days=[];for(var i=0;i<7;i++){var c=$(d[0]+'-'+i);if(c&&c.checked)days.push(i);} var au=!!($(d[0]+'-auto')&&$(d[0]+'-auto').checked); return (days.length||au)?{sport:d[0],name:d[1],mins:d[2],desc:d[3],gtype:d[4],days:days,auto:au}:null;}).filter(Boolean);
 }
 function readCfg(){
+  const planMode=($('planMode')&&$('planMode').value)||'goal';
+  if(planMode==='offseason')return readOffseasonCfg();
   const req=(id,nm)=>{const v=parseT($(id).value);if(v==null)throw `Не разобрал «${nm}» — формат м:сс или ч:мм:сс.`;return v;};
   if(!$('goalD').value)throw 'Укажите дату главного старта.';
   if(!$('startD').value)throw 'Укажите дату начала плана.';
@@ -3590,7 +3753,7 @@ function readCfg(){
     preRaceHard:!!($('preRaceHard')&&$('preRaceHard').checked),
     transPeakVol:(+(($('transPeakVol')&&$('transPeakVol').value)||0))||null,
     transWeeksAgo:($('transWeeksAgo')&&$('transWeeksAgo').value!=='')?+$('transWeeksAgo').value:null,
-    tag:($('tag').value||'[GEN]').trim()};
+    tag:($('tag').value||'[GEN]').trim(),planMode:'goal'};
   if(cfg.ltPace&&cfg.ltPace>600)throw 'Темп ПАНО выглядит странно (медленнее 10:00/км) — проверьте формат м:сс.';
   if(dParse(cfg.goalISO)<=dParse(cfg.startISO))throw 'Дата старта должна быть позже начала плана.';
   // ---- валидация противоречивого ввода (см. ревью, раздел H, пп. 23–29) ----
@@ -3622,6 +3785,28 @@ function readCfg(){
     if(runDays+crossDaysN>7)WARN.push(`${cfg.runs} пробежек + ${crossDaysN} кросс-тренировок не помещаются в 7 дней без совмещения — часть кросса встанет в один день с бегом или не будет поставлена вовсе.`);
   }
   cfg.warnings=WARN;
+  return cfg;
+}
+
+// ================= межсезонье / переходный период: чтение формы =================
+// Никакой валидации гонки/цели: межсезонью не нужны goalDist/tgtGoal/tuneRaces/lthr и т.п. — только базовые
+// вводные + два новых авто-поля (owWeeks/owVol), заполненные recalcOffseasonEstimate() тем же паттерном
+// «авто + флаг ручного ввода», что peakVol/runs/strength в readCfg (см. owWeeksTouched/owVolTouched ниже).
+function readOffseasonCfg(){
+  if(!$('startD').value)throw 'Укажите дату начала плана.';
+  const exp=($('exp')&&$('exp').value)||'inter';
+  const volUnit=($('volUnit')&&$('volUnit').value)||'km';
+  const curVol=+($('curVol')&&$('curVol').value)||null;
+  const owWeeksVal=$('owWeeks')&&$('owWeeks').value?+$('owWeeks').value:null;
+  const owVolVal=$('owVol')&&$('owVol').value?+$('owVol').value:null;
+  const cfg={planMode:'offseason',
+    startISO:$('startD').value,
+    age:+($('age')&&$('age').value)||35,weight:+($('weight')&&$('weight').value)||70,
+    curVol,volUnit,exp,
+    owWeeks:owWeeksVal||undefined,   // buildOffseasonPlan сам подставит recommendOffseasonWeeks, если пусто
+    owVol:owVolVal||undefined,
+    tag:($('tag')&&$('tag').value||'[OFF]').trim(),
+    warnings:[]};
   return cfg;
 }
 
@@ -3670,6 +3855,7 @@ function keyPrinciplesHtml(p){
   return `<h2>Как пользоваться</h2><div class="notes"><h3>Ключевые принципы</h3>${items.join('')}</div>`;
 }
 function render(p){
+  if(p&&p.cfg&&p.cfg.planMode==='offseason')return renderOffseason(p);
   const a=p.analysis,cfg=p.cfg;
   const vcls=v=>v==='реалистично'||v==='поддержание'?'ok':v==='амбициозно'?'amb':'bad';
   const vTxt=v=>({'реалистично':'Реалистично','амбициозно':'Амбициозно, но возможно','нереалистично':'Нереалистично к этой дате','поддержание':'Поддержание формы','—':'Укажите цель'}[v]||'—');
@@ -3773,21 +3959,78 @@ function render(p){
   // таблица недель и графики строятся из EDIT в refreshView() — единый источник
 }
 
+// ================= межсезонье / переходный период: отрисовка =================
+// Отдельная от render() ветка: показатели достижимости/зоны темпа тут неприменимы (нет цели/VDOT), поэтому
+// строим свою сводку + описание под-фаз силовой. Таблица недель/дней по-прежнему рисуется generic-путём
+// через refreshView()→renderStaticFromEdit() из EDIT (тот же плоский список тренировок, что и у buildPlan).
+function renderOffseason(p){
+  const a=p.analysis,cfg=p.cfg;
+  const EXPLBL={novice:'новичок',inter:'средний',adv:'опытный'};
+  const phCount={intro:0,max:0,power:0};
+  (a.subPhases||[]).forEach(s=>phCount[s]=(phCount[s]||0)+1);
+  const verdicts=`
+  <h2>Межсезонье / переходный период</h2>
+  <div class="verdicts">
+    <div class="vcard ok"><div class="t">Длительность</div>
+      <div class="big">${a.totalWeeks} нед.</div>
+      <div class="sm">опыт: ${EXPLBL[a.exp]||a.exp} · старт плана ${fmtDM(dParse(cfg.startISO))}</div></div>
+    <div class="vcard ok"><div class="t">Бег — поддержание</div>
+      <div class="big">≈${a.maintVolKm} <small>км/нед</small></div>
+      <div class="sm">${a.curVolKm?`от текущих ≈${a.curVolKm} км/нед (≈${Math.round(a.maintVolKm/a.curVolKm*100)}%)`:'ориентир на этап восстановления'} · ${a.runsPerWeek} пробежки/нед, только лёгкий/Z2, интервалов и темпа нет</div></div>
+    <div class="vcard"><div class="t">Силовая — основной фокус</div>
+      <div class="big">${a.strPerWeek}× <small>в нед.</small></div>
+      <div class="sm">45–60 мин/сессия · Втягивание ${phCount.intro||0} нед. → Максимальная сила ${phCount.max||0} нед. → Сила-мощность ${phCount.power||0} нед.</div></div>
+  </div>
+  ${(a.notes&&a.notes.length)?`<div class="notes"><h3>Примечания</h3>${a.notes.map(n=>`<p>· ${esc(n)}</p>`).join('')}</div>`:''}`;
+
+  const guidance=`
+  <div class="notes"><h3>Как устроен план</h3>
+    <p><b>Зачем нужен переходный период.</b> После цикла подготовки к старту 2–6 недель активного отдыха с небольшим сохранённым объёмом бега и переносом акцента на силу снижают риск травм и перетренированности, закрывают силовые слабые места (стабильность таза/голеностопа, сила разгибателей бедра, верх тела) и готовят опорно-двигательный аппарат к следующему циклу — это НЕ полный отдых.</p>
+    <p><b>Бег — поддержание, не развитие.</b> ${a.runsPerWeek} лёгкие пробежки в неделю, все в зоне Z2 (или Z1 — восстановительно), без интервалов и темповых отрезков; длинная либо снята, либо сильно укорочена. Раз в неделю (кроме фазы «Втягивание») — короткие ускорения (страйды): это поддержание координации бега, а не качественная тренировка.</p>
+    <p><b>Силовая — три под-фазы.</b> <i>Втягивание</i> — умеренные повторения (10–15), стабильность и мобильность (тазобедренные/ягодичные, кор, голеностоп) плюс база для верха тела. <i>Максимальная сила</i> — базовые многосуставные упражнения, 3–6 повторений, 3–4 подхода, полное восстановление между подходами: низ (присед/тяга/выпады/мостик) и верх (жим/тяга) в равной мере, плюс кор/антиротация. <i>Сила-мощность</i> — нагрузка легче, добавляется плиометрика (прыжки, скачки, броски медбола), а бег плавно возвращается к обычному объёму (+10–15%/нед) — это мост в обычную базовую фазу следующего цикла.</p>
+    <p><b>Частота силовых.</b> ${a.strPerWeek} раза в неделю по 45–60 мин, сплит A/B(/C чередуется в фазе максимальной силы) — без повторов одной и той же тренировки два дня подряд.</p>
+  </div>`;
+
+  const card=s=>`<div class="strcard"><h3>${esc(s.name)} · ${s.mins} мин</h3>
+    <ul>${esc(s.desc).split('. ').slice(1).join('. ').split(';').map(x=>x.trim()).filter(Boolean).map(x=>`<li>${x.replace(/\.$/,'')}</li>`).join('')}</ul></div>`;
+  let strSec=`<h2>Силовые тренировки по под-фазам</h2><div class="h2note">Ротация A/B(/C) по дням недели, без повторов одного набора подряд.</div>`;
+  strSec+=`<h3 style="margin-top:10px">Втягивание</h3><div class="strgrid">${card(OFF_INTRO_A)}${card(OFF_INTRO_B)}</div>`;
+  strSec+=`<h3 style="margin-top:14px">Максимальная сила</h3><div class="strgrid">${card(OFF_MAX_A)}${card(OFF_MAX_B)}${a.exp!=='novice'?card(OFF_MAX_C):''}</div>`;
+  strSec+=`<h3 style="margin-top:14px">Сила-мощность</h3><div class="strgrid">${card(OFF_POWER_A)}${card(OFF_POWER_B)}</div>`;
+
+  const weeksHtml=`<h2 style="margin-top:20px">Обзор по неделям</h2><div class="h2note">Подробные дни/тренировки — в таблице «Недельный план» ниже (там же можно править и удалять отдельные тренировки).</div>
+  <div class="vchart"><div class="bars">${(p.weeks||[]).map(w=>{
+    const maxKm=Math.max(...(p.weeks||[]).map(x=>x.km),1);
+    const h=Math.round(w.km/maxKm*100);
+    const cls=w.phase==='power'?'peak':(w.phase==='intro'?'down':'');
+    return `<div class="barcol"><div class="bar ${cls}" style="height:${h}%"><span class="val mono">${w.km}</span></div><div class="wk mono">${w.n}</div></div>`;
+  }).join('')}</div>
+  <div class="vlegend"><span><i style="background:var(--z-rec)"></i>Втягивание</span><span><i style="background:var(--accent)"></i>Сила-мощность</span><span style="margin-left:auto">км/нед (справочно)</span></div></div>
+  <div class="facts" style="margin-top:12px">${(p.weeks||[]).map(w=>`<div class="fact"><div class="k">Нед. ${w.n} · ${fmtDM(w.start)}–${fmtDM(w.end)}</div><div class="v"><small>${w.phaseLabel}</small></div></div>`).join('')}</div>`;
+
+  FITNESS_HTML=verdicts+guidance+strSec+weeksHtml;
+  // таблица недель/дней — тот же generic-путь: refreshView() → renderStaticFromEdit(EDIT)
+  return FITNESS_HTML;
+}
+
 $('goBtn').onclick=()=>{
   $('errBox').style.display='none';
   try{
     const cfg=readCfg();
-    const p=buildPlan(cfg);
+    const isOff=cfg.planMode==='offseason';
+    const p=isOff?buildOffseasonPlan(cfg):buildPlan(cfg);
     if(p.error)throw p.error;
     // предупреждения о противоречивом вводе показываем вместе с заметками плана, а не молчим
-    if(cfg.warnings&&cfg.warnings.length)cfg.warnings.forEach(t=>p.analysis.notes.unshift('Проверьте ввод: '+t));
-    LAST=p; render(p);              // считает FITNESS_HTML
-    META={tag:cfg.tag,name:`План: ${p.analysis.goalShort||''} ${fmtT(p.analysis.endGoal)} · ${cfg.goalISO}`,
-      marathon:cfg.goalISO,generated:dISO(new Date()),schema:1,cfg};
+    if(!isOff&&cfg.warnings&&cfg.warnings.length)cfg.warnings.forEach(t=>p.analysis.notes.unshift('Проверьте ввод: '+t));
+    LAST=p; render(p);              // считает FITNESS_HTML (для межсезонья — через renderOffseason)
+    META=isOff
+      ?{tag:cfg.tag,name:`Межсезонье · ${p.analysis.totalWeeks} нед. · с ${cfg.startISO}`,marathon:null,generated:dISO(new Date()),schema:1,cfg}
+      :{tag:cfg.tag,name:`План: ${p.analysis.goalShort||''} ${fmtT(p.analysis.endGoal)} · ${cfg.goalISO}`,marathon:cfg.goalISO,generated:dISO(new Date()),schema:1,cfg};
     EDIT=cloneWorkouts(p.workouts);
     // предстартовый контекст «недавняя гонка» — досчитываем окно восстановления и смягчаем задетые недели плана
+    // (неприменимо к межсезонью: там нет цели-гонки и cfg.preCtx не заполняется readOffseasonCfg)
     let preRaceNote='';
-    if(cfg.preCtx==='race'&&cfg.preRaceDate){
+    if(!isOff&&cfg.preCtx==='race'&&cfg.preRaceDate){
       const days=preRaceRecoveryDays(cfg.preRaceDist,cfg.preRaceHard,cfg.exp,p.analysis.recF);
       const raceD=dParse(cfg.preRaceDate), endWin=dAdd(raceD,days), planStart=p.start;
       if(endWin>planStart){
@@ -3894,8 +4137,9 @@ $('htmlBtn').onclick=()=>{
   const cfgRef=(LAST&&LAST.cfg)||(META&&META.cfg)||null;
   setZPaceFrom(cfgRef);
   const A=(LAST&&LAST.analysis)||null;
-  const goalTxt=A?`${A.goalName} ${fmtT(A.endGoal)}`:'';
-  const title=`План подготовки${goalTxt?` · ${goalTxt}`:''}${(META&&META.marathon)?` · ${META.marathon}`:''}`;
+  const isOff=cfgRef&&cfgRef.planMode==='offseason';
+  const goalTxt=isOff?`Межсезонье${A?' · '+A.totalWeeks+' нед.':''}`:(A?`${A.goalName} ${fmtT(A.endGoal)}`:'');
+  const title=`${isOff?'Переходный период':'План подготовки'}${goalTxt?` · ${goalTxt}`:''}${(META&&META.marathon)?` · ${META.marathon}`:''}`;
   const planObj={meta:{...(META||{tag:'[GEN]',schema:1}),generated:dISO(new Date())},workouts:EDIT};
   const planStr=JSON.stringify(JSON.stringify(planObj)).replace(/</g,'\\u003c'); // безопасно для <\/script>
   const body=(ANALYTICS_HTML||'')+`<h2>Недельный план</h2>`+renderStaticFromEdit(cfgRef,true);

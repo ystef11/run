@@ -1657,7 +1657,10 @@ function buildPlan(cfgIn){
     const rots=[
       ()=>{const n=clamp(Math.round(total/10),2,4),m=Math.max(6,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,2,cfg.exp)};},
       ()=>{const n=clamp(Math.round(total/13),2,3),m=Math.max(8,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,3,cfg.exp)};},
-      ()=>{const m=clamp(total,15,35);return {nm:`Порог ${m}' непрерывно`,st:st('interval','time',m*60,PCT(R.thr),'Порог')};},
+      // непрерывный кусок не режется через repsT/clampRepsToWork (там нет пауз для деления), поэтому
+      // потолок 35 масштабируем по опыту вручную тем же WORK_EXP_BOOST — иначе единственный формат,
+      // где нагрузка тяжелее (без пауз), у новичка не был ограничен так же, как дробные варианты.
+      ()=>{const m=clamp(total,15,Math.round(35*(WORK_EXP_BOOST[cfg.exp]||1)));return {nm:`Порог ${m}' непрерывно`,st:st('interval','time',m*60,PCT(R.thr),'Порог')};},
       ()=>{const n=clamp(Math.round(total/7),3,5),m=Math.max(5,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,1.5,cfg.exp)};}
     ][i%4];
     const rot=rots();
@@ -2039,8 +2042,15 @@ function buildPlan(cfgIn){
           // (МР / ПМ-темп / целевой темп ультры) не появлялся в плане почти ни разу (см. ревью, E/#20).
           // В подводке обязательно идём через q2For — у него свой, укороченный taper-вариант; раньше здесь
           // безусловно вызывался q2Thr с prog≈1 и в подводке получался «Порог 35' непрерывно».
-          const q=(phase==='taper')?q2For(i,wkm,R,phase,prog)
-                 :((phase==='spec'||phase==='peak')?q2For(i,wkm,R,phase,prog):q2Thr(i,R,prog));
+          // qi — порядковый номер именно ЭТОЙ пороговой недели (0,1,2...), а не абсолютный номер недели i.
+          // При nQualHere===1 порог достаётся только чётным i (0,2,4...), поэтому i%4 внутри q2Thr/q2For
+          // (ротация форматов «дробный/непрерывный») видел только остатки 0 и 2 — ротация схлопывалась в
+          // жёсткий пинг-понг между самым дробным и полностью непрерывным форматом, минуя промежуточные
+          // варианты (см. разбор пользователя: «2x10' сразу переходит в 26' одним отрезком»). i/2 даёт
+          // 0,1,2,3... — обычную последовательную ротацию по всем форматам, как и было задумано.
+          const qi=Math.floor(i/2);
+          const q=(phase==='taper')?q2For(qi,wkm,R,phase,prog)
+                 :((phase==='spec'||phase==='peak')?q2For(qi,wkm,R,phase,prog):q2Thr(qi,R,prog));
           items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];if(q.note)items[0].note=q.note;
         } else {const q=q2For(i,wkm,R,phase,prog);items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];if(q.note)items[0].note=q.note;}}
       // в неделю промежуточного старта от 21,1 км сам старт и есть длинная — вторая длинная там лишняя

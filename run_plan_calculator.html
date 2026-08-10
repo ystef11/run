@@ -12,6 +12,7 @@
     --z-long:#2f5d8f;--z-race:#c0392b;--z-rest:#9aa0a6;
   }
   *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
   html{-webkit-text-size-adjust:100%;}
   body{margin:0;background:var(--paper);color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
@@ -105,6 +106,9 @@
   tr:last-child td{border-bottom:none;}
   .day{width:62px;font-weight:700;line-height:1.25;overflow-wrap:break-word;}
   .ses{overflow-wrap:break-word;}
+  .ses a{color:var(--accent);text-decoration:underline;text-decoration-style:dotted;}
+  .ses a:hover{text-decoration-style:solid;}
+  .strcard:target{outline:2px solid var(--accent);outline-offset:3px;}
   .day .dt{display:block;font-family:ui-monospace,monospace;font-size:11px;font-weight:600;color:var(--muted);}
   .chip-cell{width:120px;white-space:nowrap;}
   .chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
@@ -138,6 +142,9 @@
     .bars{height:120px;}
     .hrv{display:block;margin-top:2px;}
     .ses{overflow-wrap:break-word;}
+  .ses a{color:var(--accent);text-decoration:underline;text-decoration-style:dotted;}
+  .ses a:hover{text-decoration-style:solid;}
+  .strcard:target{outline:2px solid var(--accent);outline-offset:3px;}
   }
   @media print{
     body{background:#fff;}.wrap{max-width:none;padding:0;}
@@ -492,8 +499,12 @@ function weeklyGain(vd){return clamp(2.09*Math.exp(-0.0606*vd),0.02,0.30);}
 
 // ================= набор темпов (сек/км) из пары результатов =================
 // соотношения откалиброваны по реальному плану 3:15 / 40:00
+// ИСПРАВЛЕНО: зона vo2 («МПК») была [P10-8,P10+2] — то есть от «чуть быстрее текущего темпа на 10км» до
+// «медленнее темпа на 10км», и почти целиком ПЕРЕКРЫВАЛАСЬ с t10/race10 и была МЕДЛЕННЕЕ race5 (темпа 5км).
+// По иерархии интенсивности (медленно→быстро) должно быть: thr < mp < t10 < vo2(МПК/I-pace, ≈темп 3-5км) <
+// race5 < rep — МПК физически не может быть медленнее темпа 5км, иначе это не МПК-стимул, а работа у порога.
 function paceSet(marSec,t10){const MP=marSec/42.195,P10=t10/10;
-  return {mp:[MP-2,MP+3],thr:[P10+12,P10+20],vo2:[P10-8,P10+2],t10:[P10-2,P10+6],
+  return {mp:[MP-2,MP+3],thr:[P10+12,P10+20],vo2:[P10-15,P10-9],t10:[P10-2,P10+6],
     rep:[P10-20,P10-12],easy:[MP+38,MP+68],rec:[MP+93,MP+113],longp:[MP+45,MP+75],
     race10:[P10-2,P10+3],race5:[P10-12,P10-7],str:[P10-40,P10-20]};}
 const mid=r=>(r[0]+r[1])/2;
@@ -835,26 +846,26 @@ function _prose(s){if(s.t==='repeat')return `${s.n}×(`+s.steps.map(_prose).join
 const describe=steps=>steps.map(_prose).join(' · ');
 
 // ================= силовые =================
-const STR_A={name:'Силовая A',mins:25,desc:'Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.'};
+const STR_A={id:'str-a',name:'Силовая A',mins:25,desc:'Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.'};
 // Выпрыгивания (плиометрика) убраны из Силовой B: в недельном шаблоне этот день почти всегда стоит вплотную
 // к пороговой/специфической тренировке (день до или после Q1/Q2/L) — прыжковая нагрузка там мешает свежести
 // ног перед ключевой тренировкой или восстановлению после неё (см. ревью плана). Оставлены только силовые/
 // техничные элементы; лёгкие беговые дрилы (skip/захлёст) — не ударная плиометрика, безопасны в любой день.
-const STR_B={name:'Силовая B',mins:20,desc:'Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.'};
-const STR_COR={name:'Кор',mins:15,desc:'Кор. Планка 3×45с; боковая 3×30с/сторона; мёртвый жук 3×10; супермен 3×12.'};
-const STR_C={name:'Силовая C',mins:20,desc:'Силовая C. Становая на одной ноге 3×8/ногу; Зашагивания на опору 3×8/ногу; Подъёмы таза на одной ноге 3×10/ногу; Скакалка 3×40; Кор: боковая планка 3×30с/сторона, антиротация 3×10/сторона.'};
+const STR_B={id:'str-b',name:'Силовая B',mins:20,desc:'Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.'};
+const STR_COR={id:'str-cor',name:'Кор',mins:15,desc:'Кор. Планка 3×45с; боковая 3×30с/сторона; мёртвый жук 3×10; супермен 3×12.'};
+const STR_C={id:'str-c',name:'Силовая C',mins:20,desc:'Силовая C. Становая на одной ноге 3×8/ногу; Зашагивания на опору 3×8/ногу; Подъёмы таза на одной ноге 3×10/ногу; Скакалка 3×40; Кор: боковая планка 3×30с/сторона, антиротация 3×10/сторона.'};
 
 // ================= межсезонье / переходный период: силовая (см. buildOffseasonPlan) =================
 // Новые константы — независимы от STR_A/B/C/COR (те не трогаем): в межсезонье силовая переходит из
 // вспомогательной роли в основной акцент, поэтому набор упражнений и под-фазы (Втягивание → Максимальная
 // сила → Сила-мощность) описаны отдельно, в том же формате {name,mins,desc}.
-const OFF_INTRO_A={name:'Межсезонье: Втягивание A',mins:35,desc:'Втягивание A. Активация ягодиц: моллюск на резинке 3×12/сторона; Приседания с собственным весом 3×15; Отжимания от пола (можно с колен) 3×10-12; Подъём таза лёжа на спине 3×15; Мобильность голеностопа: подъёмы на носки на возвышении 3×15; Кор-финишер: планка 3×30-40с.'};
-const OFF_INTRO_B={name:'Межсезонье: Втягивание B',mins:35,desc:'Втягивание B. Приставные шаги на резинке 3×12/сторона; Обратные выпады 3×12/ногу; Тяга к поясу в наклоне с лёгким весом или резинкой 3×12; Инвертированная тяга (кольца/низкий турник) 3×8-10; Стабильность стопы: ходьба на носках и на пятках 2×20м; Кор-финишер: боковая планка 3×20-25с/сторона.'};
-const OFF_MAX_A={name:'Межсезонье: Сила A (присед)',mins:55,desc:'Сила A. Приседания со штангой 4×5 (полное восстановление между подходами); Жим штанги или гантелей лёжа (либо отжимания с отягощением) 4×6; Болгарские сплит-приседания с гантелями 3×6/ногу; Тяга верхнего блока или подтягивания 3×6-8; Кор-финишер: антиротация на блоке (Paloff press) 3×10/сторону.'};
-const OFF_MAX_B={name:'Межсезонье: Сила B (тяга)',mins:55,desc:'Сила B. Румынская тяга со штангой 4×5; Тяга штанги в наклоне 4×6; Жим гантелей стоя (плечи) 3×6; Подтягивания или тяга верхнего блока широким хватом 3×6-8; Ягодичный мостик со штангой 3×8; Кор-финишер: ролик для пресса (или планка с отягощением) 3×8-10.'};
-const OFF_MAX_C={name:'Межсезонье: Сила C (унилатеральная)',mins:45,desc:'Сила C. Присед на одной ноге у опоры (пистолет-прогрессия) 3×5/ногу; Зашагивания на высокую опору с гантелями 3×6/ногу; Тяга гантели одной рукой в наклоне 3×8/сторону; Прыжки на возвышение (box jump, мягкое приземление) 3×5; Кор-финишер: боковая планка с подъёмом верхней ноги 3×8/сторону.'};
-const OFF_POWER_A={name:'Межсезонье: Мощность A',mins:40,desc:'Мощность A. Прыжки в длину с места 3×5; Приседания с выпрыгиванием (легкая нагрузка) 3×6; Приседания со штангой в скоростной манере (40-50% от 1ПМ) 3×5; Бросок медбола от груди в стену 3×8; Кор-финишер: планка с попеременным подъёмом руки и ноги 3×10.'};
-const OFF_POWER_B={name:'Межсезонье: Мощность B',mins:40,desc:'Мощность B. Скачки на одной ноге вперёд (bounds) 3×6/ногу; Взрывной подъём колена на месте 3×15с; Тяга гантелей рывковым движением (power clean-подобное) 3×5; Ротационный бросок медбола 3×8/сторону; Кор-финишер: русские скручивания с медболом 3×15.'};
+const OFF_INTRO_A={id:'str-off-intro-a',name:'Межсезонье: Втягивание A',mins:35,desc:'Втягивание A. Активация ягодиц: моллюск на резинке 3×12/сторона; Приседания с собственным весом 3×15; Отжимания от пола (можно с колен) 3×10-12; Подъём таза лёжа на спине 3×15; Мобильность голеностопа: подъёмы на носки на возвышении 3×15; Кор-финишер: планка 3×30-40с.'};
+const OFF_INTRO_B={id:'str-off-intro-b',name:'Межсезонье: Втягивание B',mins:35,desc:'Втягивание B. Приставные шаги на резинке 3×12/сторона; Обратные выпады 3×12/ногу; Тяга к поясу в наклоне с лёгким весом или резинкой 3×12; Инвертированная тяга (кольца/низкий турник) 3×8-10; Стабильность стопы: ходьба на носках и на пятках 2×20м; Кор-финишер: боковая планка 3×20-25с/сторона.'};
+const OFF_MAX_A={id:'str-off-max-a',name:'Межсезонье: Сила A (присед)',mins:55,desc:'Сила A. Приседания со штангой 4×5 (полное восстановление между подходами); Жим штанги или гантелей лёжа (либо отжимания с отягощением) 4×6; Болгарские сплит-приседания с гантелями 3×6/ногу; Тяга верхнего блока или подтягивания 3×6-8; Кор-финишер: антиротация на блоке (Paloff press) 3×10/сторону.'};
+const OFF_MAX_B={id:'str-off-max-b',name:'Межсезонье: Сила B (тяга)',mins:55,desc:'Сила B. Румынская тяга со штангой 4×5; Тяга штанги в наклоне 4×6; Жим гантелей стоя (плечи) 3×6; Подтягивания или тяга верхнего блока широким хватом 3×6-8; Ягодичный мостик со штангой 3×8; Кор-финишер: ролик для пресса (или планка с отягощением) 3×8-10.'};
+const OFF_MAX_C={id:'str-off-max-c',name:'Межсезонье: Сила C (унилатеральная)',mins:45,desc:'Сила C. Присед на одной ноге у опоры (пистолет-прогрессия) 3×5/ногу; Зашагивания на высокую опору с гантелями 3×6/ногу; Тяга гантели одной рукой в наклоне 3×8/сторону; Прыжки на возвышение (box jump, мягкое приземление) 3×5; Кор-финишер: боковая планка с подъёмом верхней ноги 3×8/сторону.'};
+const OFF_POWER_A={id:'str-off-power-a',name:'Межсезонье: Мощность A',mins:40,desc:'Мощность A. Прыжки в длину с места 3×5; Приседания с выпрыгиванием (легкая нагрузка) 3×6; Приседания со штангой в скоростной манере (40-50% от 1ПМ) 3×5; Бросок медбола от груди в стену 3×8; Кор-финишер: планка с попеременным подъёмом руки и ноги 3×10.'};
+const OFF_POWER_B={id:'str-off-power-b',name:'Межсезонье: Мощность B',mins:40,desc:'Мощность B. Скачки на одной ноге вперёд (bounds) 3×6/ногу; Взрывной подъём колена на месте 3×15с; Тяга гантелей рывковым движением (power clean-подобное) 3×5; Ротационный бросок медбола 3×8/сторону; Кор-финишер: русские скручивания с медболом 3×15.'};
 
 // ---- питание на длинных: г/ч углеводов от длительности и веса, гель ≈ 25 г ----
 function fuelFor(min,weight,isRace){
@@ -1350,7 +1361,18 @@ function buildPlan(cfgIn){
   const P1=paceSet(endMar,end10);
   const buildEnd=Math.max(1,N-3);
   const vdAt=i=>lerp(anchorVd,achGoalVd,clamp(i/buildEnd,0,1));
-  const setFor=i=>{const f=clamp(i/buildEnd,0,1);const o={};for(const k in P0)o[k]=lerpR(P0[k],P1[k],f);
+  // ИСПРАВЛЕНО: раньше темп КАЖДОЙ недели считался линейной интерполяцией уже готовых секунд/км между P0
+  // (темпы от текущей VDOT) и P1 (темпы от целевой VDOT) — то есть форма росла по прямой в шкале темпа, хотя
+  // связь VDOT→темп нелинейна (та же самая timeFor, которой уже считаются P0/P1 и прогнозы результата). Ниже
+  // vdAt(i) уже использовался для темпа ультры и для прогнозов промежуточных стартов — но не для остальных зон,
+  // из-за чего в одном плане одновременно жили две разные модели роста формы. Теперь темп ЛЮБОЙ недели считается
+  // от VDOT ЭТОЙ недели (vdAt(i)) через ту же paceSet/timeFor, что и всё остальное.
+  const setFor=i=>{const f=clamp(i/buildEnd,0,1);const vd=vdAt(i);
+    const o=paceSet(Math.round(timeFor(42195,vd)),Math.round(timeFor(10000,vd)));
+    // Измеренный порог (ПАНО/lthr) — это факт, а не оценка по VDOT, но он верен только на СТАРТЕ плана; к финалу
+    // используем формульный порог от целевой VDOT (P1.thr), плавно смешивая по прогрессу недели — тот же принцип,
+    // что раньше держал P0.thr, но не ценой потери VDOT-кривой у остальных зон.
+    if(cfg.ltPace)o.thr=lerpR([cfg.ltPace-2,cfg.ltPace+8],P1.thr,f);
     o._lt=+cfg.lthr||0;                       // для paceOfStep: вывести зону, если цель задана в уд/мин
     // ЦЕЛЕВОЙ ТЕМП УЛЬТРЫ: марафонский темп для 60–160 км на 10–30% быстрее реального гоночного, и тренировать
     // «концовку МР» на 100 км — методическая ошибка (см. ревью, C8). Считаем темп цели через Ригеля от
@@ -1775,17 +1797,39 @@ function buildPlan(cfgIn){
     // (не гонка), плюс включается только когда качественных в неделе реально ДВЕ (nQual>=2) — при nQual===1
     // с бюджетом конкурирует только одна сессия, там прежняя логика уже была верна.
     qBudgetScale=1;
+    // nQualHere — РЕШЕНИЕ «сколько качественных СМЫСЛЕННО ставить именно в эту неделю», отдельное от глобального
+    // nQual (тот считается ОДИН РАЗ на весь план от peakKm/опыта и не видит, что у конкретной недели — разгрузка,
+    // тюн или просто менее удачная точка кривой объёма — объём заметно ниже пикового). Методическое обоснование:
+    // поляризованная/пирамидальная модели держат долю жёсткой работы небольшой ПОТОМУ, что суммарный объём велик
+    // и её есть чем разбавить; на низком объёме та же % доля даёт слишком мало абсолютных минут, чтобы вместить
+    // ДВЕ разные по типу качественные (МПК и порог) каждая не короче своего методического пола. Если бюджета на
+    // обе не хватает — лучше развести МПК и порог по разным неделям (как классические планы Дэниелса/Пфитцингера
+    // на этом объёме и делают), чем каждую неделю резать обе ниже пола (см. bug-fix trimOnce выше).
+    let nQualHere=nQual;
     if(!raceHere&&phase!=='race'&&nQual>=2){
       const specPhaseEarly=(phase==='spec'||phase==='peak')&&(isUltra||goalDist>=21000);
       const specPhase10kEarly=(phase==='spec'||phase==='peak')&&goalDist>=10000&&goalDist<21000;
       const HARD_SHARE_EARLY=0.12, MODHARD_SHARE_EARLY=(baseRuns<=3?0.42:((specPhaseEarly||specPhase10kEarly)?0.36:0.30));
       const estWMin=Math.max(45,kms[i]*mid(R.easy)/60);
       const hardBudgetMin=estWMin*HARD_SHARE_EARLY;
-      // грубая прикидка «сколько минут жёсткой работы дали бы Q1+Q2 БЕЗ поправки» — те же формулы, что у самих
-      // генераторов (nQ×типичная длина отрезка ~4 мин для Q1; q2Thr считает свои минуты напрямую для Q2).
-      const naiveQ1HardMin=clamp(Math.round(kms[i]/TUNE.qDiv),TUNE.qMin,TUNE.qMax)*5.2;
-      const naiveQ2HardMin=Math.round(lerp(20,40,prog));
-      qBudgetScale=clamp(hardBudgetMin/Math.max(1,naiveQ1HardMin+naiveQ2HardMin),0.45,1);
+      // Методические полы ОБЕИХ качественных вместе — те же полы, что защищают отдельную сессию от резки ниже
+      // смысла (см. minWorkSec в trimOnce: порог ≥12 мин; nQ/qMin — МПК не короче 3 повторов).
+      const Q1_FLOOR_HARD_MIN=TUNE.qMin*5.2, Q2_FLOOR_HARD_MIN=12;
+      const budgetTooTight=hardBudgetMin<(Q1_FLOOR_HARD_MIN+Q2_FLOOR_HARD_MIN);
+      if(budgetTooTight&&i%2!==0){
+        // Бюджета на пол обеих сессий не хватает — в эту неделю остаётся только Q1 (МПК/интервалы), Q2
+        // становится лёгким (ветка slot==='Q2' ниже уже умеет это делать для nQual===1 — переиспользуем её
+        // через nQualHere). На ЧЁТНЫХ неделях всё равно пробуем обе — так порог не пропадает из плана совсем,
+        // а качественные МПК/порог со временем чередуются, а не соревнуются за один и тот же тесный бюджет
+        // КАЖДУЮ неделю.
+        nQualHere=1;
+      } else {
+        // грубая прикидка «сколько минут жёсткой работы дали бы Q1+Q2 БЕЗ поправки» — те же формулы, что у самих
+        // генераторов (nQ×типичная длина отрезка ~4 мин для Q1; q2Thr считает свои минуты напрямую для Q2).
+        const naiveQ1HardMin=clamp(Math.round(kms[i]/TUNE.qDiv),TUNE.qMin,TUNE.qMax)*5.2;
+        const naiveQ2HardMin=Math.round(lerp(20,40,prog));
+        qBudgetScale=clamp(hardBudgetMin/Math.max(1,naiveQ1HardMin+naiveQ2HardMin),0.45,1);
+      }
     }
 
     // целевые км длинной этой недели
@@ -1964,9 +2008,9 @@ function buildPlan(cfgIn){
         items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}]; if(q.note)items[0].note=q.note;}
       else if(slot==='Q2'&&!easyDay&&!(phase==='down'&&recF>1.25)){
         if(phase==='down'){const q=downQ(i,wkm,R);items=[{kind:'run',z:q.z,name:q.nm,steps:q.steps}];}
-        else if(nQual===1&&i%2!==0){ // низкий объём: полноценную 2-ю качественную не тянем каждую неделю — через раз лёгкий
+        else if(nQualHere===1&&i%2!==0){ // низкий объём (глобально) ИЛИ бюджет этой недели не тянет обе — через раз лёгкий
           items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(45)]}];
-        } else if(nQual===1){
+        } else if(nQualHere===1){
           // раз в 2 недели — качественная. В базе это поддерживающий порог, а в фазе специфики/пика —
           // работа В ТЕМПЕ ЦЕЛИ: раньше здесь всегда стоял q2Thr, и при низком объёме специфический темп
           // (МР / ПМ-темп / целевой темп ультры) не появлялся в плане почти ни разу (см. ревью, E/#20).
@@ -2145,6 +2189,7 @@ function buildPlan(cfgIn){
     // те проходы только УМЕНЬШАЮТ объём, из-за чего неделя (в частности пиковая) могла оказаться ниже цели
     // и ниже уже достигнутого максимума — тогда «Пиковая неделя» выглядела просадкой (см. замечания).
     let _flex=null,_mins=null,_wkmT=0,_easyMax=0,_recMax=0,_paceOf=null,_strideKm=0,_applyMins=null,_shrink=null,_tol=1.05;
+    let _preLongDi=null,_preLongCap=0; // потолок и индекс дня перед длинной — нужны и в доборе объёма ниже, иначе он не видит, что этот день должен остаться короче
     // --- подгонка объёма: лёгкие/восст. дни заполняют остаток недели ---
     if(!raceHere){
       // Целевой объём недели дополнительно ограничиваем ФАКТИЧЕСКИМ объёмом предыдущей недели: на разгрузочной
@@ -2377,6 +2422,7 @@ function buildPlan(cfgIn){
 
       applyMins();
       _flex=flex;_mins=mins;_wkmT=wkmT;_easyMax=easyMax;_recMax=recMax;_paceOf=paceOf;_strideKm=strideKm;_applyMins=applyMins;
+      _preLongDi=preLongDi;_preLongCap=preLongCap;
       _shrink=shrinkToTarget;_tol=tol;
       // физически убираем дни, помеченные к удалению нормализацией объёма
       days.forEach(d=>{const keep=d.items.filter(x=>!x._drop);
@@ -2497,6 +2543,15 @@ function buildPlan(cfgIn){
         if(par&&par.n===2){
           if(target.end==='time'&&target.v>minWorkSec){target.v-=60;return true;}
           if(target.end==='distance'&&target.v>(isSpec?2000:400)){target.v-=200;return true;}
+          // ИСПРАВЛЕНО: если отрезок УЖЕ короче пола (это бывает, когда естественная прогрессия сама
+          // выдала, например, 2x9' при поле в 12 мин — см. разбор плана), снятие повтора даёт «1x9'»,
+          // то есть единственный непрерывный кусок короче методического пола — ровно то, от чего
+          // minWorkSec должен защищать. Раньше проверка «v>minWorkSec» была только на пути «укоротить»
+          // и не мешала снять повтор, если укорачивать уже было некуда (v уже ниже пола). Здесь отказываемся
+          // от такой резки этой сессии — пусть неделя останется чуть выше целевой доли интенсивности,
+          // чем закончится бесполезным одиночным отрезком короче пола.
+          if(target.end==='time'&&target.v<minWorkSec)return false;
+          if(target.end==='distance'&&target.v<(isSpec?2000:400))return false;
           par.n--;return true;
         }
         if(target.end==='time'&&target.v>minWorkSec){target.v-=60;return true;}
@@ -2581,7 +2636,14 @@ function buildPlan(cfgIn){
         // удлиняем самый короткий гибкий день, пока он ниже своего потолка
         let bi=-1,bv=1e9;
         _flex.forEach((x,k)=>{ if(_mins[k]<=0)return;
-          const cap=x.z==='easy'?_easyMax:_recMax;
+          // ИСПРАВЛЕНО: день перед длинной должен добираться до СВОЕГО пониженного потолка (_preLongCap,
+          // ≈65% от длинной — см. блок «ДЕНЬ ПЕРЕД ДЛИННОЙ» выше), а не до общего _easyMax/_recMax. Раньше
+          // добор не знал об этом дне и раскачивал его наравне с остальными лёгкими — именно он чаще всего
+          // оказывался «самым коротким» после нормализации (его целенаправленно ужали) и потому первым
+          // получал +5 мин на каждом шаге добора, пока полностью не съедал разницу с обычным лёгким днём
+          // (замер: суббота 45 мин после нормализации → 60 мин после добора, наравне со средой).
+          const isPreLong=x._di===_preLongDi&&x.z==='easy';
+          const cap=isPreLong?_preLongCap:(x.z==='easy'?_easyMax:_recMax);
           if(_mins[k]<cap-2&&_mins[k]<bv){bv=_mins[k];bi=k;} });
         if(bi<0)break;
         _mins[bi]+=5;
@@ -2745,7 +2807,7 @@ function buildPlan(cfgIn){
         // возьмёт готовое значение вместо независимого пересчёта через ZPACE, иначе plan.json и HTML расходятся
         if(x.fuel)wo.fuel=x.fuel;
         workouts.push(wo);}
-      if(x.kind==='str')workouts.push({date:dISO(d.date),kind:'str',
+      if(x.kind==='str')workouts.push({date:dISO(d.date),kind:'str',id:x.id,
         name:`${cfg.tag} W${i+1}D${(d.date.getDay()+6)%7+1} ${x.name}`,desc:x.desc,mins:x.mins});
       if(x.kind==='cross')workouts.push({date:dISO(d.date),kind:'cross',sport:x.sport,gtype:x.gtype,
         name:`${cfg.tag} W${i+1}D${(d.date.getDay()+6)%7+1} ${x.name}`,desc:x.desc,mins:x.mins});}));
@@ -2888,7 +2950,7 @@ function buildOffseasonPlan(cfgIn){
       let item=null;
       if(STR_DOW.includes(di)){
         const s=sets[strCounter%sets.length]; strCounter++;
-        item={kind:'str',name:s.name,mins:s.mins,desc:s.desc};
+        item={kind:'str',id:s.id,name:s.name,mins:s.mins,desc:s.desc};
       } else if(runDow.includes(di)){
         const isLong=di===longDow&&nRuns>1;
         const shareKm=isLong?(wkVol*longShare/nRuns):(nRuns>1?(wkVol*otherShare/nRuns):wkVol/nRuns);
@@ -2905,7 +2967,7 @@ function buildOffseasonPlan(cfgIn){
       if(!d.item)return;
       const dn=di+1;
       if(d.item.kind==='run')workouts.push({date:dISO(d.date),kind:'run',name:`${tag} OW${wi+1}D${dn} ${d.item.name}`,steps:d.item.steps});
-      else if(d.item.kind==='str')workouts.push({date:dISO(d.date),kind:'str',name:`${tag} OW${wi+1}D${dn} ${d.item.name}`,desc:d.item.desc,mins:d.item.mins});
+      else if(d.item.kind==='str')workouts.push({date:dISO(d.date),kind:'str',id:d.item.id,name:`${tag} OW${wi+1}D${dn} ${d.item.name}`,desc:d.item.desc,mins:d.item.mins});
     });
     weeks.push({n:wi+1,start:weekStart,end:dAdd(weekStart,6),phase:sub,phaseLabel:PHLABEL[sub],km:wkVol,days});
   }
@@ -3410,9 +3472,13 @@ function renderStaticFromEdit(cfgRef,forExport){
       const q=(z==='mp'||z==='thr'||z==='vo2'||z==='race')?' qual':'';
       const tgt=isRest?'':(isRun?targetLabelNoR(w,cfgRef):(w.kind==='cross'?'кросс Z2':'ОФП'));
       const fuel=isRun?fuelForWorkout(w,cfgRef):null;
+      // силовая со ссылкой на карточку описания (см. strSec/renderOffseason): вместо повтора полного списка
+      // упражнений в каждой строке недели — короткая ссылка на канонический разбор конкретной силовой.
+      const nameHtml=(w.kind==='str'&&w.id)?`<a href="#${w.id}" title="Описание тренировки">${esc(w.name)}</a>`:esc(w.name);
+      const descHtml=(w.kind==='str'&&w.id)?'':` — ${esc(desc)}`;
       return `<tr class="${q}" data-date="${w.date}"><td class="day">${DOW[(w._date.getDay()+6)%7]}<span class="dt">${pad2(w._date.getDate())}.${pad2(w._date.getMonth()+1)}</span></td>
         <td class="chip-cell"><span class="chip" style="background:var(${ZC[z]})">${ZLAB[z]}</span></td>
-        <td class="ses"><b>${esc(w.name)}</b> — ${esc(desc)}${km?` <span class="kmref">≈${km.toFixed(km<10?1:0)} км · ${hm(min)}</span>`:(min?` <span class="kmref">${hm(min)}</span>`:'')}${fuel?` <span class="fuel">~${fuel.gph} г/ч · всего ~${fuel.total} г ≈ ${fuel.gels} гел.</span>`:''} &nbsp;<span class="hrv">${esc(tgt)}</span></td>
+        <td class="ses"><b>${nameHtml}</b>${descHtml}${km?` <span class="kmref">≈${km.toFixed(km<10?1:0)} км · ${hm(min)}</span>`:(min?` <span class="kmref">${hm(min)}</span>`:'')}${fuel?` <span class="fuel">~${fuel.gph} г/ч · всего ~${fuel.total} г ≈ ${fuel.gels} гел.</span>`:''} &nbsp;<span class="hrv">${esc(tgt)}</span></td>
         ${forExport?'':(isRest?'<td class="rowact"></td>':`<td class="rowact"><button class="edbtn" onclick="event.stopPropagation();openEditModal(${w._idx})" title="Изменить">✎</button><button class="edbtn del" onclick="event.stopPropagation();deleteWorkout(${w._idx})" title="Удалить">🗑</button></td>`)}</tr>`;
     }).join('');
     return `<div class="week"><div class="whead"><div class="bib mono">${gi+1}</div><div class="wmeta"><div class="dates">Неделя от ${fmtDM(dParse(g.mon))}</div></div>
@@ -4076,7 +4142,7 @@ function render(p){
   }).join('');
 
   const strSec=cfg.strength>0?(()=>{
-    const card=(s,when)=>`<div class="strcard"><div class="when">${when}</div><h3>${esc(s.name)} · ${s.mins} мин</h3>
+    const card=(s,when)=>`<div class="strcard"${s.id?` id="${s.id}"`:''}><div class="when">${when}</div><h3>${esc(s.name)} · ${s.mins} мин</h3>
       <ul>${esc(s.desc).split('. ').slice(1).join('. ').split(';').map(x=>x.trim()).filter(Boolean).map(x=>`<li>${x.replace(/\.$/,'')}</li>`).join('')}</ul></div>`;
     let h=`<h2>Силовые тренировки</h2><div class="h2note">${cfg.strength} в неделю в дни отдыха/лёгкие (не рядом с длинной и качественной); в разгрузку — только A; в подводку и неделю гонки — короткий «Кор».</div><div class="strgrid">`;
     h+=card(STR_A,'Силовая A');
@@ -4121,7 +4187,7 @@ function renderOffseason(p){
     <p><b>Частота силовых.</b> ${a.strPerWeek} раза в неделю по 45–60 мин, сплит A/B(/C чередуется в фазе максимальной силы) — без повторов одной и той же тренировки два дня подряд.</p>
   </div>`;
 
-  const card=s=>`<div class="strcard"><h3>${esc(s.name)} · ${s.mins} мин</h3>
+  const card=s=>`<div class="strcard"${s.id?` id="${s.id}"`:''}><h3>${esc(s.name)} · ${s.mins} мин</h3>
     <ul>${esc(s.desc).split('. ').slice(1).join('. ').split(';').map(x=>x.trim()).filter(Boolean).map(x=>`<li>${x.replace(/\.$/,'')}</li>`).join('')}</ul></div>`;
   let strSec=`<h2>Силовые тренировки по под-фазам</h2><div class="h2note">Ротация A/B(/C) по дням недели, без повторов одного набора подряд.</div>`;
   strSec+=`<h3 style="margin-top:10px">Втягивание</h3><div class="strgrid">${card(OFF_INTRO_A)}${card(OFF_INTRO_B)}</div>`;

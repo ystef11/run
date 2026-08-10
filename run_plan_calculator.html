@@ -291,7 +291,6 @@
       <div class="fld goalOnly"><label>Длительность плана</label><select id="planWeeks"></select><div class="hint">недель; меняет дату старта</div></div>
       <div class="fld goalOnly"><label>Дата старта</label><input type="date" id="goalD"><div class="hint">меняет длительность</div></div>
       <div class="fld offOnly"><label>Длительность межсезонья</label><input type="number" id="owWeeks" min="2" max="8" step="1"><div class="hint" id="owWeeksRec">рекомендовано по опыту и текущему объёму</div></div>
-      <div class="fld offOnly"><label>Поддерживающий объём бега</label><input type="number" id="owVol" min="0" max="160" step="1"><div class="hint" id="owVolRec">в тех же единицах, что текущий объём</div></div>
       <div class="fld goalOnly" style="grid-column:1/-1"><label>Промежуточные старты</label>
         <div id="tuneList"></div>
         <button type="button" class="btn sec" id="addTuneBtn" style="padding:5px 12px;font-size:12px;margin-top:4px">+ добавить старт</button>
@@ -359,7 +358,7 @@
         <div class="hint" id="tgtRange">рекомендуемый диапазон появится после ввода результатов</div>
         <div id="goalEstimate" style="font-size:12.5px;line-height:1.4;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--accent)">—</div></div>
       <div class="fld"><label>Беговых тренировок/нед</label>
-        <select id="runs"><option>3</option><option>4</option><option>5</option><option selected>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
+        <select id="runs"><option value="2">2</option><option>3</option><option>4</option><option>5</option><option selected>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select>
         <div class="hint" id="runsRec"></div></div>
       <div class="fld"><label>Пиковый объём</label>
         <input type="number" id="peakVol" value="95" min="25" max="260" step="1">
@@ -2362,7 +2361,12 @@ function buildPlan(cfgIn){
       // Марафон/ультра в фазе специфики: работа в целевом темпе — главный стимул, её доля законно выше
       // (классические марафонские планы дают 30–35% времени недели в МР в пиковых неделях).
       const specPhase=(phase==='spec'||phase==='peak')&&(isUltra||goalDist>=21000);
-      const HARD_SHARE=0.12, MODHARD_SHARE=(baseRuns<=3?0.42:(specPhase?0.36:0.30));
+      // 10 км в своей спец./пиковой фазе тоже законно несёт больше околопороговой работы (круизные/порог
+      // @10к — это специфика дистанции, не "лишняя" интенсивность), поэтому бюджет ослаблен так же, как
+      // у полумарафона/марафона/ультры, а не остаётся общим потолком 0.30 (см. разбор — короткие "N' непрерывно"
+      // после агрессивной резки бюджетом).
+      const specPhase10k=(phase==='spec'||phase==='peak')&&goalDist>=10000&&goalDist<21000;
+      const HARD_SHARE=0.12, MODHARD_SHARE=(baseRuns<=3?0.42:((specPhase||specPhase10k)?0.36:0.30));
       // Границы трёхзонной (поляризованной) модели:
       //   hard — от ПОРОГОВОГО темпа и быстрее (порог, МПК, повторы);
       //   mod  — «умеренная» работа между лёгким и порогом: марафонский/полумарафонский/ультра-темп, Z3;
@@ -2416,8 +2420,20 @@ function buildPlan(cfgIn){
         scan(best.x.steps,null);
         if(!target)return false;
         const isSpec=/МР|ПМ-темп|Ультра-темп|целево|КЛЮЧЕВАЯ/i.test(best.x.name||'');
-        const minWorkSec=isSpec?900:360;   // 15 мин специфики — минимум, ниже которого сессия теряет смысл
-        if(par&&par.n>1){par.n--;return true;}                      // сперва убираем повтор
+        // Порог (z==='thr') держим не короче ~12 мин на блок/повтор — короче он физиологически почти
+        // бесполезен для LT2-адаптации (см. разбор плана: раньше общий пол 360с/6мин давал "Порог 6' непрерывно").
+        const isThr=best.x.z==='thr';
+        const minWorkSec=isSpec?900:(isThr?720:360);
+        // Если в сессии всего 2 повтора, снятие ЦЕЛОГО повтора режет суммарную пороговую работу вдвое за один
+        // шаг — слишком грубо (см. разбор: "Порог 2x10'" одним шагом резки превращался в "Порог 10' непрерывно").
+        // Поэтому при n===2 сначала укорачиваем сам отрезок до пола minWorkSec, и только когда он уже у пола,
+        // снимаем повтор. При n>2 снятие одного повтора убирает меньшую долю — прежнее поведение оставлено.
+        if(par&&par.n>2){par.n--;return true;}
+        if(par&&par.n===2){
+          if(target.end==='time'&&target.v>minWorkSec){target.v-=60;return true;}
+          if(target.end==='distance'&&target.v>(isSpec?2000:400)){target.v-=200;return true;}
+          par.n--;return true;
+        }
         if(target.end==='time'&&target.v>minWorkSec){target.v-=60;return true;}
         if(target.end==='distance'&&target.v>(isSpec?2000:400)){target.v-=200;return true;}
         // ДЛИННУЮ никогда не превращаем в лёгкий бег — это ключевая тренировка недели; у неё убираем
@@ -2449,11 +2465,19 @@ function buildPlan(cfgIn){
         delete best.x.note; delete best.x.fuel;
         notes.push(`Неделя ${i+1}: интенсивной работы получалось слишком много для объёма ≈${Math.round(wkm)} км — одна качественная тренировка заменена лёгким бегом ${hm(em)}. Доля времени в интенсивности важнее, чем число «галочек» качественных.`);
         return true;};
+      // Раньше "мягкие" срезки (снять повтор/убрать 60 с) проходили молча — note добавлялся только на
+      // финальных, самых грубых сценариях (замена на лёгкий/укоротить длинную). Из-за этого в самом плане
+      // не было видно, что порог/МПК урезаны бюджетом интенсивности — это выглядело как будто так и
+      // задумано (см. разбор плана). Считаем число мягких срезок и добавляем одну сводную note на неделю.
+      let softTrims=0;
       for(let guard=0;guard<300;guard++){
         const z=measure(); if(z.t<45)break;
-        if(z.h/z.t>HARD_SHARE){ if(trimOnce('hard'))continue; }
-        if((z.h+z.mo)/z.t>MODHARD_SHARE){ if(trimOnce('mod'))continue; if(trimOnce('hard'))continue; }
+        if(z.h/z.t>HARD_SHARE){ if(trimOnce('hard')){softTrims++;continue;} }
+        if((z.h+z.mo)/z.t>MODHARD_SHARE){ if(trimOnce('mod')){softTrims++;continue;} if(trimOnce('hard')){softTrims++;continue;} }
         break;
+      }
+      if(softTrims>0){
+        notes.push(`Неделя ${i+1}: интенсивная работа (порог/МПК) сокращена бюджетом интенсивности — доля жёсткой/умеренной нагрузки была выше нормы для объёма ≈${Math.round(wkm)} км (${softTrims} шаг${softTrims===1?'':(softTrims<5?'а':'ов')} резки).`);
       }
       // имена содержат параметры работы (Nx1000, 30' непрерывно) — после сокращений их надо пересобрать,
       // иначе название разойдётся с содержимым, а классификатор зон читает именно название
@@ -2734,28 +2758,50 @@ function buildOffseasonPlan(cfgIn){
   if(!cfg.startISO)return {error:'Укажите дату начала плана.'};
   const exp=cfg.exp||'inter';
   const volUnit=cfg.volUnit||'km';
+  const wantLong=(cfg.longDow==null)?null:clamp(+cfg.longDow,0,6);   // выбранный пользователем день длинной (0=Пн...6=Вс), null = «Авто»
   const OFF_EASY_SEC=330, OFF_REC_SEC=380;   // сек/км — те же дефолтные зональные темпы (Z2/Z1), что и в редакторе (ZPACE_DEF), пока форма неизвестна
   const curVolRaw=(+cfg.curVol)>0?+cfg.curVol:0;
   const curVolKm=curVolRaw>0?(volUnit==='h'?Math.round(curVolRaw*3600/OFF_EASY_SEC):curVolRaw):0;
   const totalWeeks=clamp(Math.round(+cfg.owWeeks)||recommendOffseasonWeeks(exp,curVolKm),2,8);
-  const maintVolKm=Math.max(6,Math.round(+cfg.owVol)||recommendOffseasonVolume(curVolKm));
-  const runsPerWeek=exp==='novice'?2:(curVolKm>0&&curVolKm<25?3:4);
-  const strPerWeek=offseasonStrengthPerWeek(exp);
+  const maintVolKm=Math.max(6,Math.round(+cfg.peakVol)||recommendOffseasonVolume(curVolKm));
+  const runsPerWeek=clamp(Math.round(+cfg.runs)||offseasonRunsPerWeek(exp,curVolKm),1,7);
+  const strPerWeek=(cfg.strength!=null&&cfg.strength!==''&&!isNaN(+cfg.strength))?clamp(+cfg.strength,0,3):offseasonStrengthPerWeek(exp);
   const subPhases=offseasonSubPhases(totalWeeks);
   const start=toMonday(dParse(cfg.startISO));
   const tag=(cfg.tag||'[OFF]').trim()||'[OFF]';
   const STR_SETS={intro:[OFF_INTRO_A,OFF_INTRO_B],max:(exp==='novice'?[OFF_MAX_A,OFF_MAX_B]:[OFF_MAX_A,OFF_MAX_B,OFF_MAX_C]),power:[OFF_POWER_A,OFF_POWER_B]};
   const PHLABEL={intro:'Втягивание',max:'Максимальная сила',power:'Сила-мощность'};
-  // силовые дни недели (0=Пн...6=Вс): 2/нед — Пн/Чт, 3/нед — Пн/Ср/Пт (без повторов подряд, т.к. между ними ≥1 день)
-  const STR_DOW={2:[0,3],3:[0,2,4]}[strPerWeek]||[0,3];
-  const freeDow=[0,1,2,3,4,5,6].filter(d=>!STR_DOW.includes(d));
+  // силовые дни недели (0=Пн...6=Вс): 0/нед — без силовых, 1/нед — Ср, 2/нед — Пн/Чт, 3/нед — Пн/Ср/Пт
+  // (без повторов подряд, т.к. между ними ≥1 день). strPerWeek теперь может прийти явным cfg.strength (в т.ч. 0),
+  // поэтому карта должна покрывать 0..3 явно — раньше отсутствующий ключ 0 «проваливался» в дефолт [0,3].
+  let STR_DOW=({0:[],1:[2],2:[0,3],3:[0,2,4]})[strPerWeek]||[0,3];
+  // если пользователь выбрал день длинной, который совпадает с силовым днём — сдвигаем силовую на другой день,
+  // чтобы длинная гарантированно могла попасть на выбранный день (см. wantLong ниже)
+  if(wantLong!=null&&STR_DOW.includes(wantLong)){
+    STR_DOW=STR_DOW.filter(d=>d!==wantLong);
+    const candOrder=[3,0,5,1,4,2,6];
+    const repl=candOrder.find(d=>d!==wantLong&&!STR_DOW.includes(d));
+    if(repl!=null)STR_DOW=STR_DOW.concat([repl]).sort((a,b)=>a-b);
+  }
+  let freeDow=[0,1,2,3,4,5,6].filter(d=>!STR_DOW.includes(d));
   const pickRunDow=n=>{ n=Math.min(n,freeDow.length); if(n<=0)return [];
     const step=freeDow.length/n; const set=new Set();
     for(let i=0;i<n;i++)set.add(freeDow[Math.min(freeDow.length-1,Math.round(i*step))]);
     return Array.from(set).sort((a,b)=>a-b); };
-  const runDow=pickRunDow(runsPerWeek);
-  const longDow=runDow.length?runDow[0]:null;             // первый беговой день недели — под (укороченную) длинную
-  const strideDow=runDow.length>1?runDow[runDow.length-1]:null; // последний беговой день — под страйды (не длинная)
+  let runDow=pickRunDow(runsPerWeek);
+  // принудительно ставим длинную на выбранный пользователем день, если это возможно (не силовой день),
+  // заменяя ближайший (по круговому расстоянию дня недели) уже выбранный беговой день — количество дней бега не меняется
+  if(wantLong!=null&&!STR_DOW.includes(wantLong)&&!runDow.includes(wantLong)&&runDow.length>0){
+    const circDist=(a,b)=>Math.min(Math.abs(a-b),7-Math.abs(a-b));
+    let closestIdx=0, closestDist=Infinity;
+    runDow.forEach((d,i)=>{ const dist=circDist(d,wantLong); if(dist<closestDist){closestDist=dist; closestIdx=i;} });
+    runDow[closestIdx]=wantLong;
+    runDow=runDow.sort((a,b)=>a-b);
+  }
+  const longDow=(wantLong!=null&&runDow.includes(wantLong))?wantLong:(runDow.length?runDow[0]:null);
+  // последний беговой день (по возрастанию) — под страйды; в редком случае runsPerWeek===2 может совпасть с longDow
+  // (тогда страйды просто не добавятся к длинной, см. withStrides ниже — не над-инженерим, это безобидный край).
+  const strideDow=runDow.length>1?runDow[runDow.length-1]:null;
   let strCounter=0;
   const weeks=[], workouts=[];
   for(let wi=0; wi<totalWeeks; wi++){
@@ -3286,7 +3332,7 @@ function chartsFromEdit(){
 }
 function renderStaticFromEdit(cfgRef,forExport){
   const weeks=groupEditByWeek(EDIT);
-  return weeks.map(g=>{
+  return weeks.map((g,gi)=>{
     let wkm=0,wmin=0,longKm=0;
     const rows=g.items.map(w=>{
       const isRun=w.kind==='run';
@@ -3304,7 +3350,7 @@ function renderStaticFromEdit(cfgRef,forExport){
         <td class="ses"><b>${esc(w.name)}</b> — ${esc(desc)}${km?` <span class="kmref">≈${km.toFixed(km<10?1:0)} км · ${hm(min)}</span>`:(min?` <span class="kmref">${hm(min)}</span>`:'')}${fuel?` <span class="fuel">~${fuel.gph} г/ч · всего ~${fuel.total} г ≈ ${fuel.gels} гел.</span>`:''} &nbsp;<span class="hrv">${esc(tgt)}</span></td>
         ${forExport?'':(isRest?'<td class="rowact"></td>':`<td class="rowact"><button class="edbtn" onclick="event.stopPropagation();openEditModal(${w._idx})" title="Изменить">✎</button><button class="edbtn del" onclick="event.stopPropagation();deleteWorkout(${w._idx})" title="Удалить">🗑</button></td>`)}</tr>`;
     }).join('');
-    return `<div class="week"><div class="whead"><div class="wmeta"><div class="dates">Неделя от ${fmtDM(dParse(g.mon))}</div></div>
+    return `<div class="week"><div class="whead"><div class="bib mono">${gi+1}</div><div class="wmeta"><div class="dates">Неделя от ${fmtDM(dParse(g.mon))}</div></div>
       <div class="vol"><div class="num mono">≈${Math.round(wkm)}<small> км</small></div><div class="lbl">≈${hm(wmin)} ч/нед${longKm?` · долгая ≈${Math.round(longKm)} км`:''}</div></div></div>
       <table><tbody>${rows}</tbody></table></div>`;
   }).join('');
@@ -3313,7 +3359,8 @@ function renderStaticFromEdit(cfgRef,forExport){
 // флаги ручного ввода объявляем ДО initDates (иначе TDZ при первом recalcEstimate)
 let sliderTouched=false;
 let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false, tagTouched=false, tgtTouched=false;
-let owWeeksTouched=false, owVolTouched=false;   // межсезонье: те же флаги ручного ввода, что у peakVol/runs/strength выше
+let owWeeksTouched=false;   // межсезонье: длительность (owWeeks) — свой авто-флаг; объём/бег/силовая межсезонья
+                             // используют общие флаги peakTouched/runsTouched/strTouched (общие поля с goal-режимом)
 // показать/скрыть поля, специфичные для режима плана («Под цель» vs «Межсезонье»); DOM не удаляется — только display
 function updatePlanModeUI(){
   const mode=($('planMode')&&$('planMode').value)||'goal';
@@ -3323,7 +3370,7 @@ function updatePlanModeUI(){
 }
 // любое изменение в блоке «Исходные данные» сбрасывает ручной ввод в «Параметрах плана»,
 // чтобы авто-вычисляемые поля (цель, объём, тренировки/нед, силовые, тег) пересчитались от новых вводных
-function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouched=false; tagTouched=false; tgtTouched=false; owWeeksTouched=false; owVolTouched=false;}
+function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouched=false; tagTouched=false; tgtTouched=false; owWeeksTouched=false;}
 (function initDates(){
   const t=new Date();t.setHours(0,0,0,0);
   const nm=dAdd(t,((8-t.getDay())%7)||7);
@@ -3351,10 +3398,11 @@ function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouch
   $('strength').addEventListener('change',()=>{strTouched=true; recalcEstimate();});
   $('tag').addEventListener('input',()=>{tagTouched=true;});
   const sl=$('slider'); if(sl)sl.addEventListener('input',()=>{sliderTouched=true;recalcEstimate();});
-  // межсезонье: переключатель режима + флаги ручного ввода owWeeks/owVol (тот же паттерн, что peakVol/runs выше)
+  // межсезонье: переключатель режима + флаг ручного ввода owWeeks (тот же паттерн, что peakVol/runs выше;
+  // объём/бег/силовая межсезонья используют общие поля/флаги peakVol+peakTouched/runs+runsTouched/strength+strTouched,
+  // для которых слушатели уже зарегистрированы выше для goal-режима)
   const pm=$('planMode'); if(pm)pm.addEventListener('change',()=>{updatePlanModeUI(); recalcEstimate();});
   const owW=$('owWeeks'); if(owW)owW.addEventListener('input',()=>{owWeeksTouched=true; recalcEstimate();});
-  const owV=$('owVol'); if(owV)owV.addEventListener('input',()=>{owVolTouched=true; recalcEstimate();});
   updatePlanModeUI();
   // делегирование на весь блок «Исходные данные» (в т.ч. динамические строки результатов/промежуточных стартов,
   // день длинной, кросс-тренировки) — capture:true, чтобы флаги сбросились ДО обработчиков конкретных полей выше
@@ -3455,6 +3503,8 @@ function recommendOffseasonVolume(curVolKm){
 }
 // Частота силовых в межсезонье: опытный/средний — 3 раза/нед, новичок — 2 (восстановление важнее объёма силовой).
 function offseasonStrengthPerWeek(exp){ return exp==='novice'?2:3; }
+// Частота бега в межсезонье: новичок — 2, средний/опытный с малым текущим объёмом — 3, иначе — 4.
+function offseasonRunsPerWeek(exp,curVolKm){ return exp==='novice'?2:(curVolKm>0&&curVolKm<25?3:4); }
 // Под-фазы силовой внутри межсезонья по неделям: Втягивание (~25-30%, мин. 1 нед.) → Максимальная сила
 // (~45-55%) → Сила-мощность (~20-25%, бридж обратно в обычную базу). Для очень коротких циклов (2-3 нед.)
 // фазы ужимаются, но каждая, где это возможно, сохраняет хотя бы одну неделю.
@@ -3521,8 +3571,10 @@ function readResRows(){return Array.from(document.querySelectorAll('#resList .re
 function setResRows(list){$('resList').innerHTML='';
   const arr=(list&&list.length?list:[{dist:10000,time:'41:30'}]);
   arr.forEach(r=>addResRow(r.dist,r.time||(r.sec?fmtT(r.sec):'')));}
-// живой пересчёт авто-полей межсезонья (owWeeks/owVol) — тот же паттерн «авто, пока не тронуто руками», что
-// recalcEstimate() использует для peakVol/runs/strength; никакого VDOT/прогноза здесь не считаем.
+// живой пересчёт авто-полей межсезонья — тот же паттерн «авто, пока не тронуто руками», что recalcEstimate()
+// использует в goal-режиме для owWeeks (своё поле) и для runs/strength/peakVol (общие поля «Параметров плана»,
+// те же DOM-элементы и флаги ручного ввода runsTouched/strTouched/peakTouched, что и в goal-режиме).
+// Никакого VDOT/прогноза здесь не считаем.
 function recalcOffseasonEstimate(){
   try{
     const curVol=+($('curVol')&&$('curVol').value)||0, volUnit=($('volUnit')&&$('volUnit').value)||'km';
@@ -3532,9 +3584,15 @@ function recalcOffseasonEstimate(){
     const recW=recommendOffseasonWeeks(exp,curVolKm);
     const recV=recommendOffseasonVolume(curVolKm);
     if($('owWeeks')&&!owWeeksTouched)$('owWeeks').value=recW;
-    if($('owVol')&&!owVolTouched)$('owVol').value=recV;
     if($('owWeeksRec'))$('owWeeksRec').textContent='рекомендовано ≈'+recW+' нед.'+(owWeeksTouched?' · задано вручную':'');
-    if($('owVolRec'))$('owVolRec').textContent='рекомендовано ≈'+recV+' км/нед'+(volUnit==='h'?' (оценочно из ч/нед)':'')+(owVolTouched?' · задано вручную':'');
+    if($('peakVol')&&!peakTouched)$('peakVol').value=recV;
+    if($('peakRec'))$('peakRec').textContent='рекомендовано ≈'+recV+' км/нед'+(volUnit==='h'?' (оценочно из ч/нед)':'')+(peakTouched?' · задано вручную':'');
+    const recRuns=offseasonRunsPerWeek(exp,curVolKm);
+    if($('runs')&&!runsTouched)$('runs').value=recRuns;
+    if($('runsRec'))$('runsRec').textContent='рекомендовано '+recRuns+(runsTouched?' · задано вручную':'');
+    const recStr=offseasonStrengthPerWeek(exp);
+    if($('strength')&&!strTouched)$('strength').value=recStr;
+    if($('strRec'))$('strRec').textContent='рекомендовано '+recStr+(strTouched?' · задано вручную':'');
   }catch(e){}
 }
 function recalcEstimate(){
@@ -3588,10 +3646,16 @@ function recalcEstimate(){
     // целевой VDOT (для ультры — марафон-эквивалент по Ригелю); амбициозность — насколько цель выше текущей формы (~6% VDOT ≈ потолок за цикл)
     let ambition=0, vdGoal=null;
     const tgtSecNow=parseT(($('tgtGoal').value||'').trim());
-    if(tgtTouched&&tgtSecNow){                                  // цель из поля учитываем только если её реально ввели руками —
-                                                                  // иначе там может быть авто-значение с прошлого цикла (другие курс-поправки),
-                                                                  // и по кругу оно будет «утаскивать» дальше расчёт объёма
-
+    // ИСПРАВЛЕНО: раньше vdGoal (и, соответственно, «под цель») считался только если поле цели тронуто руками
+    // (tgtTouched). Но в авто-режиме поле НЕ пустое — в конце предыдущего пересчёта туда уже записано
+    // самосогласованное значение (realistic, из объёма/формы, см. запись в поле ниже: `if(!tgtTouched)...`).
+    // Из-за старого условия «под цель» в авто-режиме игнорировало эту самосогласованную цель и откатывалось
+    // на голый корридор по дистанции (corrBase) — расходясь с фактическим объёмом, от которого эта же цель
+    // была посчитана. Теперь используем tgtSecNow независимо от touched-состояния: в авто-режиме оно уже
+    // само по себе выведено из объёма/формы, а в ручном — это явный ввод пользователя. Разовое устаревание
+    // на один пересчёт при смене курс-поправок (рельеф/жара/высота) самокорректируется следующим пересчётом
+    // (поле перезаписывается ниже каждый раз, когда !tgtTouched).
+    if(tgtSecNow){
       const tgtSecNowClean=ca.toClean(tgtSecNow);               // поле хранит реальное (курс-дисконтированное) время — под VDOT берём чистый эквивалент
       vdGoal=gd>42195?vdot(42195,riegelInv(tgtSecNowClean,gd)):vdot(gd,tgtSecNowClean);
       if(anchor0)ambition=clamp((vdGoal-anchor0)/(anchor0*0.06),0,1);
@@ -3790,21 +3854,24 @@ function readCfg(){
 
 // ================= межсезонье / переходный период: чтение формы =================
 // Никакой валидации гонки/цели: межсезонью не нужны goalDist/tgtGoal/tuneRaces/lthr и т.п. — только базовые
-// вводные + два новых авто-поля (owWeeks/owVol), заполненные recalcOffseasonEstimate() тем же паттерном
-// «авто + флаг ручного ввода», что peakVol/runs/strength в readCfg (см. owWeeksTouched/owVolTouched ниже).
+// вводные + длительность (owWeeks, авто-поле по тому же паттерну «авто + флаг ручного ввода», см. owWeeksTouched)
+// + общие поля «Параметров плана» (runs/strength/peakVol/longDow) — те же, что использует goal-режим в readCfg();
+// в offseason-режиме их авто-подстановкой занимается recalcOffseasonEstimate().
 function readOffseasonCfg(){
   if(!$('startD').value)throw 'Укажите дату начала плана.';
   const exp=($('exp')&&$('exp').value)||'inter';
   const volUnit=($('volUnit')&&$('volUnit').value)||'km';
   const curVol=+($('curVol')&&$('curVol').value)||null;
   const owWeeksVal=$('owWeeks')&&$('owWeeks').value?+$('owWeeks').value:null;
-  const owVolVal=$('owVol')&&$('owVol').value?+$('owVol').value:null;
   const cfg={planMode:'offseason',
     startISO:$('startD').value,
     age:+($('age')&&$('age').value)||35,weight:+($('weight')&&$('weight').value)||70,
     curVol,volUnit,exp,
     owWeeks:owWeeksVal||undefined,   // buildOffseasonPlan сам подставит recommendOffseasonWeeks, если пусто
-    owVol:owVolVal||undefined,
+    runs:+(($('runs')&&$('runs').value))||undefined,
+    strength:($('strength')&&$('strength').value!=='')?+$('strength').value:undefined,
+    peakVol:+(($('peakVol')&&$('peakVol').value))||undefined,
+    longDow:($('longDow')&&$('longDow').value!=='')?+$('longDow').value:null,
     tag:($('tag')&&$('tag').value||'[OFF]').trim(),
     warnings:[]};
   return cfg;

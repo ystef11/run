@@ -518,23 +518,48 @@ const strides=(n,R)=>rp(n,[st('interval','time',20,PCT(R.str),'Ускорени�
 // Клэмп на суммарный объём "жёсткой" работы качественной сессии (без разминки/заминки/восстановления) — раньше
 // число повторов клэмпилось само по себе (обычно 3..7), одинаково независимо от длины отрезка: 7×200 м — это
 // неполные 2 мин работы, а 7×1000 м на пороге — уже отдельная тяжёлая тренировка (см. правки #5, обсуждение
-// нерелевантности коэффициента qDiv/клэмпа реповов без учёта длительности отрезка). Здесь оба базовых хелпера,
+// нерелевантности коэффициента qDiv/клэмпа реповов без учёта длительности отрезка). Здесь базовые хелперы,
 // через которые строится подавляющее большинство интервальных повторов в плане, подгоняют переданное сверху
 // число повторов так, чтобы СУММАРНОЕ время работы держалось в разумном диапазоне одной сессии — это не
 // замена существующим (уже неплохо откалиброванным для конкретных дистанций) поправкам вида n±k в ротациях
 // выше по цепочке, а защитный потолок/пол ПОВЕРХ них на случай сочетаний объёма/дистанции, для которых те
 // поправки не рассчитаны.
-const QWORK_MIN_MIN=6, QWORK_MAX_MIN=32;
-const clampRepsToWorkMin=(n,perRepMin)=>{
+//
+// Диапазон суммарной работы — НЕ одно число на все типы нагрузки: короткие быстрые повторы (экономичность/
+// скорость, 200–500 м, полное восстановление между) физиологически переносят МЕНЬШЕ суммарного времени в
+// усилии за сессию, чем аэробная мощность (МПК 600–2000 м), а порог/темп — самый широкий нормальный диапазон
+// (у опытных марафонцев ближе к старту суммарная пороговая работа доходит до 40 мин, см. "Порог 2x20'"/
+// "40' непрерывно"). Горки — RPE-работа, ближе по суммарному времени к speed, чем к thr.
+// Верхняя граница дополнительно масштабируется по опыту бегуна (WORK_EXP_BOOST) — то же отношение
+// "опыт → переносимость нагрузки", что уже используется в RAMPEXP для роста объёма.
+const WORKBOUNDS={
+  speed:[4,15],   // короткие быстрые повторы (≤500 м) — экономичность/скорость, полное восстановление
+  // Пол для vo2 намеренно НЕ поднят выше старого общего минимума (6): часть vo2-сессий — осознанно урезанные
+  // варианты (разгрузочная неделя downQ, "Math.max(3,n-2)" и т.п.) — поднятый пол забивал бы эту редукцию.
+  // Верхняя граница ужесточена (26 вместо 32) — так суммарная аэробная работа не расползается на длинных отрезках.
+  vo2:  [6,26],   // МПК / аэробная мощность (600–2000 м)
+  thr:  [10,42],  // порог/темп — самый широкий физиологически нормальный диапазон
+  mp:   [15,50],  // марафонский темп непрерывно/повторами
+  hill: [4,15],   // короткие/обычные горки (RPE, не по темпу) — по суммарному времени ближе к speed
+  hillLong:[8,25] // затяжные подъёмы (силовая выносливость) — дольше горок, короче классического порога
+};
+const WORK_EXP_BOOST={novice:0.85,inter:1.0,adv:1.15};
+const clampRepsToWork=(n,perRepMin,zone,exp)=>{
   n=Math.max(1,Math.round(n||1));
   if(!(perRepMin>0))return n;
-  const lo=Math.max(1,Math.round(QWORK_MIN_MIN/perRepMin));
-  const hi=Math.max(lo,Math.round(QWORK_MAX_MIN/perRepMin));
+  const b=WORKBOUNDS[zone]||WORKBOUNDS.thr;
+  const boost=WORK_EXP_BOOST[exp]||1;
+  const lo=Math.max(1,Math.round(b[0]/perRepMin));
+  const hi=Math.max(lo,Math.round(b[1]*boost/perRepMin));
   return clamp(n,lo,hi);
 };
-const repsD=(n,dist,r,rec)=>{n=clampRepsToWorkMin(n,(dist/1000)*mid(r)/60);
+// zone не задан явно → короткие отрезки (≤500 м, обычно R.rep/R.race5 — "Быстрые"/экономичность) это speed,
+// более длинные (600 м+, обычно R.vo2/R.t10 — "МПК"/"Круизные"/"Ступени") это vo2; там, где отрезок бежится в
+// пороговом/марафонском темпе (R.thr/H/R.mp), зона передаётся явно вызывающей стороной.
+const repsD=(n,dist,r,rec,zone,exp)=>{const z=zone||(dist<=500?'speed':'vo2');
+  n=clampRepsToWork(n,(dist/1000)*mid(r)/60,z,exp);
   return rp(n,[st('interval','distance',dist,PCT(r)),st('recovery','time',rec,HRZ(1))]);};
-const repsT=(n,min,r,recM)=>{n=clampRepsToWorkMin(n,min);
+const repsT=(n,min,r,recM,exp)=>{n=clampRepsToWork(n,min,'thr',exp);
   return rp(n,[st('interval','time',min*60,PCT(r)),st('recovery','time',recM*60,HRZ(1))]);};
 const mpCont=(min,R)=>st('interval','time',min*60,PCT(R.mp),'Марафонский');
 const mpReps=(n,min,recM,R)=>rp(n,[st('interval','time',min*60,PCT(R.mp)),st('recovery','time',recM*60,HRZ(2))]);
@@ -560,7 +585,8 @@ const VOLCORRIDOR={5000:[28,45],10000:[40,60],21097:[55,80],42195:[65,95],60000:
 const VOLPIVOT={5000:38,10000:50,21097:65,42195:90,60000:105,80000:120,100000:135,120000:145,160000:155};
 // ---- параметры недельного роста объёма (правило ~10%), общие для генератора плана и прогноза формы ----
 const RAMP_START_SHARE=.72;   // старт роста к пику, доля пика — используется, ТОЛЬКО когда текущий объём не введён (фолбэк на корридор)
-const RAMP_GROW_CAP=1.10;     // макс. недельный прирост, ×
+const RAMP_GROW_CAP=1.10;     // макс. недельный прирост, × — это ПРЕДЕЛ (аварийный потолок), не темп, по которому строится план
+const RAMP_GROW_TARGET_SHARE=.6; // «оптимальный» темп роста — доля от предела (1.10→1.06, т.е. ~6%/нед); обычные загрузочные недели растут этим темпом, а не предельным
 const RAMP_GROW_FLOOR_KM=3;   // на малых объёмах % даёт слишком мелкий шаг — не менее +3 км/нед
 const RAMPEXP={novice:0.92,inter:1.0,adv:1.12}; // опыт → скорость роста объёма ОТ ТЕКУЩЕГО (уже тренированное тело быстрее возвращает/наращивает объём, чем с нуля)
 // сколько объёма реально успеваем нарастить за buildWeeks недель роста от стартовой точки до peakKm.
@@ -891,7 +917,8 @@ function buildPlan(cfgIn){
   // ---- настроечные коэффициенты генератора (все "магические числа" здесь) ----
   const TUNE={
     startShare:RAMP_START_SHARE, // старт объёма, доля пика
-    growCap:RAMP_GROW_CAP,       // макс. недельный прирост (правило ~10%)
+    growCap:RAMP_GROW_CAP,       // макс. недельный прирост (правило ~10%) — аварийный потолок
+    growTargetShare:RAMP_GROW_TARGET_SHARE, // доля от потолка, которой план растёт в обычном режиме
     growFloorKm:RAMP_GROW_FLOOR_KM, // на малых объёмах 10% — это 2-3 км, физиологически не значимо; разрешаем прирост не меньше этого абсолюта
     downF:.76,            // множитель разгрузочной недели
     taperShares:[.72,.60],// объём 1-й и 2-й недели подводки, доля пика
@@ -1183,15 +1210,41 @@ function buildPlan(cfgIn){
   // а не доля пика «из воздуха»; если объём не введён — старое поведение (доля пика/корридор). Опыт меняет скорость
   // роста ОТ этой точки (адаптированному телу проще наращивать/возвращать объём, чем с нуля) — та же модель, что и в прогнозе формы.
   const startKm0=(cfg.curVol>0)?Math.min(cfg.volUnit==='h'?cfg.curVol*3600/mid(P0.easy):cfg.curVol,cfg.peakKm):cfg.peakKm*TUNE.startShare;
-  const growCapEff=TUNE.growCap*(RAMPEXP[cfg.exp]||1);
+  const growCapEff=TUNE.growCap*(RAMPEXP[cfg.exp]||1);     // предел (аварийный потолок) — НЕ темп плана
+  const growTargetEff=1+(growCapEff-1)*TUNE.growTargetShare; // «оптимальный» темп обычной загрузочной недели — мягче предела
   const kms=new Array(N).fill(0); const types=new Array(N).fill('');
   // ПРОХОД 1 — фаза роста (недели 0..peakIdx). Подводка и неделя гонки заполняются ПОСЛЕ, от ФАКТИЧЕСКИ достигнутого
   // пика: заявленный cfg.peakKm может быть недостижим по правилу ~10%/нед, и тогда доли от него давали недели
   // подводки ВЫШЕ реального пика цикла — подводка перестаёт быть разгрузкой (см. ревью, A2).
+  //
+  // Раньше цель недели считалась как точка на ПРЯМОЙ от startKm0 до peakKm (lerp по номеру недели), а правило
+  // ~10%/нед подключалось только как проверка СВЕРХУ — и почти никогда не срабатывало, потому что сама прямая
+  // почти всегда мельче потолка (при небольшой разнице curVol↔peakVol шаг прямой — доли км/нед, кривая объёма
+  // визуально не отличима от плоской, хотя формально монотонно растёт). Теперь недельная цель считается НЕ от
+  // прямой, а от фактического объёма предыдущей загрузочной недели (prev), компаундингом: план растёт «оптимальным»
+  // темпом (growTargetEff, доля от предела — TUNE.growTargetShare), а к предельному темпу (growCapEff) переходит
+  // только если иначе не успевает дойти до заявленного пика к пиковой неделе. growCapEff остаётся тем, чем и был —
+  // аварийным потолком, а не целевым темпом; «жать 10% каждую неделю подряд» больше не является нормальным режимом.
   let prev=startKm0;
   for(let i=0;i<=peakIdx&&i<N-1;i++){
-    const f=peakIdx===0?1:i/peakIdx;
-    let k=lerp(startKm0,cfg.peakKm,f);
+    let k;
+    if(i===0){
+      k=startKm0; // неделя 1 — точка отсчёта (текущий объём), рост начинается со 2-й недели
+    } else {
+      // «оптимальная» цель — компаундинг от факт. объёма прошлой загрузочной недели, а не доля прямой
+      k=Math.min(cfg.peakKm,Math.max(prev*growTargetEff,prev+TUNE.growFloorKm));
+      const weeksLeft=peakIdx-i; // сколько загрузочных недель (условно) остаётся, включая текущую
+      if(weeksLeft>0&&k<cfg.peakKm){
+        // сколько нужно расти в неделю, чтобы успеть к пиковой неделе оптимальным темпом — если больше
+        // оптимального, ускоряемся, но не выше предела (это и есть единственное законное применение growCapEff)
+        const neededMult=Math.pow(cfg.peakKm/Math.max(prev,1e-6),1/weeksLeft);
+        if(neededMult>growTargetEff){
+          const boostedMult=Math.min(growCapEff,neededMult);
+          k=Math.min(cfg.peakKm,Math.max(prev*boostedMult,prev+TUNE.growFloorKm));
+        }
+      }
+    }
+    if(i===peakIdx)k=cfg.peakKm; // пиковая неделя — обязана быть заявленным пиком (а не подходом к нему)
     if(i===0&&preStartAnchorKm){
       const floor=preStartAnchorKm*0.85; // не более ~15% провала за неделю относительно недавней нагрузки
       if(k<floor){k=floor;notes.push(`Неделя 1 приподнята до ≈${Math.round(k)} км/нед — плавный переход с недавней нагрузки ≈${Math.round(preStartAnchorKm)} км/нед (дальше план продолжает свою обычную прогрессию).`);}
@@ -1208,16 +1261,14 @@ function buildPlan(cfgIn){
       k*=availShare;
       notes.push(`Неделя 1 неполная (${leadDays} адаптационн${leadDays===1?'ый день':'ых дня'} до факт. даты старта) — целевой объём снижен пропорционально с ≈${Math.round(kBefore)} до ≈${Math.round(k)} км, вместо того чтобы сжимать полный объём в оставшиеся дни.`);
     }
-    const growCapAbs=Math.max(prev*growCapEff,prev+TUNE.growFloorKm); // на малых объёмах % даёт слишком мелкий шаг — берём больший из (10%×опыт, +3 км)
-    if(k>growCapAbs&&i>0)k=growCapAbs; // правило ~10% (масштабировано опытом), не менее growFloorKm км/нед (недостижимость пика уже отмечена в прогнозе — см. projectFitness)
     if(i===peakIdx)types[i]='peak';
     const isDownWeek=i>0&&i<peakIdx&&(i+1)%downEvery===0;
     const isRecWeek=tuneRecShareByWeek[i]>0;
-    // ВАЖНО: обрезку от окна восстановления применяем ПОСЛЕ клампа по правилу ~10% — это не часть обычной
+    // ВАЖНО: обрезку от окна восстановления применяем ПОСЛЕ основного расчёта цели — это не часть обычной
     // рамп-кривой, а разовая просадка. И, как и разгрузочную неделю, её нельзя пускать в `prev`: иначе
     // разовое снижение объёма одной недели навсегда утаскивает вниз потолок роста ВСЕХ последующих недель
     // (см. переписку — план переставал восстанавливать темп роста после недели с восстановительным окном).
-    if(isDownWeek){k*=TUNE.downF;types[i]='down';k=applyTuneRecCut(i,k);}
+    if(isDownWeek){k=prev*TUNE.downF;types[i]='down';k=applyTuneRecCut(i,k);}
     else if(isRecWeek){k=applyTuneRecCut(i,k);}
     else prev=k;
     kms[i]=k;
@@ -1307,8 +1358,15 @@ function buildPlan(cfgIn){
   // хотя усилие пороговое; без pk paceOfStep взял бы темп зоны и завысил км недели (см. ревью).
   // Три формата вместо одного: короткие/средние/затяжные — разная нейромышечная и силовая работа.
   const hillVariants=(w,phase)=>{const sp=(phase==='spec'||phase==='peak');
-    const hn=clamp(Math.round(w/14)+hillTier,5,10+hillTier*2), up=(sp?75:60)+hillTier*15;
-    const hnS=clamp(Math.round(w/12)+hillTier*2,6,14), upS=(sp?30:25)+hillTier*5;
+    // Раньше hn/hnS клэмпились ТОЛЬКО по числу подходов, независимо от длительности up/upS — тот же класс
+    // проблемы, что был у repsD/repsT до фикса (число повторов без учёта длины отрезка). Теперь число
+    // подходов подгоняется под суммарное время работы (WORKBOUNDS.hill), а не капается литералом само по себе.
+    const up=(sp?75:60)+hillTier*15, upS=(sp?30:25)+hillTier*5;
+    const hn=clampRepsToWork(Math.round(w/14)+hillTier, up/60, 'hill', cfg.exp);
+    const hnS=clampRepsToWork(Math.round(w/12)+hillTier*2, upS/60, 'hill', cfg.exp);
+    // hnL не нуждается в том же клэмпе: и число подходов (2..5, только от hillTier), и длительность подхода
+    // (150–210 с) уже жёстко ограничены сами по себе, суммарное время держится в разумных 5–17.5 мин без
+    // дополнительной защиты.
     const hnL=clamp(2+hillTier,2,5), upL=(sp?180:150)+hillTier*30;
     return [
       {nm:`Горки ${hn}x${up}"`,rep:hn,up:up,down:Math.round(up*1.4),
@@ -1326,8 +1384,8 @@ function buildPlan(cfgIn){
         coolV(8)],
       note:v.note};};
   // затяжные подъёмы (силовая выносливость под рельеф) — замещают часть пороговых при умеренном/горном тире
-  const hillSupport=(w,phase,R)=>{const m=(phase==='spec'||phase==='peak')?3+hillTier:2+hillTier,
-      dur=(phase==='spec'||phase==='peak')?6:4;
+  const hillSupport=(w,phase,R)=>{const dur=(phase==='spec'||phase==='peak')?6:4,
+      m=clampRepsToWork((phase==='spec'||phase==='peak')?3+hillTier:2+hillTier, dur, 'hillLong', cfg.exp);
     return {nm:`Подъёмы ${m}x${dur}'`,z:'thr',
       steps:[warmV(12),rp(m,[st('interval','time',dur*60,HRZ(3),'Затяжной подъём',R?mid(R.easy):0),
                             st('recovery','time',180,HRZ(1),'Вниз трусцой',R?mid(R.rec):0)]),coolV(8)],
@@ -1351,7 +1409,7 @@ function buildPlan(cfgIn){
   const hmTurn=i=>s>0.65?(i%2===1):s<0.35?(i%3===2):(i%2===0);
   const q1For=(i,w,R,phase,prog)=>{const n=nQ(w);
     if(phase==='taper')return {nm:`Острая ${Math.max(3,n-2)}x1000`,z:'vo2',
-      steps:[warmV(12),repsD(Math.max(3,n-2),1000,R.vo2,90),coolV(10)]};
+      steps:[warmV(12),repsD(Math.max(3,n-2),1000,R.vo2,90,null,cfg.exp),coolV(10)]};
     // УЛЬТРА: без этой ветки Q1 проваливался бы в дефолтную ротацию ниже (МПК n×1000/x400 на R.vo2/R.rep) во ВСЕЙ
     // базовой фазе (~40% цикла) — для 60–160 км это лишний акцент на VO2max, который практически не переносится в
     // результат (см. замечания по плану для ультры: «значительно больше времени в Z1–Z2 и меньше тренировок МПК»).
@@ -1373,17 +1431,17 @@ function buildPlan(cfgIn){
         return {nm:`ПМ-темп ${Math.round(um*0.8)}' непрерывно`,z:'thr',
           steps:[warmV(12),st('interval','time',Math.round(um*0.8)*60,PCT(H),'ПМ-темп'),coolV(8)]};}
       if(goalDist>=10000){const n0=clamp(Math.round(w/TUNE.qDiv),3,6);
-        return {nm:`Круизные ${n0}x1000 @10к`,z:'vo2',steps:[warmV(12),repsD(n0,1000,R.t10,90),coolV(8)]};}
+        return {nm:`Круизные ${n0}x1000 @10к`,z:'vo2',steps:[warmV(12),repsD(n0,1000,R.t10,90,null,cfg.exp),coolV(8)]};}
       const n5=clamp(Math.round(w/TUNE.qDiv)+1,4,8);
-      return {nm:`МПК ${n5}x600 @5к`,z:'vo2',steps:[warmV(12),repsD(n5,600,R.race5,90),coolV(8)]};
+      return {nm:`МПК ${n5}x600 @5к`,z:'vo2',steps:[warmV(12),repsD(n5,600,R.race5,90,null,cfg.exp),coolV(8)]};
     }
     if(isUltra){
       if(hillTier>=1)return hillOpt(w,phase,i,R);   // hillOpt отдаёт готовый {nm,z,steps,note} — без steps здесь был краш (см. ревью)
-      const rot=[{nm:"Порог 2x12'",z:'thr',st:repsT(2,12,R.thr,2)},
+      const rot=[{nm:"Порог 2x12'",z:'thr',st:repsT(2,12,R.thr,2,cfg.exp)},
                  // "Круизные" в классификаторе зон = vo2 (это их смысл в дефолтной ротации), и темп здесь R.t10,
                  // а не R.thr — поэтому z:'vo2', иначе поле z расходилось бы с zoneOfW и с фактическим темпом.
-                 {nm:`Круизные ${Math.max(3,n-1)}x1200`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
-                 {nm:`Экономичность ${n+2}x400`,z:'vo2',st:repsD(n+2,400,R.rep,90),
+                 {nm:`Круизные ${Math.max(3,n-1)}x1200`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120,null,cfg.exp)},
+                 {nm:`Экономичность ${n+2}x400`,z:'vo2',st:repsD(n+2,400,R.rep,90,null,cfg.exp),
                    note:'Короткие быстрые повторы — на экономичность бега, не на выносливость; полное восстановление между.'}][i%3];
       return {nm:rot.nm,z:rot.z,steps:[warmV(15),rot.st,coolV(10)],note:rot.note};
     }
@@ -1395,8 +1453,8 @@ function buildPlan(cfgIn){
     // смысл в дефолтной ротации ниже), а не thr — при переиспользовании этих слов тут аналитика насчитала бы
     // лишний МПК, которого по факту нет. Поэтому здесь только "Темп ..." (без "10к") и "Порог ..." + пейс R.thr.
     if(goalDist>=42000&&(phase==='spec'||phase==='peak')&&!q2WillBeThr(i,phase,prog||0)){
-      const rot=[{nm:`Темп ${n}x1200`,st:repsD(n,1200,R.thr,90)},
-                 {nm:"Порог 3x10'",st:repsT(3,10,R.thr,2)},
+      const rot=[{nm:`Темп ${n}x1200`,st:repsD(n,1200,R.thr,90,'thr',cfg.exp)},
+                 {nm:"Порог 3x10'",st:repsT(3,10,R.thr,2,cfg.exp)},
                  {nm:`Темп непрерывно ${Math.round(lerp(20,32,prog||0))}'`,
                    st:st('interval','time',Math.round(lerp(20,32,prog||0))*60,PCT(R.thr),'Темп')}][Math.floor(i/2)%3];
       return {nm:rot.nm,z:'thr',steps:[warmV(15),rot.st,coolV(10)]};
@@ -1407,11 +1465,11 @@ function buildPlan(cfgIn){
     // (см. ревью плана про удлинение порога ближе к гонке).
     if(goalDist>=21000&&goalDist<42000&&(phase==='spec'||phase==='peak')&&hmTurn(i)){
       const H=hmp(R);
-      const thrOpt=prog>=0.65?(Math.floor(i/2)%2===0?{nm:"Порог 2x20'",st:repsT(2,20,R.thr,3)}:{nm:"Порог 40' непрерывно",st:st('interval','time',2400,PCT(R.thr),'Порог')})
-                  :prog>=0.35?{nm:"Порог 3x15'",st:repsT(3,15,R.thr,2)}
-                  :{nm:"Порог 3x10'",st:repsT(3,10,R.thr,2)};
+      const thrOpt=prog>=0.65?(Math.floor(i/2)%2===0?{nm:"Порог 2x20'",st:repsT(2,20,R.thr,3,cfg.exp)}:{nm:"Порог 40' непрерывно",st:st('interval','time',2400,PCT(R.thr),'Порог')})
+                  :prog>=0.35?{nm:"Порог 3x15'",st:repsT(3,15,R.thr,2,cfg.exp)}
+                  :{nm:"Порог 3x10'",st:repsT(3,10,R.thr,2,cfg.exp)};
       const hmDist=Math.round(lerp(3,4,prog||0));            // отрезки ПМ-темпа растут к старту: 3км → 4км
-      const rot=[{nm:`ПМ-темп ${Math.max(2,n-2)}x${hmDist}км`,st:repsD(Math.max(2,n-2),hmDist*1000,H,150)},
+      const rot=[{nm:`ПМ-темп ${Math.max(2,n-2)}x${hmDist}км`,st:repsD(Math.max(2,n-2),hmDist*1000,H,150,'thr',cfg.exp)},
                  thrOpt,
                  {nm:`ПМ-темп непрерывно ${Math.round(lerp(15,25,prog||0))}'`,
                    st:st('interval','time',Math.round(lerp(15,25,prog||0))*60,PCT(H),'ПМ-темп')}][Math.floor(i/2)%3];
@@ -1429,31 +1487,31 @@ function buildPlan(cfgIn){
       // циклах (мало spec/peak недель) — гарантируем её хотя бы раз, в пиковую неделю перед стартом (см. ревью плана)
       if(phase==='peak'){
         const sp=Math.max(5,n+2);
-        return {nm:`Быстрые ${sp}x300`,z:'vo2',steps:[warmV(15),repsD(sp,300,R.rep,90),coolV(10)],
+        return {nm:`Быстрые ${sp}x300`,z:'vo2',steps:[warmV(15),repsD(sp,300,R.rep,90,null,cfg.exp),coolV(10)],
           note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'};
       }
       // Ползунок s влияет и здесь: акцент скорость — разбавляем короткими быстрыми, порог/ступени почти не
       // ставим; акцент выносливость — чаще ступени/порог, реже голая скорость 300 м (см. ревью — раньше s
       // учитывался только в общей ротации ниже, а эта 10к-специфичная ветка его игнорировала целиком).
       const rot = s<0.35 ? [
-                   {nm:`МПК ${n}x800 @10к`,st:repsD(n,800,R.t10,75)},
-                   {nm:`Быстрые ${Math.max(6,n+3)}x300`,st:repsD(Math.max(6,n+3),300,R.rep,90),
+                   {nm:`МПК ${n}x800 @10к`,st:repsD(n,800,R.t10,75,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(6,n+3)}x300`,st:repsD(Math.max(6,n+3),300,R.rep,90,null,cfg.exp),
                      note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
-                   {nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90)},
-                   {nm:`Быстрые ${Math.max(5,n+2)}x300`,st:repsD(Math.max(5,n+2),300,R.rep,90),
+                   {nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(5,n+2)}x300`,st:repsD(Math.max(5,n+2),300,R.rep,90,null,cfg.exp),
                      note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
                  ][i%4]
                : s>0.65 ? [
-                   {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150)},
-                   {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120)},
-                   {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
+                   {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150,null,cfg.exp)},
+                   {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120,null,cfg.exp)},
+                   {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2,cfg.exp)},
                  ][i%3]
                : [
-                   {nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90)},
-                   {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120)},
-                   {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150)},
-                   {nm:`МПК ${n}x800 @10к`,st:repsD(n,800,R.t10,75)},
-                   {nm:`Быстрые ${Math.max(5,n+2)}x300`,st:repsD(Math.max(5,n+2),300,R.rep,90),
+                   {nm:`МПК ${Math.max(4,n-1)}x1200 @10к`,st:repsD(Math.max(4,n-1),1200,R.t10,90,null,cfg.exp)},
+                   {nm:`МПК ${Math.max(3,n-2)}x1600 @10к`,st:repsD(Math.max(3,n-2),1600,R.t10,120,null,cfg.exp)},
+                   {nm:`Ступени ${Math.max(3,n-2)}x2000`,st:repsD(Math.max(3,n-2),2000,fastThr10,150,null,cfg.exp)},
+                   {nm:`МПК ${n}x800 @10к`,st:repsD(n,800,R.t10,75,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(5,n+2)}x300`,st:repsD(Math.max(5,n+2),300,R.rep,90,null,cfg.exp),
                      note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
                  ][i%5];
       return {nm:rot.nm,z:rot.z||'vo2',steps:[warmV(15),rot.st,coolV(10)],note:rot.note};
@@ -1471,50 +1529,50 @@ function buildPlan(cfgIn){
       // циклах (мало spec/peak недель) — гарантируем её хотя бы раз, в пиковую неделю перед стартом (см. ревью плана)
       if(phase==='peak'){
         const sp=Math.max(6,n+3);
-        return {nm:`Быстрые ${sp}x200`,z:'vo2',steps:[warmV(15),repsD(sp,200,R.rep,90),coolV(10)],
+        return {nm:`Быстрые ${sp}x200`,z:'vo2',steps:[warmV(15),repsD(sp,200,R.rep,90,null,cfg.exp),coolV(10)],
           note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'};
       }
       // Ползунок s: то же самое, что и для 10 км выше — акцент скорость даёт больше коротких быстрых повторов
       // и почти не заходит в ступени/порог; акцент выносливость — наоборот, чаще ступени и явный порог.
       const rot = s<0.35 ? [
-                   {nm:`МПК ${Math.min(12,n+5)}x400 @5к`,st:repsD(Math.min(12,n+5),400,R.race5,75)},
-                   {nm:`Быстрые ${Math.max(7,n+4)}x200`,st:repsD(Math.max(7,n+4),200,R.rep,90),
+                   {nm:`МПК ${Math.min(12,n+5)}x400 @5к`,st:repsD(Math.min(12,n+5),400,R.race5,75,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(7,n+4)}x200`,st:repsD(Math.max(7,n+4),200,R.rep,90,null,cfg.exp),
                      note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
-                   {nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90)},
-                   {nm:`Быстрые ${Math.max(6,n+3)}x200`,st:repsD(Math.max(6,n+3),200,R.rep,90),
+                   {nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(6,n+3)}x200`,st:repsD(Math.max(6,n+3),200,R.rep,90,null,cfg.exp),
                      note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
                  ][i%4]
                : s>0.65 ? [
-                   {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150)},
-                   {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120)},
-                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
+                   {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150,null,cfg.exp)},
+                   {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120,null,cfg.exp)},
+                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2,cfg.exp)},
                  ][i%3]
                : [
-                   {nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90)},
-                   {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120)},
-                   {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150)},
-                   {nm:`МПК ${Math.min(12,n+5)}x400 @5к`,st:repsD(Math.min(12,n+5),400,R.race5,75)},
-                   {nm:`Быстрые ${Math.max(6,n+3)}x200`,st:repsD(Math.max(6,n+3),200,R.rep,90),
+                   {nm:`МПК ${Math.min(8,n+2)}x600 @5к`,st:repsD(Math.min(8,n+2),600,R.race5,90,null,cfg.exp)},
+                   {nm:`МПК ${Math.max(4,n)}x1000 @5к`,st:repsD(Math.max(4,n),1000,R.race5,120,null,cfg.exp)},
+                   {nm:`Ступени ${Math.max(3,n-2)}x1600`,st:repsD(Math.max(3,n-2),1600,fastThr,150,null,cfg.exp)},
+                   {nm:`МПК ${Math.min(12,n+5)}x400 @5к`,st:repsD(Math.min(12,n+5),400,R.race5,75,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(6,n+3)}x200`,st:repsD(Math.max(6,n+3),200,R.rep,90,null,cfg.exp),
                      note:'Короткие быстрые повторы — на экономичность, скорость и каденс, не на выносливость; полное восстановление между.'},
                  ][i%5];
       return {nm:rot.nm,z:rot.z||'vo2',steps:[warmV(15),rot.st,coolV(10)],note:rot.note};
     }
     let rots;
     if(s<0.35){ // акцент скорость: короче и быстрее
-      rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
-            {nm:`МПК ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
-            {nm:`МПК ${n}x800`,st:repsD(n,800,R.vo2,75)},
-            {nm:`Быстрые ${n+1}x600`,st:repsD(n+1,600,R.rep,90)}];
+      rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90,null,cfg.exp)},
+            {nm:`МПК ${n+2}x400`,st:repsD(n+2,400,R.rep,90,null,cfg.exp)},
+            {nm:`МПК ${n}x800`,st:repsD(n,800,R.vo2,75,null,cfg.exp)},
+            {nm:`Быстрые ${n+1}x600`,st:repsD(n+1,600,R.rep,90,null,cfg.exp)}];
     } else if(s>0.65){ // акцент выносливость: круизные, длиннее
-      rots=[{nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
-            {nm:`Круизные ${Math.max(3,n-1)}x1600`,st:repsD(Math.max(3,n-1),1600,R.t10,120)},
-            {nm:`МПК ${Math.max(3,n-1)}x1000`,st:repsD(Math.max(3,n-1),1000,R.vo2,90)},
-            {nm:`Ступени ${Math.max(3,n-1)}x1500`,st:repsD(Math.max(3,n-1),1500,R.t10,105)}];
+      rots=[{nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90,null,cfg.exp)},
+            {nm:`Круизные ${Math.max(3,n-1)}x1600`,st:repsD(Math.max(3,n-1),1600,R.t10,120,null,cfg.exp)},
+            {nm:`МПК ${Math.max(3,n-1)}x1000`,st:repsD(Math.max(3,n-1),1000,R.vo2,90,null,cfg.exp)},
+            {nm:`Ступени ${Math.max(3,n-1)}x1500`,st:repsD(Math.max(3,n-1),1500,R.t10,105,null,cfg.exp)}];
     } else {
-      rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90)},
-            {nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90)},
-            {nm:`МПК ${n+2}x400`,st:repsD(n+2,400,R.rep,90)},
-            {nm:`Круизные ${n}x800`,st:repsD(n,800,R.t10,75)}];
+      rots=[{nm:`МПК ${n}x1000`,st:repsD(n,1000,R.vo2,90,null,cfg.exp)},
+            {nm:`Темп10к ${n}x1200`,st:repsD(n,1200,R.t10,90,null,cfg.exp)},
+            {nm:`МПК ${n+2}x400`,st:repsD(n+2,400,R.rep,90,null,cfg.exp)},
+            {nm:`Круизные ${n}x800`,st:repsD(n,800,R.t10,75,null,cfg.exp)}];
     }
     // больше слотов горок при более крутом/горном профиле. Раньше в ротацию добавлялся ОДИН И ТОТ ЖЕ объект
     // hillOpt несколько раз — соседние индексы давали идентичную тренировку; теперь каждый слот берёт свой
@@ -1529,14 +1587,14 @@ function buildPlan(cfgIn){
     return {nm:rot.nm,z:'vo2',steps:[warmV(15),rot.st,coolV(10)],note:rot.note};};
   // разгрузочная качественная: короче обычной и по акценту бегунка (без хардкода одной тренировки)
   const downQ=(i,w,R)=>{const n=nQ(w),k=i%2; // разгрузка тоже чередуется — 2 варианта на профиль
-    if(s<0.35){const rot=[{nm:`Освежающие ${Math.min(8,n+2)}x400`,z:'vo2',st:repsD(Math.min(8,n+2),400,R.rep,100)},
-                          {nm:'Свежий темп 2x6\'',z:'thr',st:repsT(2,6,R.t10,2)}][k];
+    if(s<0.35){const rot=[{nm:`Освежающие ${Math.min(8,n+2)}x400`,z:'vo2',st:repsD(Math.min(8,n+2),400,R.rep,100,null,cfg.exp)},
+                          {nm:'Свежий темп 2x6\'',z:'thr',st:repsT(2,6,R.t10,2,cfg.exp)}][k];
       return {nm:rot.nm,z:rot.z,steps:[warmV(12),rot.st,coolV(8)]};}
-    if(s>0.65){const rot=[{nm:'Темп10к 2x10\'',z:'thr',st:repsT(2,10,R.t10,2)},
-                          {nm:`Круизные ${Math.max(3,n-1)}x1000`,z:'vo2',st:repsD(Math.max(3,n-1),1000,R.t10,90)}][k];
+    if(s>0.65){const rot=[{nm:'Темп10к 2x10\'',z:'thr',st:repsT(2,10,R.t10,2,cfg.exp)},
+                          {nm:`Круизные ${Math.max(3,n-1)}x1000`,z:'vo2',st:repsD(Math.max(3,n-1),1000,R.t10,90,null,cfg.exp)}][k];
       return {nm:rot.nm,z:rot.z,steps:[warmV(12),rot.st,coolV(8)]};}
-    const rot=[{nm:'Порог 2x8\'',z:'thr',st:repsT(2,8,R.thr,2)},
-               {nm:`МПК ${Math.max(3,n-2)}x600`,z:'vo2',st:repsD(Math.max(3,n-2),600,R.vo2,90)}][k];
+    const rot=[{nm:'Порог 2x8\'',z:'thr',st:repsT(2,8,R.thr,2,cfg.exp)},
+               {nm:`МПК ${Math.max(3,n-2)}x600`,z:'vo2',st:repsD(Math.max(3,n-2),600,R.vo2,90,null,cfg.exp)}][k];
     return {nm:rot.nm,z:rot.z,steps:[warmV(12),rot.st,coolV(8)]};};
   // Пороговая работа ПРОГРЕССИРУЕТ по ходу цикла: раньше это была фиксированная ротация из 6 вариантов по i%6,
   // и порог в 12-ю неделю был таким же, как в 1-ю (см. ревью, C6 — у полумарафонской ветки прогрессия была,
@@ -1546,10 +1604,10 @@ function buildPlan(cfgIn){
     const pg=clamp(prog==null?0.35:prog,0,1);
     const total=Math.round(lerp(20,40,pg));                     // суммарные минуты в пороге
     const rots=[
-      ()=>{const n=clamp(Math.round(total/10),2,4),m=Math.max(6,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,2)};},
-      ()=>{const n=clamp(Math.round(total/13),2,3),m=Math.max(8,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,3)};},
+      ()=>{const n=clamp(Math.round(total/10),2,4),m=Math.max(6,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,2,cfg.exp)};},
+      ()=>{const n=clamp(Math.round(total/13),2,3),m=Math.max(8,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,3,cfg.exp)};},
       ()=>{const m=clamp(total,15,35);return {nm:`Порог ${m}' непрерывно`,st:st('interval','time',m*60,PCT(R.thr),'Порог')};},
-      ()=>{const n=clamp(Math.round(total/7),3,5),m=Math.max(5,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,1.5)};}
+      ()=>{const n=clamp(Math.round(total/7),3,5),m=Math.max(5,Math.round(total/n));return {nm:`Порог ${n}x${m}'`,st:repsT(n,m,R.thr,1.5,cfg.exp)};}
     ][i%4];
     const rot=rots();
     return {nm:rot.nm,z:'thr',steps:[warmV(12),rot.st,coolV(8)]};};
@@ -1589,7 +1647,7 @@ function buildPlan(cfgIn){
         const contVariant=m>26
           ?{nm:`ПМ-темп 2x${Math.round(m/2)}'`,st:rp(2,[st('interval','time',Math.round(m/2)*60,PCT(H),'ПМ-темп'),st('recovery','time',180,HRZ(2))])}
           :{nm:`ПМ-темп ${m}' непрерывно`,st:st('interval','time',m*60,PCT(H),'ПМ-темп')};
-        const repVariant={nm:`ПМ-темп ${repN}x${repDist}км`,st:repsD(repN,repDist*1000,H,150)};
+        const repVariant={nm:`ПМ-темп ${repN}x${repDist}км`,st:repsD(repN,repDist*1000,H,150,'thr',cfg.exp)};
         // чередуем непрерывный/сплит формат с интервалами по дистанции — недостающая специфика ПМ-темпа (см. ревью плана)
         const rot=[contVariant,repVariant][i%2];
         return {nm:rot.nm,z:'thr',steps:[warmV(15),rot.st,coolV(10)]};
@@ -1597,51 +1655,51 @@ function buildPlan(cfgIn){
       return q2Thr(i,R,prog);
     }
     if(goalDist>=10000){                     // 10 КМ: круизные @10к + порог
-      if(phase==='taper')return {nm:"Порог 2x8'",z:'thr',steps:[warmV(12),repsT(2,8,R.thr,2),coolV(8)]};
+      if(phase==='taper')return {nm:"Порог 2x8'",z:'thr',steps:[warmV(12),repsT(2,8,R.thr,2,cfg.exp),coolV(8)]};
       if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv),3,6);
         // Ползунок s задаёт долю порога в Q2: акцент скорость — порог редкий (1 из 5, разбавлен короткой
         // быстрой работой); акцент выносливость — порог чаще (2 из 3); баланс — как раньше, 1 из 4.
         const rot = s<0.35 ? [
-                     {nm:`Круизные ${n}x1000 @10к`,z:'vo2',st:repsD(n,1000,R.t10,90)},
-                     {nm:`Быстрые ${n+1}x600 @10к`,z:'vo2',st:repsD(n+1,600,R.t10,75)},
-                     {nm:`Быстрые ${Math.max(5,n+2)}x400 @10к`,z:'vo2',st:repsD(Math.max(5,n+2),400,R.rep,90)},
-                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
-                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
+                     {nm:`Круизные ${n}x1000 @10к`,z:'vo2',st:repsD(n,1000,R.t10,90,null,cfg.exp)},
+                     {nm:`Быстрые ${n+1}x600 @10к`,z:'vo2',st:repsD(n+1,600,R.t10,75,null,cfg.exp)},
+                     {nm:`Быстрые ${Math.max(5,n+2)}x400 @10к`,z:'vo2',st:repsD(Math.max(5,n+2),400,R.rep,90,null,cfg.exp)},
+                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120,null,cfg.exp)},
+                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2,cfg.exp)},
                    ][i%5]
                  : s>0.65 ? [
-                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
-                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
-                     {nm:"Порог 2x15'",z:'thr',st:repsT(2,15,R.thr,2)},
+                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2,cfg.exp)},
+                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120,null,cfg.exp)},
+                     {nm:"Порог 2x15'",z:'thr',st:repsT(2,15,R.thr,2,cfg.exp)},
                    ][i%3]
                  : [
-                     {nm:`Круизные ${n}x1000 @10к`,z:'vo2',st:repsD(n,1000,R.t10,90)},
-                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120)},
-                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2)},
-                     {nm:`Быстрые ${n+1}x600 @10к`,z:'vo2',st:repsD(n+1,600,R.t10,75)},
+                     {nm:`Круизные ${n}x1000 @10к`,z:'vo2',st:repsD(n,1000,R.t10,90,null,cfg.exp)},
+                     {nm:`Круизные ${Math.max(3,n-1)}x1200 @10к`,z:'vo2',st:repsD(Math.max(3,n-1),1200,R.t10,120,null,cfg.exp)},
+                     {nm:"Порог 3x10'",z:'thr',st:repsT(3,10,R.thr,2,cfg.exp)},
+                     {nm:`Быстрые ${n+1}x600 @10к`,z:'vo2',st:repsD(n+1,600,R.t10,75,null,cfg.exp)},
                    ][i%4];
         return {nm:rot.nm,z:rot.z,steps:[warmV(15),rot.st,coolV(10)]};}
       return q2Thr(i,R,prog);
     }
     // 5 КМ: МПК/скорость @5к + короткий порог — короче отрезки, больше повторов, акцент на VO2max
-    if(phase==='taper')return {nm:"Острая 4x400 @5к",z:'vo2',steps:[warmV(12),repsD(4,400,R.race5,75),coolV(8)]};
+    if(phase==='taper')return {nm:"Острая 4x400 @5к",z:'vo2',steps:[warmV(12),repsD(4,400,R.race5,75,null,cfg.exp),coolV(8)]};
     if(inSpec){const n=clamp(Math.round(w/TUNE.qDiv)+1,4,8);
       const rot = s<0.35 ? [
-                   {nm:`МПК ${n}x400 @5к`,z:'vo2',st:repsD(n,400,R.race5,75)},
-                   {nm:`Быстрые ${Math.max(4,n-1)}x600 @5к`,z:'vo2',st:repsD(Math.max(4,n-1),600,R.race5,90)},
-                   {nm:`Быстрые ${Math.max(7,n+3)}x300 @5к`,z:'vo2',st:repsD(Math.max(7,n+3),300,R.rep,90)},
-                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105)},
-                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
+                   {nm:`МПК ${n}x400 @5к`,z:'vo2',st:repsD(n,400,R.race5,75,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(4,n-1)}x600 @5к`,z:'vo2',st:repsD(Math.max(4,n-1),600,R.race5,90,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(7,n+3)}x300 @5к`,z:'vo2',st:repsD(Math.max(7,n+3),300,R.rep,90,null,cfg.exp)},
+                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105,null,cfg.exp)},
+                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2,cfg.exp)},
                  ][i%5]
                : s>0.65 ? [
-                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
-                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105)},
-                   {nm:"Порог 3x8'",z:'thr',st:repsT(3,8,R.thr,2)},
+                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2,cfg.exp)},
+                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105,null,cfg.exp)},
+                   {nm:"Порог 3x8'",z:'thr',st:repsT(3,8,R.thr,2,cfg.exp)},
                  ][i%3]
                : [
-                   {nm:`МПК ${n}x400 @5к`,z:'vo2',st:repsD(n,400,R.race5,75)},
-                   {nm:`Быстрые ${Math.max(4,n-1)}x600 @5к`,z:'vo2',st:repsD(Math.max(4,n-1),600,R.race5,90)},
-                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2)},
-                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105)},
+                   {nm:`МПК ${n}x400 @5к`,z:'vo2',st:repsD(n,400,R.race5,75,null,cfg.exp)},
+                   {nm:`Быстрые ${Math.max(4,n-1)}x600 @5к`,z:'vo2',st:repsD(Math.max(4,n-1),600,R.race5,90,null,cfg.exp)},
+                   {nm:"Порог 2x10'",z:'thr',st:repsT(2,10,R.thr,2,cfg.exp)},
+                   {nm:`Ступени ${Math.max(4,n-2)}x800 @5к`,z:'vo2',st:repsD(Math.max(4,n-2),800,R.race5,105,null,cfg.exp)},
                  ][i%4];
       return {nm:rot.nm,z:rot.z,steps:[warmV(15),rot.st,coolV(10)]};}
     return q2Thr(i,R,prog);
@@ -1774,10 +1832,10 @@ function buildPlan(cfgIn){
         else if(ddPre===4)items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(35)]}];
         else {let t;
           if(isUltra)t={z:'easy',name:'Спокойный бег + ускорения',steps:[easyS(30),strides(4,R)]};
-          else if(goalDist>=42000)t={z:'mp',name:'Настройка 3x1000 @МР',steps:[warm(12),repsD(3,1000,R.mp,90),strides(4,R),cool(8)]};
-          else if(goalDist>=21000){const H=hmp(R);t={z:'thr',name:'Настройка-порог 3x1000 @ПМ',steps:[warm(12),repsD(3,1000,H,90),strides(4,R),cool(8)]};}
-          else if(goalDist>=10000)t={z:'vo2',name:'Настройка 4x400 остро',steps:[warm(12),repsD(4,400,R.rep,90),strides(4,R),cool(8)]};
-          else t={z:'vo2',name:'Острая настройка 3x400 @5к',steps:[warm(12),repsD(3,400,R.race5,90),strides(3,R),cool(8)]};
+          else if(goalDist>=42000)t={z:'mp',name:'Настройка 3x1000 @МР',steps:[warm(12),repsD(3,1000,R.mp,90,'mp',cfg.exp),strides(4,R),cool(8)]};
+          else if(goalDist>=21000){const H=hmp(R);t={z:'thr',name:'Настройка-порог 3x1000 @ПМ',steps:[warm(12),repsD(3,1000,H,90,'thr',cfg.exp),strides(4,R),cool(8)]};}
+          else if(goalDist>=10000)t={z:'vo2',name:'Настройка 4x400 остро',steps:[warm(12),repsD(4,400,R.rep,90,null,cfg.exp),strides(4,R),cool(8)]};
+          else t={z:'vo2',name:'Острая настройка 3x400 @5к',steps:[warm(12),repsD(3,400,R.race5,90,null,cfg.exp),strides(3,R),cool(8)]};
           items=[{kind:'run',z:t.z,name:t.name,steps:t.steps}];}
         days.push({date:dt,items});continue;
       }
@@ -1797,10 +1855,10 @@ function buildPlan(cfgIn){
         else if(dd===4)items=[{kind:'run',z:'easy',name:'Лёгкий',steps:[easyS(35)]}];
         else if(dd===5){let t;
           if(isUltra)t={z:'easy',name:'Спокойный бег + ускорения',steps:[easyS(30),strides(4,R)]};
-          else if(goalDist>=42000)t={z:'mp',name:'Настройка 3x1000 @МР',steps:[warm(12),repsD(3,1000,R.mp,90),strides(4,R),cool(8)]};
-          else if(goalDist>=21000){const H=hmp(R);t={z:'thr',name:'Настройка-порог 3x1000 @ПМ',steps:[warm(12),repsD(3,1000,H,90),strides(4,R),cool(8)]};}
-          else if(goalDist>=10000)t={z:'vo2',name:'Настройка 4x400 остро',steps:[warm(12),repsD(4,400,R.rep,90),strides(4,R),cool(8)]};
-          else t={z:'vo2',name:'Острая настройка 3x400 @5к',steps:[warm(12),repsD(3,400,R.race5,90),strides(3,R),cool(8)]};
+          else if(goalDist>=42000)t={z:'mp',name:'Настройка 3x1000 @МР',steps:[warm(12),repsD(3,1000,R.mp,90,'mp',cfg.exp),strides(4,R),cool(8)]};
+          else if(goalDist>=21000){const H=hmp(R);t={z:'thr',name:'Настройка-порог 3x1000 @ПМ',steps:[warm(12),repsD(3,1000,H,90,'thr',cfg.exp),strides(4,R),cool(8)]};}
+          else if(goalDist>=10000)t={z:'vo2',name:'Настройка 4x400 остро',steps:[warm(12),repsD(4,400,R.rep,90,null,cfg.exp),strides(4,R),cool(8)]};
+          else t={z:'vo2',name:'Острая настройка 3x400 @5к',steps:[warm(12),repsD(3,400,R.race5,90,null,cfg.exp),strides(3,R),cool(8)]};
           items=[{kind:'run',z:t.z,name:t.name,steps:t.steps}];}
         else {items=[{kind:'run',z:'rec',name:'Восстановительный',steps:[recS(30)]}];
           if((+cfg.strength||0)>0)items.push({kind:'str',...STR_COR});}

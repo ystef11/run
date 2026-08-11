@@ -171,7 +171,7 @@
       <button id="lap_long" class="on" onclick="setFirstLap('long')">Длинный</button>
       <button id="lap_short" onclick="setFirstLap('short')">Короткий</button>
     </div>
-    <div class="hint">Если дистанция не делится на длину отсечки без остатка, остаток добавляется к первой отсечке («длинный» первый круг) или выделяется отдельной короткой первой отсечкой («короткий»).</div>
+    <div class="hint">Если дистанция не делится на длину отсечки без остатка: «длинный» — первые круги полные, последний круг — короткий, равный остатку; «короткий» — первый круг короткий, равный остатку, все остальные круги — полные.</div>
   </div>
 
   <div class="outs">
@@ -259,9 +259,11 @@
       return segs;
     }
     if(firstLap==='long'){
-      segs.push(stepKm+remainder);
-      for(let i=1;i<n;i++) segs.push(stepKm);
+      // первый круг — полный (равный длине отсечки), остаток — отдельным последним коротким кругом
+      for(let i=0;i<n;i++) segs.push(stepKm);
+      segs.push(remainder);
     } else {
+      // первый круг — короткий (равен остатку), дальше все круги полные
       segs.push(remainder);
       for(let i=0;i<n;i++) segs.push(stepKm);
     }

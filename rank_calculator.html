@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор разряда по бегу</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%85%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --gold:#c9971f;--silver:#8a8f98;--bronze:#a9662f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content;}
+  .stepper button{border:none;background:#f0eee9;color:var(--ink);font-size:26px;font-weight:700;width:54px;height:58px;cursor:pointer;line-height:1;}
+  .stepper button:active{background:var(--accent);color:#fff;}
+  .stepper input{border:none;width:120px;height:58px;text-align:center;font-size:30px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .stepper .unit{font-size:13px;color:var(--muted);padding:0 14px;}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .quick button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--ink);}
+  .quick button:hover{border-color:var(--accent);color:var(--accent);}
+  .quick button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .triofields{display:flex;gap:10px;flex-wrap:wrap;}
+  .field{flex:1;min-width:80px;}
+  .field .fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .field .box{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .field input{flex:1;width:100%;border:none;height:52px;text-align:center;font-size:22px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;min-width:0;}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field input:focus{outline:none;}
+  .field .arrows{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .field .arrows button{border:none;background:#f0eee9;color:var(--ink);width:26px;height:26px;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .field .arrows button:first-child{border-bottom:1px solid var(--line);}
+  .field .arrows button:active{background:var(--accent);color:#fff;}
+  .field .arrows svg{width:10px;height:10px;}
+  .colon{align-self:flex-end;font-size:22px;font-weight:800;color:var(--muted);padding-bottom:14px;}
+
+  .row2{display:flex;gap:16px;flex-wrap:wrap;}
+  .row2>div{flex:1;min-width:160px;}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:22px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:13px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12.5px;font-weight:700;color:#fff;background:var(--muted);}
+
+  .tablewrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:4px;font-size:13px;min-width:760px;}
+  th{text-align:center;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th.dist{text-align:left;}
+  td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:center;color:var(--muted);}
+  td.dist{text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr.cur td.dist{color:var(--accent);}
+  tr.cur{background:#fbf7ee;}
+  td.hit{background:var(--accent);color:#fff;font-weight:800;border-radius:6px;}
+  td.pred{font-weight:800;color:var(--ink);background:#f0eee9;border-radius:6px;}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Результат гонки · разряд · прогноз</div>
+    <h1>Калькулятор разряда по бегу</h1>
+    <div class="sub">По дистанции и результату — оценка VDOT, текущий спортивный разряд и таблица нормативов на всех дистанциях</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Дистанция гонки</div>
+    <div class="stepper">
+      <button onclick="bumpDist(-100)">−</button>
+      <input id="dist" class="mono" type="number" min="400" max="500000" step="1" value="10000" inputmode="numeric">
+      <button onclick="bumpDist(100)">+</button>
+      <span class="unit">метров</span>
+    </div>
+    <div class="quick">
+      <button data-d="800" onclick="setDist(800)">800 м</button>
+      <button data-d="1500" onclick="setDist(1500)">1 500 м</button>
+      <button data-d="3000" onclick="setDist(3000)">3 000 м</button>
+      <button data-d="5000" onclick="setDist(5000)">5 000 м</button>
+      <button data-d="10000" onclick="setDist(10000)">10 000 м</button>
+      <button data-d="21097.5" onclick="setDist(21097.5)">Полумарафон</button>
+      <button data-d="42195" onclick="setDist(42195)">Марафон</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Результат на этой дистанции</div>
+    <div class="triofields">
+      <div class="field"><div class="fl">Часы</div><div class="box"><input id="t_h" class="mono" type="number" min="0" max="99" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_h',1,99)">▲</button><button onclick="bumpField('t_h',-1,99)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Минуты</div><div class="box"><input id="t_m" class="mono" type="number" min="0" max="59" value="42" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_m',1,59)">▲</button><button onclick="bumpField('t_m',-1,59)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Секунды</div><div class="box"><input id="t_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_s',1,59)">▲</button><button onclick="bumpField('t_s',-1,59)">▼</button></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Пол</div>
+    <div class="tabs">
+      <button id="tab_m" class="on" onclick="setSex('m')">Мужчина</button>
+      <button id="tab_f" onclick="setSex('f')">Женщина</button>
+    </div>
+  </div>
+
+  <div class="outs">
+    <div class="out hl"><div class="k">Разряд</div><div class="v"><span id="o_rank">—</span></div></div>
+    <div class="out"><div class="k">VDOT</div><div class="v"><span id="o_vdot">0.0</span></div></div>
+    <div class="out"><div class="k">До следующего разряда</div><div class="v"><span id="o_next">—</span></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Нормативы разрядов (ЕВСК) и ваш прогноз по всем дистанциям</div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th class="dist">Дистанция</th>
+          <th>Прогноз</th>
+          <th>МСМК</th><th>МС</th><th>КМС</th><th>I</th><th>II</th><th>III</th><th>I юн.</th><th>II юн.</th><th>III юн.</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--accent)"></i>достигнутый разряд на дистанции</span>
+      <span><i style="background:#f0eee9;border:1px solid var(--line)"></i>ваш прогнозируемый результат</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><b>Как считается.</b> По введённой дистанции и времени оценивается VDOT (модель Дэниелса) — показатель текущей беговой формы. Для каждой дистанции таблицы рассчитывается эквивалентный по форме результат (при той же VDOT), который сравнивается с нормативами ЕВСК — так строится прогноз разряда даже на тех дистанциях, где вы не бежали.</p>
+    <p><b>Разряд на введённой дистанции</b> в блоке сверху берётся из строки таблицы, ближайшей к вашей дистанции, и совпадает с прямым сравнением фактического времени с нормативом (без прогноза), если дистанция — одна из табличных.</p>
+    <p><b>Нормативы</b> приведены для взрослых (без возрастных коэффициентов), классические беговые дистанции ЕВСК: 800 м, 1500 м, 3000 м, 5000 м, 10 000 м, полумарафон, марафон. Юношеские разряды на 5000 м и длиннее не предусмотрены.</p>
+  </div>
+
+  <footer>Модель: VDOT (Дэниелс) · нормативы — ЕВСК, цикл 2026–2029</footer>
+</div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  let sex='m';
+
+  // ================= физиология: VDOT (Дэниелс) =================
+  function vo2At(v){return -4.60+0.182258*v+0.000104*v*v;}
+  function pctAt(t){return 0.8+0.1894393*Math.exp(-0.012778*t)+0.2989558*Math.exp(-0.1932605*t);}
+  function vdot(distM,sec){const t=sec/60;return vo2At(distM/t)/pctAt(t);}
+  function timeFor(distM,vd){let lo=distM/8,hi=distM/1.4;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;(vdot(distM,mid)>vd)?lo=mid:hi=mid;}return (lo+hi)/2;}
+
+  // ================= нормативы ЕВСК 2026-2029 (сек) =================
+  const RANKS=['msmk','ms','kms','i','ii','iii','iy','iiy','iiiy'];
+  const RANK_LABEL={msmk:'МСМК',ms:'МС',kms:'КМС',i:'I',ii:'II',iii:'III',iy:'I юн.',iiy:'II юн.',iiiy:'III юн.'};
+
+  const STD={
+    m:{
+      800:   {msmk:106.20, ms:109.30, kms:114.74, i:121.24, ii:130.24, iii:140.24, iy:151.24, iiy:163.24, iiiy:178.24},
+      1500:  {msmk:217.00, ms:226.10, kms:236.94, i:249.94, ii:265.74, iii:285.24, iy:310.24, iiy:330.24, iiiy:370.24},
+      3000:  {msmk:472.24, ms:484.24, kms:510.24, i:540.24, ii:580.24, iii:630.24, iy:680.24, iiy:730.24, iiiy:800.24},
+      5000:  {msmk:807.00, ms:846.00, kms:890.24, i:955.24, ii:1020.24, iii:1085.24, iy:1150.24, iiy:1250.24, iiiy:null},
+      10000: {msmk:1680.00, ms:1760.00, kms:1870.24, i:2000.24, ii:2150.24, iii:2320.24, iy:null, iiy:null, iiiy:null},
+      21097.5:{msmk:3690, ms:3900, kms:4230, i:4560, ii:4890, iii:5280, iy:null, iiy:null, iiiy:null},
+      42195: {msmk:7920, ms:8400, kms:9000, i:9600, ii:10200, iii:11400, iy:null, iiy:null, iiiy:null}
+    },
+    f:{
+      800:   {msmk:120.75, ms:125.50, kms:134.24, i:145.24, ii:156.24, iii:168.24, iy:181.24, iiy:196.24, iiiy:215.24},
+      1500:  {msmk:245.50, ms:258.24, kms:278.24, i:297.24, ii:319.24, iii:345.24, iy:376.24, iiy:410.24, iiiy:450.24},
+      3000:  {msmk:530.24, ms:553.24, kms:600.24, i:653.24, ii:713.24, iii:778.24, iy:843.24, iiy:910.24, iiiy:990.24},
+      5000:  {msmk:920.24, ms:965.24, kms:1040.24, i:1125.24, ii:1220.24, iii:1325.24, iy:1440.24, iiy:1565.24, iiiy:null},
+      10000: {msmk:1910.24, ms:2028.24, kms:2220.24, i:2400.24, ii:2620.24, iii:2870.24, iy:null, iiy:null, iiiy:null},
+      21097.5:{msmk:4260, ms:4540, kms:5100, i:5670, ii:6270, iii:6900, iy:null, iiy:null, iiiy:null},
+      42195: {msmk:9000, ms:9600, kms:10800, i:12120, ii:13680, iii:15000, iy:null, iiy:null, iiiy:null}
+    }
+  };
+  const DISTS=[800,1500,3000,5000,10000,21097.5,42195];
+  const DIST_LABEL={800:'800 м',1500:'1 500 м',3000:'3 000 м',5000:'5 000 м',10000:'10 000 м',21097.5:'Полумарафон',42195:'Марафон'};
+
+  function rankOf(sec,table){
+    for(const r of RANKS){ const th=table[r]; if(th!=null && sec<=th) return r; }
+    return null;
+  }
+
+  function fmtTime(totalSec){
+    if(totalSec==null) return '—';
+    totalSec=Math.max(0,Math.round(totalSec));
+    const h=Math.floor(totalSec/3600), m=Math.floor((totalSec%3600)/60), s=totalSec%60;
+    if(h>0) return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    return m+':'+String(s).padStart(2,'0');
+  }
+
+  function getDist(){ let d=parseFloat($('dist').value); if(isNaN(d)||d<100)d=100; return d; }
+  function getTimeSec(){
+    let h=parseInt($('t_h').value,10)||0, m=parseInt($('t_m').value,10)||0, s=parseInt($('t_s').value,10)||0;
+    return h*3600+m*60+s;
+  }
+  function markQuick(d){
+    document.querySelectorAll('.quick button').forEach(b=>{
+      b.classList.toggle('on', Math.abs(parseFloat(b.dataset.d)-d)<0.6);
+    });
+  }
+  function setSex(s){
+    sex=s;
+    $('tab_m').classList.toggle('on', s==='m');
+    $('tab_f').classList.toggle('on', s==='f');
+    render();
+  }
+
+  function nearestTableDist(d){
+    let best=DISTS[0],diff=Infinity;
+    for(const td of DISTS){ const dl=Math.abs(Math.log(td)-Math.log(d)); if(dl<diff){diff=dl;best=td;} }
+    return best;
+  }
+
+  function render(){
+    const d=getDist(), t=getTimeSec();
+    markQuick(d);
+    if(t<=0){
+      $('o_rank').textContent='—'; $('o_vdot').textContent='0.0'; $('o_next').textContent='—';
+      $('rows').innerHTML='<tr><td colspan="10" style="color:var(--muted)">Впишите результат гонки</td></tr>';
+      return;
+    }
+    const vd=vdot(d,t);
+    $('o_vdot').textContent=vd.toFixed(1);
+    const table=STD[sex];
+    const curTableDist=nearestTableDist(d);
+
+    let curRankKey=null, curNextGap=null;
+
+    $('rows').innerHTML = DISTS.map(td=>{
+      const predSec = timeFor(td, vd);
+      const th=table[td];
+      const rk=rankOf(predSec,th);
+      const isCur = td===curTableDist;
+      if(isCur){ curRankKey=rk; }
+      const cells = RANKS.map(r=>{
+        const val=th[r];
+        const hit = rk===r;
+        const cls = hit? 'hit' : '';
+        return `<td class="${cls}">${val==null?'—':fmtTime(val)}</td>`;
+      }).join('');
+      return `<tr class="${isCur?'cur':''}"><td class="dist">${DIST_LABEL[td]}</td><td class="pred">${fmtTime(predSec)}</td>${cells}</tr>`;
+    }).join('');
+
+    $('o_rank').textContent = curRankKey ? RANK_LABEL[curRankKey] : 'нет разряда';
+
+    // до следующего разряда (на ближайшей табличной дистанции)
+    const th=table[curTableDist];
+    const predSec = timeFor(curTableDist, vd);
+    const curIdx = curRankKey ? RANKS.indexOf(curRankKey) : RANKS.length;
+    let nextTxt='—';
+    for(let i=curIdx-1;i>=0;i--){
+      const key=RANKS[i];
+      if(th[key]!=null){ nextTxt = RANK_LABEL[key]+': −'+fmtTime(predSec-th[key]); break; }
+    }
+    $('o_next').textContent=nextTxt;
+  }
+
+  function bumpDist(x){ $('dist').value=(parseFloat($('dist').value)||0)+x; render(); }
+  function setDist(v){ $('dist').value=v; render(); }
+  function bumpField(id,x,max){
+    const el=$(id);
+    let v=(parseInt(el.value,10)||0)+x;
+    if(v<0)v=max; if(v>max)v=0;
+    el.value=v;
+    el.dispatchEvent(new Event('input'));
+  }
+
+  $('dist').addEventListener('input', render);
+  ['t_h','t_m','t_s'].forEach(id=>$(id).addEventListener('input', render));
+
+  render();
+</script>
+</body>
+</html>

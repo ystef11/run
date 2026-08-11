@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор веса, ИМТ и темпа</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%96%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --fat:#c9862e;--musc:#2f5d8f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content;}
+  .stepper button{border:none;background:#f0eee9;color:var(--ink);font-size:26px;font-weight:700;width:54px;height:58px;cursor:pointer;line-height:1;}
+  .stepper button:active{background:var(--accent);color:#fff;}
+  .stepper input{border:none;width:110px;height:58px;text-align:center;font-size:28px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .stepper .unit{font-size:13px;color:var(--muted);padding:0 14px;}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .quick button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--ink);}
+  .quick button:hover{border-color:var(--accent);color:var(--accent);}
+  .quick button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .tabs{display:flex;gap:8px;margin-bottom:4px;flex-wrap:wrap;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 16px;font-size:13.5px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .triofields{display:flex;gap:10px;flex-wrap:wrap;}
+  .field{flex:1;min-width:80px;}
+  .field .fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .field .box{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .field input{flex:1;width:100%;border:none;height:52px;text-align:center;font-size:22px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;min-width:0;}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field input:focus{outline:none;}
+  .field .arrows{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .field .arrows button{border:none;background:#f0eee9;color:var(--ink);width:26px;height:26px;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .field .arrows button:first-child{border-bottom:1px solid var(--line);}
+  .field .arrows button:active{background:var(--accent);color:#fff;}
+  .field .arrows svg{width:10px;height:10px;}
+  .colon{align-self:flex-end;font-size:22px;font-weight:800;color:var(--muted);padding-bottom:14px;}
+
+  .slider{margin:6px 0 4px;}
+  .slider .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+  .slider .nm{font-size:14px;font-weight:600;}
+  .slider .vv{font-family:ui-monospace,monospace;font-size:16px;font-weight:800;color:var(--accent);}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:#e7e4dd;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid #fff;}
+  .fatbar{display:flex;height:12px;border-radius:6px;overflow:hidden;margin-top:12px;}
+  .fatbar i{height:100%;}
+
+  .row2{display:flex;gap:16px;flex-wrap:wrap;}
+  .row2>div{flex:1;min-width:160px;}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:20px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:12.5px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+  @media (max-width:640px){ .outs{grid-template-columns:1fr 1fr;} }
+
+  .tablehead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 16px;margin-bottom:10px;}
+  .tablectrl{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);flex-wrap:wrap;}
+  .mini{width:44px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:4px 2px;font-size:13px;font-weight:700;font-family:ui-monospace,monospace;background:#f8f7f4;color:var(--ink);}
+  .mini::-webkit-outer-spin-button,.mini::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .mini{-moz-appearance:textfield;}
+  .mini:focus{outline:none;border-color:var(--accent);}
+
+  .tablewrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:4px;font-size:14px;min-width:420px;}
+  th{text-align:center;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:center;color:var(--muted);}
+  td.w{font-weight:800;color:var(--ink);}
+  tr:last-child td{border-bottom:none;}
+  tr.cur{background:#fbeee9;}
+  tr.cur td{color:var(--ink);font-weight:700;}
+  tr.cur td.w{color:var(--accent);}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Вес · ИМТ · VO2max · темп</div>
+    <h1>Калькулятор веса, ИМТ и темпа</h1>
+    <div class="sub">ИМТ и таблица «что будет с результатом при другом весе» — с учётом того, что вес меняется не только за счёт жира, но и за счёт мышц</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Пол</div>
+    <div class="tabs">
+      <button id="sex_m" class="on" onclick="setSex('m')">Мужской</button>
+      <button id="sex_f" onclick="setSex('f')">Женский</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Рост</div>
+    <div class="stepper">
+      <button onclick="bump('height',-1)">−</button>
+      <input id="height" class="mono" type="number" min="120" max="230" step="1" value="175" inputmode="numeric">
+      <button onclick="bump('height',1)">+</button>
+      <span class="unit">см</span>
+    </div>
+    <div class="quick" id="q_height">
+      <button data-v="160" onclick="setVal('height',160)">160</button>
+      <button data-v="165" onclick="setVal('height',165)">165</button>
+      <button data-v="170" onclick="setVal('height',170)">170</button>
+      <button data-v="175" onclick="setVal('height',175)">175</button>
+      <button data-v="180" onclick="setVal('height',180)">180</button>
+      <button data-v="185" onclick="setVal('height',185)">185</button>
+      <button data-v="190" onclick="setVal('height',190)">190</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Текущий вес</div>
+    <div class="stepper">
+      <button onclick="bump('weight',-0.5)">−</button>
+      <input id="weight" class="mono" type="number" min="30" max="200" step="0.5" value="60" inputmode="decimal">
+      <button onclick="bump('weight',0.5)">+</button>
+      <span class="unit">кг</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Контрольная дистанция</div>
+    <div class="stepper">
+      <button onclick="bump('dist',-0.1)">−</button>
+      <input id="dist" class="mono" type="number" min="0.1" max="500" step="0.1" value="42.195" inputmode="decimal">
+      <button onclick="bump('dist',0.1)">+</button>
+      <span class="unit">километры</span>
+    </div>
+    <div class="quick">
+      <button data-v="5" onclick="setVal('dist',5)">5 км</button>
+      <button data-v="10" onclick="setVal('dist',10)">10 км</button>
+      <button data-v="21.0975" onclick="setVal('dist',21.0975)">Полумарафон</button>
+      <button data-v="42.195" onclick="setVal('dist',42.195)">Марафон</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Ваш результат на этой дистанции при текущем весе</div>
+    <div class="triofields">
+      <div class="field"><div class="fl">Часы</div><div class="box"><input id="t_h" class="mono" type="number" min="0" max="99" value="3" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_h',1,99)">▲</button><button onclick="bumpField('t_h',-1,99)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Минуты</div><div class="box"><input id="t_m" class="mono" type="number" min="0" max="59" value="30" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_m',1,59)">▲</button><button onclick="bumpField('t_m',-1,59)">▼</button></div>
+      </div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Секунды</div><div class="box"><input id="t_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bumpField('t_s',1,59)">▲</button><button onclick="bumpField('t_s',-1,59)">▼</button></div>
+      </div></div>
+    </div>
+    <div class="hint">По этому результату оценивается ваш текущий VO2max, от которого строится таблица ниже.</div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Из чего складывается изменение веса в таблице</div>
+    <div class="slider">
+      <div class="row"><span class="nm">Доля жировой массы</span><span class="vv" id="v_fat">75 %</span></div>
+      <input type="range" id="fatShare" min="0" max="100" step="5" value="75">
+    </div>
+    <div class="fatbar"><i id="bar_fat" style="background:var(--fat)"></i><i id="bar_musc" style="background:var(--musc)"></i></div>
+    <div class="row2" style="margin-top:6px;font-size:12px;color:var(--muted);">
+      <div><span class="dot" style="background:var(--fat);display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;"></span>жир — <span id="lbl_fatpct">75</span> %</div>
+      <div style="text-align:right;"><span class="dot" style="background:var(--musc);display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;"></span>мышцы / прочие ткани — <span id="lbl_muscpct">25</span> %</div>
+    </div>
+    <div class="quick">
+      <button data-f="100" onclick="setFat(100)">Только жир</button>
+      <button data-f="75" onclick="setFat(75)">В основном жир (75%)</button>
+      <button data-f="50" onclick="setFat(50)">Пополам</button>
+      <button data-f="25" onclick="setFat(25)">В основном мышцы (25%)</button>
+      <button data-f="0" onclick="setFat(0)">Только мышцы</button>
+    </div>
+    <div class="hint">Похудение и набор веса почти никогда не бывают чисто жировыми — часть меняющейся массы приходится на мышцы. Жир не участвует в производстве аэробной мощности и просто убирает/добавляет «балласт»: при 100% жира таблица строится в предположении, что абсолютный VO2max (л/мин) не меняется, а меняется только вес, на который он делится. Доля мышц немного двигает и сам абсолютный VO2max — см. примечание ниже.</div>
+  </div>
+
+  <div class="label" style="margin-top:4px;">Индекс массы тела</div>
+  <div class="outs">
+    <div class="out hl"><div class="k">ИМТ сейчас</div><div class="v"><span id="o_bmi_now">—</span></div></div>
+    <div class="out"><div class="k">Категория</div><div class="v" style="font-size:16px"><span id="o_cat_now">—</span></div></div>
+    <div class="out"><div class="k">Норма веса (ИМТ 18.5–25)</div><div class="v" style="font-size:16px"><span id="o_bmi_range">—</span></div></div>
+  </div>
+  <div class="outs">
+    <div class="out"><div class="k">Ориентир для бегунов на выносливость</div><div class="v" style="font-size:16px"><span id="o_bmi_runner">—</span></div></div>
+    <div class="out"><div class="k">VO2max сейчас</div><div class="v"><span id="o_vo2_now">—</span></div></div>
+    <div class="out"><div class="k">Абсолютный VO2max (оценка)</div><div class="v" style="font-size:16px"><span id="o_vo2_abs">—</span><small> л/мин</small></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="tablehead">
+      <div class="label" style="margin-bottom:0;">Вес → VO2max → результат на выбранной дистанции</div>
+      <div class="tablectrl">
+        <span>диапазон ±</span><input id="range" class="mini" type="number" min="1" max="20" step="1" value="5" inputmode="numeric"><span>кг</span>
+        <span>· шаг</span><input id="step" class="mini" type="number" min="0.5" max="5" step="0.5" value="1" inputmode="decimal"><span>кг</span>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Вес</th><th>VO2max</th><th>Время</th><th>Темп</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><b>Модель.</b> По введённому результату на дистанции считается ваш текущий VO2max (модель Дэниелса — те же формулы, что и в калькуляторе разряда): VO2(v)=−4.60+0.182258·v+0.000104·v², %VO2max(t)=0.8+0.1894393·e<sup>−0.012778t</sup>+0.2989558·e<sup>−0.1932605t</sup>, VO2max=VO2(v)/%VO2max(t), где v — скорость (м/мин), t — время (мин). Из текущего VO2max и текущего веса получаем оценку абсолютной аэробной мощности (л/мин) — условно говоря, «мощность мотора». Дальше для каждого веса из таблицы этот «мотор» делится на новый вес — получается новый относительный VO2max, а по нему методом Дэниелса пересчитывается время на той же дистанции.</p>
+    <p><b>Жир и мышцы.</b> Абсолютная мощность мотора (сердце, лёгкие, кровь) при 100% жира в изменении веса считается неизменной — меняется только то, на что она делится. Но часть меняющегося веса обычно приходится на мышцы, а мышечная масса — это ещё и часть самого «мотора» (митохондрии, капилляризация, ударный объём сердца при силовой+аэробной нагрузке), поэтому в модели её изменение немного двигает и абсолютный VO2max: на каждый кг мышечной массы — примерно ±0.4% к абсолютному VO2max. Из-за этого потеря веса за счёт мышц даёт меньший прирост скорости, чем такая же потеря за счёт жира, а набор веса за счёт мышц (силовые + сохранённый объём бега) почти не тормозит бег по сравнению с набором жира.</p>
+    <p><b>Важно.</b> Это оценка по общей физиологической модели, а не точный прогноз: реальный результат зависит от тренировок, техники и индивидуальных особенностей. Не используйте калькулятор как медицинскую рекомендацию по изменению веса.</p>
+  </div>
+
+  <footer>ИМТ + модель VDOT (Дэниелс) · для точного плана используйте калькулятор беговых планов</footer>
+</div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  let sex='m';
+
+  // ================= физиология: VDOT (Дэниелс) — как в калькуляторе разряда =================
+  function vo2At(v){return -4.60+0.182258*v+0.000104*v*v;}
+  function pctAt(t){return 0.8+0.1894393*Math.exp(-0.012778*t)+0.2989558*Math.exp(-0.1932605*t);}
+  function vdot(distM,sec){const t=sec/60;return vo2At(distM/t)/pctAt(t);}
+  function timeFor(distM,vd){let lo=distM/8,hi=distM/1.4;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;(vdot(distM,mid)>vd)?lo=mid:hi=mid;}return (lo+hi)/2;}
+
+  const MUSC_ABS_COEF=0.004; // ±0.4% абсолютного VO2max на кг мышечной массы
+
+  function setSex(v){
+    sex=v;
+    $('sex_m').classList.toggle('on', v==='m');
+    $('sex_f').classList.toggle('on', v==='f');
+    render();
+  }
+
+  function bump(id,x){
+    const el=$(id);
+    let v=(parseFloat(el.value)||0)+x;
+    el.value = (Math.round(v*100)/100).toString();
+    render();
+  }
+  function setVal(id,v){ $(id).value=v; render(); }
+  function setFat(v){ $('fatShare').value=v; render(); }
+
+  function bumpField(id,x,max){
+    const el=$(id);
+    let v=(parseInt(el.value,10)||0)+x;
+    if(v<0)v=max; if(v>max)v=0;
+    el.value=v;
+    render();
+  }
+
+  function markQuick(sel, val, tol){
+    document.querySelectorAll(sel).forEach(b=>{
+      b.classList.toggle('on', Math.abs(parseFloat(b.dataset.v)-val)<tol);
+    });
+  }
+
+  function fmtTime(totalSec){
+    if(totalSec==null || !isFinite(totalSec) || totalSec<=0) return '—';
+    totalSec=Math.round(totalSec);
+    const h=Math.floor(totalSec/3600), m=Math.floor((totalSec%3600)/60), s=totalSec%60;
+    if(h>0) return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    return m+':'+String(s).padStart(2,'0');
+  }
+
+  function fmtPace(secPerKm){
+    if(!isFinite(secPerKm) || secPerKm<=0) return '—';
+    const total=Math.round(secPerKm);
+    const m=Math.floor(total/60), s=total%60;
+    return m+':'+String(s).padStart(2,'0');
+  }
+
+  function bmiCategory(bmi){
+    if(bmi<16) return 'Выраженный дефицит';
+    if(bmi<17) return 'Недостаток (умеренный)';
+    if(bmi<18.5) return 'Недостаток массы';
+    if(bmi<25) return 'Норма';
+    if(bmi<30) return 'Избыточная масса';
+    if(bmi<35) return 'Ожирение I ст.';
+    if(bmi<40) return 'Ожирение II ст.';
+    return 'Ожирение III ст.';
+  }
+
+  function render(){
+    const height=Math.max(120, parseFloat($('height').value)||175);
+    const weight=Math.max(30, parseFloat($('weight').value)||60);
+    const distKm=Math.max(0.1, parseFloat($('dist').value)||42.195);
+    const distM=distKm*1000;
+    const h=parseInt($('t_h').value,10)||0, m=parseInt($('t_m').value,10)||0, s=parseInt($('t_s').value,10)||0;
+    const totalSec=h*3600+m*60+s;
+    const range=Math.max(1, parseFloat($('range').value)||5);
+    const step=Math.max(0.5, parseFloat($('step').value)||1);
+    const fatSharePct=parseFloat($('fatShare').value);
+
+    markQuick('#q_height button', height, 0.5);
+    markQuick('.panel .quick button[data-v="5"], .panel .quick button[data-v="10"], .panel .quick button[data-v="21.0975"], .panel .quick button[data-v="42.195"]', distKm, 0.005);
+    document.querySelectorAll('.quick button[data-f]').forEach(b=>{
+      b.classList.toggle('on', Math.abs(parseFloat(b.dataset.f)-fatSharePct)<1);
+    });
+
+    $('v_fat').textContent = fatSharePct+' %';
+    $('lbl_fatpct').textContent = fatSharePct;
+    $('lbl_muscpct').textContent = 100-fatSharePct;
+    $('bar_fat').style.width = fatSharePct+'%';
+    $('bar_musc').style.width = (100-fatSharePct)+'%';
+
+    // BMI
+    const hm = height/100;
+    const bmiNow = weight/(hm*hm);
+    $('o_bmi_now').textContent = bmiNow.toFixed(1);
+    $('o_cat_now').textContent = bmiCategory(bmiNow);
+    const wLo=(18.5*hm*hm), wHi=(25*hm*hm);
+    $('o_bmi_range').textContent = wLo.toFixed(0)+'–'+wHi.toFixed(0)+' кг';
+    const runnerLo = sex==='m'?18.5:17, runnerHi = sex==='m'?22:20;
+    $('o_bmi_runner').textContent = (runnerLo*hm*hm).toFixed(0)+'–'+(runnerHi*hm*hm).toFixed(0)+' кг';
+
+    if(totalSec<=0){
+      $('o_vo2_now').textContent='—'; $('o_vo2_abs').textContent='—';
+      $('rows').innerHTML='<tr><td colspan="4" style="color:var(--muted)">Впишите результат на контрольной дистанции</td></tr>';
+      return;
+    }
+
+    const vdotNow = vdot(distM, totalSec);
+    const absVO2Ref = vdotNow*weight/1000; // л/мин
+    $('o_vo2_now').textContent = vdotNow.toFixed(1);
+    $('o_vo2_abs').textContent = absVO2Ref.toFixed(2);
+
+    const rowsArr=[];
+    for(let k=-range; k<=range+1e-9; k+=step){
+      const W = Math.round((weight+k)*100)/100;
+      if(W<=5) continue;
+      const dW = W-weight;
+      const muscleDeltaKg = dW*(100-fatSharePct)/100;
+      const absVO2 = absVO2Ref*(1+MUSC_ABS_COEF*muscleDeltaKg);
+      const relVO2 = absVO2*1000/W;
+      const predSec = timeFor(distM, relVO2);
+      const pace = predSec/distKm;
+      rowsArr.push({W, relVO2, predSec, pace, isCur: Math.abs(dW)<step/2});
+    }
+
+    $('rows').innerHTML = rowsArr.map(r=>`<tr class="${r.isCur?'cur':''}">`+
+      `<td class="w">${r.W.toFixed(1).replace(/\.0$/,'')} кг</td>`+
+      `<td class="mono">${r.relVO2.toFixed(2)}</td>`+
+      `<td class="mono">${fmtTime(r.predSec)}</td>`+
+      `<td class="mono">${fmtPace(r.pace)} /км</td>`+
+      `</tr>`).join('');
+  }
+
+  ['height','weight','dist','t_h','t_m','t_s','range','step','fatShare'].forEach(id=>$(id).addEventListener('input', render));
+
+  render();
+</script>
+</body>
+</html>

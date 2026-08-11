@@ -51,6 +51,13 @@
         "description": "Промежуточные отметки, время и темп по дистанции",
         "icon": "laps",
         "url": "https://ystef11.github.io/run/laps_calculator.html"
+      },
+      {
+        "id": "weight",
+        "title": "Калькулятор веса и ИМТ",
+        "description": "ИМТ и влияние состава изменения веса на темп бега",
+        "icon": "weight",
+        "url": "https://ystef11.github.io/run/weight_calculator.html"
       }
     ]
   },

@@ -925,13 +925,16 @@ const OFF_MAX_C={id:'str-off-max-c',name:'Межсезонье: Сила C (ун
 const OFF_POWER_A={id:'str-off-power-a',name:'Межсезонье: Мощность A',mins:40,desc:'Мощность A. Прыжки в длину с места 3×5; Приседания с выпрыгиванием (легкая нагрузка) 3×6; Приседания со штангой в скоростной манере (40-50% от 1ПМ) 3×5; Бросок медбола от груди в стену 3×8; Кор-финишер: планка с попеременным подъёмом руки и ноги 3×10.'};
 const OFF_POWER_B={id:'str-off-power-b',name:'Межсезонье: Мощность B',mins:40,desc:'Мощность B. Скачки на одной ноге вперёд (bounds) 3×6/ногу; Взрывной подъём колена на месте 3×15с; Тяга гантелей рывковым движением (power clean-подобное) 3×5; Ротационный бросок медбола 3×8/сторону; Кор-финишер: русские скручивания с медболом 3×15.'};
 
-// ---- питание на длинных: г/ч углеводов от длительности и веса, гель ≈ 25 г ----
+// ---- питание на длинных: г/ч углеводов от длительности и веса; гель — покупная порция 20 г (только глюкоза)
+//      или 40 г (глюкоза+фруктоза): при потребности >55 г/ч считаем из 40 г, иначе из 20 г ----
 function fuelFor(min,weight,isRace){
   if(min<75)return null;
   let base=isRace?80:(min<105?40:min<140?55:70);
   const gph=clamp(Math.round(base*(weight/70)/5)*5,30,isRace?100:90);
-  const total=Math.round(gph*min/60), gels=Math.max(1,Math.round(total/25));
-  return {gph,total,gels};}
+  const total=Math.round(gph*min/60);
+  const portion=gph>55?40:20;
+  const gels=Math.max(1,Math.round(total/portion));
+  return {gph,total,gels,portion};}
 
 // ================= основной генератор =================
 // cfg: {startISO, marathonISO, tuneISO[], cur10, curMar|null, tgt10, tgtMar,
@@ -3871,6 +3874,30 @@ function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouch
     // поля без собственного recalcEstimate (промежуточные старты, день длинной, кросс-тренировки) — досчитываем здесь
     srcPanelEl.addEventListener('change',recalcEstimate);
   }
+
+  // ================= автозаполнение из приложения (профиль + аналитика Гармин) =================
+  // При открытии из Android-приложения (см. ToolUrlBuilder.kt) сюда подставляются: возраст/пол/вес
+  // из локального профиля (Гармин их не хранит), ПАНО и недельный объём из локальной базы аналитики,
+  // список лучших недавних результатов по дистанциям (см. resList выше). Поля остаются редактируемыми.
+  // При обычном открытии в браузере параметров нет — работают дефолты формы, как раньше.
+  (function applyPrefill(){
+    try{
+      const qp=new URLSearchParams(location.search);
+      if(qp.has('age')){ const a=parseInt(qp.get('age'),10); if(!isNaN(a)) $('age').value=a; }
+      if(qp.has('weight')){ const w=parseFloat(qp.get('weight')); if(!isNaN(w)&&w>0) $('weight').value=w; }
+      if(qp.has('sex') && $('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) $('sex').value=qp.get('sex');
+      if(qp.has('pano')){ const v=parseInt(qp.get('pano'),10); if(!isNaN(v)) $('lthr').value=v; }
+      if(qp.has('curvol')){ const v=parseFloat(qp.get('curvol')); if(!isNaN(v)&&v>0){ $('curVol').value=Math.round(v); if($('volUnit'))$('volUnit').value='km'; } }
+      if(qp.has('res')){
+        const parsed=qp.get('res').split(',').map(pair=>{
+          const [dStr,sStr]=pair.split(':'); const d=+dStr, sec=parseInt(sStr,10);
+          return (d>0&&sec>0)? {dist:d, sec} : null;
+        }).filter(Boolean);
+        if(parsed.length) setResRows(parsed);
+      }
+    }catch(e){}
+  })();
+
   recalcEstimate();
 })();
 
@@ -4500,7 +4527,7 @@ function keyPrinciplesHtml(p){
     items.push(`<p><b>${nm}.</b> ${a.tuneList.map(t=>`${fmtDM(dParse(t.iso))} — ${t.name}${t.pred?' · прогноз ≈'+fmtT(t.pred):''}`).join('; ')}. Используй как калибровку темпа и заострение перед главным стартом.</p>`);
   }
   const carbTarget=a.goalDist>=42000?'марафонской':a.goalDist>=21000?'полумарафонской':'гоночной';
-  items.push(`<p><b>Питание на длинных.</b> У длинных и качественных тренировок указана рекомендуемая доза углеводов (г/ч, всего и ≈ число гелей по 25 г) — это «тренировка кишечника»: норма растёт по ходу цикла к ${carbTarget}. Используй гель 2:1 (глюкоза:фруктоза), запивай водой; короткие/восстановительные — по самочувствию.</p>`);
+  items.push(`<p><b>Питание на длинных.</b> У длинных и качественных тренировок указана рекомендуемая доза углеводов (г/ч, всего и ≈ число гелей) — это «тренировка кишечника»: норма растёт по ходу цикла к ${carbTarget}. Число гелей считается из покупной порции: 20 г (только глюкоза) при потребности ≤55 г/ч, 40 г (глюкоза+фруктоза) при потребности >55 г/ч. Запивай водой; короткие/восстановительные — по самочувствию.</p>`);
   const kms=(p.weeks||[]).map(w=>w.km).filter(k=>k>0);
   const mins=(p.weeks||[]).map(w=>w.min).filter(m=>m>0);
   if(kms.length){

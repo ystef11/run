@@ -58,6 +58,7 @@
 
   .row2{display:flex;gap:16px;flex-wrap:wrap;}
   .row2>div{flex:1;min-width:160px;}
+  .row2 .fl{min-height:28px;display:flex;align-items:flex-end;}
 
   .outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:16px;}
   .out{background:var(--card);padding:15px;}
@@ -316,6 +317,26 @@
   $('age').addEventListener('input', render);
   $('lthr').addEventListener('input', render);
   ['t_h','t_m','t_s'].forEach(id=>$(id).addEventListener('input', render));
+
+  // ================= автозаполнение из приложения (аналитика Гармин + профиль) =================
+  // При открытии из Android-приложения (см. ToolUrlBuilder.kt) к URL добавляются параметры
+  // с уже известными данными — здесь их не обязательно все, поле остаётся редактируемым.
+  // При обычном открытии в браузере параметров нет — калькулятор работает как раньше.
+  (function applyPrefill(){
+    try{
+      const qp=new URLSearchParams(location.search);
+      if(qp.has('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) setSex(qp.get('sex'));
+      if(qp.has('age')){ const a=parseInt(qp.get('age'),10); if(!isNaN(a)) $('age').value=a; }
+      if(qp.has('pano')){ const v=parseInt(qp.get('pano'),10); if(!isNaN(v)) $('lthr').value=v; }
+      if(qp.has('dist')){ const d=parseFloat(qp.get('dist')); if(!isNaN(d)&&d>0) $('dist').value=d; }
+      if(qp.has('t')){
+        const t=parseInt(qp.get('t'),10);
+        if(!isNaN(t)&&t>0){
+          $('t_h').value=Math.floor(t/3600); $('t_m').value=Math.floor((t%3600)/60); $('t_s').value=t%60;
+        }
+      }
+    }catch(e){}
+  })();
 
   render();
 </script>

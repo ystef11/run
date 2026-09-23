@@ -372,6 +372,26 @@
 
   ['height','weight','dist','t_h','t_m','t_s','range','step','fatShare'].forEach(id=>$(id).addEventListener('input', render));
 
+  // ================= автозаполнение из приложения (профиль + аналитика Гармин) =================
+  // Рост/вес в аналитике Гармин НЕ хранятся (в базе их просто нет) — оба берутся только из
+  // локального профиля пользователя (см. UserProfileStore.kt), если он заполнен. Контрольную
+  // дистанцию/результат (dist,t) подставляет лучший недавний результат из базы, если он есть.
+  (function applyPrefill(){
+    try{
+      const qp=new URLSearchParams(location.search);
+      if(qp.has('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) setSex(qp.get('sex'));
+      if(qp.has('height')){ const h=parseFloat(qp.get('height')); if(!isNaN(h)&&h>0) $('height').value=h; }
+      if(qp.has('weight')){ const w=parseFloat(qp.get('weight')); if(!isNaN(w)&&w>0) $('weight').value=w; }
+      if(qp.has('dist')){ const dm=parseFloat(qp.get('dist')); if(!isNaN(dm)&&dm>0) $('dist').value=(dm/1000); }
+      if(qp.has('t')){
+        const t=parseInt(qp.get('t'),10);
+        if(!isNaN(t)&&t>0){
+          $('t_h').value=Math.floor(t/3600); $('t_m').value=Math.floor((t%3600)/60); $('t_s').value=t%60;
+        }
+      }
+    }catch(e){}
+  })();
+
   render();
 </script>
 </body>

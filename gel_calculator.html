@@ -33,6 +33,7 @@
   .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
   .quick button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--ink);}
   .quick button:hover{border-color:var(--accent);color:var(--accent);}
+  .quick button.on{background:var(--accent);border-color:var(--accent);color:#fff;}
 
   .slider{margin:6px 0 18px;}
   .slider:last-child{margin-bottom:4px;}
@@ -82,12 +83,22 @@
   </header>
 
   <div class="panel">
+    <div class="label">Размер порции</div>
+    <div class="quick" id="portionSw">
+      <button data-carb="20" onclick="setCarb(20)">20 г (гель-глюкоза)</button>
+      <button data-carb="25" onclick="setCarb(25)">25 г (кастом)</button>
+      <button data-carb="40" onclick="setCarb(40)">40 г (гель 2:1)</button>
+    </div>
+    <div class="hint" style="margin-top:8px;">Покупные гели бывают порциями 20 г (только глюкоза) или 40 г (глюкоза+фруктоза). Если по плану нужно &gt;55 г/ч — считай из 40 г, если ≤55 г/ч — из 20 г.</div>
+  </div>
+
+  <div class="panel">
     <div class="label">Количество порций</div>
     <div class="stepper">
       <button onclick="bump(-1)">−</button>
       <input id="serv" class="mono" type="number" min="1" max="60" value="10" inputmode="numeric">
       <button onclick="bump(1)">+</button>
-      <span class="unit">порций<br>× 25 г углеводов</span>
+      <span class="unit">порций<br>× <span id="unit_carb">25</span> г углеводов</span>
     </div>
     <div class="quick">
       <button onclick="setServ(5)">1 батч (5)</button>
@@ -149,11 +160,12 @@
     <p><b>Режим:</b> 1 порция каждые ~20 мин (≈4,5 км), первый гель на 30–40-й минуте, запивать водой. Обкатай состав на длинных.</p>
   </div>
 
-  <footer>1 порция = 25 г углеводов · ~155 мг натрия · вода зависит от доли мальтодекстрина</footer>
+  <footer>1 порция = <span id="ftr_carb">25</span> г углеводов · натрий пропорционально порции · вода зависит от доли мальтодекстрина</footer>
 </div>
 
 <script>
-  const CARB=25, SALT=0.4, CITRIC=0.2, FLAVOR=0.2;
+  let CARB=25;                       // размер порции, г углеводов — переключается кнопками 20/25/40
+  const SALT_R=0.4/25, CITRIC_R=0.2/25, FLAVOR_R=0.2/25; // исходные пропорции на 25 г, масштабируются под CARB
   const W_MALTO=1.2, W_SUGAR=0.35;   // мл воды на грамм: мальтодекстрин гуще → больше воды
   const VOL_FACTOR=0.62;             // прирост объёма на грамм растворённого углевода
   const NA_PER_G=393;
@@ -161,10 +173,19 @@
   const $=id=>document.getElementById(id);
   const r1=x=>Math.round(x*10)/10, r0=x=>Math.round(x);
 
+  function setCarb(v){
+    CARB=v;
+    document.querySelectorAll('#portionSw button').forEach(b=>b.classList.toggle('on', parseInt(b.dataset.carb,10)===v));
+    calc();
+  }
+
   function calc(){
     let n=parseInt($('serv').value,10); if(isNaN(n)||n<1)n=1; if(n>60)n=60; $('serv').value=n;
     const R=parseFloat($('ratio').value);
     const d=parseInt($('dex').value,10)/100;
+    const SALT=SALT_R*CARB, CITRIC=CITRIC_R*CARB, FLAVOR=FLAVOR_R*CARB;
+    $('unit_carb').textContent=CARB;
+    $('ftr_carb').textContent=CARB;
     $('lbl_serv').textContent=n;
     $('v_ratio').textContent=R.toFixed(1)+' : 1';
     $('o_ratio').textContent=R.toFixed(1)+':1';
@@ -224,7 +245,28 @@
   }
   ['ratio','dex'].forEach(id=>onlyDragThumb($(id)));
 
-  calc();
+  setCarb(25);
+
+  // Автозаполнение из приложения (см. ToolUrlBuilder.buildGel() в garmin/run_plan/apk —
+  // добавляет ?carbs=N, если в основном плане есть тренировка на сегодня с питанием). Как и в
+  // остальных калькуляторах (plan/hr_pace/weight/rank_calculator.html), параметр читается один
+  // раз при загрузке, ничего не переопределяет при обычном открытии без параметров, и поле
+  // остаётся обычным, редактируемым — это только удобный дефолт. Ключ "carbs" — стабильный,
+  // не привязан к тексту кнопок/лейблов, меняя один конец (эту функцию или ToolUrlBuilder.kt),
+  // проверяйте оба — тесты этого не ловят.
+  (function applyPrefill(){
+    try{
+      const qp=new URLSearchParams(location.search);
+      if(qp.has('carbs')){
+        const total=parseFloat(qp.get('carbs'));
+        if(!isNaN(total)&&total>0){
+          const n=Math.round(total/CARB);
+          $('serv').value=Math.min(60,Math.max(1,n||1));
+          calc();
+        }
+      }
+    }catch(e){}
+  })();
 </script>
 </body>
 </html>

@@ -67,6 +67,20 @@
 
   .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12.5px;font-weight:700;color:#fff;background:var(--muted);}
 
+  .reslist{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .resrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .resrow select{border:1px solid var(--line);border-radius:8px;padding:10px 8px;font-size:13.5px;background:#fff;color:var(--ink);}
+  .resrow input[type=text]{flex:1;min-width:110px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+    font-size:16px;font-weight:800;font-family:ui-monospace,monospace;background:#fff;color:var(--ink);}
+  .resrow input[type=text]:focus,.resrow select:focus{outline:none;border-color:var(--accent);}
+  .resrow .tparse{font-size:11px;color:var(--muted);white-space:nowrap;min-width:64px;}
+  .resrow .delbtn{appearance:none;border:1px solid #e5b5b5;background:#fff;color:#c0392b;border-radius:8px;
+    width:36px;height:36px;font-size:18px;cursor:pointer;line-height:1;flex:none;}
+  .addresbtn{appearance:none;border:1px solid var(--line);background:#fff;border-radius:20px;padding:8px 16px;
+    font-size:13px;cursor:pointer;color:var(--ink);}
+  .addresbtn:hover{border-color:var(--accent);color:var(--accent);}
+  td.pred.hit2{background:var(--accent);color:#fff;}
+
   .tablewrap{overflow-x:auto;}
   table{width:100%;border-collapse:collapse;margin-top:4px;font-size:13px;min-width:760px;}
   th{text-align:center;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap;}
@@ -98,39 +112,10 @@
   </header>
 
   <div class="panel">
-    <div class="label">Дистанция гонки</div>
-    <div class="stepper">
-      <button onclick="bumpDist(-100)">−</button>
-      <input id="dist" class="mono" type="number" min="400" max="500000" step="1" value="10000" inputmode="numeric">
-      <button onclick="bumpDist(100)">+</button>
-      <span class="unit">метров</span>
-    </div>
-    <div class="quick">
-      <button data-d="800" onclick="setDist(800)">800 м</button>
-      <button data-d="1500" onclick="setDist(1500)">1 500 м</button>
-      <button data-d="3000" onclick="setDist(3000)">3 000 м</button>
-      <button data-d="5000" onclick="setDist(5000)">5 000 м</button>
-      <button data-d="10000" onclick="setDist(10000)">10 000 м</button>
-      <button data-d="21097.5" onclick="setDist(21097.5)">Полумарафон</button>
-      <button data-d="42195" onclick="setDist(42195)">Марафон</button>
-    </div>
-  </div>
-
-  <div class="panel">
-    <div class="label">Результат на этой дистанции</div>
-    <div class="triofields">
-      <div class="field"><div class="fl">Часы</div><div class="box"><input id="t_h" class="mono" type="number" min="0" max="99" value="0" inputmode="numeric">
-        <div class="arrows"><button onclick="bumpField('t_h',1,99)">▲</button><button onclick="bumpField('t_h',-1,99)">▼</button></div>
-      </div></div>
-      <div class="colon">:</div>
-      <div class="field"><div class="fl">Минуты</div><div class="box"><input id="t_m" class="mono" type="number" min="0" max="59" value="42" inputmode="numeric">
-        <div class="arrows"><button onclick="bumpField('t_m',1,59)">▲</button><button onclick="bumpField('t_m',-1,59)">▼</button></div>
-      </div></div>
-      <div class="colon">:</div>
-      <div class="field"><div class="fl">Секунды</div><div class="box"><input id="t_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
-        <div class="arrows"><button onclick="bumpField('t_s',1,59)">▲</button><button onclick="bumpField('t_s',-1,59)">▼</button></div>
-      </div></div>
-    </div>
+    <div class="label">Результаты (можно несколько дистанций)</div>
+    <div class="reslist" id="resList"></div>
+    <button type="button" class="addresbtn" id="addResBtn">+ добавить результат</button>
+    <div class="hint">Добавьте что есть: 800–42,2 км. Форма (VDOT) берётся по лучшему результату (как в калькуляторе беговых планов). Разряд на дистанции, где результат есть, считается по фактическому времени; на остальных — по прогнозу из текущей формы.</div>
   </div>
 
   <div class="panel">
@@ -225,16 +210,6 @@
     return m+':'+String(s).padStart(2,'0');
   }
 
-  function getDist(){ let d=parseFloat($('dist').value); if(isNaN(d)||d<100)d=100; return d; }
-  function getTimeSec(){
-    let h=parseInt($('t_h').value,10)||0, m=parseInt($('t_m').value,10)||0, s=parseInt($('t_s').value,10)||0;
-    return h*3600+m*60+s;
-  }
-  function markQuick(d){
-    document.querySelectorAll('.quick button').forEach(b=>{
-      b.classList.toggle('on', Math.abs(parseFloat(b.dataset.d)-d)<0.6);
-    });
-  }
   function setSex(s){
     sex=s;
     $('tab_m').classList.toggle('on', s==='m');
@@ -248,62 +223,132 @@
     return best;
   }
 
+  // ================= результаты: несколько дистанций (тот же приём, что в калькуляторе беговых планов) =================
+  function bestVdot(results){
+    const v=(results||[]).filter(r=>r&&r.sec>0&&r.dist>0).map(r=>vdot(r.dist,r.sec));
+    return v.length? Math.max(...v) : 0;
+  }
+  function parseT(s){ // "3:15"/"3:15:30" (ч:мм[:сс]) или "40:00" (мм:сс, если первая часть >=10)
+    if(!s) return null; const p=String(s).trim().split(':').map(Number);
+    if(p.some(x=>isNaN(x))||p.length<1||p.length>3) return null;
+    if(p.length===3) return p[0]*3600+p[1]*60+p[2];
+    if(p.length===2) return p[0]>=10 ? p[0]*60+p[1] : p[0]*3600+p[1]*60;
+    return p[0]*60;
+  }
+  function phShort(d){ return d>=21097? 'ч:мм:сс (напр. 3:15:00)' : 'мм:сс (напр. 42:00)'; }
+  function resRowHtml(dist,timeStr){
+    const d=+dist||10000;
+    const opts=DISTS.map(td=>`<option value="${td}"${td===d?' selected':''}>${DIST_LABEL[td]}</option>`).join('');
+    return `<div class="resrow">
+      <select class="r-dist">${opts}</select>
+      <input type="text" class="r-time" value="${timeStr||''}" placeholder="${phShort(d)}">
+      <span class="tparse"></span>
+      <button type="button" class="delbtn" title="Удалить" onclick="this.closest('.resrow').remove();render();">×</button>
+    </div>`;
+  }
+  function updResRow(r){
+    const inp=r.querySelector('.r-time'), d=+r.querySelector('.r-dist').value, sp=r.querySelector('.tparse');
+    if(inp) inp.placeholder=phShort(d);
+    if(sp){ const sec=parseT(inp.value); sp.textContent=sec? ('= '+fmtTime(sec)) : ''; }
+  }
+  function bindResInputs(){
+    document.querySelectorAll('#resList .resrow').forEach(r=>{
+      const t=r.querySelector('.r-time'), d=r.querySelector('.r-dist');
+      if(t) t.oninput=()=>{ updResRow(r); render(); };
+      if(d) d.onchange=()=>{ updResRow(r); render(); };
+      updResRow(r);
+    });
+  }
+  function addResRow(dist,timeStr){ $('resList').insertAdjacentHTML('beforeend', resRowHtml(dist,timeStr)); bindResInputs(); }
+  function readResRows(){
+    return Array.from(document.querySelectorAll('#resList .resrow'))
+      .map(r=>({dist:+r.querySelector('.r-dist').value, sec:parseT(r.querySelector('.r-time').value)||0}))
+      .filter(r=>r.sec>0);
+  }
+  function setResRows(list){
+    $('resList').innerHTML='';
+    const arr=(list&&list.length? list : [{dist:10000,time:'42:00'}]);
+    arr.forEach(r=>addResRow(r.dist, r.time||(r.sec?fmtTime(r.sec):'')));
+  }
+
   function render(){
-    const d=getDist(), t=getTimeSec();
-    markQuick(d);
-    if(t<=0){
+    const results=readResRows();
+    if(!results.length){
       $('o_rank').textContent='—'; $('o_vdot').textContent='0.0'; $('o_next').textContent='—';
-      $('rows').innerHTML='<tr><td colspan="10" style="color:var(--muted)">Впишите результат гонки</td></tr>';
+      $('rows').innerHTML='<tr><td colspan="10" style="color:var(--muted)">Добавьте хотя бы один результат</td></tr>';
       return;
     }
-    const vd=vdot(d,t);
+    const vd=bestVdot(results);
     $('o_vdot').textContent=vd.toFixed(1);
     const table=STD[sex];
-    const curTableDist=nearestTableDist(d);
 
-    let curRankKey=null, curNextGap=null;
+    // фактически достигнутые разряды — по каждому введённому результату, напрямую (без прогноза по VDOT)
+    const achievedByDist={};
+    results.forEach(r=>{
+      const td=nearestTableDist(r.dist);
+      const th=table[td];
+      const rk=rankOf(r.sec,th);
+      const prev=achievedByDist[td];
+      if(!prev || r.sec<prev.sec) achievedByDist[td]={sec:r.sec, rankKey:rk};
+    });
 
     $('rows').innerHTML = DISTS.map(td=>{
-      const predSec = timeFor(td, vd);
       const th=table[td];
-      const rk=rankOf(predSec,th);
-      const isCur = td===curTableDist;
-      if(isCur){ curRankKey=rk; }
+      const ach=achievedByDist[td];
+      const predSec=timeFor(td, vd);
+      const rowSec=ach? ach.sec : predSec;
+      const rk=ach? ach.rankKey : rankOf(predSec, th);
       const cells = RANKS.map(r=>{
         const val=th[r];
         const hit = rk===r;
         const cls = hit? 'hit' : '';
         return `<td class="${cls}">${val==null?'—':fmtTime(val)}</td>`;
       }).join('');
-      return `<tr class="${isCur?'cur':''}"><td class="dist">${DIST_LABEL[td]}</td><td class="pred">${fmtTime(predSec)}</td>${cells}</tr>`;
+      const timeCellCls = ach? 'pred hit2' : 'pred';
+      return `<tr class="${ach?'cur':''}"><td class="dist">${DIST_LABEL[td]}</td><td class="${timeCellCls}">${fmtTime(rowSec)}</td>${cells}</tr>`;
     }).join('');
 
-    $('o_rank').textContent = curRankKey ? RANK_LABEL[curRankKey] : 'нет разряда';
+    // верхний бейдж — лучший из фактически достигнутых разрядов среди всех введённых результатов
+    let bestRankIdx=RANKS.length, bestTd=null;
+    Object.keys(achievedByDist).forEach(tdStr=>{
+      const td=+tdStr, rk=achievedByDist[td].rankKey;
+      if(rk){ const idx=RANKS.indexOf(rk); if(idx<bestRankIdx){ bestRankIdx=idx; bestTd=td; } }
+    });
+    $('o_rank').textContent = bestTd!=null ? RANK_LABEL[RANKS[bestRankIdx]] : 'нет разряда';
 
-    // до следующего разряда (на ближайшей табличной дистанции)
-    const th=table[curTableDist];
-    const predSec = timeFor(curTableDist, vd);
-    const curIdx = curRankKey ? RANKS.indexOf(curRankKey) : RANKS.length;
-    let nextTxt='—';
-    for(let i=curIdx-1;i>=0;i--){
-      const key=RANKS[i];
-      if(th[key]!=null){ nextTxt = RANK_LABEL[key]+': −'+fmtTime(predSec-th[key]); break; }
+    if(bestTd!=null){
+      const th=table[bestTd], sec=achievedByDist[bestTd].sec;
+      let nextTxt='—';
+      for(let i=bestRankIdx-1;i>=0;i--){
+        const key=RANKS[i];
+        if(th[key]!=null){ nextTxt = RANK_LABEL[key]+': −'+fmtTime(sec-th[key]); break; }
+      }
+      $('o_next').textContent=nextTxt;
+    } else {
+      $('o_next').textContent='—';
     }
-    $('o_next').textContent=nextTxt;
   }
 
-  function bumpDist(x){ $('dist').value=(parseFloat($('dist').value)||0)+x; render(); }
-  function setDist(v){ $('dist').value=v; render(); }
-  function bumpField(id,x,max){
-    const el=$(id);
-    let v=(parseInt(el.value,10)||0)+x;
-    if(v<0)v=max; if(v>max)v=0;
-    el.value=v;
-    el.dispatchEvent(new Event('input'));
-  }
+  $('addResBtn').onclick=()=>addResRow(10000,'');
+  setResRows([{dist:10000,time:'42:00'}]);
 
-  $('dist').addEventListener('input', render);
-  ['t_h','t_m','t_s'].forEach(id=>$(id).addEventListener('input', render));
+  // ================= автозаполнение из приложения (аналитика Гармин + профиль) =================
+  // При открытии из Android-приложения (см. ToolUrlBuilder.kt) сюда подставляются пол и список
+  // лучших недавних результатов по дистанциям из локальной базы аналитики (если они есть).
+  // При обычном открытии в браузере параметров нет — остаётся результат по умолчанию выше.
+  (function applyPrefill(){
+    try{
+      const qp=new URLSearchParams(location.search);
+      if(qp.has('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) setSex(qp.get('sex'));
+      if(qp.has('res')){
+        const parsed=qp.get('res').split(',').map(pair=>{
+          const [dStr,sStr]=pair.split(':'); const d=parseFloat(dStr), sec=parseInt(sStr,10);
+          return (d>0&&sec>0)? {dist:d, sec} : null;
+        }).filter(Boolean);
+        if(parsed.length) setResRows(parsed);
+      }
+    }catch(e){}
+  })();
 
   render();
 </script>

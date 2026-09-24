@@ -845,8 +845,12 @@ function projectFitness(cfgIn,peakKmActual){
     vG=vdTarget!=null?verdict(vdTarget,achGoalVd,vdot(42195,marCur)):'—';
     notes.push('Прогноз времени на ультре — грубая оценка от марафон-формы (модель Ригеля) для равнинной трассы; на рельефе/грунте и жаре добавляйте 15–40%+.');
   } else {
-    const atGoal=(cfg.results||[]).find(r=>r.dist===goalDist&&r.sec>0);
-    curGoalTime=atGoal?atGoal.sec:Math.round(timeFor(goalDist,anchorVd*ENDFAC[goalDist]));
+    // ИСПРАВЛЕНО (ревью, п.3): раньше при наличии введённого результата НА ДИСТАНЦИИ ЦЕЛИ он
+    // брался напрямую (atGoal.sec), даже если он старый, а по другим дистанциям есть более
+    // свежие и явно более быстрые результаты - anchorVd (bestVdot) их уже учитывает, а
+    // curGoalTime молча продолжал считаться от устаревшего результата. Теперь curGoalTime
+    // всегда считается от той же anchorVd, что и весь остальной прогноз формы - согласованно.
+    curGoalTime=Math.round(timeFor(goalDist,anchorVd*ENDFAC[goalDist]));
     vdTarget=tgtGoalClean?vdot(goalDist,tgtGoalClean):null;
     // вердикт считаем от той же базы, из которой спрогнозирован achGoalVd (anchorVd), а не от vdot фактического
     // введённого результата — иначе при расхождении anchorVd (усреднён с ПАНО) и «сырого» результата вердикт
@@ -1156,7 +1160,7 @@ function buildPlan(cfgIn){
     const cand=rankLoadDays(TPLr,false,v=>v==='E'||v==='R');
     if(!cand.length)return {dow:sparkDow,ok:false};
     const best=cand[0];
-    return {dow:best,ok:gapNextQL(TPLr,best)>=2};
+    return {dow:best,ok:gapNextQL(TPLr,best)>=2&&gapPrevQL(TPLr,best)>=2};
   })();
   const midLongDow=midLongPick.dow, midLongOk=midLongPick.ok;
   midLongDowRef=midLongOk?midLongDow:-1;
@@ -1952,6 +1956,11 @@ function buildPlan(cfgIn){
   let easyVarCounter=0; // счётчик для ротации структуры лёгких дней по всему плану (не только "объём + страйды")
   let prevActualKm=0;   // фактический объём предыдущей недели — им ограничиваем разгрузку/подводку
   let preDownActualKm=0; // фактический объём последней рабочей недели ПЕРЕД разгрузкой — им ограничиваем отскок
+  // Фактический объём последней ОБЫЧНОЙ рабочей недели (не разгрузка, не старт, не подводка и не неделя
+  // восстановления после промежуточного старта). После любой просадки (разгрузка, тюн-старт, восстановление)
+  // рост считаем от этого уровня, а не от самой просадки: раньше после промежуточного марафона план полз
+  // обратно по +10% от восстановительной недели (30→41→45→48→50) и «Пиковая» выходила на 50 км при 68 до старта.
+  let lastWorkingActualKm=0;
   let maxActualKm=0;     // максимум фактического объёма среди рабочих недель — им подтягиваем пиковую неделю
 
   for(let i=0;i<N;i++){
@@ -2143,7 +2152,7 @@ function buildPlan(cfgIn){
         else if(db===2){items=[{kind:'rest',label:'Отдых перед стартом',fixed:1}];}
         else if(db===3){items=[{kind:'run',z:'easy',name:'Лёгкий (подводка)',steps:[easyS(preTune.dist>=21097?30:32),strides(3,R)],fixed:1}];}
         else if(db===4){items=[{kind:'run',z:'easy',name:'Лёгкий (подводка)',steps:[easyS(preTune.dist>=21097?35:38)],fixed:1}];}
-        else {items=[{kind:'run',z:'mp',name:'Настройка перед промежуточным стартом',steps:[warm(10),repsD(3,1000,R.mp,90,'mp',cfg.exp),cool(8)],fixed:1}];}
+        else {items=[{kind:'run',z:'mp',name:'Настройка МР перед промежуточным стартом',steps:[warm(10),repsD(3,1000,R.mp,90,'mp',cfg.exp),cool(8)],fixed:1}];}
         days.push({date:dt,items});continue;
       }
       // --- неделя промежуточного старта ---
@@ -2253,7 +2262,7 @@ function buildPlan(cfgIn){
       // (см. ревью, A5). Полностью убирать длинную нельзя (потеря аэробной специфики) — режем до 55% и без специфики.
       else if(slot==='L'&&easyDay){
         const lrCut=r5(clamp(lrMin*0.55,30,90));
-        items=[{kind:'run',z:'long',name:`Длинная ${hm(lrCut)} (сокращённая, восстановление)`,steps:[longE(lrCut)],
+        items=[{kind:'run',z:'easy',name:`Длинная ${hm(lrCut)} (сокращённая, восстановление)`,steps:[longE(lrCut)],
           note:'Укороченная длинная: идёт после промежуточного старта, задача — вернуть аэробный объём, а не нагрузить. Строго по низкому пульсу, без ускорений и концовок.'}];}
       else if(slot==='L'){
         if(isUltra){
@@ -2440,7 +2449,10 @@ function buildPlan(cfgIn){
       // разгрузочной недели. Иначе 75 → 56 (down) → 61.6 превращалось в многонедельную «заморозку»
       // объёма около 60 км. Это не восстановление — это ошибка базы роста.
       let wkmT;
-      if(prevT==='down'&&preDownActualKm>0) wkmT=Math.min(wkm,preDownActualKm*1.10);
+      const isWorkingWeek=(types[i]===''||types[i]==='peak')&&!(tuneRecShareByWeek[i]>0);
+      const workingBase=Math.max(prevActualKm,prevT==='down'?preDownActualKm:0,lastWorkingActualKm);
+      if(isWorkingWeek&&workingBase>0) wkmT=Math.min(wkm,workingBase*1.10);
+      else if(prevT==='down'&&preDownActualKm>0) wkmT=Math.min(wkm,preDownActualKm*1.10);
       else wkmT=prevActualKm>0?Math.min(wkm,prevActualKm*capF):wkm;
       // ПИКОВАЯ НЕДЕЛЯ ДОЛЖНА РЕАЛЬНО ДОСТИГАТЬ ЗАЯВЛЕННОГО ПИКА. Раньше здесь стоял только +2% над уже
       // достигнутым максимумом — если пик шёл сразу после разгрузочной/тюновой недели (по плану так и задумано:
@@ -3092,7 +3104,10 @@ function buildPlan(cfgIn){
     // Если даже физиологические минимумы не помещаются, фиксируем структурный минимум, но НЕ повышаем неделю
     // сверх капа — неделя остаётся ниже цели.
     const prevTypeForCap=i>0?types[i-1]:'';
-    const growthBaseForCap=prevTypeForCap==='down'&&preDownActualKm>0?preDownActualKm:prevActualKm;
+    const isWorkingForCap=(types[i]===''||types[i]==='peak')&&!(tuneRecShareByWeek[i]>0);
+    const growthBaseForCap=isWorkingForCap
+      ?Math.max(prevActualKm,prevTypeForCap==='down'?preDownActualKm:0,lastWorkingActualKm)
+      :(prevTypeForCap==='down'&&preDownActualKm>0?preDownActualKm:prevActualKm);
     const growthSafetyCapKm=growthBaseForCap>0?(types[i]==='taper'?growthBaseForCap*0.85:(types[i]==='down'?growthBaseForCap*0.85:(types[i]==='tune'?growthBaseForCap*0.95:growthBaseForCap*1.10))):null; // рабочие недели ≤+8%, разгрузка/подводка/тюнинг имеют отдельный cap
     const shrinkRunMin=(item,minTotal)=>{
       if(!item||!item.steps)return false;
@@ -3155,6 +3170,7 @@ function buildPlan(cfgIn){
       // считается от завышенной цели и превышает ~10% от реального преддеклоадного объёма
       // (замер: факт до разгрузки 44 км, но база бралась 53 → неделя после разгрузки уходила на 53 км)
       if(types[i]!=='down'&&types[i]!=='taper')preDownActualKm=wKm;
+      if((types[i]===''||types[i]==='peak')&&!(tuneRecShareByWeek[i]>0))lastWorkingActualKm=wKm;
       if(types[i]!=='taper')maxActualKm=Math.max(maxActualKm,wKm);
     }
     weeks.push({n:i+1,start:wStart,end:dAdd(wStart,6),phase:phName,type:types[i],km:Math.round(wKm),
@@ -3203,6 +3219,130 @@ function buildPlan(cfgIn){
   if(cfg.cross)cfg.cross=cfg.cross.map(c=>{const o=Object.assign({},c);delete o._days;return o;});
   return {weeks,workouts,analysis,P0,P1,cfg,start,marD};
 }
+// ИСПРАВЛЕНО (ревью п.17 "test_plan_invariants.js падает на всех конфигурациях -
+// recommendRuns is not defined"): getQualCount/qSessionMinutes/recommendRuns раньше были
+// объявлены уже ПОСЛЕ конца расчётного ядра (маркер конца GEN-блока ниже), хотя используются
+// ВНУТРИ него (buildPlan/projectFitness выше вызывают recommendRuns/getQualCount) - тест
+// вырезает для прогона именно содержимое между началом и концом GEN-блока, так что node видел
+// вызов recommendRuns() без его определения и падал на 100% конфигураций. Сами функции никак не
+// зависят от DOM/UI (используют только clamp/lerp/LOW_VOL_KM/MODELS, уже определённые выше в
+// этом же блоке) - перенесены сюда целиком, без изменения логики. (Примечание: этот комментарий
+// намеренно не содержит буквальный текст маркера конца блока, чтобы не сбить простой indexOf(),
+// которым тест ищет границы блока - именно из-за такой же буквальной подстроки в исходной версии
+// этого комментария тест поначалу продолжал падать даже после переноса функций.)
+
+// Частота тренировок в неделю — СЛЕДСТВИЕ композиции недели (качественные + длинная + остаток на лёгкие),
+// а не отдельная линейная формула от объёма/дистанции. Раньше recommendRuns считал число тренировок в
+// изоляции от того, что реально должно поместиться в неделю (nQual/длинная/бюджет интенсивности в buildPlan),
+// из-за чего заявленная частота не вмещала нужный контент и buildPlan тихо резал план под неё (см. обсуждение).
+// Здесь повторяем ту же логику «снизу вверх», что и buildPlan, в упрощённом виде (без пересчёта минут по
+// реальному темпу — это лишь ориентир для дефолта, сам генератор считает точнее и остаётся страховкой).
+//   1) nQual        — число качественных сессий/нед, через общий getQualCount(); правило peakKm>110&&runs>=6
+//                      теперь одинаково в recommendRuns и buildPlan.
+//   2) longShare(s) — доля недельного объёма на длинную (+ спец. концовка), из модели дистанции, лерпится
+//                      акцентом s (0 скорость … 1 выносливость) — выносливостный акцент даёт длиннее/чаще
+//                      специфику, скоростной — короче (та же пара GM.longShare, что использует buildPlan).
+//   3) qShare(s)    — доля недельного объёма на качественные (тот же порядок величин, что бюджет интенсивности
+//                      MODHARD_SHARE в buildPlan: 0.30 обычная фаза / 0.36 спец.-фаза для 10к+), с небольшим
+//                      сдвигом по акценту: выносливость — пороговые сессии длиннее (доля выше), скорость —
+//                      VO2/повторы короче даже с учётом восстановления между ними (доля ниже).
+//   4) остаток      — на лёгкие/восстановительные; делим на потолок одной пробежки по опыту → число дней.
+//   5) итог         — nQual + 1 (длинная) + число лёгких/восст., клампится полом/потолком по опыту.
+// БАГФИКС (см. ревью): раньше число качественных выбиралось СТУПЕНЬКОЙ по жёстким порогам peakKm —
+// 44→1/45→2 и 110→2/111→3 (а для новичка ещё и 69→1/70→2). Рядом стоящие по объёму недели получали
+// разное число качественных без физической причины — это артефакт порога, а не разница в нагрузке.
+// Вместо порогов здесь оценивается РЕАЛЬНЫЙ бюджет недели на интенсивную работу (qShare — та же доля
+// объёма, что определяет поляризованную/пирамидальную структуру плана, см. MODHARD_SHARE/qShare в
+// buildPlan и recommendRuns) и физическая вместимость по числу пробежек (между качественными нужен
+// минимум один лёгкий/восстановительный день). Число качественных растёт только тогда, когда бюджет
+// реально вмещает ещё одну сессию — граница получается плавной и зависит от факт. темпа, а не от
+// одной точки peakKm. Третья сессия дополнительно требует опыта 'adv' — независимо от бюджета, третья
+// качественная неделя за неделей рядом с длинной/спаркой повышает риск травмы сильнее, чем даёт пользы
+// менее опытным бегунам (та же защита, что была раньше, — она не про вместимость, а про надёжность).
+function getQualCount(peakKm,exp,runs,easyPaceSec){
+  peakKm=Math.max(0,+peakKm||0); runs=Math.max(1,+runs||1);
+  const easyPace=Math.max(240,+easyPaceSec||360);
+  // доля недельного объёма, которую полярiз./пирамидальная модель отводит под интенсивную работу;
+  // у новичка бюджет уже (меньше интенсивности при том же объёме), у опытного — шире
+  const qShare={novice:0.24,inter:0.30,adv:0.34}[exp]||0.30;
+  const qBudgetKm=peakKm*qShare;
+  // сколько "жёстких" слотов физически помещается в неделю: длинная — один день, а качественным
+  // нужен минимум один лёгкий/восстановительный день между ними, иначе накопленное утомление ломает
+  // саму цель поляризации
+  const maxSlotsBySpacing=Math.max(1,Math.ceil((runs-1)/2));
+  let n=1;
+  for(let cand=2;cand<=3;cand++){
+    if(cand>maxSlotsBySpacing)break;
+    const sessMin=qSessionMinutes(cand,peakKm);
+    const candKm=cand*sessMin*60/easyPace;
+    // 10% запаса — иначе сессия "впритык" к бюджету регулярно проваливается в чуть более тесные недели
+    if(candKm<=qBudgetKm*1.10)n=cand; else break;
+  }
+  if(n===3&&exp!=='adv')n=2;
+  return clamp(n,1,3);
+}
+// Единая оценка «сколько минут длится одна качественная сессия» для прикидок вместимости недели.
+// Раньше это было три разных набора чисел в трёх местах (расчёт потолка по числу пробежек в buildPlan,
+// recommendVolume, recommendRuns) — причём один набор УБЫВАЛ с ростом nQual (55/50/45), а два других
+// РОСЛИ вместе с объёмом внутри одного и того же nQual (30→40, 40→45, 50). Это не рассинхронизация из
+// одной физиологической модели, а буквально противоречащие друг другу предположения (см. ревью). Здесь —
+// общая версия (согласована с recommendVolume/recommendRuns, которые совпадали между собой).
+function qSessionMinutes(nQual,volKm){
+  volKm=Math.max(0,+volKm||0);
+  if(nQual===1)return volKm<LOW_VOL_KM?30:40;
+  if(nQual===2)return volKm<50?40:45;
+  return 50;
+}
+function recommendRuns(peakKm,goalDist,recF,exp,s,easyPaceSec){
+  exp=exp||'inter'; s=clamp(s==null?0.5:s,0,1); peakKm=Math.max(0,+peakKm||0);
+  const GM=MODELS[goalDist]||MODELS[42195];
+  const longShareFrac=lerp(GM.longShare[0],GM.longShare[1],s);
+  const specGoal=goalDist>=10000;
+  const qShareBase=specGoal?0.36:0.30;
+  const qShare=clamp(qShareBase+(s-0.5)*0.08,0.22,0.42);
+  const easyShare=Math.max(0.15,1-longShareFrac-qShare);
+  const easyKm=peakKm*easyShare;
+  // Частота должна учитывать РЕАЛЬНУЮ вместимость ранней недели. В buildPlan потолок лёгкого дня
+  // в начале цикла = TUNE.easyMin[1] × 0.8, а длинная ограничена maxLongMin. Старая формула
+  // использовала абстрактные 13/17 км на easy-день и потому для 70–110 км/нед рекомендовала 6–7 дней,
+  // хотя фактическая неделя физически вмещала только ~55–80 км. Высокий беговой объём должен получать
+  // больше частоты, а не растягивание отдельных лёгких дней.
+  const easyMaxMinEarly=75*0.80;
+  const easyPace=Math.max(240,+easyPaceSec||360);
+  const easyMaxKm=easyMaxMinEarly*60/easyPace;
+  const longModel=MODELS[goalDist]||MODELS[42195];
+  const longShareKm=peakKm*longShareFrac;
+  const longPace=(goalDist>=42000?((longModel.maxLongMin[0]+longModel.maxLongMin[1])/2):easyPace*1.02);
+  const longCapKm=(longModel.maxLongMin[1]||80)*60/Math.max(300,longPace);
+  const floorCeil=peakKm<30?{novice:[3,4],inter:[3,4],adv:[3,4]}[exp]||[3,4]:(peakKm<45?{novice:[4,5],inter:[4,5],adv:[4,5]}[exp]||[4,5]:{novice:[4,5],inter:[4,6],adv:[4,7]}[exp]||[4,6]);
+  let ceil=floorCeil[1];
+  // При высоком объёме частота — основной способ сохранить поляризованную/пирамидальную структуру:
+  // ориентир ≈ одна пробежка на 9–10 км недельного объёма, но с учётом минимальной частоты по опыту.
+  if(peakKm>=60)ceil=Math.max(ceil,Math.ceil(peakKm/10));
+  if(peakKm>100)ceil=Math.max(ceil,Math.ceil(peakKm/10));
+  if(peakKm>140)ceil=12;
+  // Ищем минимальную частоту, которая реально вмещает недельный объём с тем же правилом Q,
+  // что использует buildPlan. Это сохраняет поляризованную/пирамидальную структуру: сначала
+  // резервируем качественные и длинную, затем распределяем остаток на easy/rec.
+  for(let runs=floorCeil[0];runs<=ceil;runs++){
+    const nQual=getQualCount(peakKm,exp,runs,easyPace);
+    const qSessionMin=qSessionMinutes(nQual,peakKm);
+    const qKm=nQual*qSessionMin*60/easyPace;
+    const longKm=Math.min(longShareKm,longCapKm);
+    const flexRuns=Math.max(0,runs-nQual-1);
+    const flexCapacity=flexRuns*easyMaxKm;
+    const requiredEasy=Math.max(0,peakKm-qKm-longKm);
+    if(flexRuns>0&&flexCapacity>=requiredEasy) {
+      let r=runs;
+      if(recF>1.2)r=Math.max(floorCeil[0],r-1);
+      return clamp(Math.round(r),floorCeil[0],ceil);
+    }
+  }
+  // Если даже верхняя граница не вмещает объём, возвращаем максимум, а buildPlan дополнительно
+  // проверяет фактическую вместимость недели.
+  return ceil;
+}
+
 /*GEN-END*/
 
 // ================= межсезонье / переходный период: построение плана =================
@@ -3325,7 +3465,7 @@ function preRaceRecoveryDays(dist,hard,exp,recF){
 function classifyRec(w){ if(w.kind==='cross')return 'cross';
   if(w.kind==='str')return 'str';
   var n=w.name||'';
-  if(/МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ|(^|[^А-Яа-яЁё])СТАРТ/i.test(n))return 'race';
+  if(/МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ|(^|[^А-Яа-яЁё])СТАРТ([^А-Яа-яЁё]|$)/i.test(n))return 'race';
   if(/Длинн/i.test(n))return 'long';
   // вторая пробежка дня: генератор называет её «Восстановительный (2-я трен.)» и помечает флагом dbl2 —
   // старый шаблон /Восст\s*утро/ не совпадал ни с одним именем, ветка 'am' была недостижима, и adaptRecovery
@@ -3752,7 +3892,7 @@ function fillDatesTunes(pr){
   if(typeof syncFromGoalDate==='function')try{syncFromGoalDate();}catch(e){}
 }
 function zoneOfW(w){ if(w.kind==='str')return 'str'; if(w.kind==='cross')return 'cross'; const n=w.name||'';
-  if(/МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ|(^|[^А-Яа-яЁё])СТАРТ/i.test(n))return 'race';
+  if(/МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ|(^|[^А-Яа-яЁё])СТАРТ([^А-Яа-яЁё]|$)/i.test(n))return 'race';
   if(/Длинн/i.test(n))return 'long';
   if(/(^|[^А-Яа-яЁё])МР([^А-Яа-яЁё]|$)|Марафонск|Ультра-темп/i.test(n))return 'mp';
   // Горки/подъёмы — пороговый стимул (усилие Z3–Z4 в гору), а не МПК: раньше "Горк" стоял в vo2-ветке и
@@ -3804,7 +3944,7 @@ function renderStaticFromEdit(cfgRef,forExport){
       const fuel=isRun?fuelForWorkout(w,cfgRef):null;
       // силовая со ссылкой на карточку описания (см. strSec/renderOffseason): вместо повтора полного списка
       // упражнений в каждой строке недели — короткая ссылка на канонический разбор конкретной силовой.
-      const nameHtml=(w.kind==='str'&&w.id)?`<a href="#${w.id}" title="Описание тренировки">${esc(w.name)}</a>`:esc(w.name);
+      const nameHtml=(w.kind==='str'&&w.id)?`<a href="#${esc(w.id)}" title="Описание тренировки">${esc(w.name)}</a>`:esc(w.name);
       const descHtml=(w.kind==='str'&&w.id)?'':` — ${esc(desc)}`;
       return `<tr class="${q}" data-date="${w.date}"><td class="day">${DOW[(w._date.getDay()+6)%7]}<span class="dt">${pad2(w._date.getDate())}.${pad2(w._date.getMonth()+1)}</span></td>
         <td class="chip-cell"><span class="chip" style="background:var(${ZC[z]})">${ZLAB[z]}</span></td>
@@ -3882,7 +4022,7 @@ function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouch
   // При обычном открытии в браузере параметров нет — работают дефолты формы, как раньше.
   (function applyPrefill(){
     try{
-      const qp=new URLSearchParams(location.search);
+      const qp=new URLSearchParams(location.hash&&location.hash.length>1?location.hash.slice(1):location.search); // ИСПРАВЛЕНО (ревью п.9): приложение теперь кладёт параметры после # (не уходит на сервер, не входит в ключ офлайн-кэша WebView) — старые ссылки с ?query= по-прежнему работают через фолбэк.
       if(qp.has('age')){ const a=parseInt(qp.get('age'),10); if(!isNaN(a)) $('age').value=a; }
       if(qp.has('weight')){ const w=parseFloat(qp.get('weight')); if(!isNaN(w)&&w>0) $('weight').value=w; }
       if(qp.has('sex') && $('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) $('sex').value=qp.get('sex');
@@ -4006,118 +4146,6 @@ function recommendVolume(curVol,goalDist,weeks,recF,exp){
   candidate=Math.min(candidate,Math.max(curVol,feasibleCap));
   return Math.round(Math.max(curVol,candidate));
 }
-// Частота тренировок в неделю — СЛЕДСТВИЕ композиции недели (качественные + длинная + остаток на лёгкие),
-// а не отдельная линейная формула от объёма/дистанции. Раньше recommendRuns считал число тренировок в
-// изоляции от того, что реально должно поместиться в неделю (nQual/длинная/бюджет интенсивности в buildPlan),
-// из-за чего заявленная частота не вмещала нужный контент и buildPlan тихо резал план под неё (см. обсуждение).
-// Здесь повторяем ту же логику «снизу вверх», что и buildPlan, в упрощённом виде (без пересчёта минут по
-// реальному темпу — это лишь ориентир для дефолта, сам генератор считает точнее и остаётся страховкой).
-//   1) nQual        — число качественных сессий/нед, через общий getQualCount(); правило peakKm>110&&runs>=6
-//                      теперь одинаково в recommendRuns и buildPlan.
-//   2) longShare(s) — доля недельного объёма на длинную (+ спец. концовка), из модели дистанции, лерпится
-//                      акцентом s (0 скорость … 1 выносливость) — выносливостный акцент даёт длиннее/чаще
-//                      специфику, скоростной — короче (та же пара GM.longShare, что использует buildPlan).
-//   3) qShare(s)    — доля недельного объёма на качественные (тот же порядок величин, что бюджет интенсивности
-//                      MODHARD_SHARE в buildPlan: 0.30 обычная фаза / 0.36 спец.-фаза для 10к+), с небольшим
-//                      сдвигом по акценту: выносливость — пороговые сессии длиннее (доля выше), скорость —
-//                      VO2/повторы короче даже с учётом восстановления между ними (доля ниже).
-//   4) остаток      — на лёгкие/восстановительные; делим на потолок одной пробежки по опыту → число дней.
-//   5) итог         — nQual + 1 (длинная) + число лёгких/восст., клампится полом/потолком по опыту.
-// БАГФИКС (см. ревью): раньше число качественных выбиралось СТУПЕНЬКОЙ по жёстким порогам peakKm —
-// 44→1/45→2 и 110→2/111→3 (а для новичка ещё и 69→1/70→2). Рядом стоящие по объёму недели получали
-// разное число качественных без физической причины — это артефакт порога, а не разница в нагрузке.
-// Вместо порогов здесь оценивается РЕАЛЬНЫЙ бюджет недели на интенсивную работу (qShare — та же доля
-// объёма, что определяет поляризованную/пирамидальную структуру плана, см. MODHARD_SHARE/qShare в
-// buildPlan и recommendRuns) и физическая вместимость по числу пробежек (между качественными нужен
-// минимум один лёгкий/восстановительный день). Число качественных растёт только тогда, когда бюджет
-// реально вмещает ещё одну сессию — граница получается плавной и зависит от факт. темпа, а не от
-// одной точки peakKm. Третья сессия дополнительно требует опыта 'adv' — независимо от бюджета, третья
-// качественная неделя за неделей рядом с длинной/спаркой повышает риск травмы сильнее, чем даёт пользы
-// менее опытным бегунам (та же защита, что была раньше, — она не про вместимость, а про надёжность).
-function getQualCount(peakKm,exp,runs,easyPaceSec){
-  peakKm=Math.max(0,+peakKm||0); runs=Math.max(1,+runs||1);
-  const easyPace=Math.max(240,+easyPaceSec||360);
-  // доля недельного объёма, которую полярiз./пирамидальная модель отводит под интенсивную работу;
-  // у новичка бюджет уже (меньше интенсивности при том же объёме), у опытного — шире
-  const qShare={novice:0.24,inter:0.30,adv:0.34}[exp]||0.30;
-  const qBudgetKm=peakKm*qShare;
-  // сколько "жёстких" слотов физически помещается в неделю: длинная — один день, а качественным
-  // нужен минимум один лёгкий/восстановительный день между ними, иначе накопленное утомление ломает
-  // саму цель поляризации
-  const maxSlotsBySpacing=Math.max(1,Math.ceil((runs-1)/2));
-  let n=1;
-  for(let cand=2;cand<=3;cand++){
-    if(cand>maxSlotsBySpacing)break;
-    const sessMin=qSessionMinutes(cand,peakKm);
-    const candKm=cand*sessMin*60/easyPace;
-    // 10% запаса — иначе сессия "впритык" к бюджету регулярно проваливается в чуть более тесные недели
-    if(candKm<=qBudgetKm*1.10)n=cand; else break;
-  }
-  if(n===3&&exp!=='adv')n=2;
-  return clamp(n,1,3);
-}
-// Единая оценка «сколько минут длится одна качественная сессия» для прикидок вместимости недели.
-// Раньше это было три разных набора чисел в трёх местах (расчёт потолка по числу пробежек в buildPlan,
-// recommendVolume, recommendRuns) — причём один набор УБЫВАЛ с ростом nQual (55/50/45), а два других
-// РОСЛИ вместе с объёмом внутри одного и того же nQual (30→40, 40→45, 50). Это не рассинхронизация из
-// одной физиологической модели, а буквально противоречащие друг другу предположения (см. ревью). Здесь —
-// общая версия (согласована с recommendVolume/recommendRuns, которые совпадали между собой).
-function qSessionMinutes(nQual,volKm){
-  volKm=Math.max(0,+volKm||0);
-  if(nQual===1)return volKm<LOW_VOL_KM?30:40;
-  if(nQual===2)return volKm<50?40:45;
-  return 50;
-}
-function recommendRuns(peakKm,goalDist,recF,exp,s,easyPaceSec){
-  exp=exp||'inter'; s=clamp(s==null?0.5:s,0,1); peakKm=Math.max(0,+peakKm||0);
-  const GM=MODELS[goalDist]||MODELS[42195];
-  const longShareFrac=lerp(GM.longShare[0],GM.longShare[1],s);
-  const specGoal=goalDist>=10000;
-  const qShareBase=specGoal?0.36:0.30;
-  const qShare=clamp(qShareBase+(s-0.5)*0.08,0.22,0.42);
-  const easyShare=Math.max(0.15,1-longShareFrac-qShare);
-  const easyKm=peakKm*easyShare;
-  // Частота должна учитывать РЕАЛЬНУЮ вместимость ранней недели. В buildPlan потолок лёгкого дня
-  // в начале цикла = TUNE.easyMin[1] × 0.8, а длинная ограничена maxLongMin. Старая формула
-  // использовала абстрактные 13/17 км на easy-день и потому для 70–110 км/нед рекомендовала 6–7 дней,
-  // хотя фактическая неделя физически вмещала только ~55–80 км. Высокий беговой объём должен получать
-  // больше частоты, а не растягивание отдельных лёгких дней.
-  const easyMaxMinEarly=75*0.80;
-  const easyPace=Math.max(240,+easyPaceSec||360);
-  const easyMaxKm=easyMaxMinEarly*60/easyPace;
-  const longModel=MODELS[goalDist]||MODELS[42195];
-  const longShareKm=peakKm*longShareFrac;
-  const longPace=(goalDist>=42000?((longModel.maxLongMin[0]+longModel.maxLongMin[1])/2):easyPace*1.02);
-  const longCapKm=(longModel.maxLongMin[1]||80)*60/Math.max(300,longPace);
-  const floorCeil=peakKm<30?{novice:[3,4],inter:[3,4],adv:[3,4]}[exp]||[3,4]:(peakKm<45?{novice:[4,5],inter:[4,5],adv:[4,5]}[exp]||[4,5]:{novice:[4,5],inter:[4,6],adv:[4,7]}[exp]||[4,6]);
-  let ceil=floorCeil[1];
-  // При высоком объёме частота — основной способ сохранить поляризованную/пирамидальную структуру:
-  // ориентир ≈ одна пробежка на 9–10 км недельного объёма, но с учётом минимальной частоты по опыту.
-  if(peakKm>=60)ceil=Math.max(ceil,Math.ceil(peakKm/10));
-  if(peakKm>100)ceil=Math.max(ceil,Math.ceil(peakKm/10));
-  if(peakKm>140)ceil=12;
-  // Ищем минимальную частоту, которая реально вмещает недельный объём с тем же правилом Q,
-  // что использует buildPlan. Это сохраняет поляризованную/пирамидальную структуру: сначала
-  // резервируем качественные и длинную, затем распределяем остаток на easy/rec.
-  for(let runs=floorCeil[0];runs<=ceil;runs++){
-    const nQual=getQualCount(peakKm,exp,runs,easyPace);
-    const qSessionMin=qSessionMinutes(nQual,peakKm);
-    const qKm=nQual*qSessionMin*60/easyPace;
-    const longKm=Math.min(longShareKm,longCapKm);
-    const flexRuns=Math.max(0,runs-nQual-1);
-    const flexCapacity=flexRuns*easyMaxKm;
-    const requiredEasy=Math.max(0,peakKm-qKm-longKm);
-    if(flexRuns>0&&flexCapacity>=requiredEasy) {
-      let r=runs;
-      if(recF>1.2)r=Math.max(floorCeil[0],r-1);
-      return clamp(Math.round(r),floorCeil[0],ceil);
-    }
-  }
-  // Если даже верхняя граница не вмещает объём, возвращаем максимум, а buildPlan дополнительно
-  // проверяет фактическую вместимость недели.
-  return ceil;
-}
-
 function recommendStrength(goalDist,volKm,recF,exp){
   let r=2;                                              // база: 2/нед полезны бегунам всех дистанций
   if(goalDist>42195||volKm>120) r=1;                    // ультра / очень большой объём → беречь восстановление (в т.ч. у возрастных)
@@ -4161,13 +4189,30 @@ function offseasonSubPhases(totalWeeks){
   for(let i=0;i<n;i++){ if(i<introN)arr.push('intro'); else if(i<introN+maxN)arr.push('max'); else arr.push('power'); }
   return arr;
 }
-function genTag(goalDist,tgtSec){                         // 3–4 символа: дистанция + время
-  if(goalDist>42195) return 'U'+Math.round(goalDist/10000);        // U6 U8 U10 U12 U16
-  const L=goalDist>=42195?'M':goalDist>=21097?'H':'T';
-  if(!tgtSec) return L;
-  if(goalDist<=10000) return L+Math.floor(tgtSec/60);              // T + минуты (T40)
-  const h=Math.floor(tgtSec/3600), m=Math.floor(tgtSec%3600/60);
-  return L+h+(m<10?'0'+m:''+m);                                    // M315, H132
+// ИСПРАВЛЕНО (ревью п.14 "intervals.icu: пустой/дублирующийся тег удаляет чужие события"):
+// раньше тег строился ТОЛЬКО из дистанции+целевого времени (напр. "M315" для любого марафона
+// на 3:15) — у двух РАЗНЫХ планов (повторная попытка через год, два разных бегуна на одном
+// аккаунте intervals.icu/Garmin) с одинаковой целью получался ОДИНАКОВЫЙ тег, и загрузка
+// одного плана удаляла/путала тренировки другого (см. GarminApi.upload/IntervalsApi.upload —
+// обе матчат старые тренировки по префиксу тега). Теперь к тегу добавляется короткий суффикс
+// даты СТАРТА плана (ММДД) — два плана с одинаковой целью, но начатые в разные дни, больше не
+// коллизируют; тот же план, перезалитый повторно (тот же startISO), сохраняет тот же тег, как
+// и раньше (перезаливка по-прежнему должна безопасно заменять сама себя).
+// см. п.14 ревью выше — общий хелпер для короткого суффикса "-ММДД" из даты старта плана,
+// используется и в genTag(), и в фолбэках тега (offseason-план).
+function startISOtoSuffix(startISO){
+  return (startISO&&/^\d{4}-\d{2}-\d{2}/.test(startISO)) ? '-'+startISO.slice(5,7)+startISO.slice(8,10) : '';
+}
+function genTag(goalDist,tgtSec,startISO){                // дистанция + время + суффикс даты старта
+  let L;
+  if(goalDist>42195) L='U'+Math.round(goalDist/10000);              // U6 U8 U10 U12 U16
+  else {
+    const pfx=goalDist>=42195?'M':goalDist>=21097?'H':'T';
+    L=!tgtSec ? pfx
+      : goalDist<=10000 ? pfx+Math.floor(tgtSec/60)                 // T + минуты (T40)
+      : (()=>{const h=Math.floor(tgtSec/3600), m=Math.floor(tgtSec%3600/60); return pfx+h+(m<10?'0'+m:''+m);})(); // M315, H132
+  }
+  return L+startISOtoSuffix(startISO);
 }
 function fillPlanWeeksOptions(){ const sel=$('planWeeks'); if(!sel||sel.options.length)return;
   [6,8,10,12,14,16,18,20,22,24,26,28].forEach(w=>{const o=document.createElement('option');o.value=w;o.textContent=w+' нед.';sel.appendChild(o);}); }
@@ -4366,7 +4411,7 @@ function recalcEstimate(){
     if(!tgtTouched)$('tgtGoal').value=fmtT(tgtSec);                // цель = реалистичное из диапазона, показываем реальное (курс-дисконтированное) время
     if($('peakRec')){ let t='рекомендовано ≈'+recPeak+' '+unit+'/нед'; if(isFinite(safeMax))t+=' · безопасно '+safeMin+'–'+safeMax; if(volUnit!=='h')t+=' · под цель ~'+glo+'–'+ghi+' км'; $('peakRec').textContent=t; }
     if($('peakWarn'))$('peakWarn').textContent=over?('⚠ '+curPeak+' '+unit+'/нед выше безопасного максимума (~'+safeMax+'): резкий рост объёма повышает риск травм'+(maxVolEver&&curPeak>maxVolEver?' — выше твоего прежнего максимума':'')):(volLow?('⚠ '+curPeak+' '+unit+'/нед ниже минимума для поддержания формы (~'+maintainMin+' '+unit+'/нед): при таком объёме прогресс не работает, прогноз недостоверен'):(baseUnreachable?('⚠ под цель нужно ≥'+glo+' '+unit+'/нед, но от текущего объёма безопасно наберёшь только ~'+safeMax+' — цель пока нереалистична, наращивай базу дольше'):''));
-    if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec)+']';
+    if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec,$('startD').value)+']';
     const pr=projectFitness(Object.assign({},cfg,{tgtGoal:tgtSec}));          // с целью — для вердикта
     if($('tgtRange'))$('tgtRange').innerHTML=`рекомендуемый диапазон: реалистично <b>≈${fmtT(ca.toDisp(realistic))}</b>, амбициозно ≈${fmtT(ca.toDisp(ambitious))} · сейчас ≈${fmtT(ca.toDisp(prR.curGoalTime))}`+(volLow?` <span style="color:#c00">⚠ пиковый объём ~${curPeak} ${unit}/нед ниже минимума для поддержания формы (~${maintainMin} ${unit}/нед) — при таком объёме прогресс не работает, целевое время недостоверно; увеличьте объём.</span>`:'')+(volLimited?` <span style="color:#c00">⚠ под эту цель нужен объём ~${glo} км/нед, но безопасно ты выйдешь только ~${safeMax} км/нед — поэтому цель недостижима в полном объёме; целевое время и прогноз пересчитаны под безопасно достижимый объём (реалистично ≈${fmtT(ca.toDisp(realistic))}).</span>`:'');
     const vtxt={'реалистично':'реалистично','амбициозно':'амбициозно','нереалистично':'вне досягаемости к дате','поддержание':'поддержание'}[pr.vG]||'';
@@ -4421,7 +4466,7 @@ function readCfg(){
     preRaceHard:!!($('preRaceHard')&&$('preRaceHard').checked),
     transPeakVol:(+(($('transPeakVol')&&$('transPeakVol').value)||0))||null,
     transWeeksAgo:($('transWeeksAgo')&&$('transWeeksAgo').value!=='')?+$('transWeeksAgo').value:null,
-    tag:($('tag').value||'[GEN]').trim(),planMode:'goal'};
+    tag:(($('tag').value||'').trim()||('[GEN'+Date.now().toString(36).slice(-4).toUpperCase()+']')),planMode:'goal'};
   if(cfg.ltPace&&cfg.ltPace>600)throw 'Темп ПАНО выглядит странно (медленнее 10:00/км) — проверьте формат м:сс.';
   if(dParse(cfg.goalISO)<=dParse(cfg.startISO))throw 'Дата старта должна быть позже начала плана.';
   // ---- валидация противоречивого ввода (см. ревью, раздел H, пп. 23–29) ----
@@ -4489,14 +4534,21 @@ function readOffseasonCfg(){
     strength:($('strength')&&$('strength').value!=='')?+$('strength').value:undefined,
     peakVol:+(($('peakVol')&&$('peakVol').value))||undefined,
     longDow:($('longDow')&&$('longDow').value!=='')?+$('longDow').value:null,
-    tag:($('tag')&&$('tag').value||'[OFF]').trim(),
+    tag:((($('tag')&&$('tag').value)||'').trim()||('[OFF'+startISOtoSuffix($('startD').value)+']')),
     warnings:[]};
   return cfg;
 }
 
 const ZC={rec:'--z-rec',easy:'--z-easy',mp:'--z-mp',thr:'--z-thr',vo2:'--z-vo2',long:'--z-long',race:'--z-race',rest:'--z-rest',str:'--z-rep',cross:'--z-rec'};
 const ZLAB={rec:'Восст.',easy:'Лёгкий',mp:'Марафон. темп',thr:'Порог',vo2:'МПК/10к',long:'Длинная',race:'Старт',rest:'Отдых',str:'Силовая',cross:'Кросс'};
-const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+// ИСПРАВЛЕНО (ревью п.21, таблица "esc() не экранирует ' и >"): раньше esc() экранировал
+// только &, < и " — этого достаточно для текста внутри тегов и для значений АТРИБУТОВ В
+// ДВОЙНЫХ кавычках (как везде используется в этом файле), но не для одинарных кавычек и не
+// для > (который может преждевременно закрыть незакрытый тег при особых вложенных случаях,
+// напр. внутри title="..."). Добавлены ' -> &#39; и > -> &gt; для полного HTML-экранирования
+// - на всякий случай (defense in depth), раз esc() используется и для w.name/s.d — полей,
+// которые пользователь может свободно редактировать через модалку.
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 
 function itemTarget(x,R,zb){ // краткая цель для правой колонки
   if(x.kind==='str')return 'ОФП';

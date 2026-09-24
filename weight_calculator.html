@@ -93,7 +93,7 @@
   tr.cur td{color:var(--ink);font-weight:700;}
   tr.cur td.w{color:var(--accent);}
 
-  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;overflow-wrap:anywhere;}
   .note b{color:var(--ink);}
   .note p{margin:6px 0;}
   footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
@@ -378,7 +378,7 @@
   // дистанцию/результат (dist,t) подставляет лучший недавний результат из базы, если он есть.
   (function applyPrefill(){
     try{
-      const qp=new URLSearchParams(location.search);
+      const qp=new URLSearchParams(location.hash&&location.hash.length>1?location.hash.slice(1):location.search); // ИСПРАВЛЕНО (ревью п.9): приложение теперь кладёт параметры после # (не уходит на сервер, не входит в ключ офлайн-кэша WebView) — старые ссылки с ?query= по-прежнему работают через фолбэк.
       if(qp.has('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) setSex(qp.get('sex'));
       if(qp.has('height')){ const h=parseFloat(qp.get('height')); if(!isNaN(h)&&h>0) $('height').value=h; }
       if(qp.has('weight')){ const w=parseFloat(qp.get('weight')); if(!isNaN(w)&&w>0) $('weight').value=w; }

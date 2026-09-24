@@ -47,7 +47,13 @@
   .out.hl .v{color:var(--accent);}
   .out.full{grid-column:1 / -1;}
 
-  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  /* ИСПРАВЛЕНО (ревью п.21, таблица "overflow-x:auto для таблиц на узких экранах"):
+     без этой обёртки многоколоночная таблица на узком экране телефона либо вылезала за
+     край страницы (горизонтальный скролл всей страницы, обрезанные боковые колонки), либо
+     сжимала текст нечитаемо - оборачиваем в .tablewrap со своим independent overflow-x, как
+     уже сделано в weight_calculator.html (см. её же .tablewrap). */
+  .tablewrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:4px;min-width:420px;}
   th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
   th.r,td.r{text-align:right;}
   td{padding:9px 8px;border-bottom:1px solid var(--line);font-size:14px;}
@@ -87,7 +93,7 @@
     <div class="label">Возраст</div>
     <div class="stepper">
       <button onclick="bumpAge(-1)">−</button>
-      <input id="age" class="mono" type="number" min="11" max="110" step="1" value="30" inputmode="numeric">
+      <input id="age" class="mono" type="number" min="18" max="110" step="1" value="30" inputmode="numeric">
       <button onclick="bumpAge(1)">+</button>
       <span class="unit">лет</span>
     </div>
@@ -119,18 +125,22 @@
 
   <div class="panel">
     <div class="label">Сохранённые результаты</div>
+    <div class="tablewrap">
     <table>
       <thead><tr><th>Дата</th><th class="r">Дистанция</th><th class="r">VO2max</th><th></th></tr></thead>
       <tbody id="saved"></tbody>
     </table>
+    </div>
   </div>
 
   <div class="panel" style="margin-top:16px;">
     <div class="label">Расшифровка результатов (<span id="lvl_sex_label">мужчины</span>, возрастная группа <span id="lvl_age_label"></span>)</div>
+    <div class="tablewrap">
     <table>
       <thead><tr><th>Низкий</th><th>Ниже среднего</th><th>Средний</th><th>Хорошо</th><th>Отлично</th></tr></thead>
       <tbody id="levels"></tbody>
     </table>
+    </div>
   </div>
 
   <div class="note">
@@ -177,7 +187,7 @@
     return 5;
   }
 
-  function getAge(){ let a=parseInt($('age').value,10); if(isNaN(a)||a<11)a=11; if(a>110)a=110; return a; }
+  function getAge(){ let a=parseInt($('age').value,10); if(isNaN(a)||a<18)a=18; if(a>110)a=110; return a; }
   function getDist(){ let d=parseFloat($('dist').value); if(isNaN(d)||d<1)d=1; return d; }
 
   function vo2fromDist(d){ return (d-504.9)/44.73; }
@@ -233,7 +243,7 @@
     cells.forEach((c,i)=>c.style.fontWeight = i===lvlIdx ? '800' : '400');
   }
 
-  function bumpAge(x){ $('age').value=(parseInt($('age').value,10)||0)+x; render(); }
+  function bumpAge(x){ let v=(parseInt($('age').value,10)||18)+x; if(v<18)v=18; if(v>110)v=110; $('age').value=v; render(); }
   function bumpDist(x){ $('dist').value=(parseFloat($('dist').value)||0)+x; render(); }
   function setDist(v){ $('dist').value=v; render(); }
 

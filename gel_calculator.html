@@ -254,12 +254,25 @@
   // остаётся обычным, редактируемым — это только удобный дефолт. Ключ "carbs" — стабильный,
   // не привязан к тексту кнопок/лейблов, меняя один конец (эту функцию или ToolUrlBuilder.kt),
   // проверяйте оба — тесты этого не ловят.
+  // ИСПРАВЛЕНО (ревью п.19 "Несовпадение плана и калькулятора геля"): раньше портации считались
+  // от ДЕФОЛТНОГО размера порции этого калькулятора (setCarb(25) выше) — план же считает число
+  // гелей от РЕАЛЬНОГО размера покупной порции (20 г при потребности ≤55 г/ч, 40 г при >55 г/ч,
+  // см. fuelFor() в run_plan_calculator.html) — при 25 г по умолчанию число порций здесь почти
+  // всегда расходилось с числом гелей, указанным в самом плане. Теперь приложение (см.
+  // ToolUrlBuilder.buildGel()) передаёт ещё и portion — если он есть, applyPrefill выставляет
+  // именно его через setCarb(portion) ДО расчёта числа порций, так что итог совпадает с планом;
+  // если portion не передан (старая ссылка/старый формат плана без структурированного fuel),
+  // используется прежнее поведение — дефолт этого калькулятора (25 г).
   (function applyPrefill(){
     try{
-      const qp=new URLSearchParams(location.search);
+      const qp=new URLSearchParams(location.hash&&location.hash.length>1?location.hash.slice(1):location.search); // ИСПРАВЛЕНО (ревью п.9): приложение теперь кладёт параметры после # (не уходит на сервер, не входит в ключ офлайн-кэша WebView) — старые ссылки с ?query= по-прежнему работают через фолбэк.
       if(qp.has('carbs')){
         const total=parseFloat(qp.get('carbs'));
         if(!isNaN(total)&&total>0){
+          if(qp.has('portion')){
+            const portion=parseFloat(qp.get('portion'));
+            if(!isNaN(portion)&&portion>0)setCarb(Math.round(portion));
+          }
           const n=Math.round(total/CARB);
           $('serv').value=Math.min(60,Math.max(1,n||1));
           calc();

@@ -338,7 +338,7 @@
   // При обычном открытии в браузере параметров нет — остаётся результат по умолчанию выше.
   (function applyPrefill(){
     try{
-      const qp=new URLSearchParams(location.search);
+      const qp=new URLSearchParams(location.hash&&location.hash.length>1?location.hash.slice(1):location.search); // ИСПРАВЛЕНО (ревью п.9): приложение теперь кладёт параметры после # (не уходит на сервер, не входит в ключ офлайн-кэша WebView) — старые ссылки с ?query= по-прежнему работают через фолбэк.
       if(qp.has('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) setSex(qp.get('sex'));
       if(qp.has('res')){
         const parsed=qp.get('res').split(',').map(pair=>{

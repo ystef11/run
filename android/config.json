@@ -62,7 +62,7 @@
     ]
   },
   "update": {
-    "latestVersion": "0.0.5",
-    "apkUrl": "https://github.com/ystef11/run/releases/download/0.0.5/runstef-release.apk"
+    "latestVersion": "0.0.6",
+    "apkUrl": "https://github.com/ystef11/run/releases/latest/download/runstef-release.apk"
   }
 }

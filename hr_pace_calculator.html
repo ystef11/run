@@ -68,7 +68,13 @@
   .out.hl{background:#fbeee9;}
   .out.hl .v{color:var(--accent);}
 
-  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  /* ИСПРАВЛЕНО (ревью п.21, таблица "overflow-x:auto для таблиц на узких экранах"):
+     без этой обёртки многоколоночная таблица на узком экране телефона либо вылезала за
+     край страницы (горизонтальный скролл всей страницы, обрезанные боковые колонки), либо
+     сжимала текст нечитаемо - оборачиваем в .tablewrap со своим independent overflow-x, как
+     уже сделано в weight_calculator.html (см. её же .tablewrap). */
+  .tablewrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:4px;min-width:420px;}
   th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
   th.r,td.r{text-align:right;}
   td{padding:11px 8px;border-bottom:1px solid var(--line);font-size:14.5px;}
@@ -149,22 +155,41 @@
           <button onclick="bumpLthr(1)">+</button>
         </div>
       </div>
+      <!-- ИСПРАВЛЕНО (ревью п.20 "HR-зоны игнорируют реальный hrmax из Гармина"): раньше HRmax
+           считался ТОЛЬКО по формуле от возраста/пола (206-0.88×возраст жен., 208-0.7×возраст муж.)
+           — даже когда приложение передавало реально ИЗМЕРЕННЫЙ максимальный пульс из истории
+           Гармина (см. ToolUrlBuilder.kt, params["hrmax"]=db.maxHrFromDb()), калькулятор его не
+           читал и не показывал поле для ручного ввода вообще. Формула — грубая популяционная
+           оценка (реальный HRmax у одного и того же возраста может отличаться на 20+ уд/мин), а
+           HRmax используется и как потолок зон (см. zbpm ниже), и как основа оценки ПАНО, когда
+           ПАНО не задано (hrmax*0.90) — ошибка в нём сдвигает ВСЕ зоны. Поле теперь редактируемое,
+           как и ПАНО выше, с тем же паттерном (пусто = оценка по формуле). -->
+      <div>
+        <div class="fl" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">ЧСС макс, уд/мин (необязательно)</div>
+        <div class="stepper sm">
+          <button onclick="bumpHrmax(-1)">−</button>
+          <input id="hrmaxIn" class="mono" type="number" min="120" max="230" placeholder="—" inputmode="numeric">
+          <button onclick="bumpHrmax(1)">+</button>
+        </div>
+      </div>
     </div>
-    <div class="hint">Пусто — ПАНО оценивается как ~90% от расчётного максимального пульса (по возрасту и полу). Точнее — впишите реальный порог, если знаете (например, по тесту или полумарафону).</div>
+    <div class="hint">Пусто — ПАНО и ЧСС макс оцениваются по формуле (возраст и пол). Точнее — впишите реальные значения, если знаете (тест, история часов, полумарафон/гонка на максимуме).</div>
   </div>
 
   <div class="outs">
     <div class="out hl"><div class="k">VDOT</div><div class="v"><span id="o_vdot">0.0</span></div></div>
-    <div class="out"><div class="k">HRmax (оценка)</div><div class="v"><span id="o_hrmax">0</span><small> уд/мин</small></div></div>
+    <div class="out"><div class="k">HRmax</div><div class="v"><span id="o_hrmax">0</span><small> уд/мин</small></div></div>
     <div class="out"><div class="k">ПАНО</div><div class="v"><span id="o_lthr">0</span><small> уд/мин</small></div></div>
   </div>
 
   <div class="panel">
     <div class="label">Зоны пульса и соответствующий темп</div>
+    <div class="tablewrap">
     <table>
       <thead><tr><th>Зона</th><th class="r">Пульс, уд/мин</th><th class="r">Темп, мин/км</th><th class="r">Темп как гоночный — дистанция</th></tr></thead>
       <tbody id="zones"></tbody>
     </table>
+    </div>
   </div>
 
   <div class="note">
@@ -255,6 +280,7 @@
   }
   function getAge(){ let a=parseInt($('age').value,10); if(isNaN(a)||a<11)a=11; if(a>100)a=100; return a; }
   function getLthrInput(){ const v=$('lthr').value; return v? +v : null; }
+  function getHrmaxInput(){ const v=$('hrmaxIn').value; return v? +v : null; }
 
   function markQuick(d){
     document.querySelectorAll('.quick button').forEach(b=>{
@@ -280,8 +306,9 @@
     const vd=vdot(d,t);
     $('o_vdot').textContent=vd.toFixed(1);
 
-    const hrmax = sex==='f' ? Math.round(206-0.88*age) : Math.round(208-0.7*age);
-    $('o_hrmax').textContent=hrmax;
+    const hrmaxInput=getHrmaxInput();
+    const hrmax = hrmaxInput || (sex==='f' ? Math.round(206-0.88*age) : Math.round(208-0.7*age));
+    $('o_hrmax').textContent=hrmax + (hrmaxInput? '' : ' (оценка)');
 
     const lthrInput=getLthrInput();
     const lthr = lthrInput || Math.round(hrmax*0.90);
@@ -303,6 +330,7 @@
 
   function bumpAge(x){ $('age').value=(parseInt($('age').value,10)||0)+x; render(); }
   function bumpLthr(x){ const cur=parseInt($('lthr').value,10)||0; $('lthr').value=Math.max(0,cur+x)||''; render(); }
+  function bumpHrmax(x){ const cur=parseInt($('hrmaxIn').value,10)||0; $('hrmaxIn').value=Math.max(0,cur+x)||''; render(); }
   function bumpDist(x){ $('dist').value=(parseFloat($('dist').value)||0)+x; render(); }
   function setDist(v){ $('dist').value=v; render(); }
   function bumpField(id,x,max){
@@ -316,6 +344,7 @@
   $('dist').addEventListener('input', render);
   $('age').addEventListener('input', render);
   $('lthr').addEventListener('input', render);
+  $('hrmaxIn').addEventListener('input', render);
   ['t_h','t_m','t_s'].forEach(id=>$(id).addEventListener('input', render));
 
   // ================= автозаполнение из приложения (аналитика Гармин + профиль) =================
@@ -324,10 +353,11 @@
   // При обычном открытии в браузере параметров нет — калькулятор работает как раньше.
   (function applyPrefill(){
     try{
-      const qp=new URLSearchParams(location.search);
+      const qp=new URLSearchParams(location.hash&&location.hash.length>1?location.hash.slice(1):location.search); // ИСПРАВЛЕНО (ревью п.9): приложение теперь кладёт параметры после # (не уходит на сервер, не входит в ключ офлайн-кэша WebView) — старые ссылки с ?query= по-прежнему работают через фолбэк.
       if(qp.has('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) setSex(qp.get('sex'));
       if(qp.has('age')){ const a=parseInt(qp.get('age'),10); if(!isNaN(a)) $('age').value=a; }
       if(qp.has('pano')){ const v=parseInt(qp.get('pano'),10); if(!isNaN(v)) $('lthr').value=v; }
+      if(qp.has('hrmax')){ const v=parseInt(qp.get('hrmax'),10); if(!isNaN(v)) $('hrmaxIn').value=v; }
       if(qp.has('dist')){ const d=parseFloat(qp.get('dist')); if(!isNaN(d)&&d>0) $('dist').value=d; }
       if(qp.has('t')){
         const t=parseInt(qp.get('t'),10);

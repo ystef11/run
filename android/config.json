@@ -64,5 +64,8 @@
   "update": {
     "latestVersion": "0.0.6",
     "apkUrl": "https://github.com/ystef11/run/releases/latest/download/runstef-release.apk"
+  },
+  "report": {
+    "scriptUrl": "https://ystef11.github.io/run/android/build_report.py"
   }
 }

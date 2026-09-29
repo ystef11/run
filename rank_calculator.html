@@ -282,42 +282,52 @@
     $('o_vdot').textContent=vd.toFixed(1);
     const table=STD[sex];
 
-    // фактически достигнутые разряды — по каждому введённому результату, напрямую (без прогноза по VDOT)
-    const achievedByDist={};
+    // введённые напрямую результаты — по каждой табличной дистанции берём лучший (наименьшее время)
+    const enteredByDist={};
     results.forEach(r=>{
       const td=nearestTableDist(r.dist);
+      const prev=enteredByDist[td];
+      if(!prev || r.sec<prev.sec) enteredByDist[td]={sec:r.sec};
+    });
+
+    // эффективный результат на каждой дистанции — лучшее из: (а) введено напрямую, (б) вытекает из лучшей текущей формы (VDOT).
+    // Так короткая дистанция не проигрывает более длинному результату: если, например, 10 км пробежаны быстрее,
+    // чем говорит введённый лично результат на 5 км, для 5 км берётся более быстрый эквивалент по форме, а не худший факт.
+    const eff={};
+    DISTS.forEach(td=>{
       const th=table[td];
-      const rk=rankOf(r.sec,th);
-      const prev=achievedByDist[td];
-      if(!prev || r.sec<prev.sec) achievedByDist[td]={sec:r.sec, rankKey:rk};
+      const predSec=timeFor(td, vd);
+      const entered=enteredByDist[td];
+      if(entered && entered.sec<=predSec){
+        eff[td]={sec:entered.sec, rankKey:rankOf(entered.sec,th), actual:true};
+      } else {
+        eff[td]={sec:predSec, rankKey:rankOf(predSec,th), actual:false};
+      }
     });
 
     $('rows').innerHTML = DISTS.map(td=>{
       const th=table[td];
-      const ach=achievedByDist[td];
-      const predSec=timeFor(td, vd);
-      const rowSec=ach? ach.sec : predSec;
-      const rk=ach? ach.rankKey : rankOf(predSec, th);
+      const e=eff[td];
       const cells = RANKS.map(r=>{
         const val=th[r];
-        const hit = rk===r;
+        const hit = e.rankKey===r;
         const cls = hit? 'hit' : '';
         return `<td class="${cls}">${val==null?'—':fmtTime(val)}</td>`;
       }).join('');
-      const timeCellCls = ach? 'pred hit2' : 'pred';
-      return `<tr class="${ach?'cur':''}"><td class="dist">${DIST_LABEL[td]}</td><td class="${timeCellCls}">${fmtTime(rowSec)}</td>${cells}</tr>`;
+      const timeCellCls = e.actual? 'pred hit2' : 'pred';
+      return `<tr class="${e.actual?'cur':''}"><td class="dist">${DIST_LABEL[td]}</td><td class="${timeCellCls}">${fmtTime(e.sec)}</td>${cells}</tr>`;
     }).join('');
 
-    // верхний бейдж — лучший из фактически достигнутых разрядов среди всех введённых результатов
+    // верхний бейдж — лучший разряд среди эффективных результатов (введённых напрямую или гарантированно вытекающих из лучшей формы)
     let bestRankIdx=RANKS.length, bestTd=null;
-    Object.keys(achievedByDist).forEach(tdStr=>{
-      const td=+tdStr, rk=achievedByDist[td].rankKey;
+    DISTS.forEach(td=>{
+      const rk=eff[td].rankKey;
       if(rk){ const idx=RANKS.indexOf(rk); if(idx<bestRankIdx){ bestRankIdx=idx; bestTd=td; } }
     });
     $('o_rank').textContent = bestTd!=null ? RANK_LABEL[RANKS[bestRankIdx]] : 'нет разряда';
 
     if(bestTd!=null){
-      const th=table[bestTd], sec=achievedByDist[bestTd].sec;
+      const th=table[bestTd], sec=eff[bestTd].sec;
       let nextTxt='—';
       for(let i=bestRankIdx-1;i>=0;i--){
         const key=RANKS[i];

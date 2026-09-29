@@ -291,6 +291,7 @@
       <div class="fld"><label>Текущий недельный объём</label>
         <div class="volrow"><input type="number" id="curVol" value="70" min="0" max="260" step="1">
         <select id="volUnit"><option value="km">км/нед</option><option value="h">ч/нед</option></select></div></div>
+      <div class="fld" id="acwrFld" style="display:none"><label>ACWR сейчас</label><div id="acwrVal" class="mono" style="font-weight:700"></div><div class="hint" id="acwrHint"></div></div>
       <div class="fld"><label>Опыт</label><select id="exp"><option value="novice">Новичок</option><option value="inter" selected>Средний</option><option value="adv">Опытный</option></select><div class="hint" style="max-width:230px">новичок — до ~2 лет бега / первый старт на дистанции; средний — бегает регулярно 2–4 года; опытный — многолетний стаж, высокая переносимость объёма. Влияет на темп роста формы и число тренировок.</div></div>
       <div class="fld"><label>Начало плана</label><input type="date" id="startD"><div class="hint">сдвинем на понедельник</div></div>
       <div class="fld goalOnly"><label>Дистанция старта</label>
@@ -3913,6 +3914,62 @@ function weeklyFromEdit(){
   for(let i=0;i<=mx;i++)arr.push(g[i]||{km:0,min:0,n:i+1});
   return arr;
 }
+// ---- ACWR по неделям плана (7д/28д, chronic=сумма28/4, как в отчёте). Нагрузка плана — оценка: минуты × коэффициент
+// зоны (масштаб не важен, ACWR — отношение). История до старта — синтетическая: 28 дней на уровне недели 1 плана,
+// последние 7 дней подобраны так, чтобы ACWR на старте = START_ACWR (переданный из приложения или 0.8 по умолчанию).
+// load/мин по зонам: калибруется медианами из Garmin (window.LPM: easy/long/thr/vo2, см. ToolUrlBuilder), иначе дефолты
+// по данным аккаунтов автора (easy ≈1.9, long ≈1.9, порог ≈4.5, интервалы ≈5.0). Остальные зоны — от них.
+function acwrLoadPerMin(z){
+  const P=window.LPM||{}, e=P.easy||1.9, L=P.long||e, T=P.thr||4.5, V=P.vo2||5.0;
+  return ({rec:.6*e,easy:e,long:L,mp:(e+T)/2,thr:T,vo2:V,race:V,str:.8*e,cross:.7*e})[z]||e;
+}
+function acwrChartHtml(){
+  const ws=(EDIT||[]).filter(w=>w.date).slice().sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  if(!ws.length)return '';
+  const start=toMonday(dParse(ws[0].date)), last=dParse(ws[ws.length-1].date);
+  const nd=Math.floor(dDiff(last,start))+1, nw=Math.ceil(nd/7);
+  const day=new Array(nw*7).fill(0);
+  ws.forEach(w=>{const i=Math.floor(dDiff(dParse(w.date),start)); if(i<0||i>=day.length)return;
+    const mins=w.kind==='run'?sesMinNoR(w.steps||[]):(+w.mins||0);
+    day[i]+=mins*acwrLoadPerMin(zoneOfW(w));});
+  // Режим 1 (есть история Garmin + калибровка LPM): реальные 28 дней load до старта плана, дальше — план в тех же единицах.
+  // Режим 2 (веб / истории нет): синтетическая история — 28 дней на уровне недели 1, ACWR на старте = START_ACWR (по умолчанию 0.8).
+  const sa=window.START_ACWR, real=!!(sa&&!sa.assumed&&sa.series&&sa.series.length>=28&&sa.end&&window.LPM&&window.LPM.easy);
+  let ser=null, r=null, assumed=!sa||!!sa.assumed, realUsed=false;
+  if(real){
+    const gap=dDiff(start,dParse(sa.end))-1;          // дней между последней записанной активностью и стартом плана
+    if(gap>=-27&&gap<=14){
+      let pre=gap>=0?sa.series.concat(new Array(gap).fill(0)):sa.series.slice(0,28+gap);
+      pre=pre.slice(-28); while(pre.length<28)pre.unshift(0);
+      const c0=pre.reduce((x,y)=>x+y,0)/4;
+      if(c0>0){ser=pre.concat(day); r=pre.slice(-7).reduce((x,y)=>x+y,0)/c0; realUsed=true;}
+    }
+  }
+  if(!ser){
+    const H=day.slice(0,7).reduce((x,y)=>x+y,0)/7; if(!(H>0))return '';
+    const st=(sa&&Number.isFinite(sa.ratio))?sa.ratio:0.8;
+    r=Math.min(Math.max(st,0.1),2.5); const h=3*r*H/(4-r);
+    ser=[].concat(new Array(21).fill(H),new Array(7).fill(h),day);
+  }
+  const sum=(a,b)=>{let t=0;for(let i=a;i<=b;i++)t+=ser[i]||0;return t;};
+  const pts=[{w:0,v:r}];
+  for(let k=0;k<nw;k++){const e=28+7*k+6; {const ch=sum(e-27,e)/4; pts.push({w:k+1,v:ch>0?sum(e-6,e)/ch:0});}}
+  const W=600,Ht=220,L=34,R=10,T=12,B=26, ymin=0.4, ymax=Math.max(1.6,Math.ceil(Math.max(...pts.map(p=>p.v))*10)/10+0.1);
+  const X=w=>L+(W-L-R)*w/nw, Y=v=>T+(Ht-T-B)*(1-(v-ymin)/(ymax-ymin));
+  const col=v=>v>1.5?'var(--z-race)':v>1.3?'var(--z-thr)':v<0.8?'var(--z-rec)':'var(--z-easy)';
+  const path=pts.map((p,i)=>(i?'L':'M')+X(p.w).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+  const dots=pts.map(p=>`<circle cx="${X(p.w).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="3.5" fill="${col(p.v)}"><title>${p.w?'Неделя '+p.w:'Старт'}: ${p.v.toFixed(2)}</title></circle>`).join('');
+  const step=Math.max(1,Math.ceil(nw/16));
+  const xl=pts.filter(p=>p.w%step===0).map(p=>`<text x="${X(p.w).toFixed(1)}" y="${Ht-8}" text-anchor="middle" font-size="10" fill="var(--muted)">${p.w?p.w:'ст.'}</text>`).join('');
+  const yl=[0.8,1.0,1.3,1.5].map(v=>`<text x="${L-4}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end" font-size="10" fill="var(--muted)">${v}</text>`).join('');
+  return `<h2>ACWR по неделям плана</h2><div class="vchart">
+    <svg viewBox="0 0 ${W} ${Ht}" width="100%" role="img" aria-label="ACWR по неделям плана">
+      <rect x="${L}" y="${Y(1.3).toFixed(1)}" width="${W-L-R}" height="${(Y(0.8)-Y(1.3)).toFixed(1)}" fill="var(--z-easy)" opacity=".13"/>
+      <line x1="${L}" x2="${W-R}" y1="${Y(1.5).toFixed(1)}" y2="${Y(1.5).toFixed(1)}" stroke="var(--z-race)" stroke-dasharray="4 3" opacity=".6"/>
+      <path d="${path}" fill="none" stroke="var(--ink)" stroke-width="1.5"/>${dots}${yl}${xl}
+    </svg>
+    <div class="vlegend"><span>зелёная зона 0.8–1.3, пунктир 1.5</span><span style="margin-left:auto">старт ${r.toFixed(2)} — ${realUsed?'история Garmin за 28 дней + план':(assumed?'истории нет, принято по умолчанию':'ACWR из Garmin, история до плана достроена')}; нагрузка плана — оценка: минуты × load/мин по зонам${window.LPM?' (калибровка по вашим тренировкам)':' (типовые значения)'}</span></div></div>`;
+}
 function chartsFromEdit(){
   const wk=weeklyFromEdit(); if(!wk.length)return '';
   const maxKm=Math.max(...wk.map(w=>w.km),1);
@@ -3925,7 +3982,7 @@ function chartsFromEdit(){
     <div class="vchart"><div class="bars">${bars(wk.map(w=>Math.round(w.km)),v=>v)}</div>
       <div class="vlegend"><span style="margin-left:auto">км/нед</span></div></div>
     <div class="vchart" style="margin-top:14px"><div class="bars">${bars(wk.map(w=>Math.round(w.min)),v=>hm(v))}</div>
-      <div class="vlegend"><span style="margin-left:auto">часы:мин/нед — по факту загруженного плана</span></div></div>`;
+      <div class="vlegend"><span style="margin-left:auto">часы:мин/нед — по факту загруженного плана</span></div></div>`+(()=>{try{return acwrChartHtml();}catch(e){return '';}})();
 }
 function renderStaticFromEdit(cfgRef,forExport){
   const weeks=groupEditByWeek(EDIT);
@@ -4028,6 +4085,29 @@ function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouch
       if(qp.has('sex') && $('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) $('sex').value=qp.get('sex');
       if(qp.has('pano')){ const v=parseInt(qp.get('pano'),10); if(!isNaN(v)) $('lthr').value=v; }
       if(qp.has('curvol')){ const v=parseFloat(qp.get('curvol')); if(!isNaN(v)&&v>0){ $('curVol').value=Math.round(v); if($('volUnit'))$('volUnit').value='km'; } }
+      if(qp.has('load')){
+        const L=qp.get('load').split(',').map(Number);
+        if(L.length>=28&&L.every(Number.isFinite)){
+          const a=L.slice(-7).reduce((x,y)=>x+y,0), c=L.slice(-28).reduce((x,y)=>x+y,0)/4;
+          if(c>0){
+            const r=a/c, st=r>1.5?'высокий риск перегрузки':r>1.3?'повышенная нагрузка':r>=0.8?'норма (0.8–1.3)':'недогрузка';
+            $('acwrVal').textContent=r.toFixed(2)+' — '+st;
+            $('acwrHint').textContent='Garmin load: 7 дн '+Math.round(a)+' / 28 дн (среднее за 7) '+Math.round(c)+(qp.get('loadend')?', на '+qp.get('loadend'):'');
+            $('acwrFld').style.display='';
+            window.START_ACWR={ratio:r,acute:a,chronic:c,end:qp.get('loadend')||null,series:L.slice(-28)};
+          }
+        }
+      }
+      if(!window.START_ACWR){
+        window.START_ACWR={ratio:0.8,assumed:true};
+        $('acwrVal').textContent='0.80 — по умолчанию';
+        $('acwrHint').textContent='данных о нагрузке нет — стартовая точка принята 0.8';
+        $('acwrFld').style.display='';
+      }
+      if(qp.has('lpm')){
+        const m={}; qp.get('lpm').split(',').forEach(x=>{const [k,v]=x.split(':'),n=parseFloat(v); if(k&&n>0)m[k]=n;});
+        window.LPM=m;
+      }
       if(qp.has('res')){
         const parsed=qp.get('res').split(',').map(pair=>{
           const [dStr,sStr]=pair.split(':'); const d=+dStr, sec=parseInt(sStr,10);

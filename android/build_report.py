@@ -130,6 +130,25 @@ def fmt_pace(s_per_km):
     return f"{m}:{s:02d}/км"
 
 
+def fmt_hms(total_s):
+    """Секунды -> 'ч:мм:сс' (если есть часы) или 'мм:сс' — то же форматирование, что в
+    rank_calculator.html (fmtTime), для единообразия с отдельным веб-калькулятором разряда."""
+    if total_s is None or (isinstance(total_s, float) and np.isnan(total_s)):
+        return "-"
+    total_s = max(0, round(total_s))
+    h, rem = divmod(total_s, 3600)
+    m, s = divmod(rem, 60)
+    if h > 0:
+        return f"{h}:{m:02d}:{s:02d}"
+    return f"{m}:{s:02d}"
+
+
+RANK_DIST_LABEL_RU = {
+    800: "800 м", 1500: "1 500 м", 3000: "3 000 м", 5000: "5 000 м",
+    10000: "10 000 м", 21097.5: "Полумарафон", 42195: "Марафон",
+}
+
+
 def load_data(db_path, json_path=None):
     """json_path необязателен (по умолчанию None): раньше отчёт требовал калибровочный JSON
     (calibration_profile*.json от garmin_calibration_fit.py) для калибровки дорожки и
@@ -786,6 +805,97 @@ def daniels_vdot(distance_m, time_s):
     pct_max = 0.8 + 0.1894393 * np.exp(-0.012778 * t_min) + 0.2989558 * np.exp(-0.1932605 * t_min)
     vo2 = -4.60 + 0.182258 * v + 0.000104 * v ** 2
     return vo2 / pct_max
+
+
+# Стандартные соревновательные дистанции (те же, что в rank_calculator.html / нормативы ЕВСК),
+# для которых считаем личный рекорд.
+REAL_BEST_EFFORT_DISTS_M = [800, 1500, 3000, 5000, 10000, 21097.5, 42195]
+
+
+def real_best_efforts_by_distance(activities, intervals, target_dists=REAL_BEST_EFFORT_DISTS_M):
+    """Личный рекорд на каждой стандартной дистанции — БЕЗ каких-либо моделей/эквивалентов
+    (см. диалог: попытка через среднюю скорость всей дистанции — "если 10 км за 40:14, то 5 км
+    не медленнее 20:07" — отклонена, т.к. предполагает равномерный темп, а реально может быть,
+    например, 19 минут на первую половину и 21 на вторую — тогда лучший реальный отрезок на 5 км
+    БЫСТРЕЕ половины общего времени, а не равен ей, и наивная пропорция это упускает). Вместо
+    предположений о равномерности здесь используются ФАКТИЧЕСКИЕ км-сплиты (intervals) той же
+    тренировки: скользящим окном по сплитам ищется самый быстрый непрерывный участок, длина
+    которого равна целевой дистанции (внутри пограничного сплита время интерполируется
+    пропорционально пройденной в нём доле дистанции, т.к. более мелких данных, чем сплит, нет) —
+    это самый быстрый РЕАЛЬНО пробежанный отрезок такой длины, какой бы ни была раскладка по
+    темпу внутри тренировки, а не выведенный из среднего темпа всей дистанции.
+
+    Результат на дистанции — лучшее (минимальное время) среди ВСЕХ тренировок и ВСЕХ окон в них,
+    включая случай, когда вся тренировка целиком равна целевой дистанции. Рекордный отрезок может
+    быть как отдельным стартом/тренировкой на этой дистанции, так и частью более длинной
+    тренировки — тогда extracted=True и указано, из тренировки какой общей длины он вычленен.
+
+    Возвращает dict {dist_m: record|None}, record = {sec, activity_id, date, name, total_km, extracted}.
+    """
+    results = {d: None for d in target_dists}
+    if intervals is None or not len(intervals) or activities is None or not len(activities):
+        return results
+
+    act_by_id = activities.set_index("activity_id") if "activity_id" in activities.columns else None
+
+    rest_mask = intervals["lap_type"].isin(LAP_REST_TYPES) if "lap_type" in intervals.columns else False
+    iv = intervals[
+        intervals["distance_m"].notna() & intervals["duration_s"].notna() &
+        (intervals["distance_m"] > 0) & (intervals["duration_s"] > 0) & (~rest_mask)
+    ]
+    if not len(iv):
+        return results
+
+    for aid, grp in iv.groupby("activity_id"):
+        g = grp.sort_values("idx") if "idx" in grp.columns else grp
+        dist = g["distance_m"].to_numpy(dtype=float)
+        dur = g["duration_s"].to_numpy(dtype=float)
+        n = len(g)
+        if n == 0:
+            continue
+        cum_d = np.concatenate([[0.0], np.cumsum(dist)])
+        cum_t = np.concatenate([[0.0], np.cumsum(dur)])
+        total_d = cum_d[-1]
+
+        if act_by_id is not None and aid in act_by_id.index:
+            act_row = act_by_id.loc[aid]
+            date = act_row["date"]
+            name = act_row["name"] if "name" in act_row else ""
+        else:
+            date, name = None, ""
+
+        for d in target_dists:
+            if d > total_d + 1e-6:
+                continue
+            best_t = None
+            j = 0
+            for i in range(n):
+                if j < i:
+                    j = i
+                while j < n and (cum_d[j + 1] - cum_d[i]) < d - 1e-9:
+                    j += 1
+                if j >= n:
+                    break
+                lap_d = dist[j]
+                if lap_d <= 0:
+                    continue
+                need = d - (cum_d[j] - cum_d[i])
+                frac = min(1.0, max(0.0, need / lap_d))
+                # время от начала окна i до точки "d метров" внутри лапа j
+                # (cum_t[j]-cum_t[i] — время ПОЛНЫХ лап i..j-1, плюс доля лапа j):
+                t = (cum_t[j] - cum_t[i]) + frac * dur[j]
+                if best_t is None or t < best_t:
+                    best_t = t
+            if best_t is None:
+                continue
+            cur = results[d]
+            if cur is None or best_t < cur["sec"]:
+                results[d] = {
+                    "sec": best_t, "activity_id": aid, "date": date, "name": name,
+                    "total_km": total_d / 1000.0,
+                    "extracted": bool(d < total_d - 1.0),
+                }
+    return results
 
 
 def detect_race_blowup(activity_id, intervals, min_clean_km=15.0,
@@ -1604,24 +1714,55 @@ def recovery_status_summary(acwr_load, acwr_km, wellness, recent_days=28):
         last_val = float(s.iloc[-1])
         frac_over = float((recent > 1.5).mean())
         frac_under = float((recent < 0.8).mean())
-        if last_val > 1.5 or frac_over >= 0.3:
+        # ВАЖНО: текущее значение (last_val) и доля дней за период, превышавших порог
+        # (frac_over/frac_under), — разные вещи. Раньше last_val>1.5 и frac_over>=0.3
+        # были объединены через "or" в одном findings-сообщении с текстом "сейчас {last_val},
+        # выше порога перегрузки (1.5) {frac_over}% дней" — из-за этого при last_val,
+        # заметно НИЖЕ 0.8 (например 0.45), но частых скачках выше 1.5 в недавней истории,
+        # отчёт показывал 🔴 "сейчас 0.45, выше порога перегрузки (1.5)" — что читается как
+        # текущая перегрузка, хотя текущее значение на самом деле ниже порога недогрузки.
+        # Теперь статус "сейчас" и статус "волатильность за период" разделены и не
+        # утверждают того, чего нет в last_val.
+        if last_val > 1.5:
             findings.append((
                 "risk",
-                f"ACWR по {label}: сейчас {last_val:.2f}, выше порога перегрузки (1.5) "
-                f"{frac_over * 100:.0f}% дней за последние {len(recent)} — повышенный риск "
-                "травмы/перетренированности."
+                f"ACWR по {label}: сейчас {last_val:.2f} — выше порога перегрузки (1.5) — "
+                "повышенный риск травмы/перетренированности."
             ))
-        elif last_val < 0.8 and frac_under >= 0.5:
-            findings.append((
-                "watch",
-                f"ACWR по {label}: сейчас {last_val:.2f}, устойчиво ниже 0.8 последние "
-                f"{len(recent)} дней — есть резерв для наращивания нагрузки."
-            ))
+        elif last_val < 0.8:
+            if frac_over >= 0.3:
+                findings.append((
+                    "watch",
+                    f"ACWR по {label}: сейчас {last_val:.2f} (ниже 0.8, недогрузка), но "
+                    f"{frac_over * 100:.0f}% дней за последние {len(recent)} нагрузка резко "
+                    "превышала порог перегрузки (1.5) — резкие скачки нагрузки, а не стабильно "
+                    "высокая нагрузка; следите за равномерностью, а не только за текущим числом."
+                ))
+            elif frac_under >= 0.5:
+                findings.append((
+                    "watch",
+                    f"ACWR по {label}: сейчас {last_val:.2f}, устойчиво ниже 0.8 последние "
+                    f"{len(recent)} дней — есть резерв для наращивания нагрузки."
+                ))
+            else:
+                findings.append((
+                    "ok",
+                    f"ACWR по {label}: сейчас {last_val:.2f} (ниже 0.8, недогрузка)."
+                ))
         else:
-            findings.append((
-                "ok",
-                f"ACWR по {label}: сейчас {last_val:.2f}, в пределах нормы (0.8-1.3)."
-            ))
+            if frac_over >= 0.3:
+                findings.append((
+                    "watch",
+                    f"ACWR по {label}: сейчас {last_val:.2f} (в пределах нормы 0.8-1.3), но "
+                    f"{frac_over * 100:.0f}% дней за последние {len(recent)} нагрузка резко "
+                    "превышала порог перегрузки (1.5) — неравномерная нагрузка, риск перегрузки "
+                    "в отдельные дни."
+                ))
+            else:
+                findings.append((
+                    "ok",
+                    f"ACWR по {label}: сейчас {last_val:.2f}, в пределах нормы (0.8-1.3)."
+                ))
 
     if wellness is None or not len(wellness):
         return findings
@@ -3330,6 +3471,11 @@ def main(db_path, out_path, json_path=None):
            "Требовалось": (excluded_races["min_pct_required"] * 100).round(0).astype(int).astype(str) + "%"}
     )[["Дата", "name", "Дистанция", "Время", "Пульс", "% от ПАНО", "Требовалось"]].rename(columns={"name": "Название"})
 
+    # Личные рекорды по стандартным дистанциям — по реальным км-сплитам (см. докстринг
+    # real_best_efforts_by_distance): без предположения о равномерном темпе, лучший реальный
+    # отрезок нужной длины может быть вычленен из более длинной тренировки.
+    real_bests = real_best_efforts_by_distance(activities, intervals)
+
     # Раздел 3b (VO2max-прокси по истории ПАНО Garmin)
     lt_vo2 = garmin_vo2max_proxy(lt)
     charts["4b"] = plot_garmin_vo2max(lt_vo2, xlim=WEEKLY_XLIM)
@@ -3848,6 +3994,45 @@ def main(db_path, out_path, json_path=None):
                 'начал отдавать эти поля позже, чем продолжительность сна.</p>'
             )
         html.append("</div>")
+
+    html.append('<h1 style="margin-top:56px;">Личные рекорды</h1>')
+    html.append('<div class="chart-block">')
+    html.append("<h2>17. Личные рекорды по стандартным дистанциям</h2>")
+    html.append(
+        '''<p class="meta">Без модели/прогноза и без допущения о равномерном темпе (см. диалог: если
+        10&nbsp;км пробежаны за 40:14, то это НЕ значит, что первые 5&nbsp;км были ровно 20:07 — на
+        деле раскладка могла быть любой, например 19 минут на первую половину и 21 на вторую, и тогда
+        реальный лучший отрезок на 5&nbsp;км быстрее половины общего времени). Вместо допущения о
+        равномерности здесь используются фактические км-сплиты тренировки: для каждой дистанции найден
+        самый быстрый непрерывный по времени отрезок именно такой длины (внутри пограничного сплита
+        время интерполировано пропорционально его доле, точнее данных нет), где бы он ни начинался —
+        в отдельном старте на эту дистанцию или внутри более длинной тренировки.</p>'''
+    )
+    rb_rows = []
+    for d in REAL_BEST_EFFORT_DISTS_M:
+        rec = real_bests.get(d)
+        if rec is None:
+            rb_rows.append({
+                "Дистанция": RANK_DIST_LABEL_RU.get(d, f"{d:g} м"), "Лучшее время": "—",
+                "Темп": "—", "Дата": "—", "Тренировка": "—", "Источник": "нет данных",
+            })
+            continue
+        sec = rec["sec"]
+        pace_s = sec / (d / 1000.0)
+        rb_rows.append({
+            "Дистанция": RANK_DIST_LABEL_RU.get(d, f"{d:g} м"),
+            "Лучшее время": fmt_hms(sec),
+            "Темп": fmt_pace(pace_s),
+            "Дата": rec["date"].strftime("%Y-%m-%d") if rec["date"] is not None else "—",
+            "Тренировка": rec["name"],
+            "Источник": (
+                f"отрезок внутри тренировки {rec['total_km']:.1f} км" if rec["extracted"]
+                else "весь старт/тренировка"
+            ),
+        })
+    rb_df = pd.DataFrame(rb_rows, columns=["Дистанция", "Лучшее время", "Темп", "Дата", "Тренировка", "Источник"])
+    html.append('<div class="table-wrap">' + rb_df.to_html(index=False, escape=True) + '</div>')
+    html.append("</div>")
 
     html.append(HTML_TAIL)
 

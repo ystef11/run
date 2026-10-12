@@ -130,25 +130,6 @@ def fmt_pace(s_per_km):
     return f"{m}:{s:02d}/км"
 
 
-def fmt_hms(total_s):
-    """Секунды -> 'ч:мм:сс' (если есть часы) или 'мм:сс' — то же форматирование, что в
-    rank_calculator.html (fmtTime), для единообразия с отдельным веб-калькулятором разряда."""
-    if total_s is None or (isinstance(total_s, float) and np.isnan(total_s)):
-        return "-"
-    total_s = max(0, round(total_s))
-    h, rem = divmod(total_s, 3600)
-    m, s = divmod(rem, 60)
-    if h > 0:
-        return f"{h}:{m:02d}:{s:02d}"
-    return f"{m}:{s:02d}"
-
-
-RANK_DIST_LABEL_RU = {
-    800: "800 м", 1500: "1 500 м", 3000: "3 000 м", 5000: "5 000 м",
-    10000: "10 000 м", 21097.5: "Полумарафон", 42195: "Марафон",
-}
-
-
 def load_data(db_path, json_path=None):
     """json_path необязателен (по умолчанию None): раньше отчёт требовал калибровочный JSON
     (calibration_profile*.json от garmin_calibration_fit.py) для калибровки дорожки и
@@ -805,97 +786,6 @@ def daniels_vdot(distance_m, time_s):
     pct_max = 0.8 + 0.1894393 * np.exp(-0.012778 * t_min) + 0.2989558 * np.exp(-0.1932605 * t_min)
     vo2 = -4.60 + 0.182258 * v + 0.000104 * v ** 2
     return vo2 / pct_max
-
-
-# Стандартные соревновательные дистанции (те же, что в rank_calculator.html / нормативы ЕВСК),
-# для которых считаем личный рекорд.
-REAL_BEST_EFFORT_DISTS_M = [800, 1500, 3000, 5000, 10000, 21097.5, 42195]
-
-
-def real_best_efforts_by_distance(activities, intervals, target_dists=REAL_BEST_EFFORT_DISTS_M):
-    """Личный рекорд на каждой стандартной дистанции — БЕЗ каких-либо моделей/эквивалентов
-    (см. диалог: попытка через среднюю скорость всей дистанции — "если 10 км за 40:14, то 5 км
-    не медленнее 20:07" — отклонена, т.к. предполагает равномерный темп, а реально может быть,
-    например, 19 минут на первую половину и 21 на вторую — тогда лучший реальный отрезок на 5 км
-    БЫСТРЕЕ половины общего времени, а не равен ей, и наивная пропорция это упускает). Вместо
-    предположений о равномерности здесь используются ФАКТИЧЕСКИЕ км-сплиты (intervals) той же
-    тренировки: скользящим окном по сплитам ищется самый быстрый непрерывный участок, длина
-    которого равна целевой дистанции (внутри пограничного сплита время интерполируется
-    пропорционально пройденной в нём доле дистанции, т.к. более мелких данных, чем сплит, нет) —
-    это самый быстрый РЕАЛЬНО пробежанный отрезок такой длины, какой бы ни была раскладка по
-    темпу внутри тренировки, а не выведенный из среднего темпа всей дистанции.
-
-    Результат на дистанции — лучшее (минимальное время) среди ВСЕХ тренировок и ВСЕХ окон в них,
-    включая случай, когда вся тренировка целиком равна целевой дистанции. Рекордный отрезок может
-    быть как отдельным стартом/тренировкой на этой дистанции, так и частью более длинной
-    тренировки — тогда extracted=True и указано, из тренировки какой общей длины он вычленен.
-
-    Возвращает dict {dist_m: record|None}, record = {sec, activity_id, date, name, total_km, extracted}.
-    """
-    results = {d: None for d in target_dists}
-    if intervals is None or not len(intervals) or activities is None or not len(activities):
-        return results
-
-    act_by_id = activities.set_index("activity_id") if "activity_id" in activities.columns else None
-
-    rest_mask = intervals["lap_type"].isin(LAP_REST_TYPES) if "lap_type" in intervals.columns else False
-    iv = intervals[
-        intervals["distance_m"].notna() & intervals["duration_s"].notna() &
-        (intervals["distance_m"] > 0) & (intervals["duration_s"] > 0) & (~rest_mask)
-    ]
-    if not len(iv):
-        return results
-
-    for aid, grp in iv.groupby("activity_id"):
-        g = grp.sort_values("idx") if "idx" in grp.columns else grp
-        dist = g["distance_m"].to_numpy(dtype=float)
-        dur = g["duration_s"].to_numpy(dtype=float)
-        n = len(g)
-        if n == 0:
-            continue
-        cum_d = np.concatenate([[0.0], np.cumsum(dist)])
-        cum_t = np.concatenate([[0.0], np.cumsum(dur)])
-        total_d = cum_d[-1]
-
-        if act_by_id is not None and aid in act_by_id.index:
-            act_row = act_by_id.loc[aid]
-            date = act_row["date"]
-            name = act_row["name"] if "name" in act_row else ""
-        else:
-            date, name = None, ""
-
-        for d in target_dists:
-            if d > total_d + 1e-6:
-                continue
-            best_t = None
-            j = 0
-            for i in range(n):
-                if j < i:
-                    j = i
-                while j < n and (cum_d[j + 1] - cum_d[i]) < d - 1e-9:
-                    j += 1
-                if j >= n:
-                    break
-                lap_d = dist[j]
-                if lap_d <= 0:
-                    continue
-                need = d - (cum_d[j] - cum_d[i])
-                frac = min(1.0, max(0.0, need / lap_d))
-                # время от начала окна i до точки "d метров" внутри лапа j
-                # (cum_t[j]-cum_t[i] — время ПОЛНЫХ лап i..j-1, плюс доля лапа j):
-                t = (cum_t[j] - cum_t[i]) + frac * dur[j]
-                if best_t is None or t < best_t:
-                    best_t = t
-            if best_t is None:
-                continue
-            cur = results[d]
-            if cur is None or best_t < cur["sec"]:
-                results[d] = {
-                    "sec": best_t, "activity_id": aid, "date": date, "name": name,
-                    "total_km": total_d / 1000.0,
-                    "extracted": bool(d < total_d - 1.0),
-                }
-    return results
 
 
 def detect_race_blowup(activity_id, intervals, min_clean_km=15.0,
@@ -2318,7 +2208,7 @@ def pearsonr_approx(x, y):
 
 
 def analyze_volume_ef_response(activities, easy_ef_df, rolling_weeks=4, horizon_weeks=4,
-                                n_bins=5, min_points=20):
+                                n_bins=5, min_points=20, window_weeks=None):
     """Дозозависимость 'объём бега -> будущее изменение EF': для каждой недели считается
     скользящий за rolling_weeks недель объём бега (км/нед, ВСЕ беговые тренировки) и сезонно-
     детрендированная EF лёгкого бега (easy_ef_df/ef_seasadj — переиспользуем расчёт из
@@ -2363,17 +2253,32 @@ def analyze_volume_ef_response(activities, easy_ef_df, rolling_weeks=4, horizon_
         for w in range(n_weeks)
     ])
 
-    valid_w = np.arange(n_weeks - horizon_weeks)
+    # Первые rolling_weeks-1 недель — неполное окно (сумма за меньшее число дней делится на
+    # полное rolling_weeks): объём там занижен искусственно, их исключаем.
+    valid_w = np.arange(rolling_weeks - 1, n_weeks - horizon_weeks)
     delta_ef = ef_week_interp[valid_w + horizon_weeks] - ef_week_interp[valid_w]
     vol_w = vol_roll[valid_w]
 
-    mask = ~np.isnan(vol_w) & ~np.isnan(delta_ef) & (vol_w > 0)
+    # Периоды почти без бега (болезнь, отпуск, старт истории) — не «режим объёма», а возврат
+    # формы от заниженной базы: исключаем окна с объёмом < 50% от медианного.
+    _med_vol = np.nanmedian(vol_w[vol_w > 0]) if (vol_w > 0).any() else 0.0
+    mask = ~np.isnan(vol_w) & ~np.isnan(delta_ef) & (vol_w >= 0.5 * _med_vol) & (vol_w > 0)
+    week_no = valid_w[mask]
     x, y = vol_w[mask], delta_ef[mask]
+    # только недавняя история; если её мало — вся, но с весами
+    _win = window_weeks or RECENT_WINDOW_WEEKS
+    _recent = week_no >= n_weeks - _win
+    window_used = _win
+    if _recent.sum() >= n_bins * 4:
+        x, y, week_no = x[_recent], y[_recent], week_no[_recent]
+    else:
+        window_used = int(n_weeks)
+    wts = 0.5 ** ((n_weeks - 1 - week_no) / RECENCY_HALF_LIFE_WEEKS)
     if len(x) < n_bins * 3:
         return {"ok": False, "reason": f"недостаточно недель с валидным объёмом ({len(x)})"}
 
     order = np.argsort(x)
-    x_sorted, y_sorted = x[order], y[order]
+    x_sorted, y_sorted, w_sorted = x[order], y[order], wts[order]
     edges = np.array_split(np.arange(len(x_sorted)), n_bins)
     delta_key = f"mean_delta_ef_next_{horizon_weeks}w"
     bins = []
@@ -2383,7 +2288,7 @@ def analyze_volume_ef_response(activities, easy_ef_df, rolling_weeks=4, horizon_
         bins.append({
             "rolling_volume_km_per_week_range": [round(float(x_sorted[e].min()), 2), round(float(x_sorted[e].max()), 2)],
             "rolling_volume_km_per_week_mean": round(float(x_sorted[e].mean()), 2),
-            delta_key: round(float(y_sorted[e].mean()), 4),
+            delta_key: round(float(np.average(y_sorted[e], weights=w_sorted[e])), 4),
             "n_weeks": int(len(e)),
         })
     best = max(bins, key=lambda b: b[delta_key])
@@ -2395,8 +2300,20 @@ def analyze_volume_ef_response(activities, easy_ef_df, rolling_weeks=4, horizon_
             break
     r, p = pearsonr_approx(x, y)
 
+    # Убывающая отдача: прирост EF на каждые +10 км/нед при переходе к следующей корзине.
+    marginal = []
+    for i in range(1, len(bins)):
+        dv = bins[i]["rolling_volume_km_per_week_mean"] - bins[i - 1]["rolling_volume_km_per_week_mean"]
+        if dv > 1:
+            marginal.append({
+                "from_km": bins[i - 1]["rolling_volume_km_per_week_mean"],
+                "to_km": bins[i]["rolling_volume_km_per_week_mean"],
+                "gain_per_10km": round((bins[i][delta_key] - bins[i - 1][delta_key]) / dv * 10.0, 4),
+            })
+
     return {
         "ok": True,
+        "window_weeks": window_used,
         "method": f"недельная агрегация; объём = скользящие {rolling_weeks} нед. (км/нед, все "
                   f"беговые тренировки), EF = сезонно-детрендированная (лёгкий бег, интерполяция "
                   f"между неделями с измерениями); изменение EF считается через {horizon_weeks} "
@@ -2410,6 +2327,7 @@ def analyze_volume_ef_response(activities, easy_ef_df, rolling_weeks=4, horizon_
             "decline_threshold": decline_threshold,
             "correlation_r": r,
             "correlation_p_approx": p,
+            "marginal": marginal,
         },
     }
 
@@ -2616,12 +2534,11 @@ def render_zone_time_chart(zones, zone_shares_ts, window_weeks):
       </div>
       <p class="meta">Сплошная линия — факт (доля недельного объёма, скользящее окно
       {window_weeks} недель — то же окно, что и в разделе 8). "Восстановление"/"Лёгкий"/"Марафонский темп"
-      считаются по пульсовой зоне (как раньше); "Порог" и "МПК" — НЕ по зоне пульса, а по
+      считаются по пульсовой зоне; "Порог" и "МПК" — НЕ по зоне пульса, а по
       физической длительности рабочего отрезка (6-30 мин и ≤6 мин соответственно, та же детекция,
       что и в разделе 8) — поэтому "Порог" здесь должен по форме сходиться с оранжевой линией в разделе 8, а не
       с долей времени в пульсовой зоне Z4 (короткие МПК-интервалы физиологически часто попадают в
-      Z4 по пульсу, не успев разогнаться до Z5, и раньше маскировали в HR-зоне провал именно
-      длинной пороговой работы — см. диалог 2026-08-17). Пунктирная горизонтальная линия —
+      Z4 по пульсу, не успев разогнаться до Z5, и маскировали бы провал именно длинной пороговой работы). Пунктирная горизонтальная линия —
       рекомендуемая доля для выбранной дистанции (см. раздел 12; для "Порог"/"МПК" использована
       рекомендация для зон Z4/Z5 соответственно), не меняется во времени, это ориентир, а не факт.
       У каждой категории своя ось Y, масштаб которой пересчитывается под факт и рекомендацию
@@ -2925,6 +2842,12 @@ def analyze_progress_drivers(weekly, fitness_weekly, block_weeks=6, horizon_week
          for t in idx], index=idx
     )
     X = X[has_break == 0].dropna(subset=["gain", "km"])
+    _cut = weekly.index[-1] - pd.Timedelta(weeks=RECENT_WINDOW_WEEKS)
+    window_weeks_used = RECENT_WINDOW_WEEKS
+    if (X.index >= _cut).sum() >= 20:
+        X = X[X.index >= _cut]
+    else:
+        window_weeks_used = int(len(weekly))
 
     if len(X) < 12:
         return {"ok": False, "reason": f"после исключения недель-провалов и краёв истории "
@@ -2979,6 +2902,7 @@ def analyze_progress_drivers(weekly, fitness_weekly, block_weeks=6, horizon_week
     }
 
     return {"ok": True, "n_blocks": len(X), "block_weeks": N, "horizon_weeks": horizon_weeks,
+            "window_weeks": window_weeks_used,
             "table": table, "dose": dose, "X": X}
 
 
@@ -3157,38 +3081,46 @@ def traffic_light_html(weekly, targets, recent_weeks=4):
     return "".join(rows)
 
 
-def build_text_report(volume_ef_response, zones, current_shares_pct, weeks_back):
+def build_text_report(volume_ef_response, zones, current_shares_pct, weeks_back, direction=None):
     vol = volume_ef_response.get("by_rolling_volume_km_per_week", {}) if volume_ef_response.get("ok") else {}
     best_bin = vol.get("best_bin", {})
     decline = vol.get("decline_threshold")
 
     parts = []
-    parts.append("<h2>12. Оптимальный объём и структура недельного бега</h2>")
+    parts.append("<h2>12. Объём и структура недельного бега</h2>")
 
     if not volume_ef_response.get("ok"):
         parts.append(
             f"<p class='meta'>Оптимальный объём по модели 'объём -> будущее изменение EF' не "
             f"посчитан: {volume_ef_response.get('reason', 'недостаточно данных')}.</p>"
         )
-    if best_bin:
-        lo, hi = best_bin.get("rolling_volume_km_per_week_range", [None, None])
+    if direction is not None and direction.get("n_windows", 0) >= 2:
+        _w = ", ".join(str(w) for w in direction["windows"])
         parts.append(
-            f"<p><b>Оптимальный недельный объём (по модели 'объём -> будущее изменение EF', "
-            f"скользящие 4 недели):</b> "
-            f"~<b>{lo:.0f}–{hi:.0f} км/неделю</b> "
-            f"(среднее в лучшей корзине {best_bin.get('rolling_volume_km_per_week_mean', float('nan')):.0f} км/нед, "
-            f"n={best_bin.get('n_weeks')} недель) — именно в этом диапазоне рост объёма даёт наибольший "
-            f"прирост эффективности (EF) в следующие 4 недели.</p>"
+            f"<p class='meta'>Расчёт повторён на окнах истории {_w} недель (свежие недели весят больше): "
+            f"результаты давней истории не описывают текущую форму, а точные километры при таком "
+            f"объёме данных меняются от окна к окну. Поэтому показано только то, что повторяется во "
+            f"всех окнах.</p>"
         )
-        if decline is not None:
-            parts.append(
-                f"<p>Выше <b>~{decline:.0f} км/неделю</b> отклик становится отрицательным "
-                f"(корреляция объёма и роста EF: r={vol.get('correlation_r')}, "
-                f"p≈{vol.get('correlation_p_approx')}) — переизбыток объёма ассоциирован со снижением "
-                f"эффективности в последующие недели, вероятно из-за накопленного утомления.</p>"
-            )
+        items = []
+        if direction["top_worse"]:
+            items.append("недели с самым высоким для вас скользящим объёмом сменялись более слабым ростом "
+                         "эффективности (EF), чем недели с умеренным объёмом — риск накопленного утомления;")
+        if direction["dim"]:
+            items.append("отдача от добавленных километров убывает: чем выше уже достигнутый объём, тем "
+                         "меньше прирост EF от каждого следующего километра;")
+        if direction["best_mid"]:
+            items.append("наибольший прирост EF давали недели с умеренным объёмом — не самым низким и не "
+                         "самым высоким из ваших недавних.")
+        if items:
+            parts.append("<p><b>Устойчиво во всех окнах:</b></p><ul>" + "".join(f"<li>{t}</li>" for t in items) + "</ul>")
+        else:
+            parts.append("<p><b>Устойчивой зависимости роста EF от объёма не обнаружено:</b> результат меняется "
+                         "от окна к окну, оптимальный объём по этим данным определить нельзя. Ориентируйтесь на "
+                         "текущую нагрузку (ACWR, раздел 9) и на срывы (раздел 17).</p>")
     elif volume_ef_response.get("ok"):
-        parts.append("<p>Не удалось выделить корзину объёма с приростом EF по имеющимся данным.</p>")
+        parts.append("<p class='meta'>Данных недавней истории недостаточно, чтобы проверить устойчивость "
+                     "зависимости объёма и роста EF; выводы не делаются.</p>")
 
     # ---- рекомендуемое распределение по зонам ДЛЯ РАЗНЫХ ЦЕЛЕВЫХ ДИСТАНЦИЙ ----
     # DIST_KM/DIST_TARGETS — теперь константы модуля (см. выше файла), а не локальные
@@ -3199,11 +3131,7 @@ def build_text_report(volume_ef_response, zones, current_shares_pct, weeks_back)
 
     parts.append(f"<h3>Текущее фактическое распределение по пульсовым зонам (последние {weeks_back} недель)</h3>")
     parts.append(
-        "<p class='meta'>Важно: здесь Z3 — это ВСЁ время с пульсом 140-159, в любых тренировках "
-        "(широкое понятие пульсовой зоны). Это НЕ то же самое, что 'марафонские отрезки' из раздела 10 "
-        "(там — узкое понятие: только вставки в темпе 285-335 с/км внутри длительных/лёгких). Пульсовая "
-        "зона шире: в неё попадает и снос пульса к концу длинной, и просто умеренно-тяжёлый бег — "
-        "поэтому её текущая доля (см. таблицу) заметно больше доли собственно марафонских вставок.</p>"
+        "<p class='meta'>Здесь считается всё время в пульсовых зонах раздела 3 во всех тренировках. Это шире, чем «марафонские отрезки» из раздела 10 (только участки в зоне Z3 внутри длинных и лёгких): в зону попадает и снос пульса к концу длинной, и просто умеренно-тяжёлый бег, поэтому текущая доля заметно больше доли собственно марафонских вставок.</p>"
     )
     parts.append("<table><tr><th>Зона</th><th>Сейчас, % времени</th></tr>")
     for name, _, _ in zones:
@@ -3245,6 +3173,313 @@ def build_text_report(volume_ef_response, zones, current_shares_pct, weeks_back)
         "под фактические данные этого атлета на этих дистанциях, а ориентир.</div>"
     )
     return "".join(parts)
+
+
+# --------------------------------------------------------------------------
+# 17. ОПТИМАЛЬНЫЙ СОСТАВ ЦИКЛА (по эффекту, а не по скользящему среднему)
+# --------------------------------------------------------------------------
+
+def _weekly_form_series(week_index, races, interval_points, sigma_days=10.0):
+    """Недельный индекс формы (VDOT) на конец каждой недели: гауссово сглаживание (σ=10 дн.)
+    всех точек формы — интервально-пороговые точки (вес = их достоверность) и гонки ≤30 км
+    (вес 4). Это тот же индекс формы, что и на графике раздела 4, только в одной шкале VDOT и
+    без привязки к лёгкому бегу: EF лёгкого бега сам проседает от накопленной усталости, поэтому
+    в блоках с большим объёмом даёт обратный сигнал (см. раздел 12) и для оценки эффекта
+    объёма не годится."""
+    pts = []
+    if interval_points is not None and len(interval_points):
+        for d, v, w in zip(interval_points["date"], interval_points["vdot"], interval_points["weight"]):
+            pts.append((pd.Timestamp(d).normalize(), float(v), float(w)))
+    if races is not None and len(races):
+        for d, v, dist in zip(races["date"], races["vdot"], races["distance_m"]):
+            if dist < 30000 and not pd.isna(v):
+                pts.append((pd.Timestamp(d).normalize(), float(v), 4.0))
+    if not pts:
+        return None
+    d0 = week_index[0]
+    pday = np.array([(d - d0).days for d, _, _ in pts], dtype=float)
+    pv = np.array([v for _, v, _ in pts])
+    pw = np.array([w for _, _, w in pts])
+    out = []
+    for i in range(len(week_index)):
+        k = pw * np.exp(-0.5 * ((pday - (i * 7 + 6)) / sigma_days) ** 2)
+        out.append((k * pv).sum() / k.sum() if k.sum() > 0.5 else np.nan)
+    return pd.Series(out, index=week_index)
+
+
+def analyze_cycle_structure(wk_km, races, interval_points, down_ratio_max=0.85, forced_ratio=0.5,
+                            window_weeks=None):
+    """Оптимальный СОСТАВ ЦИКЛА по эффекту, а не по среднему объёму прошлого.
+
+    Идея: скользящее среднее (раздел 12) смешивает недели недогруза и перегруза и не отвечает,
+    каким должен быть план. Здесь история режется на реальные циклы: цикл = серия загрузочных
+    недель + одна неделя-спад (объём < 85% среднего трёх предыдущих недель). Для каждого цикла
+    считается ИСХОД: прирост формы (индекс VDOT на конце недели после спада минус перед циклом),
+    а также был ли спад ВЫНУЖДЕННЫМ (< 50% — болезнь/усталость/пауза, а не решение). Вынужденный
+    спад — это цена перегрузки: недели, которых плану не хватало.
+
+    Из цикла берём четыре параметра, которые нужны плану:
+      1) средний объём загрузочной недели (уровень, при котором нет вынужденных срывов и прирост
+         формы максимален);
+      2) число загрузочных недель подряд (L);
+      3) глубина спада (% от среднего загрузочных недель) — по плановым, не вынужденным спадам;
+      4) пик/среднее — насколько максимальная неделя выше средней загрузочной.
+    Отдельно — недели относительно ХРОНИЧЕСКОЙ нагрузки (среднее 4 предыдущих недель): что делает
+    неделя ниже / выше того, к чему организм уже привык (недогруз против перегруза).
+
+    Ограничения: циклов в истории ~20-25, групп 3-5 → это ориентир, не доказательство; n везде
+    показан. Прирост формы шумный (индекс по интервальным точкам ±3 VDOT)."""
+    wk = wk_km.copy().astype(float)
+    weeks = wk.index
+    n = len(wk)
+    if n < 30:
+        return {"ok": False, "reason": f"мало недель истории ({n})"}
+    Fs = _weekly_form_series(weeks, races, interval_points)
+    if Fs is None:
+        return {"ok": False, "reason": "нет точек формы (гонки/интервальные VDOT)"}
+
+    tr3 = wk.rolling(3).mean().shift(1)
+    ratio3 = wk / tr3
+    isdown = (ratio3 < down_ratio_max).fillna(False)
+    cyc, start = [], 0
+    for i in range(n):
+        if not isdown.iloc[i]:
+            continue
+        loads = wk.iloc[start:i]
+        if len(loads) >= 1 and loads.mean() > 25:
+            f0 = Fs.iloc[max(start - 1, 0)]
+            f1 = Fs.iloc[min(i + 2, n - 1)]
+            cyc.append({
+                "start": weeks[start], "L": int(len(loads)), "load_km": float(loads.mean()),
+                "peak_ratio": float(loads.max() / loads.mean()), "down_km": float(wk.iloc[i]),
+                "down_ratio": float(wk.iloc[i] / loads.mean()),
+                "gain": float(f1 - f0) if not (pd.isna(f0) or pd.isna(f1)) else np.nan,
+                "weeks": int(len(loads) + 1),
+            })
+        start = i + 1
+    C = pd.DataFrame(cyc).dropna(subset=["gain"]) if cyc else pd.DataFrame()
+    _win = window_weeks or RECENT_WINDOW_WEEKS
+    window_weeks_used = _win
+    if len(C):
+        _cut = weeks[-1] - pd.Timedelta(weeks=_win)
+        if (C["start"] >= _cut).sum() >= 10:
+            C = C[C["start"] >= _cut].copy()
+        else:
+            window_weeks_used = int(n)
+    if len(C) < 10:
+        return {"ok": False, "reason": f"мало завершённых циклов в истории ({len(C)}, нужно >=10)"}
+    C["forced"] = C["down_ratio"] < forced_ratio
+    C["rate"] = C["gain"] / C["weeks"] * 4.0      # прирост VDOT за 4 недели цикла
+
+    # --- 1) уровень объёма загрузочных недель ---
+    q1, q3 = C["load_km"].quantile([0.30, 0.70])
+    edges = sorted(set([0, round(q1), round(q3), 1000]))
+    lbl = [f"до {edges[1]} км"] + [f"{edges[i]}-{edges[i + 1]} км" for i in range(1, len(edges) - 2)] \
+        + [f"больше {edges[-2]} км"] if len(edges) >= 3 else None
+    C["level"] = pd.cut(C["load_km"], edges, include_lowest=True, labels=lbl)
+    lvl = C.groupby("level", observed=True).agg(
+        n=("gain", "size"), load_km=("load_km", "mean"), L=("L", "mean"),
+        forced_share=("forced", "mean"), gain=("gain", "mean"), rate=("rate", "mean"),
+    ).reset_index()
+    ok_lvl = lvl[(lvl["n"] >= 3) & (lvl["forced_share"] <= 0.25)]
+    best_lvl = (ok_lvl.sort_values("rate", ascending=False).iloc[0] if len(ok_lvl)
+                else lvl.sort_values("forced_share").iloc[0])
+    in_best = C[C["level"] == best_lvl["level"]]
+    plan = in_best[~in_best["forced"]] if (~in_best["forced"]).any() else in_best
+    target_load_km = float(plan["load_km"].median())
+    load_lo, load_hi = float(plan["load_km"].quantile(0.25)), float(plan["load_km"].quantile(0.75))
+
+    # --- 2) число загрузочных недель подряд (среди циклов без вынужденного срыва) ---
+    P = C[~C["forced"]].copy()
+    P["Lbin"] = pd.cut(P["L"], [0, 2, 3, 4, 100], labels=["1-2", "3", "4", "5+"])
+    lg = P.groupby("Lbin", observed=True).agg(n=("gain", "size"), load_km=("load_km", "mean"),
+                                               gain=("gain", "mean"), rate=("rate", "mean")).reset_index()
+    forced_by_L = C.assign(Lbin=pd.cut(C["L"], [0, 2, 3, 4, 100], labels=["1-2", "3", "4", "5+"])) \
+        .groupby("Lbin", observed=True)["forced"].agg(["size", "mean"]).reset_index()
+    lg = lg.merge(forced_by_L.rename(columns={"size": "n_all", "mean": "forced_share"}), on="Lbin", how="left")
+    cand = lg[lg["n"] >= 3]
+    best_L_label = str(cand.sort_values("rate", ascending=False).iloc[0]["Lbin"]) if len(cand) else "3"
+    best_L = {"1-2": 2, "3": 3, "4": 4, "5+": 5}.get(best_L_label, 3)
+
+    # --- 3-4) глубина спада и пик по плановым (не вынужденным) циклам ---
+    down_ratio = float(np.clip(P["down_ratio"].median(), 0.55, 0.85))
+    down_lo, down_hi = float(P["down_ratio"].quantile(0.25)), float(P["down_ratio"].quantile(0.75))
+    # пик берём по циклам такой же длины (±1 неделя): в длинных циклах максимум из 6-7 недель
+    # почти всегда выше, чем в цикле из трёх, и завысил бы пик рецепта
+    PL = P[(P["L"] >= best_L - 1) & (P["L"] <= best_L + 1)]
+    peak_ratio = float(np.clip((PL if len(PL) >= 3 else P)["peak_ratio"].median(), 1.05, 1.25))
+
+    # --- рецепт цикла: L загрузочных недель с линейным подъёмом до пика + неделя-спад ---
+    if best_L == 1:
+        prof = [1.0]
+    else:
+        prof = [1 + (peak_ratio - 1) * (2 * i / (best_L - 1) - 1) for i in range(best_L)]
+    mean_load = float(np.mean(prof))
+    prof = [p / mean_load for p in prof]                     # среднее загрузочных = 1.00
+    weeks_km = [target_load_km * p for p in prof] + [target_load_km * down_ratio]
+    cycle_mean = float(np.mean(weeks_km))
+    recipe = pd.DataFrame({
+        "Неделя": [f"{i + 1}" + (" (пик)" if i == best_L - 1 and best_L > 1 else "") for i in range(best_L)]
+                  + [f"{best_L + 1} (спад)"],
+        "% от средней загрузочной": [round(p * 100) for p in prof] + [round(down_ratio * 100)],
+        "км": [round(v) for v in weeks_km],
+    })
+
+    # --- недели относительно хронической нагрузки (недогруз / перегруз) ---
+    chron = wk.rolling(4).mean().shift(1)
+    ratio = wk / chron
+    pre = Fs.shift(1)
+    gain_w = Fs.shift(-3) - pre
+    brk = (wk < forced_ratio * chron)
+    D = pd.DataFrame({"ratio": ratio, "chron": chron, "pre": pre, "gain": gain_w,
+                      "brk_next": brk.shift(-1).astype(float), "m": weeks.month})
+    D = D[(D["chron"] > 25)].dropna(subset=["ratio", "pre", "gain"])
+    if window_weeks_used == _win and (D.index >= weeks[-1] - pd.Timedelta(weeks=_win)).sum() >= 40:
+        D = D[D.index >= weeks[-1] - pd.Timedelta(weeks=_win)]
+    rel_tbl = None
+    if len(D) >= 40:
+        A = np.column_stack([np.ones(len(D)), D["pre"] - D["pre"].mean(), (D["chron"] - 60) / 10,
+                             np.sin(2 * np.pi * D["m"] / 12), np.cos(2 * np.pi * D["m"] / 12)])
+        res = D["gain"].values - A @ np.linalg.lstsq(A, D["gain"].values, rcond=None)[0]
+        D = D.assign(res=res)
+        D["bin"] = pd.cut(D["ratio"], [0, 0.7, 0.9, 1.1, 1.25, 10],
+                          labels=["< 70%", "70-90%", "90-110%", "110-125%", "> 125%"])
+        rel_tbl = D.groupby("bin", observed=True).agg(
+            n=("res", "size"), gain=("res", "mean"), brk=("brk_next", "mean")).reset_index()
+
+    return {
+        "ok": True, "window_weeks": window_weeks_used, "n_cycles": int(len(C)), "n_forced": int(C["forced"].sum()),
+        "cycles": C, "levels": lvl, "best_level": best_lvl, "by_L": lg, "best_L": best_L,
+        "target_load_km": target_load_km, "load_range": (load_lo, load_hi),
+        "down_ratio": down_ratio, "down_range": (down_lo, down_hi), "peak_ratio": peak_ratio,
+        "recipe": recipe, "cycle_mean_km": cycle_mean, "peak_km": max(weeks_km),
+        "down_km": weeks_km[-1], "relative_table": rel_tbl,
+        "forced_median_km": float(C.loc[C["forced"], "down_km"].median()) if C["forced"].any() else None,
+    }
+
+
+# Проверка устойчивости выводов: анализ повторяется на нескольких окнах истории; в отчёт попадает
+# только то, что не меняется от окна к окну (направление, а не точные километры).
+STABILITY_WINDOWS = (52, 78, 104)
+
+
+def volume_direction_summary(activities, easy_ef_df):
+    runs = []
+    for w in STABILITY_WINDOWS:
+        try:
+            r = analyze_volume_ef_response(activities, easy_ef_df, window_weeks=w)
+        except Exception:
+            continue
+        if not r.get("ok") or r.get("window_weeks") != w:
+            continue
+        v = r["by_rolling_volume_km_per_week"]
+        bins = v["bins"]
+        key = [k for k in bins[0] if k.startswith("mean_delta_ef")][0]
+        deltas = np.array([b[key] for b in bins], dtype=float)
+        best_i = int(np.argmax(deltas))
+        mg = v.get("marginal") or []
+        dim = None
+        if len(mg) >= 2:
+            half = len(mg) // 2
+            dim = bool(np.mean([m["gain_per_10km"] for m in mg[half:]])
+                       < np.mean([m["gain_per_10km"] for m in mg[:max(half, 1)]]))
+        runs.append({
+            "w": w,
+            "top_worse": bool(deltas[-1] < np.mean(deltas[:-1])),
+            "best_mid": bool(0 < best_i < len(bins) - 1),
+            "dim": dim,
+        })
+    n = len(runs)
+    return {
+        "n_windows": n, "windows": [r["w"] for r in runs],
+        "top_worse": n >= 2 and all(r["top_worse"] for r in runs),
+        "best_mid": n >= 2 and all(r["best_mid"] for r in runs),
+        "dim": n >= 2 and all(r["dim"] is True for r in runs),
+    }
+
+
+def cycle_direction_summary(wk_km, races, interval_points):
+    runs = []
+    for w in STABILITY_WINDOWS:
+        try:
+            res = analyze_cycle_structure(wk_km, races, interval_points, window_weeks=w)
+        except Exception:
+            continue
+        if not res.get("ok") or res.get("window_weeks") != w:
+            continue
+        C = res["cycles"]
+        med = C["load_km"].median()
+        hi, lo = C[C["load_km"] >= med], C[C["load_km"] < med]
+        ln, ls = C[C["L"] >= 4], C[C["L"] <= 3]
+        d_level = (hi["forced"].mean() - lo["forced"].mean()) if len(hi) and len(lo) else np.nan
+        d_len = (ln["forced"].mean() - ls["forced"].mean()) if len(ln) and len(ls) else np.nan
+        runs.append({"w": w, "d_level": d_level, "d_len": d_len})
+
+    def sign(key, thr=0.10):
+        v = [r[key] for r in runs]
+        if len(v) < 2 or any(pd.isna(x) for x in v):
+            return 0
+        if all(x > thr for x in v):
+            return 1
+        if all(x < -thr for x in v):
+            return -1
+        return 0
+    return {"n_windows": len(runs), "windows": [r["w"] for r in runs],
+            "level": sign("d_level"), "length": sign("d_len")}
+
+
+def cycle_structure_html(res, dirs=None):
+    p = ["<h2>17. Состав цикла: что подтверждается</h2>"]
+    if not res.get("ok"):
+        p.append(f"<p class='meta'>Не посчитано: {res.get('reason', 'недостаточно данных')}.</p>")
+        return "".join(p)
+    p.append(
+        "<div class='note'>В разделе 12 объём — скользящее среднее 4 недель, то есть среднее цикла. "
+        "Здесь история разрезана на реальные циклы (серия загрузочных недель + неделя-спад) и каждый "
+        "оценён по исходу: был ли срыв (вынужденная неделя &lt;50% от нормы — цена перегрузки). "
+        "Точный «рецепт» в километрах не даётся: циклов слишком мало, и он менялся бы от окна к окну. "
+        "Показано только то, что повторяется на всех окнах истории.</div>"
+    )
+    p.append(
+        f"<p>За последние {res['window_weeks']} нед. выделено {res['n_cycles']} циклов, из них "
+        f"{res['n_forced']} закончились вынужденным срывом.</p>"
+    )
+    items = []
+    if dirs and dirs.get("n_windows", 0) >= 2:
+        if dirs["level"] > 0:
+            items.append("чем выше объём загрузочных недель относительно ваших же циклов, тем чаще следовал срыв;")
+        elif dirs["level"] < 0:
+            items.append("более высокий объём загрузочных недель не приводил к более частым срывам;")
+        if dirs["length"] > 0:
+            items.append("чем больше загрузочных недель подряд без разгрузки, тем чаще следовал срыв;")
+        elif dirs["length"] < 0:
+            items.append("длинные серии загрузочных недель не приводили к более частым срывам.")
+        _w = ", ".join(str(w) for w in dirs["windows"])
+        if items:
+            p.append(f"<p><b>Устойчиво на окнах {_w} нед.:</b></p><ul>" + "".join(f"<li>{t}</li>" for t in items) + "</ul>")
+        else:
+            p.append(f"<p><b>Устойчивых закономерностей по составу цикла не найдено</b> (окна {_w} нед.): "
+                     "связь объёма и длины цикла со срывами меняется от окна к окну. "
+                     "Планируйте по текущей нагрузке (ACWR, раздел 9).</p>")
+    else:
+        p.append("<p class='meta'>Истории недостаточно, чтобы проверить устойчивость выводов по составу цикла "
+                 "на нескольких окнах; выводы не делаются.</p>")
+
+    rt = res.get("relative_table")
+    if rt is not None and len(rt):
+        t3 = pd.DataFrame({
+            "неделя к среднему 4 предыдущих": rt["bin"].astype(str), "недель": rt["n"],
+            "прирост формы через 3 нед (поправка на уровень/сезон)": rt["gain"].round(2),
+            "срыв на следующей неделе, %": (rt["brk"] * 100).round(0),
+        })
+        p.append("<h3>Недогруз и перегруз: неделя относительно привычной нагрузки</h3>")
+        p.append('<div class="table-wrap">' + t3.to_html(index=False, escape=True) + "</div>")
+        p.append("<p class='meta'>Недели &lt;70% от привычного — это в основном срывы, а не плановая "
+                 "разгрузка, они и дают потерю формы; недели &gt;125% в основном стоят после срыва "
+                 "(возврат к норме), поэтому их прирост не показатель пользы перегруза.</p>")
+    p.append("<p class='meta'>Групп мало, индекс формы шумный (интервальные точки ±3 VDOT) — это ориентир, "
+             "а не доказательство. Вид тренировок в неделях (сколько качества, Z4/Z5) задают разделы 13-16.</p>")
+    return "".join(p)
 
 
 # --------------------------------------------------------------------------
@@ -3304,8 +3539,219 @@ HTML_HEAD = """<!DOCTYPE html>
 HTML_TAIL = "</body></html>"
 
 
+# --------------------------------------------------------------------------
+# Защита от GPS-сбоев и личные рекорды по стандартным дистанциям
+# --------------------------------------------------------------------------
+
+# Окно анализа «что работает»: результаты 2-3 годовой давности не описывают текущую форму
+# (объёмы выросли, скорость выросла, отдача от нагрузки убывает), поэтому выводы берутся по
+# недавней истории, а внутри неё свежие недели весят больше.
+RECENT_WINDOW_WEEKS = 78
+RECENCY_HALF_LIFE_WEEKS = 26
+
+GPS_MIN_PACE_S_PER_KM = 120.0   # быстрее 2:00/км лап физически невозможен
+GPS_CADENCE_RATIO_MAX = 1.5     # лап «длиннее» шагов в 1.5+ раза — сбой GPS (часы потеряли и нашли точку)
+
+
+def repair_gps_glitch_laps(intervals):
+    """Чинит лапы (км-сплиты) с GPS-сбоем: часы теряют точку, затем «телепортируются» туда, где
+    её нашли, и один сплит получает многокилометровый скачок дистанции за обычное время
+    (например, 2785 м за 271 с = 1:37/км). Признаки сбоя: темп быстрее 2:00/км либо дистанция
+    лапа в 1.5+ раза больше, чем даёт независимая оценка по шагам (каденс × длина шага × время;
+    на нормальных лапах отношение держится около 1.0 ± 10%).
+
+    Дистанция сбойного лапа заменяется оценкой по шагам (с поправкой на типичное отношение
+    GPS/шаги в этой же тренировке), а при отсутствии каденса — оценкой по медианному темпу
+    остальных лапов. Время лапа не трогается. Возвращает (intervals, число исправленных лапов)."""
+    if intervals is None or not len(intervals):
+        return intervals, 0
+    need = {"activity_id", "distance_m", "duration_s"}
+    if not need.issubset(intervals.columns):
+        return intervals, 0
+    iv = intervals.copy()
+    if not iv.index.is_unique:
+        iv = iv.reset_index(drop=True)
+    d = iv["distance_m"].astype(float)
+    t = iv["duration_s"].astype(float)
+    valid = d.notna() & t.notna() & (d > 0) & (t > 0)
+    pace = t / d.where(d > 0) * 1000.0
+    if {"avg_cadence_spm", "stride_length_mm"}.issubset(iv.columns):
+        # stride_length в БД фактически в сантиметрах (~110 = 1.1 м шаг)
+        steps_m = iv["avg_cadence_spm"].astype(float) * t / 60.0 * iv["stride_length_mm"].astype(float) / 100.0
+    else:
+        steps_m = pd.Series(np.nan, index=iv.index)
+    ratio = d / steps_m.where(steps_m > 0)
+    bad = valid & ((pace < GPS_MIN_PACE_S_PER_KM) | ((d >= 200) & (ratio > GPS_CADENCE_RATIO_MAX)))
+    n_fixed = 0
+    if not bad.any():
+        return iv, 0
+    has_gap = "avg_grade_adjusted_pace_s_per_km" in iv.columns
+    for aid, bad_idx in iv[bad].groupby("activity_id").groups.items():
+        ok_idx = iv.index[(iv["activity_id"] == aid) & valid & ~bad]
+        r_ok = ratio.loc[ok_idx].median() if len(ok_idx) else np.nan
+        med_pace = pace.loc[ok_idx].median() if len(ok_idx) else np.nan
+        k = r_ok if (pd.notna(r_ok) and 0.8 <= r_ok <= 1.3) else 1.0
+        for i in bad_idx:
+            if pd.notna(steps_m.loc[i]) and steps_m.loc[i] > 0:
+                new_d = float(steps_m.loc[i]) * k
+            elif pd.notna(med_pace) and med_pace > 0:
+                new_d = float(t.loc[i]) / med_pace * 1000.0
+            else:
+                continue
+            new_pace = float(t.loc[i]) / new_d * 1000.0
+            if has_gap and pd.notna(iv.at[i, "avg_grade_adjusted_pace_s_per_km"]) and pd.notna(pace.loc[i]) and pace.loc[i] > 0:
+                iv.at[i, "avg_grade_adjusted_pace_s_per_km"] = iv.at[i, "avg_grade_adjusted_pace_s_per_km"] * new_pace / pace.loc[i]
+            iv.at[i, "distance_m"] = new_d
+            if "avg_pace_s_per_km" in iv.columns:
+                iv.at[i, "avg_pace_s_per_km"] = new_pace
+            n_fixed += 1
+    return iv, n_fixed
+
+
+def fmt_hms(total_s):
+    """Секунды -> 'ч:мм:сс' (если есть часы) или 'мм:сс' (как fmtTime в rank_calculator.html)."""
+    if total_s is None or (isinstance(total_s, float) and np.isnan(total_s)):
+        return "-"
+    total_s = max(0, round(total_s))
+    h, rem = divmod(total_s, 3600)
+    m, s = divmod(rem, 60)
+    return f"{h}:{m:02d}:{s:02d}" if h > 0 else f"{m}:{s:02d}"
+
+
+RANK_DIST_LABEL_RU = {
+    800: "800 м", 1500: "1 500 м", 3000: "3 000 м", 5000: "5 000 м",
+    10000: "10 000 м", 21097.5: "Полумарафон", 42195: "Марафон",
+}
+
+# Стандартные соревновательные дистанции (как в rank_calculator.html).
+REAL_BEST_EFFORT_DISTS_M = [800, 1500, 3000, 5000, 10000, 21097.5, 42195]
+
+# Темп мировых рекордов (с/км) — окно быстрее него это заведомо сбой данных, а не рекорд.
+_WORLD_RECORD_PACE_S_PER_KM = {800: 126.0, 1500: 137.0, 3000: 146.0, 5000: 151.0,
+                               10000: 157.0, 21097.5: 163.0, 42195: 171.0}
+
+
+def real_best_efforts_by_distance(activities, intervals, target_dists=REAL_BEST_EFFORT_DISTS_M):
+    """Личный рекорд на каждой стандартной дистанции по фактическим км-сплитам, без допущения о
+    равномерном темпе: скользящим окном по НЕПРЕРЫВНОЙ ленте тренировки (включая отдых между
+    повторами — иначе соседние повторы склеивались бы в «один быстрый отрезок») ищется самый
+    быстрый участок нужной длины; внутри пограничного сплита время интерполируется.
+
+    Защита от сбоев GPS («телепорт» точки): лапы должны быть предварительно очищены
+    repair_gps_glitch_laps(); затем дистанция лапов каждой тренировки сверяется с её общей
+    дистанцией (Garmin) и приводится к ней пропорционально. Если лапы с общей дистанцией/временем
+    не сходятся (неполные данные) — лапы не используются, а рекорд берётся только по всей
+    тренировке, если её дистанция почти равна целевой (время пересчитывается на целевую дистанцию).
+    Окна быстрее мирового рекорда отбрасываются как заведомо ошибочные.
+
+    Возвращает {dist_m: {sec, activity_id, date, name, total_km, extracted} | None}."""
+    results = {d: None for d in target_dists}
+    if intervals is None or activities is None or not len(intervals) or not len(activities):
+        return results
+    if "activity_id" not in activities.columns:
+        return results
+    act = activities.drop_duplicates("activity_id").set_index("activity_id")
+    iv = intervals[
+        intervals["distance_m"].notna() & intervals["duration_s"].notna()
+        & (intervals["distance_m"] > 0) & (intervals["duration_s"] > 0)
+    ]
+
+    def offer(d, sec, aid, a, total_m, extracted):
+        if sec is None or not np.isfinite(sec) or sec <= 0:
+            return
+        if sec / (d / 1000.0) < _WORLD_RECORD_PACE_S_PER_KM.get(d, 0):
+            return
+        cur = results[d]
+        if cur is None or sec < cur["sec"]:
+            results[d] = {
+                "sec": float(sec), "activity_id": aid,
+                "date": a["date"] if "date" in a.index else None,
+                "name": a["name"] if "name" in a.index else "",
+                "total_km": total_m / 1000.0, "extracted": bool(extracted),
+            }
+
+    seen_laps = set()
+    for aid, grp in iv.groupby("activity_id"):
+        if aid not in act.index:
+            continue
+        seen_laps.add(aid)
+        a = act.loc[aid]
+        D = float(a["distance_m"]) if pd.notna(a.get("distance_m")) else 0.0
+        T = float(a["duration_s"]) if pd.notna(a.get("duration_s")) else 0.0
+        g = grp.sort_values("idx") if "idx" in grp.columns else grp
+        cum_d = np.concatenate([[0.0], np.cumsum(g["distance_m"].to_numpy(dtype=float))])
+        cum_t = np.concatenate([[0.0], np.cumsum(g["duration_s"].to_numpy(dtype=float))])
+        laps_ok = (D > 0 and T > 0 and cum_d[-1] > 0
+                   and 0.85 <= cum_d[-1] / D <= 1.15 and 0.9 <= cum_t[-1] / T <= 1.1)
+        if laps_ok:
+            cum_d = cum_d * (D / cum_d[-1])
+            for d in target_dists:
+                if d > D + 1e-6:
+                    continue
+                starts = cum_d[cum_d <= D - d + 1e-6]
+                ends = cum_d[cum_d >= d - 1e-6]
+                cand = []
+                if len(starts):
+                    cand.append(np.min(np.interp(starts + d, cum_d, cum_t) - np.interp(starts, cum_d, cum_t)))
+                if len(ends):
+                    cand.append(np.min(np.interp(ends, cum_d, cum_t) - np.interp(ends - d, cum_d, cum_t)))
+                if cand:
+                    offer(d, min(cand), aid, a, D, d < 0.99 * D)
+        elif D > 0 and T > 0:
+            for d in target_dists:
+                if d <= D <= d * 1.03:
+                    offer(d, T * d / D, aid, a, D, False)
+
+    # тренировки без лапов: только целиком
+    for aid, a in act.iterrows():
+        if aid in seen_laps:
+            continue
+        D = float(a["distance_m"]) if pd.notna(a.get("distance_m")) else 0.0
+        T = float(a["duration_s"]) if pd.notna(a.get("duration_s")) else 0.0
+        if D > 0 and T > 0:
+            for d in target_dists:
+                if d <= D <= d * 1.03:
+                    offer(d, T * d / D, aid, a, D, False)
+    return results
+
+
+def personal_records_html(activities, intervals):
+    real_bests = real_best_efforts_by_distance(activities, intervals)
+    out = ['<h1 style="margin-top:56px;">Личные рекорды</h1>', "<h2>18. Личные рекорды по стандартным дистанциям</h2>",
+           '<p class="meta">Лучшее время на каждой дистанции — самый быстрый реально пробежанный '
+           'непрерывный отрезок такой длины по км-сплитам (внутри пограничного сплита время '
+           'интерполировано). Это может быть отдельный старт или часть более длинной тренировки; '
+           'равномерный темп не предполагается. Сбои GPS (часы теряют сигнал, а потом «перепрыгивают» '
+           'в найденную точку) отсекаются: сплиты с невозможной скоростью пересчитываются по шагам, '
+           'а дистанция тренировки сверяется с общей дистанцией по данным Garmin.</p>']
+    rows = []
+    for d in REAL_BEST_EFFORT_DISTS_M:
+        rec = real_bests.get(d)
+        label = RANK_DIST_LABEL_RU.get(d, f"{d:g} м")
+        if rec is None:
+            rows.append({"Дистанция": label, "Лучшее время": "—", "Темп": "—", "Дата": "—",
+                         "Тренировка": "—", "Источник": "нет данных"})
+            continue
+        rows.append({
+            "Дистанция": label,
+            "Лучшее время": fmt_hms(rec["sec"]),
+            "Темп": fmt_pace(rec["sec"] / (d / 1000.0)),
+            "Дата": rec["date"].strftime("%Y-%m-%d") if rec["date"] is not None and pd.notna(rec["date"]) else "—",
+            "Тренировка": rec["name"],
+            "Источник": (f"отрезок внутри тренировки {rec['total_km']:.1f} км" if rec["extracted"]
+                         else "весь старт/тренировка"),
+        })
+    df = pd.DataFrame(rows, columns=["Дистанция", "Лучшее время", "Темп", "Дата", "Тренировка", "Источник"])
+    out.append('<div class="table-wrap">' + df.to_html(index=False, escape=True) + '</div>')
+    return "".join(out)
+
+
+
 def main(db_path, out_path, json_path=None):
     activities_raw, intervals_raw, lt, wellness, cross, calib = load_data(db_path, json_path)
+    # Сбои GPS (скачок дистанции в одном сплите) чиним СРАЗУ — иначе они искажают темп, VDOT,
+    # зоны и рекорды во всех разделах ниже.
+    intervals_raw, n_gps_fixed = repair_gps_glitch_laps(intervals_raw)
 
     # --- переклассификация типа тренировки, ПЕРЕД всем остальным ---
     # activities['type_guess'] из БД (алгоритм Гармина/экспортёра) часто ошибается — например,
@@ -3372,7 +3818,7 @@ def main(db_path, out_path, json_path=None):
     if pano_garmin is not None:
         pano_final = pano_garmin
         pano_source_note = (
-            f"Источник — история ПАНО Гармина (lactate_threshold): среднее {pano_garmin} уд/мин "
+            f"Источник — история ПАНО Гармина: среднее {pano_garmin} уд/мин "
             f"за последние {pano_garmin_info['window_days']} дн. до {pano_garmin_info['last_date']} "
             f"(n={pano_garmin_info['n']} точек)."
         )
@@ -3471,11 +3917,6 @@ def main(db_path, out_path, json_path=None):
            "Требовалось": (excluded_races["min_pct_required"] * 100).round(0).astype(int).astype(str) + "%"}
     )[["Дата", "name", "Дистанция", "Время", "Пульс", "% от ПАНО", "Требовалось"]].rename(columns={"name": "Название"})
 
-    # Личные рекорды по стандартным дистанциям — по реальным км-сплитам (см. докстринг
-    # real_best_efforts_by_distance): без предположения о равномерном темпе, лучший реальный
-    # отрезок нужной длины может быть вычленен из более длинной тренировки.
-    real_bests = real_best_efforts_by_distance(activities, intervals)
-
     # Раздел 3b (VO2max-прокси по истории ПАНО Garmin)
     lt_vo2 = garmin_vo2max_proxy(lt)
     charts["4b"] = plot_garmin_vo2max(lt_vo2, xlim=WEEKLY_XLIM)
@@ -3541,7 +3982,8 @@ def main(db_path, out_path, json_path=None):
     # calibration_profile.json не нужен
     current_shares = current_zone_shares(intervals, zones, activities, weeks_back=12)
     volume_ef_response = analyze_volume_ef_response(activities, easy_ef_df)
-    text9 = build_text_report(volume_ef_response, zones, current_shares, weeks_back=12)
+    volume_dirs = volume_direction_summary(activities, easy_ef_df)
+    text9 = build_text_report(volume_ef_response, zones, current_shares, weeks_back=12, direction=volume_dirs)
 
     # ---- "Что даёт прирост": блоковый анализ, периоды между стартами, лента недель, сон ----
     # (см. диалог 2026-09-24 — добавлено поверх/вместо разрозненных наблюдений в тексте раздела 8)
@@ -3551,6 +3993,8 @@ def main(db_path, out_path, json_path=None):
     charts["drivers"] = plot_progress_drivers(progress_drivers.get("table")) if progress_drivers.get("ok") else None
     periods_df = periods_between_races(races, activities, intervals, zones, cross)
     sleep_resp = sleep_quality_response(activities, intervals, wellness)
+    cycle_res = analyze_cycle_structure(wk_km, races, interval_vdot_df)
+    cycle_dirs = cycle_direction_summary(wk_km, races, interval_vdot_df)
 
     # ---------------- сборка HTML ----------------
     # Период/кол-во тренировок берём прямо из БД, а не из calib['meta'] — так шапка отчёта не
@@ -3562,9 +4006,16 @@ def main(db_path, out_path, json_path=None):
                 f'Всего тренировок: {len(activities)} | '
                 f'Сформировано: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>')
 
+    if n_gps_fixed:
+        html.append(
+            f'<div class="note">Исправлено сбоев GPS: {n_gps_fixed} км-сплит(ов) с невозможной скоростью '
+            '(часы потеряли сигнал и «перепрыгнули» в найденную точку) — дистанция таких сплитов '
+            'пересчитана по шагам. Учтено во всех расчётах ниже.</div>'
+        )
+
     if tm_info.get("applied"):
         html.append(
-            '<div class="note">Калибровка беговой дорожки применена: distance_m/темп для '
+            '<div class="note">Калибровка беговой дорожки применена: дистанция и темп для '
             f'{tm_info["n_treadmill_activities"]} тредмил-тренировок скорректированы на '
             f'{tm_info["factor"]:.3f} ({"+" if tm_info["pct"]>=0 else ""}{tm_info["pct"]}%). '
             'Это учтено во ВСЕХ расчётах ниже (объём, EF, VDOT, ACWR по км, зоны, темп по зонам).</div>'
@@ -3586,8 +4037,8 @@ def main(db_path, out_path, json_path=None):
     html.append(
         '<div class="note">Тип тренировки (лёгкая/длительная/интервалы/порог/микс) переопределён '
         'заново по названию тренировки из плана (Recovery/Easy/Long/Intervals/Threshold/Mixed/Race и '
-        'их русским аналогам), а не взят из БД как есть: исходная разметка activities.type_guess '
-        'от Гармина/экспортёра нередко ошибается (например, тренировки с названием "...Лёгкий" в БД '
+        'их русским аналогам), а не взят из данных Garmin как есть: исходная разметка типа тренировки '
+        'от Гармина/экспортёра нередко ошибается (например, тренировки с названием "...Лёгкий" в данных '
         'помечены как threshold/interval). Для тренировок без узнаваемого названия используется '
         'резервное правило по минутам в пульсовых зонах. Это затрагивает ВСЕ разделы ниже, которые '
         'опираются на тип тренировки (объём по типам, EF лёгкого бега, поиск ПАНО, лента недель, '
@@ -3610,7 +4061,7 @@ def main(db_path, out_path, json_path=None):
     html.append(
         f'<p class="meta">Отобраны тренировки длительностью 35-65 минут с устойчиво высоким пульсом '
         f'({min_hr_note}, плато, не интервальная структура) — типичный диапазон 10К-гонок и жёстких '
-        'темповых тестов. Порог отступа считается от ПАНО (см. ниже), а не хардкодится.</p>'
+        'темповых тестов. Нижняя граница пульса для отбора считается от ПАНО.</p>'
     )
     # ИСПРАВЛЕНО (ревью п.12 "HTML-инъекция в отчёте аналитики"): таблицы 3/6b/7/4a/
     # 4a_excluded ниже рендерятся через to_html() и включают колонку "Название" с сырым
@@ -3666,7 +4117,7 @@ def main(db_path, out_path, json_path=None):
             'кварталов) — слишком мало точек и слишком много посторонних факторов (объём, гонки, '
             'тейпер), чтобы это было строгим доказательством причинности. Не используется напрямую '
             'для построения зон (см. раздел 3) — только как один из двух независимых аргументов в '
-            'пользу того, где проходит граница Z1/Z2 (см. докстринг build_zones).</p>'
+            'пользу того, где проходит граница Z1/Z2.</p>'
         )
         html.append('<div class="table-wrap">' + tables["6b"].to_html(index=False, escape=True) + '</div>')
         html.append("</div>")
@@ -3683,16 +4134,14 @@ def main(db_path, out_path, json_path=None):
     html.append('<div class="table-wrap">' + tables["7"].to_html(index=False, escape=True) + '</div>')
     html.append(
         f'<p class="meta">Z1/Z2/Z3 построены по методике Карвонена (%HRR = резерв пульса = max_hr '
-        f'{"−"} rhr): Z2 = 60-70% HRR при rhr={rhr:.0f} уд/мин ({rhr_info["source"]}, '
-        f'{"скользящее среднее за " + str(rhr_info["window_days"]) + " дн." if rhr_info["source"]=="wellness.rhr" else "нет данных wellness"}) '
-        f'и max_hr={max_hr} уд/мин ({max_hr_info["source"]}'
+        f'{"−"} rhr): Z2 = 60-70% HRR при rhr={rhr:.0f} уд/мин ('
+        f'{"скользящее среднее пульса покоя (Garmin) за " + str(rhr_info["window_days"]) + " дн." if rhr_info["source"]=="wellness.rhr" else "нет данных о пульсе покоя"}) '
+        f'и max_hr={max_hr} уд/мин ({str(max_hr_info["source"]).replace("activities.max_hr", "максимум по тренировкам")}'
         + (f', отсеяно {max_hr_info["n_excluded"]} тренировок с неправдоподобным скачком max_hr '
-           f'относительно среднего пульса той же тренировки — см. estimate_max_hr()'
+           f' относительно среднего пульса той же тренировки'
            if max_hr_info.get("n_excluded") else '')
-        + '). Смена метода с прежнего "центр±6" на Карвонена и обоснование — '
-        f'см. докстринг build_zones() и диалог 2026-08-18: два независимых способа без ярлыков '
-        f'("Recovery"/"Easy") — форма распределения пульса и бэктест по методикам — сошлись на границе '
-        f'Z1/Z2 ≈60% HRR. {ef_cross_check} '
+        + '). Граница Z1/Z2 ≈60% HRR подтверждена двумя независимыми проверками: формой распределения пульса и сверкой с классическими методиками.  '
+        f'{ef_cross_check} '
         f'Верхняя граница Z4 = ПАНО ({pano_final} уд/мин). Темп — с учётом калибровки дорожки, '
         f"только по тренировкам с {cutoff_date.strftime('%Y-%m-%d')} (последние 8 недель), "
         f"диапазон = 25-75 перцентиль по сплитам, чтобы отражать актуальную форму, а не всю историю.</p>"
@@ -3751,8 +4200,7 @@ def main(db_path, out_path, json_path=None):
     html.append("<h2>5. VO2max-прокси по истории ПАНО Garmin</h2>")
     html.append(img_tag(charts["4b"]))
     html.append(
-        '<p class="meta">Единственный собственный фитнес-показатель Гармина в базе — история ПАНО '
-        '(lactate_threshold, считается через Firstbeat по фактическим тренировкам). Эта кривая — '
+        '<p class="meta">Единственный собственный фитнес-показатель Garmin в данных — история ПАНО (Garmin считает её по фактическим тренировкам). Эта кривая — '
         'VO2max-эквивалент, посчитанный из истории ПАНО той же формулой Дэниэлса, что и VDOT в п.4 '
         '(эффорт ~60 мин) — это оценка, а не собственно внутреннее число Гармина.</p>'
     )
@@ -3764,11 +4212,9 @@ def main(db_path, out_path, json_path=None):
     html.append(img_tag(charts["8"]))
     html.append(
         '<p class="meta">По подграфику на зону; внутри — темп ПО МЕСЯЦАМ (январь-декабрь), отдельная линия на '
-        'каждый год (цвет = год, тот же, что и на графике п.4). Раньше график шёл единой лентой по кварталам '
-        "через всю историю — за прошедшее время фитнес менялся (VDOT от ~31 до ~48, см. п.4), и такая лента "
-        'смешивала сезонный ход темпа с многолетним трендом формы; наложение по годам их разделяет. Точка на '
+        'каждый год (цвет = год, тот же, что и на графике п.4). Наложение по годам разделяет сезонный ход темпа и многолетний тренд формы. Точка на '
         'графике = месяц, где в зоне набралось ≥5 сплитов (иначе пропуск, не рисуется). Темп посчитан по '
-        'лапам/сплитам (intervals), не по среднему за тренировку целиком — исключает искажение от '
+        'лапам/сплитам, не по среднему за тренировку целиком — исключает искажение от '
         "разминки/заминки. Сравни с разделом 3 (последние 8 недель, детальнее).</p>"
     )
     html.append("</div>")
@@ -3815,12 +4261,11 @@ def main(db_path, out_path, json_path=None):
         "(заряжено минус потрачено, скользящее среднее 14 дн.) — устойчиво отрицательный баланс "
         "или растущий стресс одновременно с высоким ACWR по бегу — сигнал, что фоновое утомление "
         "(сон, работа, стресс вне тренировок) накладывается на беговую нагрузку, а не только она сама "
-        "по себе. 9г — HRV (вариабельность пульса, wellness.hrv_last_night_avg/hrv_weekly_avg): "
+        "по себе. 9г — HRV (вариабельность пульса): "
         "серая линия — сырое ночное значение, синяя — готовое недельное сглаживание от Гармина. Фон "
-        "закрашен по статусу Гармина (hrv_status): зелёный — BALANCED, жёлтый — UNBALANCED, "
+        "закрашен по статусу Гармина: зелёный — BALANCED, жёлтый — UNBALANCED, "
         "красный — LOW — протяжённые не-зелёные периоды, особенно совпадающие с высоким ACWR, "
-        "говорят о недовосстановлении сильнее, чем разовые провалы. 9д — сон "
-        "(wellness.sleep_score/sleep_duration_s): зелёный/жёлтый/красный фон — стандартные пороги "
+        "говорят о недовосстановлении сильнее, чем разовые провалы. 9д — сон: зелёный/жёлтый/красный фон — стандартные пороги "
         "Гармина для sleep_score (&ge;80 / 60-79 / &lt;60), синяя линия — продолжительность "
         "сна (правая ось), закрашенный коридор 7-9 ч — общий ориентир нормы для взрослых, "
         "не подогнан под этого атлета.</p>"
@@ -3834,14 +4279,7 @@ def main(db_path, out_path, json_path=None):
     html.append(
         '<p class="meta">"Марафонские отрезки" — время лапов внутри длительных/лёгких тренировок '
         'с пульсом в зоне Z3 "марафонский темп" (см. раздел 3, методика Карвонена); вычтено из доли '
-        'исходного типа тренировки (long/easy), чтобы сумма долей оставалась 100%. Раньше отбор шёл '
-        'по фиксированному темповому коридору (285-335 с/км, по фактическому темпу гонок Утрехт/'
-        'Гронинген) — статичный коридор систематически не ловил такие тренировки из периодов с '
-        'другой формой (см. диалог 2026-08-20, тренировка от 2026-02-15: 191 мин с устойчивым '
-        'пульсом в Z3 весь забег, но темпом 346-420 с/км — вне тогдашнего коридора). Пульсовая зона '
-        'Z3, в отличие от темпового коридора, сама уже подстроена под этого атлета и не завязана на '
-        'конкретный темп — поэтому одинаково применима к любому периоду истории. Темповые/'
-        'интервальные вставки (не марафонские) по-прежнему определяются по темповым коридорам.</p>'
+        'исходного типа тренировки (long/easy), чтобы сумма долей оставалась 100%. Отбор идёт по пульсовой зоне, а не по фиксированному темпу: зона подстроена под атлета и не зависит от формы в конкретный период, поэтому одинаково применима ко всей истории. Темповые/интервальные вставки (не марафонские) определяются по темповым коридорам.</p>'
     )
     html.append("</div>")
 
@@ -3854,10 +4292,7 @@ def main(db_path, out_path, json_path=None):
         f'{ZONE_TS_WINDOW_WEEKS} недель на каждую неделю истории, то же окно, что и в разделе 8), а '
         'рекомендуемая доля для выбранной дистанции — горизонтальными пунктирными линиями того же '
         'цвета, что и соответствующая зона, для сравнения на глаз в любой момент истории, а не '
-        'только "сейчас". С 2026-08-17 числитель факта — только обнаруженные рабочие отрезки '
-        '(та же детекция, что в разделе 8), а не любая лапа с этим пульсом: раньше лёгкие/длинные '
-        'пробежки, где пульс случайно заходил в ту же зону (жара, дрейф, рельеф), маскировали на '
-        'этом графике спад качественной работы, видимый в разделе 8.</p>'
+        'только "сейчас". В факт входят только обнаруженные рабочие отрезки (та же детекция, что в разделе 8), а не любая лапа с этим пульсом: иначе лёгкие и длинные пробежки, где пульс случайно заходил в ту же зону (жара, дрейф, рельеф), маскировали бы спад качественной работы, видимый в разделе 8.</p>'
     )
     html.append("</div>")
 
@@ -3886,7 +4321,7 @@ def main(db_path, out_path, json_path=None):
     if progress_drivers.get("ok"):
         html.append(
             f'<p>Построено по {progress_drivers["n_blocks"]} скользящим блокам по '
-            f'{progress_drivers["block_weeks"]} недель (после исключения недель-провалов). '
+            f'{progress_drivers["block_weeks"]} недель за последние {progress_drivers["window_weeks"]} нед. (после исключения недель-провалов). '
             'Столбик — частная ранговая корреляция недельного показателя блока с приростом формы '
             'после него (поправка на стартовый уровень и сезон); ус — приближённый 90%-й интервал. '
             'Синий = больше показателя ассоциировано с бОльшим последующим приростом, красный — '
@@ -3906,7 +4341,7 @@ def main(db_path, out_path, json_path=None):
             html.append('<div class="table-wrap">' + tt.to_html(index=False, escape=True) + '</div>')
         html.append(
             '<p class="meta">"Z4/Z5 (Гармин)" — фиксированные пульсовые зоны Гармина '
-            '(activities.hr_time_in_zone_4/5), НЕ те же зоны, что Z1-Z5 отчёта из раздела 3 '
+            ', НЕ те же зоны, что Z1-Z5 отчёта из раздела 3 '
             '(там границы построены индивидуально методом Карвонена) — использованы здесь, потому '
             'что посчитаны Гармином на уровне каждой тренировки целиком и не требуют повторного '
             'разбора сплитов по всей истории.</p>'
@@ -3933,9 +4368,7 @@ def main(db_path, out_path, json_path=None):
     html.append("<h2>15. Лента недель и текущий статус</h2>")
     html.append(
         '<p class="meta">Код дня — самая тяжёлая тренировка дня (R старт, T порог, I интервалы, '
-        'S steady/микс, L длительная, E лёгкая, r восстановительная, - отдых), по исправленной '
-        'классификации из начала отчёта (см. примечание в шапке про переклассификацию '
-        'type_guess). Последние 16 недель:</p>'
+        'S steady/микс, L длительная, E лёгкая, r восстановительная, - отдых), по классификации из шапки отчёта. Последние 16 недель:</p>'
     )
     html.append(weekly_ribbon_html(weekly_progress, n_weeks=16))
     targets = []
@@ -3968,7 +4401,7 @@ def main(db_path, out_path, json_path=None):
         html.append("<h2>16. Сон и качество тренировок</h2>")
         html.append(
             f'<p class="meta">По {sleep_resp["n_sessions"]} интервальным/пороговым/steady-тренировкам. '
-            'Качество тренировки — средний workout_compliance_score Гармина по рабочим сплитам '
+            'Качество тренировки — средний показатель соответствия плану (compliance score) Garmin по рабочим сплитам '
             '(попадание в целевой темп плана), не самостоятельная реконструкция.</p>'
         )
         html.append("<h3>Продолжительность сна прошлой ночью</h3>")
@@ -3995,44 +4428,11 @@ def main(db_path, out_path, json_path=None):
             )
         html.append("</div>")
 
-    html.append('<h1 style="margin-top:56px;">Личные рекорды</h1>')
     html.append('<div class="chart-block">')
-    html.append("<h2>17. Личные рекорды по стандартным дистанциям</h2>")
-    html.append(
-        '''<p class="meta">Без модели/прогноза и без допущения о равномерном темпе (см. диалог: если
-        10&nbsp;км пробежаны за 40:14, то это НЕ значит, что первые 5&nbsp;км были ровно 20:07 — на
-        деле раскладка могла быть любой, например 19 минут на первую половину и 21 на вторую, и тогда
-        реальный лучший отрезок на 5&nbsp;км быстрее половины общего времени). Вместо допущения о
-        равномерности здесь используются фактические км-сплиты тренировки: для каждой дистанции найден
-        самый быстрый непрерывный по времени отрезок именно такой длины (внутри пограничного сплита
-        время интерполировано пропорционально его доле, точнее данных нет), где бы он ни начинался —
-        в отдельном старте на эту дистанцию или внутри более длинной тренировки.</p>'''
-    )
-    rb_rows = []
-    for d in REAL_BEST_EFFORT_DISTS_M:
-        rec = real_bests.get(d)
-        if rec is None:
-            rb_rows.append({
-                "Дистанция": RANK_DIST_LABEL_RU.get(d, f"{d:g} м"), "Лучшее время": "—",
-                "Темп": "—", "Дата": "—", "Тренировка": "—", "Источник": "нет данных",
-            })
-            continue
-        sec = rec["sec"]
-        pace_s = sec / (d / 1000.0)
-        rb_rows.append({
-            "Дистанция": RANK_DIST_LABEL_RU.get(d, f"{d:g} м"),
-            "Лучшее время": fmt_hms(sec),
-            "Темп": fmt_pace(pace_s),
-            "Дата": rec["date"].strftime("%Y-%m-%d") if rec["date"] is not None else "—",
-            "Тренировка": rec["name"],
-            "Источник": (
-                f"отрезок внутри тренировки {rec['total_km']:.1f} км" if rec["extracted"]
-                else "весь старт/тренировка"
-            ),
-        })
-    rb_df = pd.DataFrame(rb_rows, columns=["Дистанция", "Лучшее время", "Темп", "Дата", "Тренировка", "Источник"])
-    html.append('<div class="table-wrap">' + rb_df.to_html(index=False, escape=True) + '</div>')
+    html.append(cycle_structure_html(cycle_res, cycle_dirs))
     html.append("</div>")
+
+    html.append(personal_records_html(activities, intervals))
 
     html.append(HTML_TAIL)
 

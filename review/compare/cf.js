@@ -1,0 +1,10 @@
+const path=process.argv[2];process.env.PLAN_HTML=path;
+const {calc}=require('./calc_all.js');
+const [V0,t,gd,N]=process.argv.slice(3,7).map(Number);const over=process.argv[7]?JSON.parse(process.argv[7]):undefined;
+const sel=(process.argv[8]||'').split(',').filter(Boolean).map(Number);
+const {p}=calc(V0,t,gd,N,over);
+const DN=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+p.weeks.forEach(w=>{if(sel.length&&!sel.includes(w.n))return;
+ console.log(`--- Нед ${w.n} ${w.type||'work'} ${w.kmRaw.toFixed(1)} км ${Math.round(w.minRaw)} мин пр ${w.runs}`);
+ w.days.forEach((d,i)=>{const it=d.items.filter(x=>x.kind==='run');console.log('  '+DN[i]+' '+(it.length?it.map(x=>`${x.km.toFixed(1)}км/${Math.round(x.min)}′ ${x.name.replace(/^\[T\] W\d+D\d /,'')}`).join(' | '):'—'));});});
+console.log(p.analysis.notes.filter(n=>/ниже кривой|не вмещ/.test(n)).join('\n'));

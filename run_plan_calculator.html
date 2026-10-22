@@ -864,7 +864,7 @@ function buildPlan(cfgIn){
     cap=Math.min(cap,isUltra?(GM.ultraLong||300):DL.longMax);
     if(cfg.maxLongCap>0)cap=Math.min(cap,cfg.maxLongCap);
     return cap;};
-  const LONG_STEP=10, longStep=p=>Math.min(LONG_STEP,Math.max(5,0.1*p)); // прогрессия длинной: +10 мин, но не больше +10% к прошлой (скачок разовой дистанции — предиктор травм, Frandsen 2025); сетка плана — 5 мин
+  const LONG_STEP=10, longStep=p=>Math.min(LONG_STEP,Math.max(5,0.1*p)); // прогрессия длинной: +10 мин, но не больше +10% к прошлой (скачок разовой дистанции — предиктор травм, Frandsen 2025); сетка плана — 5 мин, округление к ближайшей (половина — вниз): округление вниз съедало до половины шага
   let longPrev=cfg.curLong>0?+cfg.curLong:0, longPeak=0;
   if(cfg.curLong>0&&cfg.maxLongCap>0&&cfg.curLong>cfg.maxLongCap)notes.push('Минимальная длинная больше максимальной — действует максимум.');
 
@@ -1017,7 +1017,7 @@ function buildPlan(cfgIn){
     if(longPrev<=0)longPrev=r5(longCapFor(curMin,R,true));
     if(type==='down')L=Math.min(capL,longPrev*RECOVERY_F);
     else if(type==='taper')L=Math.min(capL,(longPeak||longPrev)*tsh[i]);
-    else L=Math.min(capL,Math.floor((longPrev+longStep(longPrev))/5)*5);
+    else L=Math.min(capL,Math.ceil((longPrev+longStep(longPrev))/5-0.5)*5);
     if(cfg.curLong>0&&type!=='down'&&type!=='taper')L=Math.max(L,Math.min(cfg.curLong,capL));
     L=r5(Math.min(L,W));if(L>capL)L=Math.floor(capL/5)*5;
     const tuneLong=tr&&tr.dist>=21097;
@@ -1467,6 +1467,8 @@ function buildPlan(cfgIn){
   if(tanda&&fcCapped)notes.push(`Прогноз ${isUltra?'ограничен объёмом плана через марафонскую форму':'марафона ограничен объёмом плана'} (Тэнда 2011): марафон ≈${fmtT(ca.toDisp(Math.round(tanda.sec)))} при ${Math.round(tanda.K)} км/нед и среднем темпе ${fmtP(tanda.P)}/км за 8 недель до старта${tanda.ext?'; вне диапазона модели 2:47–3:36 — экстраполяция':''}.`);
   const peakReal=Math.round(Math.max(0,...weeks.filter(w=>w.type!=='race').map(w=>w.km)));
   const maxAcwr=Math.max(...weeks.slice(0,B).map(w=>w.acwr));
+  if(goalDist>=42195){const lgs=weeks.filter(w=>w.type!=='race').flatMap(w=>w.days.flatMap(d=>d.items)).filter(x=>x.kind==='run'&&/^Длинная/.test(x.name||x.n||'')).sort((x,y)=>y.min-x.min), lg0=lgs[0];
+    if(lg0&&lg0.min<120&&!(cfg.maxLongCap>0&&lg0.min>=cfg.maxLongCap-5))notes.push(`Самая длинная пробежка плана — ${hm(Math.round(lg0.min))} (≈${Math.round(lg0.km)} км): короче ориентира для марафона 2–2,5 ч. Длинная растёт не больше +10% в неделю (скачок одной пробежки — фактор травм, Frandsen 2025), за ${B} нед. от вашей привычной больше не набрать. Дольше — только при большем числе недель или более длинной привычной (поле «Мин. длительная»).`);}
   const tidName=b.s<=0.01?'поляризованное':b.s>=0.99?'пирамидальное':'смешанное';
   notes.unshift(`Объём: уровень ${lvl.idx} по 80/20 (${hm(lvl.avgMin)}–${hm(lvl.peakMin)} ч/нед), сейчас ≈${hm(curMin)}, пик плана ≈${hm(peakReached)} ч/нед. Рост ограничен ACWR ≤${ACWR_MAX} (максимум в плане ${maxAcwr.toFixed(2)}) и беговыми км ≤ +30% за 2 недели. Разгрузки: ${DELOAD_NAMES[deload]}.`);
   notes.splice(1,0,`Распределение интенсивности — ${tidName}: Z1+Z2 / Z3+Z4 / Z5 ≈ ${shares.map(x=>Math.round(x*100)).join('/')}% — бюджет Z3+Z4 и Z5 не больше этих долей, остальное Z1+Z2. Лимиты Дэниелса: длинная ≤${DL.longHigh*100}–${DL.longLow*100}% недели и ≤${DL.longMax} мин, за тренировку T ≤10%, I ≤8%, R ≤5%, M ≤20% недели.`);

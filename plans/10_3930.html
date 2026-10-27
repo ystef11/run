@@ -1,0 +1,657 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>План подготовки · 10 км 39:50 · 2027-01-10</title>
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --z-rec:#7f95a3;--z-easy:#5b8c5a;--z-mp:#df4a2e;--z-thr:#d98a1f;--z-vo2:#7d5bd6;--z-rep:#1f9b8e;
+    --z-long:#2f5d8f;--z-race:#c0392b;--z-rest:#9aa0a6;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 20px 80px;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(245,244,240,.93);backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);padding:10px 0;margin:-8px 0 8px;border-bottom:1px solid var(--line);}
+  .jumpbtn{appearance:none;border:none;cursor:pointer;background:var(--accent);color:#fff;font-weight:700;
+    font-size:14px;padding:10px 18px;border-radius:24px;box-shadow:0 2px 8px rgba(0,0,0,.12);transition:transform .1s,opacity .2s;}
+  .jumpbtn:hover{transform:translateY(-1px);}
+  .jumpbtn:active{transform:translateY(0);}
+  .jumpbtn.disabled{background:var(--z-rest);cursor:default;box-shadow:none;}
+
+  tr.today td{background:#fdeee9 !important;}
+  td.day.today{color:var(--accent);box-shadow:inset 4px 0 0 var(--accent);}
+  .todaytag{display:inline-block;margin-top:3px;font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+    background:var(--accent);color:#fff;border-radius:3px;padding:1px 5px;}
+  .week.hastoday{box-shadow:0 0 0 2px var(--accent);}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:22px;margin-bottom:30px;}
+  .eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(30px,6vw,52px);line-height:.98;margin:8px 0 4px;font-weight:800;letter-spacing:-.02em;}
+  h1 .tgt{color:var(--accent);}
+  .sub{font-size:16px;color:var(--muted);margin:6px 0 18px;}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);}
+  .fact{background:var(--card);padding:12px 14px;}
+  .fact .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .fact .v{font-size:18px;font-weight:700;margin-top:2px;}
+  .fact .v small{font-weight:500;color:var(--muted);font-size:13px;}
+
+  h2{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);
+     border-bottom:1px solid var(--ink);padding-bottom:7px;margin:42px 0 16px;font-weight:800;}
+  .h2note{font-size:12.5px;color:var(--muted);margin:-8px 0 16px;}
+
+  .zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;}
+  .zone{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--zc);padding:9px 12px;border-radius:3px;}
+  .zone .name{font-weight:700;font-size:13px;}
+  .zone .pace{font-size:13px;}
+  .zone .hr{font-size:13px;font-weight:700;}
+  .zone .note{font-size:11.5px;color:var(--muted);}
+
+  .analysis{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--z-long);border-radius:4px;padding:16px 20px;}
+  .analysis p{margin:7px 0;font-size:13.5px;}
+  .analysis b{color:var(--ink);}
+
+  .vchart{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:18px 16px 12px;}
+  .bars{display:flex;align-items:flex-end;gap:5px;height:160px;}
+  .barcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .bar{width:100%;background:var(--z-long);border-radius:3px 3px 0 0;position:relative;min-height:3px;}
+  .bar.down{background:var(--z-rec);}
+  .bar.peak{background:var(--accent);}
+  .bar.race{background:var(--z-race);}
+  .bar .val{position:absolute;top:-15px;left:-2px;right:-2px;text-align:center;font-size:9.5px;color:var(--muted);}
+  .barcol .wk{font-size:10px;color:var(--muted);margin-top:5px;}
+  .vlegend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:14px;}
+  .vlegend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
+
+  .strgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .strcard{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:16px 18px;}
+  .strcard h3{margin:0 0 2px;font-size:16px;}
+  .strcard .when{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+  .strcard ul{margin:12px 0 10px;padding-left:18px;}
+  .strcard li{margin:5px 0;font-size:13.5px;}
+  .strcard .prog{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:9px;}
+
+  .week{background:var(--card);border:1px solid var(--line);border-radius:5px;margin-bottom:16px;overflow:hidden;}
+  .week.down{background:#faf7f0;}
+  .whead{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .bib{font-family:ui-monospace,monospace;font-weight:800;font-size:22px;background:var(--ink);color:#fff;
+       width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:5px;flex:none;}
+  .week.peak .bib{background:var(--accent);}
+  .week.down .bib{background:var(--z-rec);}
+  .week.race .bib{background:var(--z-race);}
+  .wmeta{flex:1;min-width:150px;}
+  .wmeta .dates{font-weight:700;font-size:15px;}
+  .wmeta .phase{font-size:12px;color:var(--muted);}
+  .badge{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:20px;border:1px solid var(--line);color:var(--muted);}
+  .badge.down{background:var(--z-rec);color:#fff;border-color:transparent;}
+  .badge.peak{background:var(--accent);color:#fff;border-color:transparent;}
+  .badge.race{background:var(--z-race);color:#fff;border-color:transparent;}
+  .vol{text-align:right;}
+  .vol .num{font-family:ui-monospace,monospace;font-size:19px;font-weight:800;}
+  .vol .num small{font-size:12px;font-weight:600;color:var(--muted);}
+  .kmref{color:var(--muted);font-size:12px;font-family:ui-monospace,monospace;}
+  .fuel{color:#0f8a6e;font-size:12px;font-weight:700;white-space:nowrap;}
+  .vol .lbl{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+
+  table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13.5px;}
+  tr:last-child td{border-bottom:none;}
+  .day{width:62px;font-weight:700;line-height:1.25;overflow-wrap:break-word;}
+  .ses{overflow-wrap:break-word;}
+  .ses a{color:var(--accent);text-decoration:underline;text-decoration-style:dotted;}
+  .ses a:hover{text-decoration-style:solid;}
+  .strcard:target{outline:2px solid var(--accent);outline-offset:3px;}
+  .day .dt{display:block;font-family:ui-monospace,monospace;font-size:11px;font-weight:600;color:var(--muted);}
+  .chip-cell{width:120px;white-space:nowrap;}
+  .chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+        padding:3px 8px;border-radius:3px;color:#fff;}
+  .ses b{color:var(--accent);}
+  .tt{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+      border:1px solid var(--line);border-radius:3px;padding:1px 5px;margin-right:6px;}
+  .hrv{font-family:ui-monospace,monospace;font-size:11.5px;font-weight:700;color:#374151;white-space:nowrap;}
+  .hrv::before{content:"♥ ";color:var(--accent);font-weight:400;}
+  tr.qual td{background:rgba(0,0,0,.02);}
+  tr.subrow td{border-top:1px dashed var(--line);}
+
+  .notes{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:4px;padding:18px 20px;}
+  .notes h3{margin:0 0 8px;font-size:15px;}
+  .notes p{margin:8px 0;font-size:13.5px;}
+  .notes p b{color:var(--ink);}
+  footer{margin-top:36px;font-size:12px;color:var(--muted);text-align:center;}
+  .jsonlink{margin-top:10px;background:none;border:none;color:var(--muted);font-size:11.5px;text-decoration:underline;text-underline-offset:2px;cursor:pointer;opacity:.7;}
+  .jsonlink:hover{opacity:1;color:var(--ink);}
+  .dot2{margin:0 8px;color:var(--muted);opacity:.6;}
+
+  @media (max-width:680px){
+    .wrap{padding-left:12px;padding-right:12px;}
+    .strgrid{grid-template-columns:1fr;}
+    td{font-size:12.5px;padding:7px 7px;}
+    .day{width:56px;}
+    .day .dt{font-size:10.5px;}
+    .chip-cell{width:84px;white-space:normal;}
+    .chip{white-space:normal;font-size:9.5px;line-height:1.2;}
+    .todaytag{font-size:8px;letter-spacing:.02em;padding:1px 4px;}
+    .bars{height:120px;}
+    .hrv{display:block;margin-top:2px;}
+    .ses{overflow-wrap:break-word;}
+  .ses a{color:var(--accent);text-decoration:underline;text-decoration-style:dotted;}
+  .ses a:hover{text-decoration-style:solid;}
+  .strcard:target{outline:2px solid var(--accent);outline-offset:3px;}
+  }
+  @media print{
+    body{background:#fff;}.wrap{max-width:none;padding:0;}
+    .week,.strcard,.vchart,.notes,.zone,.analysis{break-inside:avoid;}h2{break-after:avoid;}
+    *{ -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:20px 22px;margin:18px 0 26px;}
+  .panel h2{margin-top:0;border:none;padding:0;}
+  .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 18px;}
+  .fld label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:700;}
+  .fld input[type=text],.fld input[type=number],.fld input[type=date],.fld select{
+    width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:4px;font:inherit;background:#fff;}
+  .fld .hint{font-size:11px;color:var(--muted);margin-top:3px;}
+  .fld.wide{grid-column:1/-1;}
+  .volrow{display:flex;gap:8px;}
+  .volrow input{flex:1;}
+  .volrow select{width:110px;}
+  .chk{display:flex;align-items:center;gap:8px;padding-top:20px;font-weight:600;}
+  .sliderbox{display:flex;align-items:center;gap:12px;}
+  .sliderbox input[type=range]{flex:1;accent-color:var(--accent);}
+  .sliderbox .sl{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;}
+  .btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+  .btn{appearance:none;border:none;cursor:pointer;background:var(--accent);color:#fff;font-weight:700;
+    font-size:14px;padding:11px 20px;border-radius:24px;box-shadow:0 2px 8px rgba(0,0,0,.12);}
+  .btn.sec{background:var(--ink);}
+  .btn:disabled{background:var(--z-rest);cursor:default;box-shadow:none;}
+  .errbox{background:#fdeeee;border:1px solid #e5b5b5;border-left:5px solid #c0392b;border-radius:4px;
+    padding:12px 16px;margin:14px 0;color:#7a2318;font-weight:600;display:none;}
+  .verdicts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:16px 0 8px;}
+  .vcard{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;border-top:4px solid var(--z-rest);}
+  .vcard.ok{border-top-color:var(--z-easy);} .vcard.amb{border-top-color:var(--z-thr);} .vcard.bad{border-top-color:#c0392b;}
+  .vcard .t{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+  .vcard .big{font-size:22px;font-weight:800;margin:4px 0 2px;}
+  .vcard .sm{font-size:12.5px;color:var(--muted);}
+  .fuel{display:inline-block;font-size:10.5px;font-weight:700;color:#7a4a12;background:#fbf0dc;
+    border:1px solid #ecd9b0;border-radius:3px;padding:1px 6px;margin-left:6px;}
+  .kmref{display:inline-block;font-size:10.5px;font-weight:700;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:1px 5px;margin-left:6px;}
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(245,244,240,.93);backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);padding:10px 0;margin:-8px 0 8px;border-bottom:1px solid var(--line);}
+  .jumpbtn{appearance:none;border:none;cursor:pointer;background:var(--accent);color:#fff;font-weight:700;
+    font-size:14px;padding:10px 18px;border-radius:24px;box-shadow:0 2px 8px rgba(0,0,0,.12);}
+  .jumpbtn.disabled{background:var(--z-rest);cursor:default;box-shadow:none;}
+  .strgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .strcard{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:16px 18px;}
+  .strcard h3{margin:0 0 2px;font-size:16px;}
+  .strcard .when{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+  .strcard ul{margin:12px 0 4px;padding-left:18px;}
+  .strcard li{margin:5px 0;font-size:13.5px;}
+  @media (max-width:680px){.strgrid{grid-template-columns:1fr;}}
+  .importrow{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);flex-wrap:wrap;}
+  .importnote{background:#eef4fb;border:1px solid #c9dcef;border-left:5px solid var(--z-long);border-radius:4px;
+    padding:10px 14px;margin:12px 0;font-size:13px;color:#1e3a5f;display:none;}
+  .editorsec{display:none;margin-top:10px;}
+  .editweek{background:var(--card);border:1px solid var(--line);border-radius:5px;margin-bottom:12px;overflow:hidden;}
+  .ewhead{padding:9px 14px;font-weight:700;font-size:13px;background:var(--paper);border-bottom:1px solid var(--line);}
+  .editweek table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  .editweek td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:13px;overflow-wrap:break-word;}
+  .editweek td:nth-child(1){width:130px;}
+  .editweek td:nth-child(2){width:92px;}
+  .editweek td:nth-child(3){width:210px;}
+  .editweek td:nth-child(5){width:64px;}
+  .editweek tr:last-child td{border-bottom:none;}
+  .ed-date{width:100%;padding:4px 6px;border:1px solid var(--line);border-radius:4px;font:inherit;font-size:12.5px;}
+  .ed-name{width:100%;padding:4px 6px;border:1px solid var(--line);border-radius:4px;font:inherit;font-size:13px;}
+  .ed-desc{overflow-wrap:break-word;}
+  .ed-actions{white-space:nowrap;width:64px;}
+  @media (max-width:680px){
+    .editweek td:nth-child(1){width:100px;}
+    .editweek td:nth-child(2){width:64px;padding:6px 3px;}
+    .editweek td:nth-child(2) .chip{white-space:normal;font-size:9px;line-height:1.15;padding:2px 4px;}
+    .editweek td:nth-child(3){width:120px;}
+    .editweek td:nth-child(5){width:56px;}
+    .editweek td{font-size:12px;padding:5px 5px;}
+  }
+  .rowact{white-space:nowrap;text-align:right;width:78px;padding-left:6px;}
+  .rowact .edbtn{opacity:.55;transition:opacity .12s;}
+  .rowact .edbtn:hover{opacity:1;}
+  .edbtn{appearance:none;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer;
+    padding:3px 6px;font-size:13px;margin-left:3px;}
+  .edbtn.del{color:#c0392b;border-color:#e5b5b5;}
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,20,20,.45);z-index:100;
+    align-items:center;justify-content:center;padding:20px;}
+  .modal{background:#fff;border-radius:8px;padding:22px 24px;max-width:560px;width:100%;max-height:88vh;overflow:auto;}
+  .modal h3{margin:0 0 14px;font-size:17px;}
+  .modal label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    margin:12px 0 4px;font-weight:700;}
+  .modal input[type=text],.modal input[type=date],.modal input[type=number],.modal select,.modal textarea{
+    width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:4px;font:inherit;font-size:13.5px;}
+  .modal textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;min-height:140px;resize:vertical;}
+  .modal .mrow{display:flex;gap:10px;}
+  .modal .mrow>div{flex:1;}
+  .modal .mbtns{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .modal-wide{max-width:640px;}
+  .steprow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0;padding:7px 8px;
+    background:#f7f6f2;border-radius:5px;}
+  .steprow.nested{background:#eeece5;}
+  .steprow select,.steprow input[type=text],.steprow input[type=number]{
+    padding:5px 6px;border:1px solid var(--line);border-radius:4px;font:inherit;font-size:12.5px;background:#fff;}
+  .steprow .stype{width:118px;}
+  .steprow .send{width:88px;}
+  .steprow .sdur{width:64px;}
+  .steprow .sdist{width:76px;}
+  .steprow .stgt{width:82px;}
+  .steprow .szone{width:56px;}
+  .steprow .space{width:46px;}
+  .steprow .slabel{width:118px;flex:1;min-width:90px;}
+  .steprow .unit{font-size:11.5px;color:var(--muted);}
+  .stepblock{border:1px dashed var(--line);border-radius:6px;padding:8px 8px 4px;margin:8px 0;background:#fbfaf7;}
+  .stepblock .blockhead{display:flex;align-items:center;gap:8px;margin-bottom:2px;font-size:12.5px;font-weight:700;}
+  .stepblock .blockhead input{width:52px;padding:5px 6px;border:1px solid var(--line);border-radius:4px;font:inherit;}
+  .subSteps{margin-left:6px;padding-left:8px;border-left:2px solid var(--line);}
+  .stepsToolbar{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
+  .btn.sm{padding:7px 14px;font-size:12.5px;}
+  .edbtn.tiny{padding:2px 6px;font-size:12px;}
+  .offOnly{display:none;}
+</style></head><body><div class="wrap">
+<div class="topbar"><button class="jumpbtn" id="jumpBtn" onclick="jumpToday()">📍 К текущему дню</button></div>
+<header><div class="eyebrow">Сгенерировано калькулятором</div><h1>План подготовки ·<br>10 км 39:50 · 2027-01-10</h1></header>
+
+  <h2>Оценка достижимости</h2>
+  <div class="verdicts">
+    <div class="vcard ok"><div class="t">10 км · цель 39:50</div>
+      <div class="big">Реалистично</div>
+      <div class="sm">сейчас ≈40:30 → реалистичный прогноз к старту ≈<b>39:50</b>.<br>Эквивалент формы:<table style="margin:3px 0 0;border-collapse:collapse;font-size:12.5px">
+        <tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Дистанция</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Прогноз к старту</td></tr>
+        <tr><td style="padding:1px 10px 1px 0">5 КМ</td><td style="padding:1px 10px">19:32</td><td style="padding:1px 0"><b>19:13</b></td></tr><tr><td style="padding:1px 10px 1px 0">10 КМ</td><td style="padding:1px 10px">40:30</td><td style="padding:1px 0"><b>39:50</b></td></tr>
+        </table>
+        <table style="margin:6px 0 0;border-collapse:collapse;font-size:12.5px">
+        <tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Показатель</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Прогноз к старту</td></tr>
+        <tr><td style="padding:1px 10px 1px 0">VDOT (≈VO₂max, мл/кг/мин)</td><td style="padding:1px 10px">51.2</td><td style="padding:1px 0"><b>52.2</b></td></tr>
+        </table></div></div>
+    <div class="vcard"><div class="t">Восстановление и подводка</div>
+      <div class="big">разгрузки: по необходимости (Пфитцингер)</div>
+      <div class="sm">HRmax ≈181 · подводка 2 нед. с гонкой · после старта 1 лёгкий день на 3 км · ACWR в плане ≤1.12</div></div>
+  </div>
+  <div class="notes"><h3>Примечания модели</h3><p>· Объём: уровень 1 по 80/20 (4:30–6:00 ч/нед), сейчас ≈5:46, пик плана ≈7:03 ч/нед. Рост ограничен ACWR ≤1.3 (максимум в плане 1.12) и беговыми км ≤ +30% за 2 недели. Разгрузки: по необходимости (Пфитцингер).</p><p>· Распределение интенсивности — поляризованное: Z1+Z2 / Z3+Z4 / Z5 ≈ 80/6/14% — бюджет Z3+Z4 и Z5 не больше этих долей, остальное Z1+Z2. Лимиты Дэниелса: длинная ≤25–30% недели и ≤150 мин, за тренировку T ≤10%, I ≤8%, R ≤5%, M ≤20% недели.</p><p>· Зоны по плану (все недели): Z1 25% · Z2 65% · Z3 0% · Z4 6% · Z5 4%.</p><p>· Добавлен контрольный тест 5 КМ за ~3 нед. до старта (самостоятельно, без регистрации): по нему уточните VDOT и темпы.</p><p>· Объём 1 нед. (8) ниже кривой роста: неделя вмещает только 97–97% её минут — из-за дней старта, предстартового отдыха и окна восстановления, лимитов Дэниелса.</p><p>· Неделя старта: объём 181 мин вместо 212 по кривой подводки — неделя вмещает не больше (предстартовый выезд, настройка, лёгкие не длиннее подводящих недель).</p></div>
+  <h2 style="margin-top:34px">Параметры плана</h2>
+  <div class="facts">
+    <div class="fact"><div class="k">Недель</div><div class="v">11</div></div>
+    <div class="fact"><div class="k">Главный старт</div><div class="v">10 янв <small>10 км · 39:50</small></div></div>
+    <div class="fact"><div class="k">Пик объёма</div><div class="v">≈81 <small>км/нед</small></div></div>
+    <div class="fact"><div class="k">Тренировок</div><div class="v">6 <small>бег/нед + ОФП</small></div></div>
+    <div class="fact"><div class="k">Промежуточные старты</div><div class="v">1 <small>5 КМ (тест) ≈19:13</small></div></div>
+    <div class="fact"><div class="k">Модель Z1+Z2 / Z3+Z4 / Z5</div><div class="v"><small>80/6/14%</small></div></div>
+    <div class="fact"><div class="k">Зоны по плану Z1/Z2/Z3/Z4/Z5</div><div class="v"><small>25/65/0/6/4%</small></div></div>
+  </div>
+  <h2>Зоны: темп сейчас → к старту · пульс от ПАНО 178</h2>
+  <div class="h2note">Уд/мин — справочно от вашего ПАНО; в Garmin уходят цели по зонам Z1–Z5 (настройте зоны на часах от ПАНО 178).</div>
+  <div class="zones"><div class="zone"><i style="background:var(--z-easy)"></i><div>
+      <div class="zn">Лёгкий / длинная (E)</div>
+      <div class="zp mono">4:48–5:45 → <b>4:44–5:40</b> /км</div>
+      <div class="zh">151–158 уд</div></div></div><div class="zone"><i style="background:var(--z-mp)"></i><div>
+      <div class="zn">Марафонский (MP)</div>
+      <div class="zp mono">4:24–4:29 → <b>4:19–4:25</b> /км</div>
+      <div class="zh">160–167 уд</div></div></div><div class="zone"><i style="background:var(--z-thr)"></i><div>
+      <div class="zn">Пороговый (T)</div>
+      <div class="zp mono">4:05–4:13 → <b>4:01–4:09</b> /км</div>
+      <div class="zh">169–176 уд</div></div></div><div class="zone"><i style="background:var(--z-vo2)"></i><div>
+      <div class="zn">МПК / темп 10 км</div>
+      <div class="zp mono">3:46–3:55 → <b>3:42–3:52</b> /км</div>
+      <div class="zh">178–181 уд</div></div></div><div class="zone"><i style="background:var(--z-rep)"></i><div>
+      <div class="zn">Повторы / ускорения</div>
+      <div class="zp mono">3:30–3:35 → <b>3:27–3:32</b> /км</div>
+      <div class="zh">по ощущению</div></div></div></div><h2>Силовые тренировки</h2><div class="h2note">2 в неделю — в дни качественных («тяжёлые дни тяжёлыми») или в лёгкие не накануне нагрузки; не в день длинной; в подводку и неделю старта — короткий «Кор».</div><div class="strgrid"><div class="strcard" id="str-a"><div class="when">Силовая A</div><h3>Силовая A · 25 мин</h3>
+      <ul><li>Приседания 3×8 (2 в запасе)</li><li>Румынская тяга 3×8</li><li>Болгарские сплит-приседания 3×8/ногу</li><li>Подъёмы на носки 3×15</li><li>Планка 3×45с + боковая 3×30с/сторона</li></ul></div><div class="strcard" id="str-b"><div class="when">Силовая B</div><h3>Силовая B · 20 мин</h3>
+      <ul><li>Беговые дрилы (A/B-skip, захлёст) 2×20м</li><li>Присед пистолетом у опоры 3×6/ногу</li><li>Ягодичный мостик 3×10/ногу</li><li>Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12</li></ul></div><div class="strcard" id="str-cor"><div class="when">Подводка / неделя гонки</div><h3>Кор · 15 мин</h3>
+      <ul><li>Планка 3×45с</li><li>боковая 3×30с/сторона</li><li>мёртвый жук 3×10</li><li>супермен 3×12</li></ul></div></div><h2>Как пользоваться</h2><div class="notes"><h3>Ключевые принципы</h3><p><b>Пульс — рамка, темп — ориентир.</b> Лёгкие, восстановительные и длинные бежишь по времени, удерживая ЧСС в зоне. Если на привычном темпе пульс выше зоны — недовосстановление, жара или болезнь, сбавь. На отрезках и ускорениях пульс «не успевает» — там ведёт темп.</p><p><b>Лёгкий бег (E).</b> Разговорный темп, 59–74% VO₂max по Дэниелсу (пульс до ~158 уд); лёгкая — не короче 30 мин. После старта — 1 лёгкий день на каждые 3 км гонки, без качественных.</p><p><b>Длинная — по времени.</b> Пик ≈1:50 (нед. 9). Не превышай пиковую длительность, даже если «чувствуешь силы»: выигрыш минимален, а цена восстановления высока. Специфику добавляют отрезки в целевом темпе, а не лишние минуты трусцой.</p><p><b>Промежуточный старт.</b> 20 дек — 5 КМ (тест) · прогноз ≈19:13. Используй как калибровку темпа и заострение перед главным стартом.</p><p><b>Питание на длинных.</b> У длинных и качественных тренировок указана рекомендуемая доза углеводов (г/ч, всего и ≈ число гелей) — это «тренировка кишечника»: норма растёт по ходу цикла к гоночной. Число гелей считается из покупной порции: 20 г (только глюкоза) при потребности ≤55 г/ч, 40 г (глюкоза+фруктоза) при потребности >55 г/ч. Запивай водой; короткие/восстановительные — по самочувствию.</p><p><b>Объём.</b> С частотой до 6 пробежек в неделю (на ранних и разгрузочных неделях меньше — частота следует за объёмом недели) выходит ≈4.2–7.0 ч бега в неделю (≈51–81 км). Километраж в карточках недель — <b>справочный</b>: зависит от реального темпа и рельефа, веди тренировку по времени и пульсу. Если не успеваешь восстанавливаться — первым делом режь вторые тренировки и лёгкие.</p></div><h2>Объём по неделям (из загруженного плана)</h2>
+    <div class="vchart"><div class="bars"><div class="barcol"><div class="bar " style="height:85%"><span class="val mono">70</span></div><div class="wk mono">1</div></div><div class="barcol"><div class="bar " style="height:88%"><span class="val mono">72</span></div><div class="wk mono">2</div></div><div class="barcol"><div class="bar " style="height:90%"><span class="val mono">74</span></div><div class="wk mono">3</div></div><div class="barcol"><div class="bar " style="height:93%"><span class="val mono">76</span></div><div class="wk mono">4</div></div><div class="barcol"><div class="bar down" style="height:74%"><span class="val mono">61</span></div><div class="wk mono">5</div></div><div class="barcol"><div class="bar " style="height:98%"><span class="val mono">80</span></div><div class="wk mono">6</div></div><div class="barcol"><div class="bar " style="height:96%"><span class="val mono">79</span></div><div class="wk mono">7</div></div><div class="barcol"><div class="bar race" style="height:74%"><span class="val mono">61</span></div><div class="wk mono">8</div></div><div class="barcol"><div class="bar peak" style="height:100%"><span class="val mono">82</span></div><div class="wk mono">9</div></div><div class="barcol"><div class="bar down" style="height:72%"><span class="val mono">59</span></div><div class="wk mono">10</div></div><div class="barcol"><div class="bar race" style="height:62%"><span class="val mono">51</span></div><div class="wk mono">11</div></div></div>
+      <div class="vlegend"><span style="margin-left:auto">км/нед</span></div></div>
+    <div class="vchart" style="margin-top:14px"><div class="bars"><div class="barcol"><div class="bar " style="height:85%"><span class="val mono">5:57</span></div><div class="wk mono">1</div></div><div class="barcol"><div class="bar " style="height:87%"><span class="val mono">6:04</span></div><div class="wk mono">2</div></div><div class="barcol"><div class="bar " style="height:90%"><span class="val mono">6:16</span></div><div class="wk mono">3</div></div><div class="barcol"><div class="bar " style="height:92%"><span class="val mono">6:27</span></div><div class="wk mono">4</div></div><div class="barcol"><div class="bar down" style="height:73%"><span class="val mono">5:08</span></div><div class="wk mono">5</div></div><div class="barcol"><div class="bar " style="height:95%"><span class="val mono">6:41</span></div><div class="wk mono">6</div></div><div class="barcol"><div class="bar " style="height:95%"><span class="val mono">6:38</span></div><div class="wk mono">7</div></div><div class="barcol"><div class="bar race" style="height:73%"><span class="val mono">5:06</span></div><div class="wk mono">8</div></div><div class="barcol"><div class="bar peak" style="height:100%"><span class="val mono">7:00</span></div><div class="wk mono">9</div></div><div class="barcol"><div class="bar down" style="height:70%"><span class="val mono">4:56</span></div><div class="wk mono">10</div></div><div class="barcol"><div class="bar race" style="height:60%"><span class="val mono">4:11</span></div><div class="wk mono">11</div></div></div>
+      <div class="vlegend"><span style="margin-left:auto">часы:мин/нед — по факту загруженного плана</span></div></div><h2>ACWR по неделям плана</h2><div class="vchart">
+    <svg viewBox="0 0 600 220" width="100%" role="img" aria-label="ACWR по неделям плана">
+      <rect x="34" y="57.5" width="556" height="75.8" fill="var(--z-easy)" opacity=".13"/>
+      <line x1="34" x2="590" y1="27.2" y2="27.2" stroke="var(--z-race)" stroke-dasharray="4 3" opacity=".6"/>
+      <path d="M34.0 133.3 L84.5 92.9 L135.1 88.5 L185.6 87.7 L236.2 94.5 L286.7 126.4 L337.3 86.4 L387.8 85.7 L438.4 120.0 L488.9 112.1 L539.5 118.2 L590.0 111.8" fill="none" stroke="var(--ink)" stroke-width="1.5"/><circle cx="34.0" cy="133.3" r="3.5" fill="var(--z-easy)"><title>Старт: 0.80</title></circle><circle cx="84.5" cy="92.9" r="3.5" fill="var(--z-easy)"><title>Неделя 1: 1.07</title></circle><circle cx="135.1" cy="88.5" r="3.5" fill="var(--z-easy)"><title>Неделя 2: 1.10</title></circle><circle cx="185.6" cy="87.7" r="3.5" fill="var(--z-easy)"><title>Неделя 3: 1.10</title></circle><circle cx="236.2" cy="94.5" r="3.5" fill="var(--z-easy)"><title>Неделя 4: 1.06</title></circle><circle cx="286.7" cy="126.4" r="3.5" fill="var(--z-easy)"><title>Неделя 5: 0.85</title></circle><circle cx="337.3" cy="86.4" r="3.5" fill="var(--z-easy)"><title>Неделя 6: 1.11</title></circle><circle cx="387.8" cy="85.7" r="3.5" fill="var(--z-easy)"><title>Неделя 7: 1.11</title></circle><circle cx="438.4" cy="120.0" r="3.5" fill="var(--z-easy)"><title>Неделя 8: 0.89</title></circle><circle cx="488.9" cy="112.1" r="3.5" fill="var(--z-easy)"><title>Неделя 9: 0.94</title></circle><circle cx="539.5" cy="118.2" r="3.5" fill="var(--z-easy)"><title>Неделя 10: 0.90</title></circle><circle cx="590.0" cy="111.8" r="3.5" fill="var(--z-easy)"><title>Неделя 11: 0.94</title></circle><text x="30" y="136.3" text-anchor="end" font-size="10" fill="var(--muted)">0.8</text><text x="30" y="106.0" text-anchor="end" font-size="10" fill="var(--muted)">1</text><text x="30" y="60.5" text-anchor="end" font-size="10" fill="var(--muted)">1.3</text><text x="30" y="30.2" text-anchor="end" font-size="10" fill="var(--muted)">1.5</text><text x="34.0" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">ст.</text><text x="84.5" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">1</text><text x="135.1" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">2</text><text x="185.6" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">3</text><text x="236.2" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">4</text><text x="286.7" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">5</text><text x="337.3" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">6</text><text x="387.8" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">7</text><text x="438.4" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">8</text><text x="488.9" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">9</text><text x="539.5" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">10</text><text x="590.0" y="212" text-anchor="middle" font-size="10" fill="var(--muted)">11</text>
+    </svg>
+    <div class="vlegend"><span>зелёная зона 0.8–1.3, пунктир 1.5</span><span style="margin-left:auto">старт 0.80 — истории нет, принято по умолчанию; нагрузка плана — оценка: минуты × session-RPE по зонам (3/5/7)</span></div></div><h2>Недельный план</h2><div class="week"><div class="whead"><div class="bib mono">1</div><div class="wmeta"><div class="dates">Неделя от 26 окт</div></div>
+      <div class="vol"><div class="num mono">≈70<small> км</small></div><div class="lbl">≈6:42 ч/нед · долгая ≈18 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-10-26"><td class="day">Пн<span class="dt">26.10</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W1D1 Восстановительный</b> — Восстановительный 45 мин Z1 <span class="kmref">≈8.6 км · 0:45</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-10-27"><td class="day">Вт<span class="dt">27.10</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W1D2 Повторы 6×300 м</b> — Разминка 25 мин Z2 · 6×(0,3 км 3:30–3:35/км; 2 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈11 км · 0:53</span> &nbsp;<span class="hrv">3:30–3:35/км</span></td>
+        </tr><tr class="" data-date="2026-10-27"><td class="day">Вт<span class="dt">27.10</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W1D2 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-10-28"><td class="day">Ср<span class="dt">28.10</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W1D3 Лёгкий</b> — Лёгкий 50 мин Z2 · 4×(Ускорение 20с 3:30–3:35/км; 1 мин Z1) <span class="kmref">≈11 км · 0:55</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-10-29"><td class="day">Чт<span class="dt">29.10</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-thr)">Порог</span></td>
+        <td class="ses"><b>[T39-1026] W1D4 Порог 3×5&#39;</b> — Разминка 25 мин Z2 · 3×(5 мин 4:05–4:13/км; 1 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈11 км · 0:53</span> &nbsp;<span class="hrv">4:05–4:13/км</span></td>
+        </tr><tr class="" data-date="2026-10-29"><td class="day">Чт<span class="dt">29.10</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-b" title="Описание тренировки">[T39-1026] W1D4 Силовая B</a></b> <span class="kmref">0:20</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-10-30"><td class="day">Пт<span class="dt">30.10</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-10-31"><td class="day">Сб<span class="dt">31.10</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W1D6 Лёгкий</b> — Лёгкий 50 мин Z2 · 4×(Ускорение 20с 3:30–3:35/км; 1 мин Z1) <span class="kmref">≈11 км · 0:55</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-11-01"><td class="day">Вс<span class="dt">01.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W1D7 Длинная 1:35</b> — Длинная 95 мин Z2 <span class="kmref">≈18 км · 1:35</span> <span class="fuel">~35 г/ч · всего ~55 г ≈ 3 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">2</div><div class="wmeta"><div class="dates">Неделя от 2 ноя</div></div>
+      <div class="vol"><div class="num mono">≈72<small> км</small></div><div class="lbl">≈6:49 ч/нед · долгая ≈18 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-11-02"><td class="day">Пн<span class="dt">02.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W2D1 Восстановительный</b> — Восстановительный 45 мин Z1 <span class="kmref">≈8.6 км · 0:45</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-11-03"><td class="day">Вт<span class="dt">03.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-thr)">Порог</span></td>
+        <td class="ses"><b>[T39-1026] W2D2 Темп 20&#39;</b> — Разминка 25 мин Z2 · Темп 20 мин 4:05–4:13/км · Заминка 10 мин Z1 <span class="kmref">≈12 км · 0:55</span> &nbsp;<span class="hrv">4:05–4:13/км</span></td>
+        </tr><tr class="" data-date="2026-11-03"><td class="day">Вт<span class="dt">03.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W2D2 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-11-04"><td class="day">Ср<span class="dt">04.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W2D3 Лёгкий</b> — Лёгкий 50 мин Z2 · 4×(Ускорение 20с 3:30–3:35/км; 1 мин Z1) <span class="kmref">≈11 км · 0:55</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-11-05"><td class="day">Чт<span class="dt">05.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W2D4 Горки 8×90&quot;</b> — Разминка 20 мин Z2 · 8×(В гору 2 мин Z5; Вниз трусцой 2 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈12 км · 0:59</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-11-05"><td class="day">Чт<span class="dt">05.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-b" title="Описание тренировки">[T39-1026] W2D4 Силовая B</a></b> <span class="kmref">0:20</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-11-06"><td class="day">Пт<span class="dt">06.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-11-07"><td class="day">Сб<span class="dt">07.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W2D6 Лёгкий</b> — Лёгкий 50 мин Z2 · 4×(Ускорение 20с 3:30–3:35/км; 1 мин Z1) <span class="kmref">≈11 км · 0:55</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-11-08"><td class="day">Вс<span class="dt">08.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W2D7 Длинная 1:35</b> — Длинная 95 мин Z2 <span class="kmref">≈18 км · 1:35</span> <span class="fuel">~35 г/ч · всего ~55 г ≈ 3 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">3</div><div class="wmeta"><div class="dates">Неделя от 9 ноя</div></div>
+      <div class="vol"><div class="num mono">≈74<small> км</small></div><div class="lbl">≈7:01 ч/нед · долгая ≈19 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-11-09"><td class="day">Пн<span class="dt">09.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W3D1 Восстановительный</b> — Восстановительный 45 мин Z1 <span class="kmref">≈8.6 км · 0:45</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-11-10"><td class="day">Вт<span class="dt">10.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W3D2 Повторы 6×400 м</b> — Разминка 25 мин Z2 · 6×(0,4 км 3:30–3:35/км; 3 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈13 км · 1:02</span> &nbsp;<span class="hrv">3:30–3:35/км</span></td>
+        </tr><tr class="" data-date="2026-11-10"><td class="day">Вт<span class="dt">10.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W3D2 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-11-11"><td class="day">Ср<span class="dt">11.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W3D3 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:30–3:35/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-11-12"><td class="day">Чт<span class="dt">12.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-thr)">Порог</span></td>
+        <td class="ses"><b>[T39-1026] W3D4 Порог 4×5&#39;</b> — Разминка 15 мин Z2 · 4×(5 мин 4:05–4:13/км; 1 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈10 км · 0:49</span> &nbsp;<span class="hrv">4:05–4:13/км</span></td>
+        </tr><tr class="" data-date="2026-11-12"><td class="day">Чт<span class="dt">12.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-b" title="Описание тренировки">[T39-1026] W3D4 Силовая B</a></b> <span class="kmref">0:20</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-11-13"><td class="day">Пт<span class="dt">13.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-11-14"><td class="day">Сб<span class="dt">14.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W3D6 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:30–3:35/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-11-15"><td class="day">Вс<span class="dt">15.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W3D7 Длинная 1:40</b> — Длинная 100 мин Z2 <span class="kmref">≈19 км · 1:40</span> <span class="fuel">~35 г/ч · всего ~58 г ≈ 3 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">4</div><div class="wmeta"><div class="dates">Неделя от 16 ноя</div></div>
+      <div class="vol"><div class="num mono">≈76<small> км</small></div><div class="lbl">≈7:12 ч/нед · долгая ≈19 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-11-16"><td class="day">Пн<span class="dt">16.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W4D1 Восстановительный</b> — Восстановительный 45 мин Z1 <span class="kmref">≈8.6 км · 0:45</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-11-17"><td class="day">Вт<span class="dt">17.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-thr)">Порог</span></td>
+        <td class="ses"><b>[T39-1026] W4D2 Темп 20&#39;</b> — Разминка 25 мин Z2 · Темп 20 мин 4:05–4:13/км · Заминка 10 мин Z1 <span class="kmref">≈12 км · 0:55</span> &nbsp;<span class="hrv">4:05–4:13/км</span></td>
+        </tr><tr class="" data-date="2026-11-17"><td class="day">Вт<span class="dt">17.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W4D2 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-11-18"><td class="day">Ср<span class="dt">18.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W4D3 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:30–3:35/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-11-19"><td class="day">Чт<span class="dt">19.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W4D4 МПК 4×1200 м</b> — Разминка 20 мин Z2 · 4×(1,2 км 3:46–3:55/км; 5 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈14 км · 1:06</span> &nbsp;<span class="hrv">3:46–3:55/км</span></td>
+        </tr><tr class="" data-date="2026-11-19"><td class="day">Чт<span class="dt">19.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-b" title="Описание тренировки">[T39-1026] W4D4 Силовая B</a></b> <span class="kmref">0:20</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-11-20"><td class="day">Пт<span class="dt">20.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-11-21"><td class="day">Сб<span class="dt">21.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W4D6 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:30–3:35/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-11-22"><td class="day">Вс<span class="dt">22.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W4D7 Длинная 1:40</b> — Длинная 100 мин Z2 <span class="kmref">≈19 км · 1:40</span> <span class="fuel">~35 г/ч · всего ~58 г ≈ 3 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">5</div><div class="wmeta"><div class="dates">Неделя от 23 ноя</div></div>
+      <div class="vol"><div class="num mono">≈61<small> км</small></div><div class="lbl">≈5:53 ч/нед · долгая ≈15 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-11-23"><td class="day">Пн<span class="dt">23.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W5D1 Восстановительный</b> — Восстановительный 45 мин Z1 <span class="kmref">≈8.6 км · 0:45</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-11-24"><td class="day">Вт<span class="dt">24.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W5D2 МПК 4×800 м</b> — Разминка 15 мин Z2 · 4×(0,8 км 3:42–3:52/км; 3 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈10 км · 0:49</span> &nbsp;<span class="hrv">3:42–3:52/км</span></td>
+        </tr><tr class="" data-date="2026-11-24"><td class="day">Вт<span class="dt">24.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W5D2 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-11-25"><td class="day">Ср<span class="dt">25.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W5D3 Лёгкий</b> — Лёгкий 40 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈8.8 км · 0:45</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-11-26"><td class="day">Чт<span class="dt">26.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-thr)">Порог</span></td>
+        <td class="ses"><b>[T39-1026] W5D4 Порог 3×5&#39;</b> — Разминка 15 мин Z2 · 3×(5 мин 4:01–4:09/км; 1 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈9.0 км · 0:43</span> &nbsp;<span class="hrv">4:01–4:09/км</span></td>
+        </tr><tr class="" data-date="2026-11-26"><td class="day">Чт<span class="dt">26.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-b" title="Описание тренировки">[T39-1026] W5D4 Силовая B</a></b> <span class="kmref">0:20</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-11-27"><td class="day">Пт<span class="dt">27.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-11-28"><td class="day">Сб<span class="dt">28.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W5D6 Лёгкий</b> — Лёгкий 40 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈8.8 км · 0:45</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-11-29"><td class="day">Вс<span class="dt">29.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W5D7 Длинная 1:20</b> — Длинная 80 мин Z2 <span class="kmref">≈15 км · 1:20</span> <span class="fuel">~35 г/ч · всего ~47 г ≈ 2 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">6</div><div class="wmeta"><div class="dates">Неделя от 30 ноя</div></div>
+      <div class="vol"><div class="num mono">≈80<small> км</small></div><div class="lbl">≈7:26 ч/нед · долгая ≈20 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-11-30"><td class="day">Пн<span class="dt">30.11</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W6D1 Восстановительный</b> — Восстановительный 45 мин Z1 <span class="kmref">≈8.6 км · 0:45</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-01"><td class="day">Вт<span class="dt">01.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-thr)">Порог</span></td>
+        <td class="ses"><b>[T39-1026] W6D2 Порог 3×8&#39;</b> — Разминка 20 мин Z2 · 3×(8 мин 4:01–4:09/км; 2 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈13 км · 1:00</span> &nbsp;<span class="hrv">4:01–4:09/км</span></td>
+        </tr><tr class="" data-date="2026-12-01"><td class="day">Вт<span class="dt">01.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W6D2 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-02"><td class="day">Ср<span class="dt">02.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W6D3 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-03"><td class="day">Чт<span class="dt">03.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W6D4 МПК 5×1200 м</b> — Разминка 15 мин Z2 · 5×(1,2 км 3:42–3:52/км; 5 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈15 км · 1:10</span> &nbsp;<span class="hrv">3:42–3:52/км</span></td>
+        </tr><tr class="" data-date="2026-12-03"><td class="day">Чт<span class="dt">03.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-b" title="Описание тренировки">[T39-1026] W6D4 Силовая B</a></b> <span class="kmref">0:20</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-04"><td class="day">Пт<span class="dt">04.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-12-05"><td class="day">Сб<span class="dt">05.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W6D6 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-12-06"><td class="day">Вс<span class="dt">06.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W6D7 Длинная 1:45</b> — Длинная 105 мин Z2 <span class="kmref">≈20 км · 1:45</span> <span class="fuel">~45 г/ч · всего ~79 г ≈ 4 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">7</div><div class="wmeta"><div class="dates">Неделя от 7 дек</div></div>
+      <div class="vol"><div class="num mono">≈79<small> км</small></div><div class="lbl">≈7:23 ч/нед · долгая ≈20 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-12-07"><td class="day">Пн<span class="dt">07.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W7D1 Восстановительный</b> — Восстановительный 45 мин Z1 <span class="kmref">≈8.6 км · 0:45</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-08"><td class="day">Вт<span class="dt">08.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W7D2 Интервалы 3×2000 м @10к</b> — Разминка 15 мин Z2 · 3×(2 км 3:57–4:02/км; 3 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈12 км · 0:58</span> &nbsp;<span class="hrv">3:57–4:02/км</span></td>
+        </tr><tr class="" data-date="2026-12-08"><td class="day">Вт<span class="dt">08.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W7D2 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-09"><td class="day">Ср<span class="dt">09.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W7D3 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-10"><td class="day">Чт<span class="dt">10.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W7D4 Повторы 10×400 м</b> — Разминка 15 мин Z2 · 10×(0,4 км 3:27–3:32/км; 3 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈15 км · 1:09</span> &nbsp;<span class="hrv">3:27–3:32/км</span></td>
+        </tr><tr class="" data-date="2026-12-10"><td class="day">Чт<span class="dt">10.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-b" title="Описание тренировки">[T39-1026] W7D4 Силовая B</a></b> <span class="kmref">0:20</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-11"><td class="day">Пт<span class="dt">11.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-12-12"><td class="day">Сб<span class="dt">12.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W7D6 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-12-13"><td class="day">Вс<span class="dt">13.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W7D7 Длинная 1:45</b> — Длинная 105 мин Z2 <span class="kmref">≈20 км · 1:45</span> <span class="fuel">~45 г/ч · всего ~79 г ≈ 4 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">8</div><div class="wmeta"><div class="dates">Неделя от 14 дек</div></div>
+      <div class="vol"><div class="num mono">≈61<small> км</small></div><div class="lbl">≈5:51 ч/нед</div></div></div>
+      <table><tbody><tr class="" data-date="2026-12-14"><td class="day">Пн<span class="dt">14.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W8D1 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-15"><td class="day">Вт<span class="dt">15.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-thr)">Порог</span></td>
+        <td class="ses"><b>[T39-1026] W8D2 Порог 3×5&#39;</b> — Разминка 25 мин Z2 · 3×(5 мин 4:01–4:09/км; 1 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈11 км · 0:53</span> &nbsp;<span class="hrv">4:01–4:09/км</span></td>
+        </tr><tr class="" data-date="2026-12-15"><td class="day">Вт<span class="dt">15.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W8D2 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-16"><td class="day">Ср<span class="dt">16.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W8D3 Лёгкий</b> — Лёгкий 55 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈12 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-12-16"><td class="day">Ср<span class="dt">16.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-b" title="Описание тренировки">[T39-1026] W8D3 Силовая B</a></b> <span class="kmref">0:20</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-17"><td class="day">Чт<span class="dt">17.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W8D4 Лёгкий</b> — Лёгкий 60 мин Z2 <span class="kmref">≈11 км · 1:00</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-12-18"><td class="day">Пт<span class="dt">18.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-12-19"><td class="day">Сб<span class="dt">19.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W8D6 Лёгкий выезд перед стартом</b> — Лёгкий 20 мин Z2 · 3×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈4.7 км · 0:24</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-20"><td class="day">Вс<span class="dt">20.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-race)">Старт</span></td>
+        <td class="ses"><b>[T39-1026] W8D7 КОНТРОЛЬНЫЙ ТЕСТ 5 КМ 19:13</b> — Разминка 15 мин Z2 · 3×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) · Тест 5 КМ 5 км 3:49–3:53/км · Заминка 10 мин Z1 <span class="kmref">≈11 км · 0:48</span> &nbsp;<span class="hrv">3:49–3:53/км</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">9</div><div class="wmeta"><div class="dates">Неделя от 21 дек</div></div>
+      <div class="vol"><div class="num mono">≈82<small> км</small></div><div class="lbl">≈7:40 ч/нед · долгая ≈21 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-12-21"><td class="day">Пн<span class="dt">21.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W9D1 Восстановительный</b> — Восстановительный 30 мин Z1 <span class="kmref">≈5.7 км · 0:30</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class="" data-date="2026-12-21"><td class="day">Пн<span class="dt">21.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-cor" title="Описание тренировки">[T39-1026] W9D1 Кор</a></b> <span class="kmref">0:15</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-22"><td class="day">Вт<span class="dt">22.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W9D2 Восстановительный</b> — Восстановительный 70 мин Z1 <span class="kmref">≈13 км · 1:10</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-23"><td class="day">Ср<span class="dt">23.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W9D3 Повторы 10×400 м</b> — Разминка 15 мин Z2 · 10×(0,4 км 3:27–3:32/км; 3 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈15 км · 1:09</span> &nbsp;<span class="hrv">3:27–3:32/км</span></td>
+        </tr><tr class="" data-date="2026-12-23"><td class="day">Ср<span class="dt">23.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-a" title="Описание тренировки">[T39-1026] W9D3 Силовая A</a></b> <span class="kmref">0:25</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-24"><td class="day">Чт<span class="dt">24.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W9D4 Лёгкий</b> — Лёгкий 65 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈14 км · 1:10</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-12-25"><td class="day">Пт<span class="dt">25.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2026-12-26"><td class="day">Сб<span class="dt">26.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W9D6 Лёгкий</b> — Лёгкий 65 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈14 км · 1:10</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2026-12-27"><td class="day">Вс<span class="dt">27.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W9D7 Длинная 1:50</b> — Длинная 110 мин Z2 <span class="kmref">≈21 км · 1:50</span> <span class="fuel">~45 г/ч · всего ~83 г ≈ 4 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">10</div><div class="wmeta"><div class="dates">Неделя от 28 дек</div></div>
+      <div class="vol"><div class="num mono">≈59<small> км</small></div><div class="lbl">≈5:11 ч/нед · долгая ≈14 км</div></div></div>
+      <table><tbody><tr class="" data-date="2026-12-28"><td class="day">Пн<span class="dt">28.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>[T39-1026] W10D1 Восстановительный</b> — Восстановительный 40 мин Z1 <span class="kmref">≈7.6 км · 0:40</span> &nbsp;<span class="hrv">Z1 · 116–150 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-29"><td class="day">Вт<span class="dt">29.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W10D2 Интервалы 4×1000 м @10к</b> — Разминка 15 мин Z2 · 4×(1 км 3:57–4:02/км; 2 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈10 км · 0:49</span> &nbsp;<span class="hrv">3:57–4:02/км</span></td>
+        </tr><tr class="" data-date="2026-12-29"><td class="day">Вт<span class="dt">29.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-cor" title="Описание тренировки">[T39-1026] W10D2 Кор</a></b> <span class="kmref">0:15</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class="" data-date="2026-12-30"><td class="day">Ср<span class="dt">30.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W10D3 Лёгкий</b> — Лёгкий 35 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈7.8 км · 0:40</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2026-12-31"><td class="day">Чт<span class="dt">31.12</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W10D4 Повторы 6×400 м</b> — Разминка 15 мин Z2 · 6×(0,4 км 3:27–3:32/км; 3 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈11 км · 0:51</span> &nbsp;<span class="hrv">3:27–3:32/км</span></td>
+        </tr><tr class="" data-date="2027-01-01"><td class="day">Пт<span class="dt">01.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2027-01-02"><td class="day">Сб<span class="dt">02.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W10D6 Лёгкий</b> — Лёгкий 35 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈7.8 км · 0:40</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2027-01-03"><td class="day">Вс<span class="dt">03.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-long)">Длинная</span></td>
+        <td class="ses"><b>[T39-1026] W10D7 Длинная 1:15</b> — Длинная 75 мин Z2 <span class="kmref">≈14 км · 1:15</span> <span class="fuel">~35 г/ч · всего ~44 г ≈ 2 гел.</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr></tbody></table></div><div class="week"><div class="whead"><div class="bib mono">11</div><div class="wmeta"><div class="dates">Неделя от 4 янв</div></div>
+      <div class="vol"><div class="num mono">≈51<small> км</small></div><div class="lbl">≈4:26 ч/нед</div></div></div>
+      <table><tbody><tr class="" data-date="2027-01-04"><td class="day">Пн<span class="dt">04.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W11D1 Лёгкий</b> — Лёгкий 40 мин Z2 <span class="kmref">≈7.6 км · 0:40</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2027-01-04"><td class="day">Пн<span class="dt">04.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rep)">Силовая</span></td>
+        <td class="ses"><b><a href="#str-cor" title="Описание тренировки">[T39-1026] W11D1 Кор</a></b> <span class="kmref">0:15</span> &nbsp;<span class="hrv">ОФП</span></td>
+        </tr><tr class=" qual" data-date="2027-01-05"><td class="day">Вт<span class="dt">05.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-vo2)">МПК/10к</span></td>
+        <td class="ses"><b>[T39-1026] W11D2 Интервалы 4×400 м (настройка) @10к</b> — Разминка 15 мин Z2 · 4×(0,4 км 3:57–4:02/км; 2 мин Z1) · Заминка 10 мин Z1 <span class="kmref">≈7.5 км · 0:37</span> &nbsp;<span class="hrv">3:57–4:02/км</span></td>
+        </tr><tr class="" data-date="2027-01-06"><td class="day">Ср<span class="dt">06.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W11D3 Лёгкий</b> — Лёгкий 40 мин Z2 <span class="kmref">≈7.6 км · 0:40</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2027-01-07"><td class="day">Чт<span class="dt">07.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W11D4 Лёгкий</b> — Лёгкий 35 мин Z2 · 4×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈7.8 км · 0:40</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class="" data-date="2027-01-08"><td class="day">Пт<span class="dt">08.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-rec)">Восст.</span></td>
+        <td class="ses"><b>Отдых</b> —  &nbsp;<span class="hrv"></span></td>
+        </tr><tr class="" data-date="2027-01-09"><td class="day">Сб<span class="dt">09.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-easy)">Лёгкий</span></td>
+        <td class="ses"><b>[T39-1026] W11D6 Лёгкий выезд перед стартом</b> — Лёгкий 20 мин Z2 · 3×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) <span class="kmref">≈4.7 км · 0:24</span> &nbsp;<span class="hrv">Z2 · 151–158 уд</span></td>
+        </tr><tr class=" qual" data-date="2027-01-10"><td class="day">Вс<span class="dt">10.01</span></td>
+        <td class="chip-cell"><span class="chip" style="background:var(--z-race)">Старт</span></td>
+        <td class="ses"><b>[T39-1026] W11D7 ГЛАВНЫЙ СТАРТ 10 КМ 39:50</b> — Разминка 15 мин Z2 · 3×(Ускорение 20с 3:27–3:32/км; 1 мин Z1) · 10 км 3:59 10 км 3:57–4:02/км · Заминка 10 мин Z1 <span class="kmref">≈16 км · 1:09</span> &nbsp;<span class="hrv">3:57–4:02/км</span></td>
+        </tr></tbody></table></div>
+<footer>Сгенерировано 2026-10-27. Лёгкие и длинные — по времени и пульсу; качественные — по темпу.<br><button type="button" class="jsonlink" onclick="dlPlanJSON()">экспорт plan.json для Garmin</button><span class="dot2">·</span><button type="button" class="jsonlink" onclick="window.print()">сохранить PDF</button></footer></div>
+<script>function jumpToday(){var r=document.querySelector('tr.today')||window.__near;
+if(r)r.scrollIntoView({behavior:'smooth',block:'center'});}
+(function(){var t=new Date();t.setHours(0,0,0,0);
+var iso=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+var all=Array.prototype.slice.call(document.querySelectorAll('tr[data-date]'));
+var b=document.getElementById('jumpBtn'); if(!all.length){if(b){b.classList.add('disabled');b.textContent='Нет тренировок';b.onclick=null;}return;}
+var rows=all.filter(function(r){return r.getAttribute('data-date')===iso;});
+if(rows.length){rows.forEach(function(r){r.classList.add('today');
+  var w=r.closest('.week');if(w)w.classList.add('hastoday');});return;}
+// сегодня тренировки нет: ведём к ближайшей следующей (или к финалу плана)
+var next=null;for(var i=0;i<all.length;i++){if(all[i].getAttribute('data-date')>iso){next=all[i];break;}}
+var target=next||all[all.length-1];window.__near=target;
+var d=target.getAttribute('data-date').split('-');
+if(b){b.textContent=next?('→ Ближайшая тренировка · '+d[2]+'.'+d[1]):('План завершён · '+d[2]+'.'+d[1]);}
+var w=target.closest('.week');if(w)w.classList.add('hastoday');})();
+window.__PLAN__=JSON.parse("{\"meta\":{\"tag\":\"[T39-1026]\",\"name\":\"План: 10 км 39:50 · 2027-01-10\",\"marathon\":\"2027-01-10\",\"generated\":\"2026-10-27\",\"schema\":1,\"cfg\":{\"startISO\":\"2026-10-26\",\"goalISO\":\"2027-01-10\",\"goalDist\":10000,\"tuneRaces\":[],\"results\":[{\"dist\":10000,\"sec\":2430}],\"tgtGoal\":2390,\"runsAuto\":true,\"age\":38,\"weight\":60,\"lthr\":178,\"ltPace\":249,\"peakVol\":null,\"volUnit\":\"km\",\"runs\":6,\"curVol\":70,\"curLong\":null,\"sex\":\"m\",\"exp\":\"inter\",\"maxVolEver\":null,\"maxLongCap\":null,\"elevGain\":0,\"localHills\":false,\"altitude\":0,\"heat\":false,\"longDow\":6,\"cross\":[],\"strength\":2,\"slider\":0,\"preCtx\":\"none\",\"preRaceDist\":10000,\"preRaceDate\":\"2026-10-19\",\"transPeakVol\":null,\"transWeeksAgo\":1,\"deload\":\"need\",\"lpm\":null,\"histLoads\":null,\"tag\":\"[T39-1026]\",\"planMode\":\"goal\",\"warnings\":[]}},\"workouts\":[{\"date\":\"2026-10-26\",\"kind\":\"run\",\"name\":\"[T39-1026] W1D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2700,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-10-27\",\"kind\":\"run\",\"name\":\"[T39-1026] W1D2 Повторы 6×300 м\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1500,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":6,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":300,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":120,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}],\"note\":\"Быстро и легко, без закисления: полное восстановление трусцой.\"},{\"date\":\"2026-10-27\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W1D2 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-10-28\",\"kind\":\"run\",\"name\":\"[T39-1026] W1D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3000,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-10-29\",\"kind\":\"run\",\"name\":\"[T39-1026] W1D4 Порог 3×5'\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1500,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":300,\"tg\":{\"pace\":[\"4:05\",\"4:13\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-10-29\",\"kind\":\"str\",\"id\":\"str-b\",\"name\":\"[T39-1026] W1D4 Силовая B\",\"desc\":\"Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.\",\"mins\":20},{\"date\":\"2026-10-31\",\"kind\":\"run\",\"name\":\"[T39-1026] W1D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3000,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-01\",\"kind\":\"run\",\"name\":\"[T39-1026] W1D7 Длинная 1:35\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":5700,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~35 г/ч · всего ~55 г ≈ 3 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":35,\"total\":55,\"gels\":3,\"portion\":20}},{\"date\":\"2026-11-02\",\"kind\":\"run\",\"name\":\"[T39-1026] W2D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2700,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-11-03\",\"kind\":\"run\",\"name\":\"[T39-1026] W2D2 Темп 20'\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1500,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"interval\",\"end\":\"time\",\"v\":1200,\"tg\":{\"pace\":[\"4:05\",\"4:13\"]},\"d\":\"Темп\"},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-11-03\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W2D2 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-11-04\",\"kind\":\"run\",\"name\":\"[T39-1026] W2D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3000,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-05\",\"kind\":\"run\",\"name\":\"[T39-1026] W2D4 Горки 8×90\\\"\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1200,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":8,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":90,\"tg\":{\"hr\":5},\"d\":\"В гору\",\"pk\":317},{\"t\":\"recovery\",\"end\":\"time\",\"v\":126,\"tg\":{\"hr\":1},\"d\":\"Вниз трусцой\",\"pk\":317}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}],\"note\":\"В гору — по усилию (RPE 8/10), не по темпу: за минуту пульс не выходит на плато. Вниз — трусцой.\"},{\"date\":\"2026-11-05\",\"kind\":\"str\",\"id\":\"str-b\",\"name\":\"[T39-1026] W2D4 Силовая B\",\"desc\":\"Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.\",\"mins\":20},{\"date\":\"2026-11-07\",\"kind\":\"run\",\"name\":\"[T39-1026] W2D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3000,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-08\",\"kind\":\"run\",\"name\":\"[T39-1026] W2D7 Длинная 1:35\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":5700,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~35 г/ч · всего ~55 г ≈ 3 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":35,\"total\":55,\"gels\":3,\"portion\":20}},{\"date\":\"2026-11-09\",\"kind\":\"run\",\"name\":\"[T39-1026] W3D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2700,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-11-10\",\"kind\":\"run\",\"name\":\"[T39-1026] W3D2 Повторы 6×400 м\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1500,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":6,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":400,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":180,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}],\"note\":\"Быстро и легко, без закисления: полное восстановление трусцой.\"},{\"date\":\"2026-11-10\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W3D2 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-11-11\",\"kind\":\"run\",\"name\":\"[T39-1026] W3D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-12\",\"kind\":\"run\",\"name\":\"[T39-1026] W3D4 Порог 4×5'\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":300,\"tg\":{\"pace\":[\"4:05\",\"4:13\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-11-12\",\"kind\":\"str\",\"id\":\"str-b\",\"name\":\"[T39-1026] W3D4 Силовая B\",\"desc\":\"Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.\",\"mins\":20},{\"date\":\"2026-11-14\",\"kind\":\"run\",\"name\":\"[T39-1026] W3D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-15\",\"kind\":\"run\",\"name\":\"[T39-1026] W3D7 Длинная 1:40\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":6000,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~35 г/ч · всего ~58 г ≈ 3 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":35,\"total\":58,\"gels\":3,\"portion\":20}},{\"date\":\"2026-11-16\",\"kind\":\"run\",\"name\":\"[T39-1026] W4D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2700,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-11-17\",\"kind\":\"run\",\"name\":\"[T39-1026] W4D2 Темп 20'\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1500,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"interval\",\"end\":\"time\",\"v\":1200,\"tg\":{\"pace\":[\"4:05\",\"4:13\"]},\"d\":\"Темп\"},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-11-17\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W4D2 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-11-18\",\"kind\":\"run\",\"name\":\"[T39-1026] W4D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-19\",\"kind\":\"run\",\"name\":\"[T39-1026] W4D4 МПК 4×1200 м\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1200,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":1200,\"tg\":{\"pace\":[\"3:46\",\"3:55\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":270,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-11-19\",\"kind\":\"str\",\"id\":\"str-b\",\"name\":\"[T39-1026] W4D4 Силовая B\",\"desc\":\"Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.\",\"mins\":20},{\"date\":\"2026-11-21\",\"kind\":\"run\",\"name\":\"[T39-1026] W4D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:30\",\"3:35\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-22\",\"kind\":\"run\",\"name\":\"[T39-1026] W4D7 Длинная 1:40\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":6000,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~35 г/ч · всего ~58 г ≈ 3 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":35,\"total\":58,\"gels\":3,\"portion\":20}},{\"date\":\"2026-11-23\",\"kind\":\"run\",\"name\":\"[T39-1026] W5D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2700,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-11-24\",\"kind\":\"run\",\"name\":\"[T39-1026] W5D2 МПК 4×800 м\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":800,\"tg\":{\"pace\":[\"3:42\",\"3:52\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":180,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-11-24\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W5D2 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-11-25\",\"kind\":\"run\",\"name\":\"[T39-1026] W5D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2400,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-26\",\"kind\":\"run\",\"name\":\"[T39-1026] W5D4 Порог 3×5'\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":300,\"tg\":{\"pace\":[\"4:01\",\"4:09\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-11-26\",\"kind\":\"str\",\"id\":\"str-b\",\"name\":\"[T39-1026] W5D4 Силовая B\",\"desc\":\"Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.\",\"mins\":20},{\"date\":\"2026-11-28\",\"kind\":\"run\",\"name\":\"[T39-1026] W5D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2400,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-11-29\",\"kind\":\"run\",\"name\":\"[T39-1026] W5D7 Длинная 1:20\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":4800,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~35 г/ч · всего ~47 г ≈ 2 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":35,\"total\":47,\"gels\":2,\"portion\":20}},{\"date\":\"2026-11-30\",\"kind\":\"run\",\"name\":\"[T39-1026] W6D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2700,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-12-01\",\"kind\":\"run\",\"name\":\"[T39-1026] W6D2 Порог 3×8'\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1200,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":480,\"tg\":{\"pace\":[\"4:01\",\"4:09\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":120,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-12-01\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W6D2 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-12-02\",\"kind\":\"run\",\"name\":\"[T39-1026] W6D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-03\",\"kind\":\"run\",\"name\":\"[T39-1026] W6D4 МПК 5×1200 м\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":5,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":1200,\"tg\":{\"pace\":[\"3:42\",\"3:52\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":270,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-12-03\",\"kind\":\"str\",\"id\":\"str-b\",\"name\":\"[T39-1026] W6D4 Силовая B\",\"desc\":\"Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.\",\"mins\":20},{\"date\":\"2026-12-05\",\"kind\":\"run\",\"name\":\"[T39-1026] W6D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-06\",\"kind\":\"run\",\"name\":\"[T39-1026] W6D7 Длинная 1:45\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":6300,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~45 г/ч · всего ~79 г ≈ 4 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":45,\"total\":79,\"gels\":4,\"portion\":20}},{\"date\":\"2026-12-07\",\"kind\":\"run\",\"name\":\"[T39-1026] W7D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2700,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-12-08\",\"kind\":\"run\",\"name\":\"[T39-1026] W7D2 Интервалы 3×2000 м @10к\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":2000,\"tg\":{\"pace\":[\"3:57\",\"4:02\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":180,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-12-08\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W7D2 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-12-09\",\"kind\":\"run\",\"name\":\"[T39-1026] W7D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-10\",\"kind\":\"run\",\"name\":\"[T39-1026] W7D4 Повторы 10×400 м\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":10,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":400,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":180,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}],\"note\":\"Быстро и легко, без закисления: полное восстановление трусцой.\"},{\"date\":\"2026-12-10\",\"kind\":\"str\",\"id\":\"str-b\",\"name\":\"[T39-1026] W7D4 Силовая B\",\"desc\":\"Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.\",\"mins\":20},{\"date\":\"2026-12-12\",\"kind\":\"run\",\"name\":\"[T39-1026] W7D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-13\",\"kind\":\"run\",\"name\":\"[T39-1026] W7D7 Длинная 1:45\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":6300,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~45 г/ч · всего ~79 г ≈ 4 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":45,\"total\":79,\"gels\":4,\"portion\":20}},{\"date\":\"2026-12-14\",\"kind\":\"run\",\"name\":\"[T39-1026] W8D1 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-15\",\"kind\":\"run\",\"name\":\"[T39-1026] W8D2 Порог 3×5'\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":1500,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":300,\"tg\":{\"pace\":[\"4:01\",\"4:09\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-12-15\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W8D2 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-12-16\",\"kind\":\"run\",\"name\":\"[T39-1026] W8D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3300,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-16\",\"kind\":\"str\",\"id\":\"str-b\",\"name\":\"[T39-1026] W8D3 Силовая B\",\"desc\":\"Силовая B. Беговые дрилы (A/B-skip, захлёст) 2×20м; Присед пистолетом у опоры 3×6/ногу; Ягодичный мостик 3×10/ногу; Кор: мёртвый жук 3×10, боковая планка 3×8, супермен 3×12.\",\"mins\":20},{\"date\":\"2026-12-17\",\"kind\":\"run\",\"name\":\"[T39-1026] W8D4 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3600,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"}]},{\"date\":\"2026-12-19\",\"kind\":\"run\",\"name\":\"[T39-1026] W8D6 Лёгкий выезд перед стартом\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":1200,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-20\",\"kind\":\"run\",\"name\":\"[T39-1026] W8D7 КОНТРОЛЬНЫЙ ТЕСТ 5 КМ 19:13\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]},{\"t\":\"interval\",\"end\":\"distance\",\"v\":5000,\"tg\":{\"pace\":[\"3:49\",\"3:53\"]},\"d\":\"Тест 5 КМ\"},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}],\"note\":\"Ориентир по текущей форме: ≈19:13 (3:51/км). После старта — 2 лёгких дн.; обновите VDOT по результату.\"},{\"date\":\"2026-12-21\",\"kind\":\"run\",\"name\":\"[T39-1026] W9D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":1800,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-12-21\",\"kind\":\"str\",\"id\":\"str-cor\",\"name\":\"[T39-1026] W9D1 Кор\",\"desc\":\"Кор. Планка 3×45с; боковая 3×30с/сторона; мёртвый жук 3×10; супермен 3×12.\",\"mins\":15},{\"date\":\"2026-12-22\",\"kind\":\"run\",\"name\":\"[T39-1026] W9D2 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":4200,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-12-23\",\"kind\":\"run\",\"name\":\"[T39-1026] W9D3 Повторы 10×400 м\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":10,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":400,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":180,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}],\"note\":\"Быстро и легко, без закисления: полное восстановление трусцой.\"},{\"date\":\"2026-12-23\",\"kind\":\"str\",\"id\":\"str-a\",\"name\":\"[T39-1026] W9D3 Силовая A\",\"desc\":\"Силовая A. Приседания 3×8 (2 в запасе); Румынская тяга 3×8; Болгарские сплит-приседания 3×8/ногу; Подъёмы на носки 3×15; Планка 3×45с + боковая 3×30с/сторона.\",\"mins\":25},{\"date\":\"2026-12-24\",\"kind\":\"run\",\"name\":\"[T39-1026] W9D4 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3900,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-26\",\"kind\":\"run\",\"name\":\"[T39-1026] W9D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":3900,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-27\",\"kind\":\"run\",\"name\":\"[T39-1026] W9D7 Длинная 1:50\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":6600,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~45 г/ч · всего ~83 г ≈ 4 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":45,\"total\":83,\"gels\":4,\"portion\":20}},{\"date\":\"2026-12-28\",\"kind\":\"run\",\"name\":\"[T39-1026] W10D1 Восстановительный\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2400,\"tg\":{\"hr\":1},\"d\":\"Восстановительный\"}]},{\"date\":\"2026-12-29\",\"kind\":\"run\",\"name\":\"[T39-1026] W10D2 Интервалы 4×1000 м @10к\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":1000,\"tg\":{\"pace\":[\"3:57\",\"4:02\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":120,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2026-12-29\",\"kind\":\"str\",\"id\":\"str-cor\",\"name\":\"[T39-1026] W10D2 Кор\",\"desc\":\"Кор. Планка 3×45с; боковая 3×30с/сторона; мёртвый жук 3×10; супермен 3×12.\",\"mins\":15},{\"date\":\"2026-12-30\",\"kind\":\"run\",\"name\":\"[T39-1026] W10D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2100,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2026-12-31\",\"kind\":\"run\",\"name\":\"[T39-1026] W10D4 Повторы 6×400 м\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":6,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":400,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":180,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}],\"note\":\"Быстро и легко, без закисления: полное восстановление трусцой.\"},{\"date\":\"2027-01-02\",\"kind\":\"run\",\"name\":\"[T39-1026] W10D6 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2100,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2027-01-03\",\"kind\":\"run\",\"name\":\"[T39-1026] W10D7 Длинная 1:15\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":4500,\"tg\":{\"hr\":2},\"d\":\"Длинная\"}],\"note\":\"Питание ~35 г/ч · всего ~44 г ≈ 2 гел. Пей воду с каждым гелем.\",\"fuel\":{\"gph\":35,\"total\":44,\"gels\":2,\"portion\":20}},{\"date\":\"2027-01-04\",\"kind\":\"run\",\"name\":\"[T39-1026] W11D1 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2400,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"}]},{\"date\":\"2027-01-04\",\"kind\":\"str\",\"id\":\"str-cor\",\"name\":\"[T39-1026] W11D1 Кор\",\"desc\":\"Кор. Планка 3×45с; боковая 3×30с/сторона; мёртвый жук 3×10; супермен 3×12.\",\"mins\":15},{\"date\":\"2027-01-05\",\"kind\":\"run\",\"name\":\"[T39-1026] W11D2 Интервалы 4×400 м (настройка) @10к\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"distance\",\"v\":400,\"tg\":{\"pace\":[\"3:57\",\"4:02\"]}},{\"t\":\"recovery\",\"end\":\"time\",\"v\":90,\"tg\":{\"hr\":1}}]},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]},{\"date\":\"2027-01-06\",\"kind\":\"run\",\"name\":\"[T39-1026] W11D3 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2400,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"}]},{\"date\":\"2027-01-07\",\"kind\":\"run\",\"name\":\"[T39-1026] W11D4 Лёгкий\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":2100,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":4,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2027-01-09\",\"kind\":\"run\",\"name\":\"[T39-1026] W11D6 Лёгкий выезд перед стартом\",\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":1200,\"tg\":{\"hr\":2},\"d\":\"Лёгкий\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]}]},{\"date\":\"2027-01-10\",\"kind\":\"run\",\"name\":\"[T39-1026] W11D7 ГЛАВНЫЙ СТАРТ 10 КМ 39:50\",\"steps\":[{\"t\":\"warmup\",\"end\":\"time\",\"v\":900,\"tg\":{\"hr\":2},\"d\":\"Разминка\"},{\"t\":\"repeat\",\"n\":3,\"steps\":[{\"t\":\"interval\",\"end\":\"time\",\"v\":20,\"tg\":{\"pace\":[\"3:27\",\"3:32\"]},\"d\":\"Ускорение\"},{\"t\":\"recovery\",\"end\":\"time\",\"v\":60,\"tg\":{\"hr\":1}}]},{\"t\":\"interval\",\"end\":\"distance\",\"v\":10000,\"tg\":{\"pace\":[\"3:57\",\"4:02\"]},\"d\":\"10 км 3:59\"},{\"t\":\"cooldown\",\"end\":\"time\",\"v\":600,\"tg\":{\"hr\":1},\"d\":\"Заминка\"}]}]}");
+function dlPlanJSON(){var t=JSON.stringify(window.__PLAN__,null,1);
+var b64=btoa(unescape(encodeURIComponent(t)));
+var u='data:application/json;base64,'+b64;
+var a=document.createElement('a');a.href=u;a.download='plan.json';a.click();}</script></body></html>

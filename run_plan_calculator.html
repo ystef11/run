@@ -285,8 +285,7 @@
         <button type="button" class="btn sec" id="addResBtn" style="padding:5px 12px;font-size:12px;margin-top:4px">+ добавить результат</button>
         <div class="hint">добавьте что есть: 5 / 10 км, 21,1 / 42,2 км. Форма (VDOT) берётся по лучшему результату; остальные уточняют. Совсем нет результатов (например, бег «с нуля») — оставьте список пустым, форма оценится по недельному объёму и опыту ниже (менее точно, чем от гонки).</div></div>
       <div class="fld"><label>Возраст</label><input type="number" id="age" value="38" min="16" max="80"></div>
-      <div class="fld"><label>Вес, кг</label><input type="number" id="weight" value="60" min="40" max="130"><div class="hint">для расчёта питания/гелей</div></div>
-      <div class="fld goalOnly"><label>ПАНО: пульс, уд/мин</label><input type="number" id="lthr" value="178" min="120" max="210"><div class="hint">пусто — зоны Garmin Z1–Z5</div></div>
+            <div class="fld goalOnly"><label>ПАНО: пульс, уд/мин</label><input type="number" id="lthr" value="178" min="120" max="210"><div class="hint">пусто — зоны Garmin Z1–Z5</div></div>
       <div class="fld goalOnly"><label>ПАНО: темп, мин/км</label><input type="text" id="ltpace" placeholder="м:сс"><div class="hint" id="ltpaceHint">подставлен из результатов — можно изменить</div></div>
       <div class="fld"><label>Текущий недельный объём</label>
         <div class="volrow"><input type="number" id="curVol" value="70" min="0" max="260" step="1">
@@ -1301,7 +1300,7 @@ function buildPlan(cfgIn){
         if(x.kind==='run'){x.km=sesKm(x.steps,R);x.min=sesMin(x.steps,R);zoneMins(x.steps,R,zm);wKm+=x.km;wMin+=x.min;{const rl=runLoad(x,R,lpm);load+=rl;runLoadSum+=rl;}
           x.label=describe(x.steps);
           const isRaceX=x.z==='race', longRace=x.steps.some(q=>q.end==='distance'&&q.v>=21000);
-          if(!isRaceX||longRace){const fu=fuelFor(x.min,cfg.weight||70,isRaceX);if(fu){x.fuel=fu;
+          if(!isRaceX||longRace){const fu=fuelFor(x.min,isRaceX);if(fu){x.fuel=fu;
             x.note=[x.note||'',`Питание ~${fu.gph} г/ч · всего ~${fu.total} г ≈ ${fu.gels} гел.${isRaceX?'':' Пей воду с каждым гелем.'}`].filter(Boolean).join(' ');}}}
         if(x.kind==='cross'){const cl=x.mins*crossLpm(x.cls);load+=cl;crossLoad+=cl;}
       });
@@ -1540,10 +1539,10 @@ const OFF_MAX_C={id:'str-off-max-c',name:'Межсезонье: Сила C (ун
 const OFF_POWER_A={id:'str-off-power-a',name:'Межсезонье: Мощность A',mins:40,desc:'Мощность A. Прыжки в длину с места 3×5; Приседания с выпрыгиванием (легкая нагрузка) 3×6; Приседания со штангой в скоростной манере (40-50% от 1ПМ) 3×5; Бросок медбола от груди в стену 3×8; Кор-финишер: планка с попеременным подъёмом руки и ноги 3×10.'};
 const OFF_POWER_B={id:'str-off-power-b',name:'Межсезонье: Мощность B',mins:40,desc:'Мощность B. Скачки на одной ноге вперёд (bounds) 3×6/ногу; Взрывной подъём колена на месте 3×15с; Тяга гантелей рывковым движением (power clean-подобное) 3×5; Ротационный бросок медбола 3×8/сторону; Кор-финишер: русские скручивания с медболом 3×15.'};
 
-function fuelFor(min,weight,isRace){
+function fuelFor(min,isRace){
   if(min<75)return null;
   let base=isRace?80:(min<105?40:min<140?55:70);
-  const gph=clamp(Math.round(base*(weight/70)/5)*5,30,isRace?100:90);
+  const gph=clamp(Math.round(base/5)*5,30,isRace?100:90);
   const total=Math.round(gph*min/60);
   const portion=gph>55?40:20;
   const gels=Math.max(1,Math.round(total/portion));
@@ -1909,10 +1908,9 @@ function fuelForWorkout(w,cfgRef){
   if(!w||w.kind!=='run')return null;
   if(w.fuel)return w.fuel;
   if(!w.steps)return null;
-  const weight=(cfgRef&&cfgRef.weight)||70;
   const long21=isRaceEffort(w.steps);
   if(zoneOfW(w)==='race'&&!long21)return null;
-  return fuelFor(sesMinNoR(w.steps),weight,long21);
+  return fuelFor(sesMinNoR(w.steps),long21);
 }
 function updateNotePreview(){
   const cfgRef=(LAST&&LAST.cfg)||(META&&META.cfg)||null;
@@ -1969,7 +1967,7 @@ function fillForm(cfg){
   let res=(cfg.results&&cfg.results.length)?cfg.results:[];
   if(!res.length){ if(cfg.cur10)res.push({dist:10000,sec:cfg.cur10}); if(cfg.curMar)res.push({dist:42195,sec:cfg.curMar}); }
   if(res.length)setResRows(res);
-  $('age').value=cfg.age||38; $('weight').value=cfg.weight||70;
+  $('age').value=cfg.age||38;
   $('lthr').value=cfg.lthr||''; $('ltpace').value=cfg.ltPace?fmtP(cfg.ltPace):''; ltpaceTouched=!!cfg.ltPace;
   if(cfg.startISO)$('startD').value=cfg.startISO;
   $('curVol').value=cfg.curVol||Math.round((cfg.peakVol||80)*0.8);
@@ -2154,7 +2152,7 @@ function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouch
   $('addTuneBtn').onclick=()=>{addTuneRow('',10000);recalcEstimate();};
   $('addResBtn').onclick=()=>addResRow(10000,'');
   setResRows([{dist:10000,time:'41:30'}]);
-  ['goalDist','age','curVol','volUnit','weight','lthr','curLong','sex','exp','maxVolEver','maxLongCap','elevGain','localHills','altitude','heat','deload'].forEach(id=>{const e=$(id);if(e){e.addEventListener('input',recalcEstimate);e.addEventListener('change',recalcEstimate);}});
+  ['goalDist','age','curVol','volUnit','lthr','curLong','sex','exp','maxVolEver','maxLongCap','elevGain','localHills','altitude','heat','deload'].forEach(id=>{const e=$(id);if(e){e.addEventListener('input',recalcEstimate);e.addEventListener('change',recalcEstimate);}});
   $('tgtGoal').addEventListener('input',()=>{tgtTouched=true;recalcEstimate();});
   { const ab=$('tgtAutoBtn'); if(ab)ab.addEventListener('click',()=>{tgtTouched=false;recalcEstimate();}); }
   $('planWeeks').addEventListener('change',syncFromDuration);
@@ -2182,7 +2180,6 @@ function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouch
     try{
       const qp=new URLSearchParams(location.hash&&location.hash.length>1?location.hash.slice(1):location.search);
       if(qp.has('age')){ const a=parseInt(qp.get('age'),10); if(!isNaN(a)) $('age').value=a; }
-      if(qp.has('weight')){ const w=parseFloat(qp.get('weight')); if(!isNaN(w)&&w>0) $('weight').value=w; }
       if(qp.has('sex') && $('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) $('sex').value=qp.get('sex');
       if(qp.has('pano')){ const v=parseInt(qp.get('pano'),10); if(!isNaN(v)) $('lthr').value=v; }
       if(qp.has('curvol')){ const v=parseFloat(qp.get('curvol')); if(!isNaN(v)&&v>0){ $('curVol').value=Math.round(v); if($('volUnit'))$('volUnit').value='km'; } }
@@ -2468,7 +2465,7 @@ function readCfg(opts){
     tuneRaces:readTuneRows(),results,
     tgtGoal:opts.forecast?(parseT($('tgtGoal').value)||null):req('tgtGoal','цель'),
     runsAuto:(typeof runsTouched==='undefined')?false:!runsTouched,
-    age:+$('age').value||35,weight:+$('weight').value||70,
+    age:+$('age').value||35,
     lthr:$('lthr').value?+$('lthr').value:null,
     ltPace:$('ltpace').value?(()=>{const p=$('ltpace').value.trim().split(':').map(Number);
       if(p.length!==2||p.some(isNaN))throw 'Темп ПАНО — в формате м:сс, например 4:10.';return p[0]*60+p[1];})():null,
@@ -2539,7 +2536,7 @@ function readOffseasonCfg(){
   const owWeeksVal=$('owWeeks')&&$('owWeeks').value?+$('owWeeks').value:null;
   const cfg={planMode:'offseason',
     startISO:$('startD').value,
-    age:+($('age')&&$('age').value)||35,weight:+($('weight')&&$('weight').value)||70,
+    age:+($('age')&&$('age').value)||35,
     curVol,volUnit,exp,
     owWeeks:owWeeksVal||undefined,
     runs:+(($('runs')&&$('runs').value))||undefined,

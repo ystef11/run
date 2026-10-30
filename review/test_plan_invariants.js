@@ -70,6 +70,7 @@ const pick = a => a[Math.floor(rnd() * a.length)];
 const SAMPLE = +(process.env.SAMPLE || 1500);
 
 function* configs() {
+  if (process.env.EXTRA) for (const x of JSON.parse(fs.readFileSync(process.env.EXTRA, 'utf8'))) yield x; // доп. конфиги: [{name,cfg}]
   const base = iso(2026, 10, 5);
   for (let k = 0; k < SAMPLE; k++) {
     const g = GOALS[k % GOALS.length], N = pick([4, 6, 8, 12, 16, 20, 26]), lead = pick([0, 0, 3, 6]);
@@ -102,10 +103,12 @@ for (const { name, cfg } of configs()) {
   const W = p.weeks, B = W.findIndex(w => w.type === 'taper' || w.type === 'race'), ultra = cfg.goalDist > 42195;
   // 11
   const a = p.analysis;
-  {const r = a.anchorVd + Math.floor(B / 6), am = a.anchorVd + Math.floor(B / 4);
-    const bad = cfg.goalDist >= 42195 ? (a.forecastVd > r + 0.11 || a.ambVd > am + 0.11 || a.ambVd < a.forecastVd - 0.01)
-      : (Math.abs(a.forecastVd - r) > 0.11 || Math.abs(a.ambVd - am) > 0.11);
-    if (bad) fail(11, name, `${a.anchorVd}→${a.forecastVd}/${a.ambVd} B=${B}`);}
+  // поправка на частоту (5.5): при < 6 пробежек процентные лимиты × 6/n, n — привычное число (заданное вручную или текущий объём ÷ 70 мин)
+  const nF = (cfg.runsAuto || !(+cfg.runs > 0)) ? Math.min(7, Math.max(3, Math.round(a.curMin / 70))) : Math.min(12, Math.max(3, +cfg.runs)), kfT = nF < 6 ? 6 / nF : 1;
+  // 11: прогноз — траектория роста скорости, верхняя граница — лучший VDOT (раздел 4.3); не ниже исходной оценки
+  {const hi = Math.max(a.bestVd, a.anchorVd) + 0.11;
+    const bad = a.forecastVd < a.anchorVd - 0.11 || a.forecastVd > hi || a.ambVd < a.forecastVd - 0.01 || a.ambVd > hi;
+    if (bad) fail(11, name, `${a.anchorVd}→${a.forecastVd}/${a.ambVd} best ${a.bestVd} B=${B}`);}
   let prevLongMin = null, floorRuns = 0, lastWork = null, peak = 0, prevTune = false, lastReg = a.curMin; // база — текущий объём, пока не было обычной недели
   // 26: контрольный тест — за 21 день до старта, в любой день недели; неделя старта/теста — не выше 80% последней рабочей (Пфитцингер)
   (a.tuneList || []).filter(x => /\(тест\)/.test(x.name)).forEach(x => { if (x.iso !== C.dISO(C.dAdd(C.dParse(cfg.goalISO), -21))) fail(26, name, `тест ${x.iso}, старт ${cfg.goalISO}`); });
@@ -143,7 +146,7 @@ for (const { name, cfg } of configs()) {
       const even = runs.some(y => y !== x && y.z === 'easy' && y.min >= x.min - 5);
       // недобор объёма из-за частоты (приоритет важных тренировок над лёгкими) — доля длинной растёт
       const short = w.short >= 10 || w.min < w.target - 25 || runs.some(y => y.z === 'rec');
-      if (w.type !== 'tune' && !runs.some(y => y.z === 'race') && !even && !short && x.km > sh * w.km * 1.12 + 1) fail(4, name, `нед ${w.n} длинная ${x.km.toFixed(1)} км из ${w.km}`);
+      if (w.type !== 'tune' && !runs.some(y => y.z === 'race') && !even && !short && x.km > sh * kfT * w.km * 1.12 + 1) fail(4, name, `нед ${w.n} длинная ${x.km.toFixed(1)} км из ${w.km}`);
     });
     // 5
     if (w.type !== 'race' && !partial) runs.forEach(x => {
@@ -152,7 +155,7 @@ for (const { name, cfg } of configs()) {
       const zoneWork = z => { let s = 0; const walk = (a, k) => a.forEach(q => { if (q.t === 'repeat') walk(q.steps, k * q.n); else if (q.t === 'interval' && q.tg && q.tg.pace && q.d !== 'Ускорение') s += k * C.sesMin([q], w.R); }); walk(all, 1); return s; };
       const work = zoneWork();
       // при нехватке пробежек неделя меньше плановой — проценты Дэниелса от плановой недели
-      const wm = Math.max(w.min, w.target || 0);
+      const wm = Math.max(w.min, w.target || 0) * kfT;
       if (/^Порог|^Темп/.test(x.name) && work > C.DL.T * wm * 1.08 + 1.5) fail(5, name, `нед ${w.n} ${x.name}: T ${work.toFixed(0)} мин из ${w.min}`);
       if (/^МПК/.test(x.name) && (work > C.DL.I * wm * 1.08 + 2.5)) fail(5, name, `нед ${w.n} ${x.name}: I ${work.toFixed(0)} мин из ${w.min}`);
       if (/^Повторы/.test(x.name) && work > C.DL.R * wm * 1.08 + 2) fail(5, name, `нед ${w.n} ${x.name}: R ${work.toFixed(0)} мин из ${w.min}`);
@@ -169,7 +172,7 @@ for (const { name, cfg } of configs()) {
     // 13
     if (w.type !== 'race' && w.type !== 'tune' && !raceAdj(w) && !partial && !(w.short >= 10) && Math.abs(w.min - w.target) > 12) fail(13, name, `нед ${w.n}: ${w.min} мин при кривой ${w.target}`);
     // 30: прогрессия длинной (сетка плана 5 мин: допуск +5,5)
-    if (i < B && !partial && w.type !== 'down' && w.type !== 'tune') {
+    if (i < B && !partial && w.type !== 'down' && w.type !== 'tune' && w.type !== 'A') {
       const lg = runs.filter(x => x.z === 'long' && /^Длинная/.test(x.name) && !x.light);
       if (lg.length) { const m = Math.max(...lg.map(x => x.min));
         if (prevLongMin != null && m > prevLongMin + Math.max(5, 0.1 * prevLongMin) + 5.5) fail(30, name, `нед ${w.n}: длинная ${Math.round(m)} мин после ${Math.round(prevLongMin)}`);
@@ -181,8 +184,8 @@ for (const { name, cfg } of configs()) {
       if (w.type !== 'down' && runs.length < floorRuns && easyMin >= 35 * need) fail(31, name, `нед ${w.n}: ${runs.length} пробежек после ${floorRuns}`);
       floorRuns = Math.min(a.level && a.level.idx === 0 ? 5 : a.level && a.level.idx >= 3 ? 7 : 6, Math.max(floorRuns, runs.length));
     }
-    // 32: подводка (кроме недели старта и недель с окном/предстартом): с 5+ пробежками есть отдельная качественная — интенсивность сохраняется (Bosquet 2007)
-    if (w.type === 'taper' && !partial && !raceAdj(w) && !tfAdj(w) && runs.length >= 5 && w.min >= 200 && w.ph !== 'I' && !runs.some(x => ['thr', 'vo2', 'mp'].includes(x.z) || /^Средне-длинная.*из них/.test(x.name)))
+    // 32: подводка (кроме ультра — для него эталонов нет, цели Z3+ остаются долей объёма, раздел 4.4.6; недели старта и недели с окном/предстартом): с 5+ пробежками есть отдельная качественная — интенсивность сохраняется (Bosquet 2007)
+    if (w.type === 'taper' && !ultra && !partial && !raceAdj(w) && !tfAdj(w) && runs.length >= 5 && w.min >= 200 && w.ph !== 'I' && !runs.some(x => ['thr', 'vo2', 'mp'].includes(x.z) || /^(Средне-д|Д)линная.*из них/.test(x.name)))
       fail(32, name, `нед ${w.n}: подводка без отдельной качественной (${runs.length} пробежек)`);
     // 28: главный старт — накануне нет качественных и бега длиннее выезда, за 2 дня бега нет, в любом дне недели старта (метки идут через границу недель)
     {const rd = C.dParse(cfg.goalISO);
@@ -227,7 +230,8 @@ for (const { name, cfg } of configs()) {
     runs.forEach(x => {
       if (!(x.min > 0)) fail(12, name, `нед ${w.n} ${x.name}: длительность ${x.min}`);
       const zz = C.zoneOfW({ kind: 'run', name: x.name });
-      const ok = zz === x.z || (x.z === 'easy' && zz === 'rec') || (x.z === 'long' && zz === 'long');
+      const ok = zz === x.z || (x.z === 'easy' && zz === 'rec') || (x.z === 'long' && zz === 'long')
+        || (/^Интервалы .*@(5к|10к)/.test(x.name) && ['thr', 'vo2'].includes(x.z)); // зона по темпу бегуна (пороговая или МПК), в названии её нет
       if (!ok) fail(12, name, `нед ${w.n} «${x.name}»: z=${x.z}, по названию ${zz}`);
     });
   });

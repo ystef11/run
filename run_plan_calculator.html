@@ -1163,8 +1163,11 @@ function buildPlan(cfgIn){
     // откат А: остальные пробежки не меняются; неделя Б: остальные пробежки −11% от прошлой рабочей
     const Lother=type==='A'?Lnom:type==='down'&&prog.lastWork&&prog.lastWork.L>0?WAVE.bOther*prog.lastWork.L:null;
     const mlDur=()=>r5(Math.min((Lother||Lcur)*0.6,isUltra?180:120));
-    const mlOk=()=>goalDist>=21097&&ph!=='I'&&Lcur>0&&mlDur()>=60&&wkmOf(lead>0?Wt:W,R,ph)>=DL.mlKm&&spec.qs.length+1<=runsFree();
-    if(mlOk())spec.ml={dur:mlDur(),spark:isUltra};
+    // остаток недели после длинной и Q, за вычетом минимума остальных пробежек (5.5.4): средне-длинная не вытесняет лёгкие; спарка ультра укорачивается до остатка
+    const mlFit=()=>Weff-used-Lcur-spec.qs.reduce((a,x)=>a+x.min,0)-(o.fixed?20:30)*Math.max(0,runsFree()-spec.qs.length-1)+10;
+    const mlDurFit=()=>isUltra?Math.min(mlDur(),Math.floor(mlFit()/5)*5):mlDur();
+    const mlOk=()=>goalDist>=21097&&ph!=='I'&&Lcur>0&&mlDurFit()>=60&&(isUltra?mlDurFit()>=mlDur()*0.5:mlFit()>=mlDur())&&wkmOf(lead>0?Wt:W,R,ph)>=DL.mlKm&&spec.qs.length+1<=runsFree();
+    if(mlOk())spec.ml={dur:mlDurFit(),spark:isUltra};
     // средне-длинная с отрезками T (MQ): марафон, фазы III–IV, если остался бюджет качественных
     const tryMQ=()=>{if(!(goalDist===42195&&(ph==='III'||ph==='IV')&&spec.ml&&!spec.ml.spark))return null;
       const k='MQ',last=prog.rung.MQ,tj=hold?(last!=null?last:0):(last==null?0:Math.min(last+1,LAD.LQ.length-1));

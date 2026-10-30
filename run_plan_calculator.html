@@ -1156,6 +1156,8 @@ function buildPlan(cfgIn){
       if(ok)slots--;else spec.notes.push({skip:q,why:'dose'});}
     // остаток недельных целей (4.4.1): свободный слот получает тип той корзины, где остаток больше; тип, уже стоящий в неделе, повторяется дозой прошлой ступени
     const basketRem=k=>{const z=zoneOf(k,R);return z===3||z===4?remMid():remUp();};
+    // достижимый остаток корзины: не больше лимита Дэниелса на одну тренировку этого типа
+    const attain=k=>Math.min(basketRem(k),capOf(k,W,R,ph));
     const cand=types.map(k=>({k,acc:acc&&accSide(QT[k].q)?0:1,age:-(i-(prog.tLast[k]!=null?prog.tLast[k]:-1)),ord:types.indexOf(k)}));
     const failed=new Set();
     while(slots>0){
@@ -1163,7 +1165,7 @@ function buildPlan(cfgIn){
       const used=x=>tried.has(x.k)||spec.qs.some(y=>y.k===x.k)||(spec.lq&&spec.lq.k===x.k);
       for(let z=opts.length-1;z>=0;z--)if(used(opts[z])&&(QT[opts[z].k].q==='spd'||QT[opts[z].k].lq))opts.splice(z,1);
       if(!opts.length)break;
-      opts.sort((a,c)=>a.acc-c.acc||Math.sign(Math.round(basketRem(c.k)/5)-Math.round(basketRem(a.k)/5))||(used(a)?1:0)-(used(c)?1:0)||(uq.has(QT[a.k].q)?1:0)-(uq.has(QT[c.k].q)?1:0)||a.age-c.age||a.ord-c.ord);
+      opts.sort((a,c)=>a.acc-c.acc||Math.sign(Math.round(attain(c.k)/5)-Math.round(attain(a.k)/5))||(used(a)?1:0)-(used(c)?1:0)||(uq.has(QT[a.k].q)?1:0)-(uq.has(QT[c.k].q)?1:0)||a.age-c.age||a.ord-c.ord);
       const x=opts[0];const again=used(x);
       if(takeQ(x.k,modeOf(x.k),false,again)){slots--;tried.add(x.k);}else failed.add(x.k);}
     // средне-длинная (3.5): полумарафон, марафон, ультра (спарка); 60% длинной, ≤ 120 (ультра 180), только если ≥ 60 и есть пробежка

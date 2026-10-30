@@ -719,7 +719,7 @@ function zoneMins(steps,R,acc){acc=acc||[0,0,0,0,0];
 function trimpOf(steps,R){return zoneMins(steps,R).reduce((a,m,j)=>a+m*(j+1),0);}
 function runLoad(item,R,lpm){return lpm?sesMin(item.steps,R)*loadPerMin(item.z,lpm):trimpOf(item.steps,R);}
 const acwrCap=h3=>ACWR_MAX*h3/(4-ACWR_MAX);
-const recoveryDaysAfter=dist=>Math.ceil(Math.min(dist,42195)/3000);
+const recoveryDaysAfter=dist=>Math.round(Math.min(dist,42195)/3000);// Дэниелс: 1 лёгкий день на 3 км (15 км → 5, полумарафон → 7)
 // цель относительно модели 1 (3.4): вне диапазона — только предупреждение
 function goalVerdict(Vc,V0g,Vbest,Vreal){
   if(Vc>Vbest+0.03&&!(Vreal!=null&&Vc<=Vreal+0.03))return 'вне диапазона';

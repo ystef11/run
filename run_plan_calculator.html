@@ -960,6 +960,13 @@ function buildPlan(cfgIn){
     // блок специфики: steady и МР начинаются в фазе IV, база уже есть — первая доза без истории = наибольшая ступень в пределах бюджета недели
     const j0=(()=>{if(!(k==='ST'||k==='M')||!(maxWork>0))return 0;let j=0;for(let q=0;q<L.length;q++){const s=rungOf(k,q,R);if(s&&s.work<=maxWork+0.5)j=q;else break;}return j;})();
     const tj=mode==='maint'||hold?(last!=null?last:0):(last==null?j0:Math.min(last+1,L.length-1));
+    // подводка, откат, поддержание: доза не выше прошлой (ступень или, если прошлые дозы были уменьшены под лимиты, их фактические минуты) —
+    // наибольшая из ступеней и их уменьшений в пределах лимита недели, а не нижняя ступень
+    if(hold||mode==='maint'){const cap0=last!=null?rungOf(k,last,R).work:(prog.lw[k]>0?prog.lw[k]:null);
+      if(cap0!=null){const up=Math.min(maxWork,cap0)+0.5;let best=null;
+        for(let q=0;q<L.length;q++){const r0=rungOf(k,q,R);if(!r0)continue;
+          for(const s of [r0].concat(reducedOf(k,q,R)))if(s.work<=up&&s.work>=minWork-0.01&&(!best||s.work>best.s.work+0.01))best={j:s===r0&&q===last?q:null,s};}
+        if(best)return best;}}
     const opts=[{j:tj,s:rungOf(k,tj,R)}];
     if(last!=null&&last!==tj)opts.push({j:last,s:rungOf(k,last,R)});
     reducedOf(k,tj,R).forEach(s=>opts.push({j:null,s}));
@@ -971,7 +978,7 @@ function buildPlan(cfgIn){
   // ---------- состояние прогрессии по назначениям ----------
   let prog;
   const resetProg=()=>{prog={rung:{},ref:{},tLast:{},qLast:{thr:0,vo2:0,spd:0,end:0},qN:{thr:nMaxOf('thr'),vo2:nMaxOf('vo2'),spd:nMaxOf('spd'),end:nMaxOf('end')},
-    longPrev:cfg.curLong>0?+cfg.curLong:0,longPeak:0,lastLong:0,lastA:false,lastEasy:0,taperEasy:0,lastWork:null,skip:{},carryMid:0,carryUp:0};};
+    lw:{},longPrev:cfg.curLong>0?+cfg.curLong:0,longPeak:0,lastLong:0,lastA:false,lastEasy:0,taperEasy:0,lastWork:null,skip:{},carryMid:0,carryUp:0};};
   resetProg();
   const refWork=(k,R)=>prog.ref[k]!=null?prog.ref[k]:(QT[k]&&QT[k].lq?0:((rungOf(k,0,R)||{}).work||0));
   // типы недели: горки в фазе II через неделю вместо R (при рельефе — и вместо T)
@@ -1528,6 +1535,7 @@ function buildPlan(cfgIn){
       (wk.picks||[]).forEach(p=>{const q=p.q||QT[p.k].q;
         const ds=s.dose[q]=s.dose[q]||{dev:0,maint:0,hold:0};if(holdT)ds.hold++;else ds[p.mode==='maint'?'maint':'dev']++;
         if(p.j!=null&&!holdT&&p.mode==='dev'){prog.rung[p.k]=p.j;prog.ref[p.k]=p.work;}
+        if(!holdT&&p.mode==='dev')prog.lw[p.k]=p.work;
         prog.tLast[p.k]=i;prog.qLast[q]=i;
         const ref=prog.ref[p.k]!=null?prog.ref[p.k]:p.work;prog.qN[q]=clamp(Math.floor(p.work/(QF[q]*ref)+1e-9),1,nMaxOf(q));});
       // тест или гонка — стимул своего назначения

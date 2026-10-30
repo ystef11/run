@@ -1465,7 +1465,7 @@ function buildPlan(cfgIn){
     else wk=run(clamp(rMin||3,3,top),top)||best;
     if(!wk)wk=cw(3,0,1);
     // в неделе вышло 3 пробежки при большем допуске — бюджет качественных как при 3 пробежках
-    if(wk&&!wk.fail&&wk.runs<=3&&(wk.picks||[]).length>1){const w=composeWeek(i,Wt,type,{runs:3,dbl:0,relax:0,q1:true,peak:pk,prevHard:prev.hard,prevLong:prev.long,prevLoad:prev.load,fixed:!!runsFixed});if(!w.fail)wk=w;}
+    if(wk&&!wk.fail&&wk.runs<=3&&(wk.picks||[]).length>=1&&wk.days.filter(d=>d.items.some(x=>x.kind==='run'&&(x.z==='race'||isQZ(x)||x.qml||/из них/.test(x.name)))).length>1){let bw=null;for(const T of (runsFixed?[3]:[Math.min(4,dayCap),3]))for(const rx of [0,1]){if(bw&&bw.ok)break;const w=composeWeek(i,Wt,type,{runs:T,dbl:0,relax:rx,q1:true,peak:pk,prevHard:prev.hard,prevLong:prev.long,prevLoad:prev.load,fixed:!!runsFixed});if(w.fail)continue;if(w.ok){bw=w;break;}if(!bw||w.cap>bw.cap+0.5)bw=w;}if(bw)wk=bw;}
     return wk;};
 
   // ---------- шаг 3: кривая по неделям — один проход ----------

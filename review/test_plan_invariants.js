@@ -14,7 +14,7 @@
  * 11  прогноз: реалистично +1 VDOT за 6 недель, амбициозно — за 4; у марафона и ультра не выше этого (ограничение объёмом по Тэнде)
  * 12  у каждой беговой тренировки положительная длительность, зона в названии совпадает с полем z
  * 13  сумма недели = минуты кривой (кроме недобора, о котором есть примечание, и недель стартов)
- * 14  бюджет качественных (Дэниелс 2Q): не больше 2, при 3 пробежках — 1; старт, длинная со вставками, К2 без пары и средне-длинная с T — тоже
+ * 14  бюджет качественных (Дэниелс 2Q): не больше 2, при 3 пробежках — 1, при ≥ 7 пробежках (заданных или выведенных) — 3; старт, длинная со вставками, К2 без пары и средне-длинная с T — тоже
  * 15  у марафона и ультра прогноз в форме (план без цели) равен прогнозу плана под цель
 * 17  качественные не подряд и через границу недель (вс → пн)
  * 18  дней бега в неделе ≤ предела уровня 80/20 (0 — 5, 1–2 — 6, 3 — 7), кроме недели главного старта
@@ -45,7 +45,7 @@ function loadCore() {
   if (a < 0 || b < 0) throw new Error('GEN-START/GEN-END не найдены');
   const m0 = src.match(/function zoneOfW\(/); const rest = src.slice(m0.index);
   const zoneOfW = rest.slice(0, rest.search(/\nfunction \w+\(|\nconst \w+=/));
-  const code = src.slice(a, b) + '\n' + zoneOfW + '\nmodule.exports={LEVELS,levelFor,TPL,weeksTo,goalByWeeks,toMonday,buildPlan,forecastFor,zoneOfW,sesMin,sesKm,dISO,dParse,dAdd,dDiff,DL,ACWR_MAX,taperShares,recoveryDaysAfter};';
+  const code = src.slice(a, b) + '\n' + zoneOfW + '\nmodule.exports={LEVELS,levelFor,weeksTo,goalByWeeks,toMonday,buildPlan,forecastFor,zoneOfW,sesMin,sesKm,dISO,dParse,dAdd,dDiff,DL,ACWR_MAX,taperShares,recoveryDaysAfter};';
   const Module = require('module'); const m = new Module('core'); m._compile(code, 'core.js'); return m.exports;
 }
 const C = loadCore();
@@ -159,7 +159,7 @@ for (const { name, cfg } of configs()) {
       if ((/^МР|концовка в МР/.test(x.name)) && (work > Math.min(C.DL.M * wm, C.DL.Mmax) * 1.05 + 2)) fail(5, name, `нед ${w.n} ${x.name}: M ${work.toFixed(0)} мин из ${w.min}`);
     });
     // 6
-    runs.filter(x => x.z === 'easy' && !/выезд/i.test(x.name) && w.type !== 'race').forEach(x => { if (x.min < 29) fail(6, name, `нед ${w.n} ${x.name} ${x.min.toFixed(0)} мин`); });
+    runs.filter(x => x.z === 'easy' && !/выезд/i.test(x.name) && w.type !== 'race').forEach(x => { if (x.min < (cfg.runsAuto ? 29 : 19)) fail(6, name, `нед ${w.n} ${x.name} ${x.min.toFixed(0)} мин`); });
     // 7
     if (!cfg.runsAuto && runs.length > cfg.runs) fail(7, name, `нед ${w.n}: ${runs.length} пробежек при ${cfg.runs}`);
     // 8
@@ -199,7 +199,7 @@ for (const { name, cfg } of configs()) {
       const fixedK2 = (cfg.cross || []).some(c => (c.days || []).length && c.cls === 'K2');
       // настройка приоритетнее бюджета: неделя со стартом (теста) и настройкой при 3 пробежках — две тяжёлые
       const setupAndRace = runs.some(x => /настройка/.test(x.name)) && runs.some(x => x.z === 'race');
-      const lim = w.ph === 'I' ? 0 : w.runs <= 3 ? (setupAndRace ? 2 : 1) : 2;
+      const lim = w.ph === 'I' ? 0 : w.runs <= 3 ? (setupAndRace ? 2 : 1) : (w.runs >= 7 || (!cfg.runsAuto && cfg.runs >= 7)) ? 3 : 2;
       if (hard > lim && !fixedK2) fail(14, name, `нед ${w.n} (${w.ph}, ${w.runs} пробежек): тяжёлых ${hard} при бюджете ${lim}`);
     }
     // 10
@@ -233,11 +233,16 @@ for (const { name, cfg } of configs()) {
   });
   // 17, 18
   {const isQ = d => d.items.some(x => x.kind === 'run' && ['thr', 'vo2', 'mp'].includes(x.z));
-    const lv = a.level ? a.level.idx : 1, cap = lv === 0 ? 5 : lv >= 3 ? 7 : 6;
+    const lv = a.level ? a.level.idx : 1, cap = Math.max(lv === 0 ? 5 : lv >= 3 ? 7 : 6, cfg.runsAuto ? 0 : Math.min(7, cfg.runs));
     W.forEach((w, i) => {
       if (i > 0 && isQ(w.days[0]) && isQ(W[i - 1].days[6]) && w.type !== 'race') fail(17, name, `нед ${w.n}: Q в пн после Q в вс`);
       const rd = w.days.filter(d => d.items.some(x => x.kind === 'run')).length;
       if (w.type !== 'race' && rd > cap) fail(18, name, `нед ${w.n}: дней бега ${rd} при пределе ${cap}`);
+      // 33: при ≥4 днях бега — не 3 дня без бега подряд (кроме недель с гонкой/настройкой/окном восстановления)
+      if (i > 0 && rd >= 4 && w.type !== 'race' && !raceAdj(w) && !tfAdj(w) && w.type !== 'tune') {
+        let c = 0, mx = 0; w.days.forEach(d => { if (d.items.some(x => x.kind === 'run')) c = 0; else { c++; mx = Math.max(mx, c); } });
+        if (mx > 2) fail(33, name, `нед ${w.n}: ${mx} дн. без бега подряд при ${rd} днях бега`);
+      }
     });}
   // 15
   if (cfg.goalDist >= 42195 && cfg.tgtGoal > 0) {
@@ -286,7 +291,7 @@ for (let off = 0; off < 7; off++) for (const w of [4, 8, 16, 26]) {
 }
 
 // 24: строки шаблона [группа][дней][пробежек]: дней бега = ключ, пробежек (клетка «R+X» — две) = ключ, не больше одной второй пробежки в день, длинная в конце
-for (const g of Object.keys(C.TPL)) for (const nd of Object.keys(C.TPL[g])) for (const r of Object.keys(C.TPL[g][nd])) {
+for (const g of Object.keys(C.TPL || {})) for (const nd of Object.keys(C.TPL[g])) for (const r of Object.keys(C.TPL[g][nd])) {
   const cells = C.TPL[g][nd][r].split(' '); total++; CUR = { g, nd, r };
   const days = cells.filter(c => c !== '-').length, runs = cells.reduce((a, c) => a + (c === '-' ? 0 : c.split('+').length), 0);
   if (days !== +nd || runs !== +r || cells.length !== 7 || cells[6] !== 'L' || cells.some(c => c.split('+').length > 2 || (c.includes('+') && !/^R\+/.test(c) )))

@@ -167,8 +167,9 @@
   .volrow select{width:110px;}
   .chk{display:flex;align-items:center;gap:8px;padding-top:20px;font-weight:600;}
   .sliderbox{display:flex;align-items:center;gap:12px;}
-  .sliderbox input[type=range]{flex:1;accent-color:var(--accent);}
+  .sliderbox input[type=range]{flex:1;min-width:0;accent-color:var(--accent);}
   .sliderbox .sl{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;}
+  @media(max-width:480px){.sliderbox{gap:8px;}.sliderbox .sl{white-space:normal;font-size:11px;max-width:84px;line-height:1.2;}}
   .btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
   .btn{appearance:none;border:none;cursor:pointer;background:var(--accent);color:#fff;font-weight:700;
     font-size:14px;padding:11px 20px;border-radius:24px;box-shadow:0 2px 8px rgba(0,0,0,.12);}
@@ -506,6 +507,7 @@ function paceAtPct(vd,pct){
 
 const PW={race:[-0.008,0.0125],thr:[-0.016,0.016],rep:[-0.0125,0.0125],ultra:[-0.025,0.035],ultraRace:[-0.015,0.045]};
 const win=(p,w)=>[p*(1+w[0]),p*(1+w[1])];
+// legacy: темпы по времени марафона и 10 км (старые plan.json с cur10/tgt10)
 function paceSet(marSec,t10){const MP=marSec/42.195;
   const vd=vdot(10000,t10);
   const thrP=paceAtDuration(vd,60);
@@ -522,6 +524,8 @@ const lerpR=(a,b,f)=>[lerp(a[0],b[0],f),lerp(a[1],b[1],f)];
 
 const st=(t,end,v,tg,d,pk)=>{const o={t,end,v:Math.round(v),tg};if(d)o.d=d;if(pk)o.pk=Math.round(pk);return o;};
 const HRZ=z=>({hr:z});
+// HRmax: 208 − 0,7·возраст (м, Tanaka 2001), 206 − 0,88·возраст (ж, Gulati 2010)
+function hrmaxOf(c){return c.sex==='f'?Math.round(206-0.88*(c.age||35)):Math.round(208-0.7*(c.age||35));}
 function zbpm(z,lt,hrmax){const r={1:[0.65,0.84],2:[0.85,0.89],3:[0.90,0.94],4:[0.95,0.99],5:[1.00,1.06]}[z];
   const cap=hrmax>lt?hrmax:Math.round(lt*1.08);
   const lo=Math.max(90,Math.round(r[0]*lt)), hi=Math.min(cap,Math.round(r[1]*lt));
@@ -572,18 +576,6 @@ function normalizeCfg(cfg){
   if(c.cross)c.cross=c.cross.map(x=>Object.assign({},x));
   return c;}
 function bestVdot(results){const v=(results||[]).filter(r=>r&&r.sec>0&&r.dist>0).map(r=>vdot(r.dist,r.sec));return v.length?Math.max(...v):null;}
-// legacy: темпы по времени марафона и 10 км (старые plan.json с cur10/tgt10)
-function paceSet(marSec,t10){const MP=marSec/42.195;
-  const vd=vdot(10000,t10);
-  const thrP=paceAtDuration(vd,60);
-  const easyP=[paceAtPct(vd,0.74),paceAtPct(vd,0.59)];
-  const iP=[paceAtPct(vd,1.00),paceAtPct(vd,0.95)];
-  const mileP=timeFor(1609.34,vd)/1.60934, p5=timeFor(5000,vd)/5, p10=t10/10;
-  const rep=win(mileP,PW.rep);
-  return {mp:win(MP,PW.race),thr:win(thrP,PW.thr),vo2:iP,t10:win(p10,PW.race),
-    rep,easy:easyP,rec:[(easyP[0]+easyP[1])/2,easyP[1]],longp:easyP.slice(),
-    race10:win(p10,PW.race),race5:win(p5,PW.race),str:rep.slice()};}
-
 // ---------- шаг 1: профиль результатов (3.1) ----------
 // время и VDOT на дистанции: до марафона — Дэниелс–Гилберт; ультра — от марафонского эквивалента по Ригелю (экстраполяция)
 const timeAtV=(D,V)=>D>42195?riegel(timeFor(42195,V),D):timeFor(D,V);
@@ -820,11 +812,11 @@ function buildPlan(cfgIn){
   const b=planBasics(cfgIn); if(b.error)return b;
   const {cfg,goalDist,GM,isUltra,notes,pf,start,raceD,N,tsh,B,shares,kpm,curMin,lvl,ca,tgtClean,vG}=b;
   if(N<4)return {error:`До старта всего ${N} нед. — нужно минимум 4, лучше 10+.`};
-  const hrmax=cfg.sex==='f'?Math.round(206-0.88*(cfg.age||35)):Math.round(208-0.7*(cfg.age||35));
+  const hrmax=hrmaxOf(cfg);
   const leadDays=dISO(start)===cfg.startISO?0:dDiff(dParse(cfg.startISO),start);
   const deload=DELOAD_NAMES[cfg.deload]?cfg.deload:'need';
   const lpm=cfg.lpm&&cfg.lpm.easy>0?cfg.lpm:null;
-  const longDow0=(cfg.longDow==null||cfg.longDow==='')?(raceD.getDay()+6)%7:clamp(+cfg.longDow,0,6);
+  const longDow0=(cfg.longDow==null||cfg.longDow===''||!Number.isFinite(+cfg.longDow))?(raceD.getDay()+6)%7:clamp(Math.round(+cfg.longDow),0,6);
   const gpk=goalDist>0?(+cfg.elevGain||0)/(goalDist/1000):0;
   const hilly=!!cfg.localHills||gpk>=8, hillTier=gpk>=40?2:gpk>=20?1:0;
   const peakMin=b.peakMin;
@@ -983,8 +975,9 @@ function buildPlan(cfgIn){
   const refWork=(k,R)=>prog.ref[k]!=null?prog.ref[k]:(QT[k]&&QT[k].lq?0:((rungOf(k,0,R)||{}).work||0));
   // типы недели: горки в фазе II через неделю вместо R (при рельефе — и вместо T)
   const typesFor=(ph,i)=>{let L=phaseTypes(goalDist,ph);
-    if(ph==='II'&&L.includes('R')){const odd=(i-nI)%2===1;L=odd?L.map(k=>k==='R'?'HILL':k):L.filter(k=>k!=='HILL');}
-
+    const odd=(i-nI)%2===1;
+    if(ph==='II'&&L.includes('R'))L=odd?L.map(k=>k==='R'?'HILL':k):L.filter(k=>k!=='HILL');
+    if(hilly&&!isUltra&&ph==='II'&&odd)L=L.map(k=>k==='T'?'HILL':k);
     return L.filter((k,j)=>L.indexOf(k)===j);};
   const accentOn=i=>!!b.accent&&i<B&&i<b.accent.weeks;
   const accSide=q=>b.accent?(b.accent.side==='end'?(q==='thr'||q==='end'):(q==='vo2'||q==='spd')):false;
@@ -1179,7 +1172,7 @@ function buildPlan(cfgIn){
     if(mlOk())spec.ml={dur:mlDurFit(),spark:isUltra};
     // средне-длинная с отрезками T (MQ): марафон, фазы III–IV, если остался бюджет качественных
     const tryMQ=()=>{if(!(goalDist===42195&&(ph==='III'||ph==='IV')&&spec.ml&&!spec.ml.spark))return null;
-      const k='MQ',last=prog.rung.MQ,tj=hold?(last!=null?last:0):(last==null?0:Math.min(last+1,LAD.LQ.length-1));
+      const last=prog.rung.MQ,tj=hold?(last!=null?last:0):(last==null?0:Math.min(last+1,LAD.LQ.length-1));
       const dur=spec.ml.dur,lim=Math.min(capOf('T',W,R,ph),budMax('T','dev'),dur-30);
       for(const j of [tj].concat(last!=null&&last!==tj?[last]:[])){const n=Math.floor(Math.min(dur*LAD.LQ[j],lim)/10);
         if(n*10>=WORK_MIN.MQ)return {n,j:n*10>=Math.floor(dur*LAD.LQ[j]/10)*10?j:null,work:n*10};}
@@ -1303,7 +1296,7 @@ function buildPlan(cfgIn){
           const restD=()=>[0,1,2,3,4,5,6].filter(d=>!run(d)&&!dd[d].role&&!hasX(d));
           const cx=[];
           for(const cls of ['K2','K3','K1','K4'])for(const x of crossAuto.filter(y=>y.cls===cls)){
-            const m=Math.max(20,r5((x.c.mins||0)*crossF)),ok=d=>d!=null&&!hasX(d);let d=null,hard=false;
+            const ok=d=>d!=null&&!hasX(d);let d=null,hard=false;
             const rest=restD(),r=rest.length>1?rest:[];
             if(cls==='K2'){
               d=[0,1,2,3,4,5,6].filter(z=>isQd(z)&&!hasX(z)&&!hardD(z+1)).sort((a,c)=>c-a)[0];
@@ -1897,7 +1890,7 @@ function targetLabelNoR(w,cfgRef){
   const s0=(w.steps||[])[0];
   if(s0&&s0.tg&&s0.tg.hr){
     const z=s0.tg.hr;
-    if(cfgRef&&cfgRef.lthr){const hrmax=Math.round(208-0.7*(cfgRef.age||35));const r=zbpm(z,cfgRef.lthr,hrmax);return `Z${z} · ${r[0]}–${r[1]} уд`;}
+    if(cfgRef&&cfgRef.lthr){const hrmax=hrmaxOf(cfgRef);const r=zbpm(z,cfgRef.lthr,hrmax);return `Z${z} · ${r[0]}–${r[1]} уд`;}
     return `Z${z}`;
   }
   return '';
@@ -2621,7 +2614,7 @@ function readCfg(opts){
     tag:(($('tag').value||'').trim()||('[GEN'+Date.now().toString(36).slice(-4).toUpperCase()+']')),planMode:'goal'};
   if(cfg.ltPace&&cfg.ltPace>600)throw 'Темп ПАНО выглядит странно (медленнее 10:00/км) — проверьте формат м:сс.';
   if(dParse(cfg.goalISO)<=dParse(cfg.startISO))throw 'Дата старта должна быть позже начала плана.';
-  const hrmaxEst=cfg.sex==='f'?Math.round(206-0.88*cfg.age):Math.round(208-0.7*cfg.age);
+  const hrmaxEst=hrmaxOf(cfg);
   if(cfg.lthr&&cfg.lthr>hrmaxEst)
     throw `Пульс ПАНО ${cfg.lthr} выше расчётного максимального (${hrmaxEst} для вашего возраста и пола). Проверьте значение: обычно ПАНО на 15–30 уд ниже максимума.`;
   if(cfg.lthr&&cfg.lthr<110)throw `Пульс ПАНО ${cfg.lthr} слишком низкий — проверьте значение.`;

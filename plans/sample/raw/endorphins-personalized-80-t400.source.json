@@ -1,0 +1,304 @@
+{
+  "calendar": {
+    "fields": [
+      {
+        "disabled": false,
+        "label": "Toggle navigation",
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "",
+        "type": "button",
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": "Find people",
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Community",
+        "type": "button",
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Training",
+        "type": "button",
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Routes",
+        "type": "button",
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Account",
+        "type": "button",
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": "Open navigation menu",
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": "Close menu",
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Feed",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Find People",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Community",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Training",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Integrations",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Chat",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Routes",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "[профиль]",
+        "type": null,
+        "value": ""
+      },
+      {
+        "disabled": false,
+        "label": null,
+        "max": null,
+        "min": null,
+        "placeholder": null,
+        "step": null,
+        "tag": "BUTTON",
+        "text": "Get the app",
+        "type": "button",
+        "value": ""
+      }
+    ],
+    "scripts": [
+      "https://widget.intercom.io/widget/dn46jspq",
+      "https://analytics.tiktok.com/i18n/pixel/static/identify_9fbdaf50.js",
+      "https://scripts.clarity.ms/0.8.77-beta/clarity.js",
+      "https://analytics.tiktok.com/i18n/pixel/static/main.MTJjYzk1MmQ1MQ.js",
+      "https://www.clarity.ms/tag/xibzq11dpr",
+      "https://t.endorphinsrunning.com/static/array.js",
+      "https://analytics.tiktok.com/i18n/pixel/events.js?sdkid=D0RIMTBC77UB9PLJMPHG&lib=ttq",
+      "https://connect.facebook.net/signals/config/1218159863234206?v=2.9.429&r=stable&domain=endorphinsrunning.com&hme=e7a5ac71fbf0293a48c0a6b6de35ad61286effa29f2279ff1fce9a756cccd512&ex_m=118%2C241%2C171%2C27%2C82%2C83%2C162%2C78%2C77%2C11%2C181%2C102%2C20%2C153%2C141%2C46%2C85%2C90%2C149%2C176%2C183%2C8%2C4%2C5%2C7%2C6%2C3%2C103%2C115%2C32%2C17%2C31%2C18%2C33%2C34%2C35%2C37%2C55%2C163%2C87%2C126%2C22%2C24%2C51%2C47%2C49%2C48%2C95%2C104%2C108%2C124%2C160%2C164%2C53%2C125%2C29%2C26%2C133%2C79%2C43%2C166%2C165%2C167%2C157%2C155%2C30%2C42%2C66%2C123%2C178%2C80%2C21%2C128%2C93%2C76%2C23%2C97%2C98%2C130%2C96%2C151%2C150%2C154%2C109%2C177%2C180%2C41%2C56%2C127%2C54%2C161%2C72%2C185%2C110%2C184%2C210%2C255%2C84%2C275%2C274%2C273%2C14%2C25%2C28%2C40%2C62%2C117%2C68%2C10%2C73%2C111%2C112%2C113%2C119%2C144%2C38%2C36%2C146%2C147%2C148%2C143%2C142%2C172%2C86%2C175%2C173%2C174%2C57%2C69%2C67%2C137%2C19%2C179%2C52%2C325%2C326%2C327%2C324%2C341%2C363%2C248%2C237%2C70%2C238%2C236%2C366%2C357%2C59%2C249%2C121%2C145%2C92%2C135%2C61%2C134%2C140%2C139%2C65%2C74%2C168%2C88%2C89%2C129%2C44%2C39%2C60%2C63%2C114%2C182%2C1%2C138%2C16%2C136%2C12%2C2%2C64%2C105%2C15%2C75%2C71%2C132%2C101%2C100%2C187%2C188%2C106%2C107%2C9%2C116%2C186%2C58%2C158%2C99%2C91%2C81%2C131%2C120%2C169%2C50%2C159%2C0%2C94%2C152%2C156%2C170%2C45%2C122%2C13%2C189",
+      "https://connect.facebook.net/en_US/fbevents.js",
+      "https://www.googletagmanager.com/gtag/js?id=G-6C1DM2HFWH",
+      "https://accounts.google.com/gsi/client",
+      "https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.mjs",
+      "https://endorphinsrunning.com/bundle.58b8cfd182ed54451183.js",
+      "https://js.stripe.com/basil/stripe.js",
+      "https://t.endorphinsrunning.com/static/1.441.2/surveys.js",
+      "https://t.endorphinsrunning.com/array/phc_tYa3XH6IRWoZF237DvIJpiomhxGhLJD4JCOHf6nbj8o/config.js",
+      "https://t.endorphinsrunning.com/static/1.441.2/dead-clicks-autocapture.js",
+      "https://t.endorphinsrunning.com/static/1.441.2/posthog-recorder.js",
+      "https://t.endorphinsrunning.com/static/1.441.2/exception-autocapture.js",
+      "https://t.endorphinsrunning.com/static/1.441.2/web-vitals-with-attribution.js"
+    ],
+    "text": "Feed\nFind People\nCommunity\nTraining\nIntegrations\nChat\nRoutes\n[профиль]\nGet the app to track runs and let your plan adapt to every workout.\nGet the app\nActive Plan\nPREMIUM\n17 Week Personalized Training Plan\n0 / 97 Workouts\n0.0 / 1412.4 km\nToday's Workout\nTempo — 11.7 kilometers\nWeek 1\nOct 29 - Nov 1\nWorkouts 0/3\nDistance 0.00 / 46.20 km\nThu\nTempo\n11.7km\nFri\nRest\n \nSat\nEasy\n10.5km\nSun\nLong\n24km\nWeek 2\nNov 2 - Nov 8\nWorkouts 0/6\nDistance 0.00 / 78.60 km\nMon\nEasy\n11.5km\nTue\nHills\n10.1km\nWed\nEasy\n10.5km\nThu\nSpeed\n12km\nFri\nRest\n \nSat\nEasy\n10.5km\nSun\nLong\n24km\nCoaching Updates Pause\nWithout a subscription, your plan will stop adapting beyond this point.\nUpgrade ›\nWeek 3\nUPGRADE\nNov 9 - Nov 15\nWorkouts 0/6\nDistance 0.00 / 80.90 km\nMon\nEasy\n11.5km\nTue\nTempo\n12.4km\nWed\nEasy\n10.5km\nThu\nStrides\n12km\nFri\nRest\n \nSat\nEasy\n10.5km\nSun\nLong\n24km\nWeek 4\nUPGRADE\nNov 16 - Nov 22\nWorkouts 0/6\nDistance 0.00 / 82.40 km\nMon\nEasy\n11.2km\nTue\nSpeed\n12.5km\nWed\nEasy\n11.3km\nThu\nTempo\n12km\nFri\nRest\n \nSat\nEasy\n11.4km\nSun\nLong\n24km\nWeek 5\nUPGRADE\nNov 23 - Nov 29\nWorkouts 0/6\nDistance 0.00 / 85.40 km\nMon\nEasy\n11.5km\nTue\nTempo\n12.9km\nWed\nEasy\n12km\nThu\nSpeed\n13km\nFri\nRest\n \nSat\nEasy\n12km\nSun\nLong\n24km\nWeek 6\nUPGRADE\nNov 30 - Dec 6\nWorkouts 0/6\nDistance 0.00 / 83.90 km\nMon\nEasy\n11.2km\nTue\nSpeed\n13km\nWed\nEasy\n11.3km\nThu\nTempo\n13km\nFri\nRest\n \nSat\nEasy\n11.4km\nSun\nLong\n24km\nWeek 7\nUPGRADE\nDec 7 - Dec 13\nWorkouts 0/6\nDistance 0.00 / 87.10 km\nMon\nEasy\n11.5km\nTue\nSpeed\n13.5km\nWed\nEasy\n12km\nThu\nTempo\n14.1km\nFri\nRest\n \nSat\nEasy\n12km\nSun\nLong\n24km\nWeek 8\nUPGRADE\nDec 14 - Dec 20\nWorkouts 0/6\nDistance 0.00 / 87.10 km\nMon\nEasy\n13km\nTue\nHills\n12.1km\nWed\nEasy\n12km\nThu\nSpeed\n14km\nFri\nRest\n \nSat\nEasy\n12km\nSun\nLong\n24km\nWeek 9\nUPGRADE\nDec 21 - Dec 27\nWorkouts 0/6\nDistance 0.00 / 80.90 km\nMon\nEasy\n11.5km\nTue\nTempo\n12.4km\nWed\nEasy\n10.5km\nThu\nStrides\n12km\nFri\nRest\n \nSat\nEasy\n10.5km\nSun\nLong\n24km\nWeek 10\nUPGRADE\nDec 28 - Jan 3\nWorkouts 0/6\nDistance 0.00 / 85.50 km\nMon\nEasy\n11.5km\nTue\nSpeed\n13km\nWed\nEasy\n12km\nThu\nTempo\n13km\nFri\nRest\n \nSat\nEasy\n12km\nSun\nLong\n24km\nWeek 11\nUPGRADE\nJan 4 - Jan 10\nWorkouts 0/6\nDistance 0.00 / 88.70 km\nMon\nEasy\n12.8km\nTue\nSpeed\n14km\nWed\nEasy\n11.8km\nThu\nTempo\n14km\nFri\nRest\n \nSat\nEasy\n11.9km\nSun\nLong\n24.2km\nWeek 12\nUPGRADE\nJan 11 - Jan 17\nWorkouts 0/6\nDistance 0.00 / 90.20 km\nMon\nEasy\n13km\nTue\nHills\n12.2km\nWed\nEasy\n13.5km\nThu\nSpeed\n14km\nFri\nRest\n \nSat\nEasy\n13.5km\nSun\nLong\n24km\nWeek 13\nUPGRADE\nJan 18 - Jan 24\nWorkouts 0/6\nDistance 0.00 / 80.60 km\nMon\nEasy\n11.5km\nTue\nSpeed\n12km\nWed\nEasy\n10.5km\nThu\nStrides\n12km\nFri\nRest\n \nSat\nEasy\n10.5km\nSun\nLong\n24.1km\nWeek 14\nUPGRADE\nJan 25 - Jan 31\nWorkouts 0/6\nDistance 0.00 / 87.00 km\nMon\nEasy\n11.5km\nTue\nTempo\n13.5km\nWed\nEasy\n12km\nThu\nStrides\n14km\nFri\nRest\n \nSat\nEasy\n12km\nSun\nLong\n24km\nWeek 15\nUPGRADE\nFeb 1 - Feb 7\nWorkouts 0/6\nDistance 0.00 / 91.70 km\nMon\nEasy\n13km\nTue\nStrides\n14km\nWed\nEasy\n13km\nThu\nSpeed\n14.5km\nFri\nRest\n \nSat\nEasy\n13km\nSun\nLong\n24.2km\nWeek 16\nUPGRADE\nFeb 8 - Feb 14\nWorkouts 0/6\nDistance 0.00 / 95.50 km\nMon\nEasy\n14.5km\nTue\nSpeed\n15km\nWed\nEasy\n13.5km\nThu\nTempo\n15km\nFri\nRest\n \nSat\nEasy\n13.5km\nSun\nLong\n24km\nWeek 17\nUPGRADE\nFeb 15 - Feb 18\nWorkouts 0/6\nDistance 0.00 / 80.70 km\nMon\nEasy\n11.5km\nTue\nSpeed\n12km\nWed\nEasy\n10.5km\nThu\nStrides\n12km",
+    "title": "Endorphins Running - The Ultimate Running Community",
+    "url": "https://endorphinsrunning.com/training"
+  },
+  "observedHtml": "engines/endorphins/pages/19-active-plan.html",
+  "workoutDetails": [
+    {
+      "week": 1,
+      "workout": "Tempo — 11.7 km",
+      "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a290d",
+      "snapshot": "- navigation:\n  - img \"Logo\"\n  - button \"Open navigation menu\":\n- complementary:\n  - button \"Endorphins\":\n    - img \"Endorphins\"\n  - button \"Close menu\":\n  - navigation:\n    - button \"Feed\":\n      - generic: Feed\n    - button \"Find People\":\n      - generic: Find People\n    - button \"Community\":\n      - generic: Community\n    - button \"Training\":\n      - generic: Training\n    - button \"Integrations\":\n      - generic: Integrations\n    - button \"Chat\":\n      - generic: Chat\n    - button \"Routes\":\n      - generic: Routes\n  - button \"[профиль] [профиль]\":\n    - img \"[профиль]\"\n    - generic: [профиль]\n- complementary \"Get the Endorphins app\":\n  - generic: Get the app to track runs and let your plan adapt to every workout.\n  - button \"Get the app\"\n- main:\n  - heading \"TEMPO\" [level=1]\n  - generic: Thursday, October 29, 2026\n  - generic: • 11.7 kilometers total\n  - img \"Coach\"\n  - generic: Coach Notes\n  - paragraph: Hi [профиль]! You have a tempo run today. Find a rhythm and focus on controlled breathing. The pace should be faster than easy runs but not an all-out sprint. Tempo runs are as much about mental strength as they are about physical endurance. Embrace the discomfort and know that each tempo run is a step towards becoming a stronger, more resilient runner. Remember, the discomfort you feel now is building the strength you'll rely on during your race. Stay focused, stay strong, and enjoy the challenge.\n  - button \"Read More\"\n  - generic: WARMUP\n  - generic: 2.5 kilometers\n  - paragraph: Easy warmup at a pace no faster than 5:22 / kilometer.\n  - generic: TEMPO\n  - generic: 6.7 kilometers\n  - generic: 28 minutes\n  - generic: at 4:07-4:16 kilometers\n  - generic: 1:00 min rest\n  - generic: COOLDOWN\n  - generic: 2.5 kilometers\n  - paragraph: Cool down at a pace no faster than 5:22 / kilometer.\n- iframe [id=\"intercom-frame\"]"
+    },
+    {
+      "week": 1,
+      "workout": "Easy Run — 10.5 km",
+      "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a290f",
+      "snapshot": "- navigation:\n  - img \"Logo\"\n  - button \"Open navigation menu\":\n- complementary:\n  - button \"Endorphins\":\n    - img \"Endorphins\"\n  - button \"Close menu\":\n  - navigation:\n    - button \"Feed\":\n      - generic: Feed\n    - button \"Find People\":\n      - generic: Find People\n    - button \"Community\":\n      - generic: Community\n    - button \"Training\":\n      - generic: Training\n    - button \"Integrations\":\n      - generic: Integrations\n    - button \"Chat\":\n      - generic: Chat\n    - button \"Routes\":\n      - generic: Routes\n  - button \"[профиль] [профиль]\":\n    - img \"[профиль]\"\n    - generic: [профиль]\n- complementary \"Get the Endorphins app\":\n  - generic: Get the app to track runs and let your plan adapt to every workout.\n  - button \"Get the app\"\n- main:\n  - heading \"EASY RUN\" [level=1]\n  - generic: Saturday, October 31, 2026\n  - generic: • 10.5 kilometers total\n  - img \"Coach\"\n  - generic: Coach Notes\n  - paragraph: Hi [профиль]! Relax and enjoy your easy run. Welcome to your first easy run! Easy runs are essential for recovery and building a strong aerobic base. They allow your body to adapt to the training load while minimizing stress. During today's run, focus on maintaining a light, conversational pace. This is your time to enjoy the simplicity of running and to connect with the joy it brings. Consistency is the key to long-term success, and easy runs are the foundation of that consistency. They help you recover from more intense workouts and prepare you for the challenges ahead. As you run, focus on your breathing and let your mind relax. This is your time to reflect on your goals and visualize your success. Remember, every easy run is a step towards your ultimate goal. Embrace the process, and let each run rejuvenate you. Enjoy the rhythm of your footsteps and the freedom of movement. This is your journey, and every step counts.\n  - button \"Read More\"\n  - generic: EASY RUN\n  - generic: 10.5 kilometers\n  - paragraph: Run at a conversational pace no faster than 5:12 / kilometer.\n- iframe [id=\"intercom-frame\"]"
+    },
+    {
+      "week": 1,
+      "workout": "Long Run — 24 km",
+      "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a2910",
+      "snapshot": "- navigation:\n  - img \"Logo\"\n  - button \"Open navigation menu\":\n- complementary:\n  - button \"Endorphins\":\n    - img \"Endorphins\"\n  - button \"Close menu\":\n  - navigation:\n    - button \"Feed\":\n      - generic: Feed\n    - button \"Find People\":\n      - generic: Find People\n    - button \"Community\":\n      - generic: Community\n    - button \"Training\":\n      - generic: Training\n    - button \"Integrations\":\n      - generic: Integrations\n    - button \"Chat\":\n      - generic: Chat\n    - button \"Routes\":\n      - generic: Routes\n  - button \"[профиль] [профиль]\":\n    - img \"[профиль]\"\n    - generic: [профиль]\n- complementary \"Get the Endorphins app\":\n  - generic: Get the app to track runs and let your plan adapt to every workout.\n  - button \"Get the app\"\n- main:\n  - generic: Workout\n  - heading \"LONG RUN\" [level=1]\n  - generic: Sunday, November 1, 2026\n  - generic: • 24 kilometers total\n  - img \"Coach\"\n  - generic: Coach Notes\n  - paragraph: Hi [профиль]! Your long run is today. In these initial weeks, it's all about getting your body accustomed to the distance. Focus on maintaining a conversational pace. Let your body adapt gradually, and savor the experience of each run. The goal right now is consistency, not speed. Each step you take is a step towards building a resilient foundation. Remember, patience is key, and every run is a building block for your future success. Today's long run is 24 kilometers. Stay steady and keep a comfortable pace.\n  - button \"Read More\"\n  - generic: LONG RUN\n  - generic: 24 kilometers\n  - paragraph: Run your long run between 4:54 and 5:02 / kilometer.\n- iframe [id=\"intercom-frame\"]"
+    },
+    {
+      "week": 2,
+      "workout": "Easy Run — 11.5 km",
+      "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a2911",
+      "snapshot": "- navigation:\n  - img \"Logo\"\n  - button \"Open navigation menu\":\n- complementary:\n  - button \"Endorphins\":\n    - img \"Endorphins\"\n  - button \"Close menu\":\n  - navigation:\n    - button \"Feed\":\n      - generic: Feed\n    - button \"Find People\":\n      - generic: Find People\n    - button \"Community\":\n      - generic: Community\n    - button \"Training\":\n      - generic: Training\n    - button \"Integrations\":\n      - generic: Integrations\n    - button \"Chat\":\n      - generic: Chat\n    - button \"Routes\":\n      - generic: Routes\n  - button \"[профиль] [профиль]\":\n    - img \"[профиль]\"\n    - generic: [профиль]\n- complementary \"Get the Endorphins app\":\n  - generic: Get the app to track runs and let your plan adapt to every workout.\n  - button \"Get the app\"\n- main:\n  - heading \"EASY RUN\" [level=1]\n  - generic: Monday, November 2, 2026\n  - generic: • 11.5 kilometers total\n  - img \"Coach\"\n  - generic: Coach Notes\n  - paragraph: Hi [профиль]! Relax and enjoy your easy run. You’re still building your aerobic base, and today’s easy run is key for that. Keep your effort light and steady, and focus on running smoothly. These easier days are critical for your long-term success. Remember, it’s not about speed today—it’s about getting the mileage in while keeping your body fresh. Use this time to enjoy the simplicity of running and to connect with the joy it brings.\n  - button \"Read More\"\n  - generic: EASY RUN\n  - generic: 11.5 kilometers\n  - paragraph: Run at a conversational pace no faster than 5:12 / kilometer.\n- iframe [id=\"intercom-frame\"]"
+    },
+    {
+      "week": 2,
+      "workout": "Hills — 10.1 km",
+      "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a2912",
+      "snapshot": "- navigation:\n  - img \"Logo\"\n  - button \"Open navigation menu\":\n- complementary:\n  - button \"Endorphins\":\n    - img \"Endorphins\"\n  - button \"Close menu\":\n  - navigation:\n    - button \"Feed\":\n      - generic: Feed\n    - button \"Find People\":\n      - generic: Find People\n    - button \"Community\":\n      - generic: Community\n    - button \"Training\":\n      - generic: Training\n    - button \"Integrations\":\n      - generic: Integrations\n    - button \"Chat\":\n      - generic: Chat\n    - button \"Routes\":\n      - generic: Routes\n  - button \"[профиль] [профиль]\":\n    - img \"[профиль]\"\n    - generic: [профиль]\n- complementary \"Get the Endorphins app\":\n  - generic: Get the app to track runs and let your plan adapt to every workout.\n  - button \"Get the app\"\n- main:\n  - heading \"HILLS\" [level=1]\n  - generic: Tuesday, November 3, 2026\n  - generic: • 10.1 kilometers total\n  - img \"Coach\"\n  - generic: Coach Notes\n  - paragraph: Hi [профиль]! Hill repeats help build leg strength and mental toughness. Attack the uphill and recover on the way down. Hill running is an excellent way to build strength and power, which are essential for tackling challenging courses. Hills are your secret weapon, and today you'll learn how to harness their power. As you run, focus on driving your knees, pumping your arms, and maintaining a strong posture. Complete your hill intervals at a 3% - 6% incline using the active recovery time to jog back down the hill.\n  - button \"Read More\"\n  - generic: WARMUP\n  - generic: 2 kilometers\n  - paragraph: Easy warmup at a pace no faster than 5:22 / kilometer.\n  - generic: HILLS\n  - generic: 2.2 kilometers\n  - generic: \"8\"\n  - generic: x\n  - generic: 1 minutes\n  - generic: at 3:34-3:43 kilometers\n  - generic: 3:00 min jog between reps\n  - generic: COOLDOWN\n  - generic: 2 kilometers\n  - paragraph: Cool down at a pace no faster than 5:22 / kilometer.\n- iframe [id=\"intercom-frame\"]"
+    },
+    {
+      "week": 2,
+      "workout": "Easy Run — 10.5 km",
+      "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a2913",
+      "snapshot": "- navigation:\n  - img \"Logo\"\n  - button \"Open navigation menu\":\n- complementary:\n  - button \"Endorphins\":\n    - img \"Endorphins\"\n  - button \"Close menu\":\n  - navigation:\n    - button \"Feed\":\n      - generic: Feed\n    - button \"Find People\":\n      - generic: Find People\n    - button \"Community\":\n      - generic: Community\n    - button \"Training\":\n      - generic: Training\n    - button \"Integrations\":\n      - generic: Integrations\n    - button \"Chat\":\n      - generic: Chat\n    - button \"Routes\":\n      - generic: Routes\n  - button \"[профиль] [профиль]\":\n    - img \"[профиль]\"\n    - generic: [профиль]\n- complementary \"Get the Endorphins app\":\n  - generic: Get the app to track runs and let your plan adapt to every workout.\n  - button \"Get the app\"\n- main:\n  - heading \"EASY RUN\" [level=1]\n  - generic: Wednesday, November 4, 2026\n  - generic: • 10.5 kilometers total\n  - img \"Coach\"\n  - generic: Coach Notes\n  - paragraph: Hi [профиль]! You have an easy run today. You’re still building your aerobic base, and today’s easy run is key for that. Keep your effort light and steady, and focus on running smoothly. These easier days are critical for your long-term success. Remember, it’s not about speed today—it’s about getting the mileage in while keeping your body fresh. Use this time to enjoy the simplicity of running and to connect with the joy it brings.\n  - button \"Read More\"\n  - generic: EASY RUN\n  - generic: 10.5 kilometers\n  - paragraph: Run at a conversational pace no faster than 5:12 / kilometer.\n- iframe [id=\"intercom-frame\"]"
+    },
+    {
+      "week": 2,
+      "workout": "Intervals",
+      "url": "https://endorphinsrunning.com/training-purchase?source=week_view_workout_lock",
+      "snapshot": "- button:\n- generic: Premium Subscription\n- button \"Close and go to my training plan\":\n- generic: ✦\n- generic: ✦\n- generic: ✦\n- img \"Endorphins\"\n- heading \"[профиль], your plan to run 3:00:13 starts now\" [level=1]\n- paragraph: Coach-built workouts that keep you consistent, confident, and ready for race day.\n- generic: RECOMMENDED\n- generic: Annual\n- generic: $9.99 / month\n- generic: Billed annually\n- generic: Save $120 vs paying monthly\n- generic: Most runners who reach their goals choose this plan\n- generic: Monthly\n- generic: $19.99 / month\n- generic: Higher cost, same features\n- button \"Have a promo or referral code?\"\n- generic: Personalized Training Plans\n- generic: A plan built for you, not a generic template\n- generic: Weekly Coaching Updates\n- generic: Your plan is reviewed and updated every week\n- generic: Real-Time Optimizations\n- generic: Your training adjusts automatically as your body responds\n- generic: Device Integration\n- generic: Your runs sync automatically. No manual logging\n- generic: Expert Coaching\n- generic: Coach-designed plans you'd normally pay hundreds for\n- generic: Strength Training\n- generic: Strength workouts that help you run faster and stay healthy\n- generic: 4.9+\n- generic: 50k+ members\n- heading \"Why Runners Love Endorphins\" [level=2]\n- img \"Coach\"\n- img \"Coach\"\n- img \"Coach\"\n- img \"Coach\"\n- generic: Expert Coaching\n- generic: Access training plans designed by professional running coaches\n- img \"Garmin\"\n- img \"Strava\"\n- img \"COROS\"\n- img \"Apple Health\"\n- generic: Connect Devices\n- generic: Integrate data from your favorite apps and devices into your training plan.\n- generic: Weekly Coaching Suggestions\n- generic: Get weekly coaching suggestions based on your runs and progress.\n- button\n- button\n- button\n- heading \"Join Our Community\" [level=2]\n- generic: 50K+\n- generic: Active Runners\n- generic: \"4.9\"\n- generic: App Store Rating\n- generic: 1M+\n- generic: Miles Logged\n- heading \"Testimonials\" [level=2]\n- generic: Sarah M.\n- generic: Boston, MA\n- generic: Boston Marathon Finisher\n- generic: \"\\\"Endorphins helped me shave 15 minutes off my marathon time. The personalized training plan was exactly what I needed!\\\"\"\n- generic: Michael R.\n- generic: New York, NY\n- generic: Brooklyn Half PR\n- generic: \"\\\"The real-time optimizations are game-changing. I've never felt more prepared for a race. My PR keeps improving!\\\"\"\n- generic: Emma L.\n- generic: Chicago, IL\n- generic: First Half Marathon\n- generic: \"\\\"As a beginner runner, I was worried about overtraining. Endorphins' smart plans helped me progress safely and confidently.\\\"\"\n- generic: Jessica T.\n- generic: Seattle, WA\n- generic: BQ Qualifier\n- generic: \"\\\"The race-specific training plans are incredible. I qualified for Boston with Endorphins' guidance!\\\"\"\n- button\n- button\n- button\n- button\n- heading \"Why Choose Endorphins\" [level=2]\n- generic: Features\n- generic: Endorphins\n- generic: Personalized Training\n- generic: Real-time Optimizations\n- generic: Expert Coaches\n- generic: Multi-device Integration\n- generic: Strength Training Plans\n- generic: Race-Specific Plans\n- generic: Recovery Monitoring\n- generic: Monthly Price\n- generic: $19.99\n- generic: Annual Price\n- generic: $119.99\n- generic: 30-Day Money-Back Guarantee\n- generic: Try Endorphins Premium risk-free. If you're not satisfied, we'll refund your purchase.\n- generic: Signed in as\n- generic: [email]\n- button \"(Not you?)\"\n- generic: $10.00/month (billed annually) · Cancel anytime\n- button \"Get Started Now\":\n  - generic: Get Started Now\n- iframe [id=\"intercom-frame\"]"
+    },
+    {
+      "week": 2,
+      "workout": "Easy Run",
+      "url": "https://endorphinsrunning.com/training-purchase?source=week_view_workout_lock",
+      "snapshot": "- button:\n- generic: Premium Subscription\n- button \"Close and go to my training plan\":\n- generic: ✦\n- generic: ✦\n- generic: ✦\n- img \"Endorphins\"\n- heading \"[профиль], your plan to run 3:00:13 starts now\" [level=1]\n- paragraph: Coach-built workouts that keep you consistent, confident, and ready for race day.\n- generic: RECOMMENDED\n- generic: Annual\n- generic: $9.99 / month\n- generic: Billed annually\n- generic: Save $120 vs paying monthly\n- generic: Most runners who reach their goals choose this plan\n- generic: Monthly\n- generic: $19.99 / month\n- generic: Higher cost, same features\n- button \"Have a promo or referral code?\"\n- generic: Personalized Training Plans\n- generic: A plan built for you, not a generic template\n- generic: Weekly Coaching Updates\n- generic: Your plan is reviewed and updated every week\n- generic: Real-Time Optimizations\n- generic: Your training adjusts automatically as your body responds\n- generic: Device Integration\n- generic: Your runs sync automatically. No manual logging\n- generic: Expert Coaching\n- generic: Coach-designed plans you'd normally pay hundreds for\n- generic: Strength Training\n- generic: Strength workouts that help you run faster and stay healthy\n- generic: 4.9+\n- generic: 50k+ members\n- heading \"Why Runners Love Endorphins\" [level=2]\n- img \"Coach\"\n- img \"Coach\"\n- img \"Coach\"\n- img \"Coach\"\n- generic: Expert Coaching\n- generic: Access training plans designed by professional running coaches\n- img \"Garmin\"\n- img \"Strava\"\n- img \"COROS\"\n- img \"Apple Health\"\n- generic: Connect Devices\n- generic: Integrate data from your favorite apps and devices into your training plan.\n- generic: Weekly Coaching Suggestions\n- generic: Get weekly coaching suggestions based on your runs and progress.\n- button\n- button\n- button\n- heading \"Join Our Community\" [level=2]\n- generic: 50K+\n- generic: Active Runners\n- generic: \"4.9\"\n- generic: App Store Rating\n- generic: 1M+\n- generic: Miles Logged\n- heading \"Testimonials\" [level=2]\n- generic: Sarah M.\n- generic: Boston, MA\n- generic: Boston Marathon Finisher\n- generic: \"\\\"Endorphins helped me shave 15 minutes off my marathon time. The personalized training plan was exactly what I needed!\\\"\"\n- generic: Michael R.\n- generic: New York, NY\n- generic: Brooklyn Half PR\n- generic: \"\\\"The real-time optimizations are game-changing. I've never felt more prepared for a race. My PR keeps improving!\\\"\"\n- generic: Emma L.\n- generic: Chicago, IL\n- generic: First Half Marathon\n- generic: \"\\\"As a beginner runner, I was worried about overtraining. Endorphins' smart plans helped me progress safely and confidently.\\\"\"\n- generic: Jessica T.\n- generic: Seattle, WA\n- generic: BQ Qualifier\n- generic: \"\\\"The race-specific training plans are incredible. I qualified for Boston with Endorphins' guidance!\\\"\"\n- button\n- button\n- button\n- button\n- heading \"Why Choose Endorphins\" [level=2]\n- generic: Features\n- generic: Endorphins\n- generic: Personalized Training\n- generic: Real-time Optimizations\n- generic: Expert Coaches\n- generic: Multi-device Integration\n- generic: Strength Training Plans\n- generic: Race-Specific Plans\n- generic: Recovery Monitoring\n- generic: Monthly Price\n- generic: $19.99\n- generic: Annual Price\n- generic: $119.99\n- generic: 30-Day Money-Back Guarantee\n- generic: Try Endorphins Premium risk-free. If you're not satisfied, we'll refund your purchase.\n- generic: Signed in as\n- generic: [email]\n- button \"(Not you?)\"\n- generic: $10.00/month (billed annually) · Cancel anytime\n- button \"Get Started Now\":\n  - generic: Get Started Now\n- iframe [id=\"intercom-frame\"]"
+    },
+    {
+      "week": 2,
+      "workout": "Long Run",
+      "url": "https://endorphinsrunning.com/training-purchase?source=week_view_workout_lock",
+      "snapshot": "- button:\n- generic: Premium Subscription\n- button \"Close and go to my training plan\":\n- generic: ✦\n- generic: ✦\n- generic: ✦\n- img \"Endorphins\"\n- heading \"[профиль], your plan to run 3:00:13 starts now\" [level=1]\n- paragraph: Coach-built workouts that keep you consistent, confident, and ready for race day.\n- generic: RECOMMENDED\n- generic: Annual\n- generic: $9.99 / month\n- generic: Billed annually\n- generic: Save $120 vs paying monthly\n- generic: Most runners who reach their goals choose this plan\n- generic: Monthly\n- generic: $19.99 / month\n- generic: Higher cost, same features\n- button \"Have a promo or referral code?\"\n- generic: Personalized Training Plans\n- generic: A plan built for you, not a generic template\n- generic: Weekly Coaching Updates\n- generic: Your plan is reviewed and updated every week\n- generic: Real-Time Optimizations\n- generic: Your training adjusts automatically as your body responds\n- generic: Device Integration\n- generic: Your runs sync automatically. No manual logging\n- generic: Expert Coaching\n- generic: Coach-designed plans you'd normally pay hundreds for\n- generic: Strength Training\n- generic: Strength workouts that help you run faster and stay healthy\n- generic: 4.9+\n- generic: 50k+ members\n- heading \"Why Runners Love Endorphins\" [level=2]\n- img \"Coach\"\n- img \"Coach\"\n- img \"Coach\"\n- img \"Coach\"\n- generic: Expert Coaching\n- generic: Access training plans designed by professional running coaches\n- img \"Garmin\"\n- img \"Strava\"\n- img \"COROS\"\n- img \"Apple Health\"\n- generic: Connect Devices\n- generic: Integrate data from your favorite apps and devices into your training plan.\n- generic: Weekly Coaching Suggestions\n- generic: Get weekly coaching suggestions based on your runs and progress.\n- button\n- button\n- button\n- heading \"Join Our Community\" [level=2]\n- generic: 50K+\n- generic: Active Runners\n- generic: \"4.9\"\n- generic: App Store Rating\n- generic: 1M+\n- generic: Miles Logged\n- heading \"Testimonials\" [level=2]\n- generic: Sarah M.\n- generic: Boston, MA\n- generic: Boston Marathon Finisher\n- generic: \"\\\"Endorphins helped me shave 15 minutes off my marathon time. The personalized training plan was exactly what I needed!\\\"\"\n- generic: Michael R.\n- generic: New York, NY\n- generic: Brooklyn Half PR\n- generic: \"\\\"The real-time optimizations are game-changing. I've never felt more prepared for a race. My PR keeps improving!\\\"\"\n- generic: Emma L.\n- generic: Chicago, IL\n- generic: First Half Marathon\n- generic: \"\\\"As a beginner runner, I was worried about overtraining. Endorphins' smart plans helped me progress safely and confidently.\\\"\"\n- generic: Jessica T.\n- generic: Seattle, WA\n- generic: BQ Qualifier\n- generic: \"\\\"The race-specific training plans are incredible. I qualified for Boston with Endorphins' guidance!\\\"\"\n- button\n- button\n- button\n- button\n- heading \"Why Choose Endorphins\" [level=2]\n- generic: Features\n- generic: Endorphins\n- generic: Personalized Training\n- generic: Real-time Optimizations\n- generic: Expert Coaches\n- generic: Multi-device Integration\n- generic: Strength Training Plans\n- generic: Race-Specific Plans\n- generic: Recovery Monitoring\n- generic: Monthly Price\n- generic: $19.99\n- generic: Annual Price\n- generic: $119.99\n- generic: 30-Day Money-Back Guarantee\n- generic: Try Endorphins Premium risk-free. If you're not satisfied, we'll refund your purchase.\n- generic: Signed in as\n- generic: [email]\n- button \"(Not you?)\"\n- generic: $10.00/month (billed annually) · Cancel anytime\n- button \"Get Started Now\":\n  - generic: Get Started Now\n- iframe [id=\"intercom-frame\"]"
+    }
+  ]
+}

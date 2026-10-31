@@ -1,0 +1,1 @@
+import{L as t,e as s,f as n,a6 as o,R as _,_ as r}from"./entry.79f5757a.js";const c=t({__name:"ManageStatusChip",props:{tone:{default:"neutral"}},setup(e){return(a,p)=>(s(),n("span",{class:_(["grm-status",`is-${e.tone}`])},[o(a.$slots,"default",{},void 0,!0)],2))}});const u=r(c,[["__scopeId","data-v-c3abefda"]]);export{u as default};

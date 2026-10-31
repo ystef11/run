@@ -1,0 +1,1853 @@
+{
+  "meta": {
+    "tag": "[RUNDIDA]",
+    "schema": 1,
+    "name": "rundida · 5 км · 80 км/нед · ПАНО 4:00",
+    "generated": "2026-10-29",
+    "marathon": "2027-01-24",
+    "source": {
+      "url": "https://rundida.com/plan/custom/",
+      "retrieved": "2026-10-29",
+      "raw": "raw/rundida-5k-80-t400.source.json"
+    },
+    "profile": {
+      "id": "80-t400",
+      "km": 80,
+      "t": 240,
+      "level": "advanced",
+      "days": 6,
+      "long": 24,
+      "vdot": 53.450573239692226,
+      "benchmark": {
+        "distance": 10000,
+        "time": 2342
+      }
+    },
+    "generatorInput": {
+      "distance": "5K",
+      "weeks": 12,
+      "category": "race-prep",
+      "recent_race": null,
+      "goal_time": null,
+      "weekly_km": 80,
+      "fixed_days": [],
+      "long_run_day": "sun",
+      "injury_history": false,
+      "race_date": "2027-01-24",
+      "long_run_target_km": null,
+      "long_run_peak_week": null,
+      "runs_per_week": 6,
+      "current_long_run_km": 24,
+      "injury_recent_months": null,
+      "injury_area": null,
+      "wants_intervals": null,
+      "coach": {
+        "intervals": "weekly",
+        "long_run_target_km": null,
+        "quality_emphasis": "mixed",
+        "cautions": [
+          "The 10K result is labeled an estimate, so anchor workout effort to current fitness rather than a goal time"
+        ],
+        "rationale": {
+          "intervals": "Advanced runner on high volume and six days a week can absorb a weekly interval session",
+          "quality_emphasis": "A 5K peak benefits from mixing threshold work with faster interval sessions"
+        }
+      }
+    },
+    "conversion": {
+      "detail": "volume-summary",
+      "notes": [
+        "Фактический результат веб-сервиса по запросу профиля 80 км/нед, ПАНО 4:00; неделя начинается 2026-11-02.",
+        "Сервис отбросил помеченный как оценочный результат 10 км: recent_race=null, VDOT не калиброван. Поэтому численные тренировочные темпы не добавлялись. Этот файл показывает результат распознавания запроса, а не корректно персонализированный по ПАНО план.",
+        "Строки дней, дистанции и недельные итоги сохранены без исправления. Серверная генерация закрыта; скачан только публичный код интерфейса и калькулятора темпов."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-11-02",
+      "goalISO": "2027-01-24",
+      "goalDist": 5000,
+      "planMode": "goal",
+      "tag": "[RUNDIDA]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-11-02",
+      "kind": "run",
+      "name": "Easy 16km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 1,
+        "dow": "mon",
+        "date": "2026-11-02",
+        "workout": "Easy 16km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-03",
+      "kind": "run",
+      "name": "Easy 16km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 2,
+        "dow": "tue",
+        "date": "2026-11-03",
+        "workout": "Easy 16km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-04",
+      "kind": "run",
+      "name": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Sustained output ability at threshold",
+      "sourceDay": {
+        "day": 3,
+        "dow": "wed",
+        "date": "2026-11-04",
+        "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+        "purpose": "Sustained output ability at threshold",
+        "type": "key",
+        "highlight": "3km Tempo"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-05",
+      "kind": "run",
+      "name": "Easy 16km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Pace switch practice under fatigue",
+      "sourceDay": {
+        "day": 4,
+        "dow": "thu",
+        "date": "2026-11-05",
+        "workout": "Easy 16km, last 1km at race pace (race effort)",
+        "purpose": "Pace switch practice under fatigue",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-06",
+      "kind": "run",
+      "name": "Easy 16km + 4 hill strides on a gentle slope",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Adapt to climbing rhythm",
+      "sourceDay": {
+        "day": 5,
+        "dow": "fri",
+        "date": "2026-11-06",
+        "workout": "Easy 16km + 4 hill strides on a gentle slope",
+        "purpose": "Adapt to climbing rhythm",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "run",
+      "name": "Long 12km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 7,
+        "dow": "sun",
+        "date": "2026-11-08",
+        "workout": "Long 12km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-09",
+      "kind": "run",
+      "name": "Easy 16km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 8,
+        "dow": "mon",
+        "date": "2026-11-09",
+        "workout": "Easy 16km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-10",
+      "kind": "run",
+      "name": "Easy 16km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 9,
+        "dow": "tue",
+        "date": "2026-11-10",
+        "workout": "Easy 16km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-11",
+      "kind": "run",
+      "name": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Sustained output ability at threshold",
+      "sourceDay": {
+        "day": 10,
+        "dow": "wed",
+        "date": "2026-11-11",
+        "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+        "purpose": "Sustained output ability at threshold",
+        "type": "key",
+        "highlight": "3km Tempo"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-12",
+      "kind": "run",
+      "name": "Easy 16km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Pace switch practice under fatigue",
+      "sourceDay": {
+        "day": 11,
+        "dow": "thu",
+        "date": "2026-11-12",
+        "workout": "Easy 16km, last 1km at race pace (race effort)",
+        "purpose": "Pace switch practice under fatigue",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-13",
+      "kind": "run",
+      "name": "Easy 16km + 4 hill strides on a gentle slope",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Adapt to climbing rhythm",
+      "sourceDay": {
+        "day": 12,
+        "dow": "fri",
+        "date": "2026-11-13",
+        "workout": "Easy 16km + 4 hill strides on a gentle slope",
+        "purpose": "Adapt to climbing rhythm",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "run",
+      "name": "Long 12km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 14,
+        "dow": "sun",
+        "date": "2026-11-15",
+        "workout": "Long 12km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-16",
+      "kind": "run",
+      "name": "Easy 16km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 15,
+        "dow": "mon",
+        "date": "2026-11-16",
+        "workout": "Easy 16km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-17",
+      "kind": "run",
+      "name": "Easy 16km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 16,
+        "dow": "tue",
+        "date": "2026-11-17",
+        "workout": "Easy 16km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-18",
+      "kind": "run",
+      "name": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Sustained output ability at threshold",
+      "sourceDay": {
+        "day": 17,
+        "dow": "wed",
+        "date": "2026-11-18",
+        "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+        "purpose": "Sustained output ability at threshold",
+        "type": "key",
+        "highlight": "3km Tempo"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-19",
+      "kind": "run",
+      "name": "Easy 16km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Pace switch practice under fatigue",
+      "sourceDay": {
+        "day": 18,
+        "dow": "thu",
+        "date": "2026-11-19",
+        "workout": "Easy 16km, last 1km at race pace (race effort)",
+        "purpose": "Pace switch practice under fatigue",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-20",
+      "kind": "run",
+      "name": "Easy 16km + 4 hill strides on a gentle slope",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Adapt to climbing rhythm",
+      "sourceDay": {
+        "day": 19,
+        "dow": "fri",
+        "date": "2026-11-20",
+        "workout": "Easy 16km + 4 hill strides on a gentle slope",
+        "purpose": "Adapt to climbing rhythm",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "run",
+      "name": "Long 12km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 21,
+        "dow": "sun",
+        "date": "2026-11-22",
+        "workout": "Long 12km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-23",
+      "kind": "run",
+      "name": "Easy 16km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 22,
+        "dow": "mon",
+        "date": "2026-11-23",
+        "workout": "Easy 16km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-24",
+      "kind": "run",
+      "name": "Easy 16km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 23,
+        "dow": "tue",
+        "date": "2026-11-24",
+        "workout": "Easy 16km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "run",
+      "name": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Sustained output ability at threshold",
+      "sourceDay": {
+        "day": 24,
+        "dow": "wed",
+        "date": "2026-11-25",
+        "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+        "purpose": "Sustained output ability at threshold",
+        "type": "key",
+        "highlight": "3km Tempo"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "run",
+      "name": "Easy 16km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Pace switch practice under fatigue",
+      "sourceDay": {
+        "day": 25,
+        "dow": "thu",
+        "date": "2026-11-26",
+        "workout": "Easy 16km, last 1km at race pace (race effort)",
+        "purpose": "Pace switch practice under fatigue",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-27",
+      "kind": "run",
+      "name": "Easy 16km + 4 hill strides on a gentle slope",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Adapt to climbing rhythm",
+      "sourceDay": {
+        "day": 26,
+        "dow": "fri",
+        "date": "2026-11-27",
+        "workout": "Easy 16km + 4 hill strides on a gentle slope",
+        "purpose": "Adapt to climbing rhythm",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "run",
+      "name": "Long 12km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 28,
+        "dow": "sun",
+        "date": "2026-11-29",
+        "workout": "Long 12km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 82
+    },
+    {
+      "date": "2026-11-30",
+      "kind": "run",
+      "name": "Easy 16km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 29,
+        "dow": "mon",
+        "date": "2026-11-30",
+        "workout": "Easy 16km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Pace feel + VO2max stimulus",
+      "sourceDay": {
+        "day": 30,
+        "dow": "tue",
+        "date": "2026-12-01",
+        "workout": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+        "purpose": "Pace feel + VO2max stimulus",
+        "type": "key",
+        "highlight": "5×1000m"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-02",
+      "kind": "run",
+      "name": "Easy 16km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 31,
+        "dow": "wed",
+        "date": "2026-12-02",
+        "workout": "Easy 16km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-03",
+      "kind": "run",
+      "name": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Sustained output ability at threshold",
+      "sourceDay": {
+        "day": 32,
+        "dow": "thu",
+        "date": "2026-12-03",
+        "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+        "purpose": "Sustained output ability at threshold",
+        "type": "key",
+        "highlight": "3km Tempo"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-04",
+      "kind": "run",
+      "name": "Easy 16km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Pace switch practice under fatigue",
+      "sourceDay": {
+        "day": 33,
+        "dow": "fri",
+        "date": "2026-12-04",
+        "workout": "Easy 16km, last 1km at race pace (race effort)",
+        "purpose": "Pace switch practice under fatigue",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "Long 12km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 35,
+        "dow": "sun",
+        "date": "2026-12-06",
+        "workout": "Long 12km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-07",
+      "kind": "run",
+      "name": "Easy 16km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 36,
+        "dow": "mon",
+        "date": "2026-12-07",
+        "workout": "Easy 16km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Pace feel + VO2max stimulus",
+      "sourceDay": {
+        "day": 37,
+        "dow": "tue",
+        "date": "2026-12-08",
+        "workout": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+        "purpose": "Pace feel + VO2max stimulus",
+        "type": "key",
+        "highlight": "5×1000m"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "run",
+      "name": "Easy 16km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 38,
+        "dow": "wed",
+        "date": "2026-12-09",
+        "workout": "Easy 16km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-10",
+      "kind": "run",
+      "name": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Sustained output ability at threshold",
+      "sourceDay": {
+        "day": 39,
+        "dow": "thu",
+        "date": "2026-12-10",
+        "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+        "purpose": "Sustained output ability at threshold",
+        "type": "key",
+        "highlight": "3km Tempo"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-11",
+      "kind": "run",
+      "name": "Easy 16km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Pace switch practice under fatigue",
+      "sourceDay": {
+        "day": 40,
+        "dow": "fri",
+        "date": "2026-12-11",
+        "workout": "Easy 16km, last 1km at race pace (race effort)",
+        "purpose": "Pace switch practice under fatigue",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "Long 12km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 42,
+        "dow": "sun",
+        "date": "2026-12-13",
+        "workout": "Long 12km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-14",
+      "kind": "run",
+      "name": "Easy 13km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 43,
+        "dow": "mon",
+        "date": "2026-12-14",
+        "workout": "Easy 13km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "Easy 13km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 44,
+        "dow": "tue",
+        "date": "2026-12-15",
+        "workout": "Easy 13km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2026-12-17",
+      "kind": "run",
+      "name": "Easy 13km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Pace switch practice under fatigue",
+      "sourceDay": {
+        "day": 46,
+        "dow": "thu",
+        "date": "2026-12-17",
+        "workout": "Easy 13km, last 1km at race pace (race effort)",
+        "purpose": "Pace switch practice under fatigue",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2026-12-18",
+      "kind": "run",
+      "name": "Easy 13km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 47,
+        "dow": "fri",
+        "date": "2026-12-18",
+        "workout": "Easy 13km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "Long 11km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 49,
+        "dow": "sun",
+        "date": "2026-12-20",
+        "workout": "Long 11km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2026-12-21",
+      "kind": "run",
+      "name": "Easy 16km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 50,
+        "dow": "mon",
+        "date": "2026-12-21",
+        "workout": "Easy 16km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Pace feel + VO2max stimulus",
+      "sourceDay": {
+        "day": 51,
+        "dow": "tue",
+        "date": "2026-12-22",
+        "workout": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+        "purpose": "Pace feel + VO2max stimulus",
+        "type": "key",
+        "highlight": "5×1000m"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-23",
+      "kind": "run",
+      "name": "Easy 16km + 4 hill strides on a gentle slope",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Adapt to climbing rhythm",
+      "sourceDay": {
+        "day": 52,
+        "dow": "wed",
+        "date": "2026-12-23",
+        "workout": "Easy 16km + 4 hill strides on a gentle slope",
+        "purpose": "Adapt to climbing rhythm",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-24",
+      "kind": "run",
+      "name": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Sustained output ability at threshold",
+      "sourceDay": {
+        "day": 53,
+        "dow": "thu",
+        "date": "2026-12-24",
+        "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+        "purpose": "Sustained output ability at threshold",
+        "type": "key",
+        "highlight": "3km Tempo"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-25",
+      "kind": "run",
+      "name": "Easy 16km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 54,
+        "dow": "fri",
+        "date": "2026-12-25",
+        "workout": "Easy 16km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "Long 12km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Long run + race pace finish practice",
+      "sourceDay": {
+        "day": 56,
+        "dow": "sun",
+        "date": "2026-12-27",
+        "workout": "Long 12km, last 1km at race pace (race effort)",
+        "purpose": "Long run + race pace finish practice",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-28",
+      "kind": "run",
+      "name": "Easy 16km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 57,
+        "dow": "mon",
+        "date": "2026-12-28",
+        "workout": "Easy 16km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Pace feel + VO2max stimulus",
+      "sourceDay": {
+        "day": 58,
+        "dow": "tue",
+        "date": "2026-12-29",
+        "workout": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+        "purpose": "Pace feel + VO2max stimulus",
+        "type": "key",
+        "highlight": "5×1000m"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-30",
+      "kind": "run",
+      "name": "Easy 16km + 4 hill strides on a gentle slope",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Adapt to climbing rhythm",
+      "sourceDay": {
+        "day": 59,
+        "dow": "wed",
+        "date": "2026-12-30",
+        "workout": "Easy 16km + 4 hill strides on a gentle slope",
+        "purpose": "Adapt to climbing rhythm",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2026-12-31",
+      "kind": "run",
+      "name": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Sustained output ability at threshold",
+      "sourceDay": {
+        "day": 60,
+        "dow": "thu",
+        "date": "2026-12-31",
+        "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+        "purpose": "Sustained output ability at threshold",
+        "type": "key",
+        "highlight": "3km Tempo"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2027-01-01",
+      "kind": "run",
+      "name": "Easy 16km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 61,
+        "dow": "fri",
+        "date": "2027-01-01",
+        "workout": "Easy 16km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "Long 12km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Long run + race pace finish practice",
+      "sourceDay": {
+        "day": 63,
+        "dow": "sun",
+        "date": "2027-01-03",
+        "workout": "Long 12km, last 1km at race pace (race effort)",
+        "purpose": "Long run + race pace finish practice",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 74
+    },
+    {
+      "date": "2027-01-04",
+      "kind": "run",
+      "name": "Easy 13km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 64,
+        "dow": "mon",
+        "date": "2027-01-04",
+        "workout": "Easy 13km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "Easy 13km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 65,
+        "dow": "tue",
+        "date": "2027-01-05",
+        "workout": "Easy 13km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2027-01-07",
+      "kind": "run",
+      "name": "Easy 13km, last 1km at race pace (race effort)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Pace switch practice under fatigue",
+      "sourceDay": {
+        "day": 67,
+        "dow": "thu",
+        "date": "2027-01-07",
+        "workout": "Easy 13km, last 1km at race pace (race effort)",
+        "purpose": "Pace switch practice under fatigue",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2027-01-08",
+      "kind": "run",
+      "name": "Easy 13km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 68,
+        "dow": "fri",
+        "date": "2027-01-08",
+        "workout": "Easy 13km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "Long 11km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 70,
+        "dow": "sun",
+        "date": "2027-01-10",
+        "workout": "Long 11km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 68
+    },
+    {
+      "date": "2027-01-11",
+      "kind": "run",
+      "name": "Easy 12km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 71,
+        "dow": "mon",
+        "date": "2027-01-11",
+        "workout": "Easy 12km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 51
+    },
+    {
+      "date": "2027-01-12",
+      "kind": "run",
+      "name": "Warm-up 2km + 3×800m @ fast/km, full recovery + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Activate fast-twitch fibers for race sharpness",
+      "sourceDay": {
+        "day": 72,
+        "dow": "tue",
+        "date": "2027-01-12",
+        "workout": "Warm-up 2km + 3×800m @ fast/km, full recovery + Cool-down 1km",
+        "purpose": "Activate fast-twitch fibers for race sharpness",
+        "type": "key",
+        "highlight": "3×800m"
+      },
+      "sourceWeeklyKm": 51
+    },
+    {
+      "date": "2027-01-14",
+      "kind": "run",
+      "name": "Easy 12km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 74,
+        "dow": "thu",
+        "date": "2027-01-14",
+        "workout": "Easy 12km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 51
+    },
+    {
+      "date": "2027-01-15",
+      "kind": "run",
+      "name": "Easy 12km + 4 hill strides on a gentle slope",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Adapt to climbing rhythm",
+      "sourceDay": {
+        "day": 75,
+        "dow": "fri",
+        "date": "2027-01-15",
+        "workout": "Easy 12km + 4 hill strides on a gentle slope",
+        "purpose": "Adapt to climbing rhythm",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 51
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "Long 10km @ easy effort/km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Build endurance and capillary density",
+      "sourceDay": {
+        "day": 77,
+        "dow": "sun",
+        "date": "2027-01-17",
+        "workout": "Long 10km @ easy effort/km",
+        "purpose": "Build endurance and capillary density",
+        "type": "key"
+      },
+      "sourceWeeklyKm": 51
+    },
+    {
+      "date": "2027-01-18",
+      "kind": "run",
+      "name": "Easy 9km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Wake up the body, promote blood flow",
+      "sourceDay": {
+        "day": 78,
+        "dow": "mon",
+        "date": "2027-01-18",
+        "workout": "Easy 9km",
+        "purpose": "Wake up the body, promote blood flow",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 28
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "Warm-up 2km + 3×800m @ fast/km, full recovery + Cool-down 1km",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1000,
+          "tg": {},
+          "d": "Фрагмент исходной тренировки"
+        }
+      ],
+      "desc": "Activate fast-twitch fibers for race sharpness",
+      "sourceDay": {
+        "day": 79,
+        "dow": "tue",
+        "date": "2027-01-19",
+        "workout": "Warm-up 2km + 3×800m @ fast/km, full recovery + Cool-down 1km",
+        "purpose": "Activate fast-twitch fibers for race sharpness",
+        "type": "key",
+        "highlight": "3×800m"
+      },
+      "sourceWeeklyKm": 28
+    },
+    {
+      "date": "2027-01-21",
+      "kind": "run",
+      "name": "Easy 9km + 4–6 strides at the end",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Дистанция из текста сайта"
+        }
+      ],
+      "desc": "Maintain elasticity and leg turnover",
+      "sourceDay": {
+        "day": 81,
+        "dow": "thu",
+        "date": "2027-01-21",
+        "workout": "Easy 9km + 4–6 strides at the end",
+        "purpose": "Maintain elasticity and leg turnover",
+        "type": "easy"
+      },
+      "sourceWeeklyKm": 28
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "RACE DAY — 5K",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "open",
+          "v": 0,
+          "tg": {},
+          "d": "См. исходное описание"
+        }
+      ],
+      "desc": "Race day — trust the training",
+      "sourceDay": {
+        "day": 84,
+        "dow": "sun",
+        "date": "2027-01-24",
+        "workout": "RACE DAY — 5K",
+        "purpose": "Race day — trust the training",
+        "type": "race"
+      },
+      "sourceWeeklyKm": 28
+    }
+  ]
+}

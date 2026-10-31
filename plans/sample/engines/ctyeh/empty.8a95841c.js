@@ -1,0 +1,1 @@
+import{r as e,e as s,k as _,h as t,g as p,a6 as r}from"./entry.79f5757a.js";const u={__name:"empty",setup(l){return(a,c)=>{const o=e("v-main"),n=e("v-app");return s(),_(n,null,{default:t(()=>[p(o,null,{default:t(()=>[r(a.$slots,"default")]),_:3})]),_:3})}}};export{u as default};

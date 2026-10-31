@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калорийность и макро для бегуна</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --z-rec:#7f95a3;--z-easy:#5b8c5a;--z-mp:#df4a2e;--z-thr:#d98a1f;--z-vo2:#7d5bd6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+  select{width:100%;height:48px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:16px;padding:0 12px;margin-bottom:12px;}
+  select:focus,.field input:focus{outline:2px solid var(--accent);outline-offset:-2px;}
+
+  .triofields{display:flex;gap:10px;flex-wrap:wrap;}
+  .field{flex:1;min-width:80px;}
+  .field .fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .field .box{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .field input{flex:1;width:100%;border:none;height:52px;text-align:center;font-size:22px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;min-width:0;}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field .arrows{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .field .arrows button{border:none;background:#f0eee9;color:var(--ink);width:26px;height:26px;cursor:pointer;padding:0;font-size:10px;line-height:1;}
+  .field .arrows button:first-child{border-bottom:1px solid var(--line);}
+  .field .arrows button:active{background:var(--accent);color:#fff;}
+  .colon{align-self:flex-end;font-size:22px;font-weight:800;color:var(--muted);padding-bottom:14px;}
+
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-top:6px;}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);}
+  .btn:hover{border-color:var(--accent);color:var(--accent);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .btn.primary:hover{color:#fff;opacity:.9;}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  .goalcard{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .goalcard .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .goalcard .v{font-size:22px;font-weight:800;margin-top:2px;}
+  .goalcard .f{font-size:13px;color:var(--muted);}
+  .badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;border:1px solid var(--line);border-radius:6px;padding:3px 9px;color:var(--muted);}
+  .badge.saved{color:var(--z-easy);border-color:var(--z-easy);}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:22px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:13px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+
+  .tablewrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  th.r,td.r{text-align:right;}
+  td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:14.5px;}
+  tr:last-child td{border-bottom:none;}
+  .zdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:middle;}
+  .zname{font-weight:700;}
+  .zsub{font-size:12px;color:var(--muted);display:block;margin-top:1px;}
+  .grp{border-left:5px solid var(--gc,var(--line));}
+  .subh{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:14px 0 2px;}
+  .subh:first-of-type{margin-top:2px;}
+  td small{color:var(--muted);}
+  .saved-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .saved-item:last-child{border-bottom:none;}
+  .saved-item button{border:none;background:none;color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;padding:2px 6px;}
+  .hidden{display:none !important;}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+  @media(max-width:480px){.outs{grid-template-columns:1fr;}}
+
+  .opts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+  .numrow{display:flex;gap:12px;flex-wrap:wrap;}
+  .numrow .field{min-width:120px;}
+  .numrow input.plain{width:100%;height:48px;border:1px solid var(--line);border-radius:8px;text-align:center;font-size:20px;font-weight:800;font-family:ui-monospace,monospace;background:#fff;color:var(--ink);-moz-appearance:textfield;}
+  .numrow input.plain::-webkit-outer-spin-button,.numrow input.plain::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .verdict{font-size:24px;font-weight:800;margin:2px 0 6px;}
+  .verdict.ok{color:var(--z-easy);} .verdict.near{color:var(--z-thr);} .verdict.far{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Калории · белки · жиры · углеводы</div>
+    <h1>Калорийность и макро для бегуна</h1>
+    <div class="sub">Суточная калорийность и макронутриенты с учётом недельного пробега, состава тела и цели по весу</div>
+  </header>
+
+  <div class="panel">
+    <div class="opts"><div class="label" style="margin:0;">Пол</div>
+      <div class="tabs"><button id="g_m" class="on" onclick="setG('M')">Мужчина</button><button id="g_f" onclick="setG('F')">Женщина</button></div></div>
+    <div class="opts"><div class="label" style="margin:0;">Единицы</div>
+      <div class="tabs"><button id="u_m" class="on" onclick="setU('metric')">кг / см</button><button id="u_e" onclick="setU('english')">lb / ft</button></div></div>
+    <div class="numrow">
+      <div class="field"><div class="fl">Возраст</div><input id="age" class="plain" type="number" value="35" min="10" max="105" inputmode="numeric"></div>
+      <div class="field"><div class="fl">Вес, <span class="wl">кг</span></div><input id="w" class="plain" type="number" value="75" min="30" step="0.1" inputmode="decimal"></div>
+      <div class="field" id="hMetric"><div class="fl">Рост, см</div><input id="hcm" class="plain" type="number" value="178" min="100" max="250" inputmode="numeric"></div>
+      <div class="field hidden" id="hEng"><div class="fl">Рост, фт</div><input id="hft" class="plain" type="number" value="5" min="3" max="8" inputmode="numeric"></div>
+      <div class="field hidden" id="hEng2"><div class="fl">дюймы</div><input id="hin" class="plain" type="number" value="10" min="0" max="11" inputmode="numeric"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="label">Тренировки и питание</div>
+    <div class="fl" style="font-size:11px;color:var(--muted);margin:0 0 6px;text-transform:uppercase;letter-spacing:.08em;">Недельный пробег</div>
+    <select id="mi"><option value="0">Не указано</option><option value="20" selected>10–29 миль / 16–47 км</option><option value="40">30–49 миль / 48–79 км</option><option value="60">50–69 миль / 80–111 км</option><option value="80">70–89 миль / 112–143 км</option><option value="100">90+ миль / 144+ км</option></select>
+    <div class="fl" style="font-size:11px;color:var(--muted);margin:0 0 6px;text-transform:uppercase;letter-spacing:.08em;">Жировая масса</div>
+    <select id="bf"><option value="">Не указано (оценка по росту/весу/возрасту)</option><option value="6.5">Очень худой (4–9%)</option><option value="12">Худой (10–14%)</option><option value="17">Стройный (15–19%)</option><option value="22" selected>Средний (20–24%)</option><option value="26.5">Немного избыточный (24–29%)</option><option value="32">Избыточный (30+%)</option></select>
+    <div class="fl" style="font-size:11px;color:var(--muted);margin:0 0 6px;text-transform:uppercase;letter-spacing:.08em;">Соотношение У / Б / Ж</div>
+    <select id="dr"><option value="60,15,25">Высокоуглеводное: 60/15/25</option><option value="50,20,30" selected>Спортивное: 50/20/30</option><option value="40,30,30">Сбалансированное: 40/30/30</option><option value="20,50,30">Низкоуглеводное: 20/50/30</option></select>
+    <div class="fl" style="font-size:11px;color:var(--muted);margin:0 0 6px;text-transform:uppercase;letter-spacing:.08em;">Снижение веса</div>
+    <select id="fl"><option value="0">0 кг/нед</option><option value="0.225">0,225 кг/нед (0,5 lb)</option><option value="0.45">0,45 кг/нед (1 lb)</option><option value="0.675">0,675 кг/нед (1,5 lb)</option></select>
+  </div>
+  <div class="outs">
+    <div class="out"><div class="k">Поддержание</div><div class="v"><span id="o_maint">—</span><small> ккал</small></div></div>
+    <div class="out hl"><div class="k">Цель на день</div><div class="v"><span id="o_target">—</span><small> ккал</small></div></div>
+    <div class="out"><div class="k">Базовый обмен</div><div class="v"><span id="o_bmr">—</span><small> ккал</small></div></div>
+  </div>
+  <div id="warn"></div>
+  <div class="panel"><div class="label">Макронутриенты в день</div>
+    <div class="tablewrap"><table><thead><tr><th>Нутриент</th><th class="r">Доля</th><th class="r">Ккал</th><th class="r">Граммы</th></tr></thead><tbody id="macros"></tbody></table></div></div>
+  <div class="note">
+    <p><b>Как считается.</b> Базовый обмен — формула Катча–Макардла по безжировой массе (если выбрана жировая масса) или Миффлина–Сан-Жеора (если нет). Умножается на 1,2 (повседневная активность без бега). К этому добавляется расход на бег: примерно 1 ккал на кг веса на километр, по середине выбранного диапазона недельного пробега (20, 40, 60, 80, 100 миль), в пересчёте на день.</p>
+    <p><b>Снижение веса:</b> дефицит 500 ккал в день на каждый фунт (0,45 кг) в неделю. <b>Макро:</b> 4 ккал/г углеводов и белка, 9 ккал/г жира.</p>
+    <p>Результат — ориентир, а не медицинская рекомендация. Цели ниже базового обмена нежелательны для бегуна.</p>
+  </div>
+  <footer>Катч–Макардл / Миффлин–Сан-Жеор · расход на бег ≈1 ккал/кг/км</footer>
+</div>
+<script>
+
+  const $=id=>document.getElementById(id);
+  let G='M',U='metric';
+  function setG(g){G=g;$('g_m').classList.toggle('on',g==='M');$('g_f').classList.toggle('on',g==='F');render();}
+  function setU(u){
+    if(u===U)return;
+    const w=parseFloat($('w').value);
+    if(!isNaN(w))$('w').value=u==='english'?Math.round(w*2.20462):Math.round(w/2.20462*10)/10;
+    if(u==='english'){const cm=parseFloat($('hcm').value)||178,inch=cm/2.54;$('hft').value=Math.floor(inch/12);$('hin').value=Math.round(inch%12);}
+    else{const ft=parseFloat($('hft').value)||0,i=parseFloat($('hin').value)||0;$('hcm').value=Math.round((ft*12+i)*2.54);}
+    U=u;$('u_m').classList.toggle('on',u==='metric');$('u_e').classList.toggle('on',u==='english');
+    $('hMetric').classList.toggle('hidden',u==='english');$('hEng').classList.toggle('hidden',u==='metric');$('hEng2').classList.toggle('hidden',u==='metric');
+    document.querySelector('.wl').textContent=u==='metric'?'кг':'lb';render();
+  }
+  const fmt=n=>Math.round(n).toLocaleString('ru-RU');
+  function render(){
+    const age=Math.max(10,Math.min(105,parseFloat($('age').value)||0));
+    let kg=parseFloat($('w').value);kg=U==='english'?kg/2.20462:kg;
+    const cm=U==='metric'?parseFloat($('hcm').value):((parseFloat($('hft').value)||0)*12+(parseFloat($('hin').value)||0))*2.54;
+    if(!(kg>0)||!(cm>0)||!age){['o_maint','o_target','o_bmr'].forEach(i=>$(i).textContent='—');$('macros').innerHTML='';return;}
+    const bf=$('bf').value;
+    const bmr=bf!==''?370+21.6*kg*(1-parseFloat(bf)/100):10*kg+6.25*cm-5*age+(G==='M'?5:-161);
+    const run=parseFloat($('mi').value)*1.609344/7*kg*1.0;
+    const maint=bmr*1.2+run;
+    const def=parseFloat($('fl').value)/0.45359237*500;
+    const target=maint-def;
+    $('o_bmr').textContent=fmt(bmr);$('o_maint').textContent=fmt(maint);$('o_target').textContent=fmt(target);
+    $('warn').innerHTML=target<bmr?'<div class="note" style="margin:0 0 16px;border-left-color:var(--accent)"><b>Внимание.</b> Цель ниже базового обмена — для бегуна это слишком мало, уменьшите дефицит.</div>':'';
+    const r=$('dr').value.split(',').map(Number),kc=[4,4,9],names=['Углеводы','Белки','Жиры'];
+    $('macros').innerHTML=r.map((p,i)=>{const k=target*p/100;return `<tr><td><span class="zname">${names[i]}</span></td><td class="r mono">${p}%</td><td class="r mono">${fmt(k)}</td><td class="r mono"><b>${fmt(k/kc[i])} г</b></td></tr>`;}).join('');
+  }
+  ['age','w','hcm','hft','hin','mi','bf','dr','fl'].forEach(id=>{$(id).addEventListener('input',render);$(id).addEventListener('change',render);});
+  render();
+
+</script>
+</body>
+</html>

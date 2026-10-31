@@ -1,0 +1,7 @@
+// Extracted from bundle.58b8cfd182ed54451183.js
+// Source SHA256 9f62d2581fb6bfe0ebb573e02848df33dd8e0747c141370c3cd68d65b237a391
+// Byte offsets (UTF-16): 7527218..7528341
+// This is a fragment of the vendor bundle, not an independently runnable engine.
+function hj() {
+  return r.createElement(r.Fragment, null, r.createElement(PP, null), r.createElement(fO, { name: "problem", layout: Aj, position: 1, id: "problem" }, r.createElement(xO, null)), r.createElement(fO, { name: "fix_steps", layout: Aj, position: 2, id: "how" }, r.createElement(BM, null)), r.createElement(fO, { name: "coach_texts", layout: Aj, position: 3 }, r.createElement(IM, null)), r.createElement(fO, { name: "features", layout: Aj, position: 4 }, r.createElement(kR, null)), r.createElement(fO, { name: "real_people", layout: Aj, position: 5 }, r.createElement(UR, null)), r.createElement(fO, { name: "reviews", layout: Aj, position: 6 }, r.createElement(oF, null)), r.createElement(fO, { name: "community", layout: Aj, position: 7, id: "community" }, r.createElement(OF, null)), r.createElement(fO, { name: "pricing", layout: Aj, position: 8 }, r.createElement(fj, null)), r.createElement(fO, { name: "faq", layout: Aj, position: 9 }, r.createElement(ij, null)), r.createElement(fO, { name: "cta_band", layout: Aj, position: 10 }, r.createElement($D, { title: "Your plan is one tap away", sub: "Build it in under a minute and run your first workout today.", cta: "Start training free" })), r.createElement(fx.A, { runnerCount: rv.rm }));
+}

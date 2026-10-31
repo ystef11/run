@@ -1,0 +1,1 @@
+const s=r=>{const e=Number(r);return!Number.isFinite(e)||e<=0};function f(r,e="zh",u=!1){if(s(r))return"--";const o=Math.round(Number(r)),t=Math.floor(o/60),n=o%60;if(e==="en")return t<=0?`${n} min`:n?`${t} hr ${n} min`:`${t} hr`;const i=u?"分":"分鐘";return t<=0?`${n} ${i}`:n?`${t} 小時 ${n} 分`:`${t} 小時`}export{f};

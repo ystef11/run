@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тренировочные темпы и времена на дистанциях</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --z-rec:#7f95a3;--z-easy:#5b8c5a;--z-mp:#df4a2e;--z-thr:#d98a1f;--z-vo2:#7d5bd6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+  select{width:100%;height:48px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:16px;padding:0 12px;margin-bottom:12px;}
+  select:focus,.field input:focus{outline:2px solid var(--accent);outline-offset:-2px;}
+
+  .triofields{display:flex;gap:10px;flex-wrap:wrap;}
+  .field{flex:1;min-width:80px;}
+  .field .fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .field .box{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .field input{flex:1;width:100%;border:none;height:52px;text-align:center;font-size:22px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;min-width:0;}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field .arrows{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .field .arrows button{border:none;background:#f0eee9;color:var(--ink);width:26px;height:26px;cursor:pointer;padding:0;font-size:10px;line-height:1;}
+  .field .arrows button:first-child{border-bottom:1px solid var(--line);}
+  .field .arrows button:active{background:var(--accent);color:#fff;}
+  .colon{align-self:flex-end;font-size:22px;font-weight:800;color:var(--muted);padding-bottom:14px;}
+
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-top:6px;}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);}
+  .btn:hover{border-color:var(--accent);color:var(--accent);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .btn.primary:hover{color:#fff;opacity:.9;}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  .goalcard{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .goalcard .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .goalcard .v{font-size:22px;font-weight:800;margin-top:2px;}
+  .goalcard .f{font-size:13px;color:var(--muted);}
+  .badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;border:1px solid var(--line);border-radius:6px;padding:3px 9px;color:var(--muted);}
+  .badge.saved{color:var(--z-easy);border-color:var(--z-easy);}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:22px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:13px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+
+  .tablewrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  th.r,td.r{text-align:right;}
+  td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:14.5px;}
+  tr:last-child td{border-bottom:none;}
+  .zdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:middle;}
+  .zname{font-weight:700;}
+  .zsub{font-size:12px;color:var(--muted);display:block;margin-top:1px;}
+  .grp{border-left:5px solid var(--gc,var(--line));}
+  .subh{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:14px 0 2px;}
+  .subh:first-of-type{margin-top:2px;}
+  td small{color:var(--muted);}
+  .saved-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .saved-item:last-child{border-bottom:none;}
+  .saved-item button{border:none;background:none;color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;padding:2px 6px;}
+  .ed{cursor:text;border-bottom:1px dotted #b9b5ab;}
+  .ed:hover{background:#fbeee9;}
+  .ed-in{width:78px;height:28px;border:1px solid var(--accent);border-radius:6px;text-align:right;font:inherit;font-weight:800;padding:0 6px;}
+  .hidden{display:none !important;}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+  @media(max-width:480px){.outs{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Цель · форма · темпы</div>
+    <h1>Тренировочные темпы</h1>
+    <div class="sub">По целевому результату и недавней гонке — темпы тренировок всех типов и прогноз времени на любых дистанциях</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Ваша цель</div>
+    <select id="goalDist"></select>
+    <div class="triofields">
+      <div class="field"><div class="fl">Часы</div><div class="box"><input id="g_h" class="mono" type="number" min="0" max="99" value="3" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('g_h',1,99)">▲</button><button onclick="bump('g_h',-1,99)">▼</button></div></div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Минуты</div><div class="box"><input id="g_m" class="mono" type="number" min="0" max="59" value="15" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('g_m',1,59)">▲</button><button onclick="bump('g_m',-1,59)">▼</button></div></div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Секунды</div><div class="box"><input id="g_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('g_s',1,59)">▲</button><button onclick="bump('g_s',-1,59)">▼</button></div></div></div>
+    </div>
+
+    <div class="label" style="margin-top:22px;">Недавний результат гонки</div>
+    <select id="curDist"></select>
+    <div id="curTime" class="triofields">
+      <div class="field"><div class="fl">Часы</div><div class="box"><input id="c_h" class="mono" type="number" min="0" max="99" value="3" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('c_h',1,99)">▲</button><button onclick="bump('c_h',-1,99)">▼</button></div></div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Минуты</div><div class="box"><input id="c_m" class="mono" type="number" min="0" max="59" value="15" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('c_m',1,59)">▲</button><button onclick="bump('c_m',-1,59)">▼</button></div></div></div>
+      <div class="colon">:</div>
+      <div class="field"><div class="fl">Секунды</div><div class="box"><input id="c_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('c_s',1,59)">▲</button><button onclick="bump('c_s',-1,59)">▼</button></div></div></div>
+    </div>
+
+    <div class="toolbar" style="margin-top:18px;">
+      <div class="tabs" id="unitTabs">
+        <span style="font-size:12px;color:var(--muted);align-self:center;margin-right:2px;">Темп</span>
+        <button id="u_km" class="on" onclick="setUnit('km')">мин/км</button>
+        <button id="u_mi" onclick="setUnit('mi')">мин/миля</button>
+      </div>
+      <button class="btn" onclick="resetAll()">Сбросить</button>
+    </div>
+  </div>
+
+  <div class="panel goalcard">
+    <div>
+      <div class="k">Ваша цель</div>
+      <div class="v" id="gc_goal">—</div>
+      <div class="f" id="gc_from"></div>
+    </div>
+    <div style="text-align:right;">
+      <span class="badge" id="gc_badge">Не сохранено</span>
+      <div class="actions" style="margin-top:10px;justify-content:flex-end;">
+        <button class="btn primary" onclick="saveCurrent()">Сохранить темпы</button>
+        <button class="btn" onclick="shareLink()" id="shareBtn">Поделиться ссылкой</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="savedPanel">
+    <div class="label">Сохранённые цели</div>
+    <div id="savedList"></div>
+  </div>
+
+  <div class="outs" id="outs">
+    <div class="out hl"><div class="k">VDOT цели</div><div class="v"><span id="o_vg">—</span></div></div>
+    <div class="out"><div class="k">VDOT сейчас</div><div class="v"><span id="o_vc">—</span></div></div>
+    <div class="out"><div class="k">Рост формы</div><div class="v"><span id="o_gap">—</span></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="tabs" id="mainTabs">
+      <button id="tab_paces" class="on" onclick="setTab('paces')">Тренировочные темпы</button>
+      <button id="tab_races" onclick="setTab('races')">Времена на дистанциях</button>
+    </div>
+  </div>
+
+  <div id="view_paces">
+    <div class="panel" id="basisPanel">
+      <div class="label">Темпы рассчитаны для</div>
+      <div class="tabs">
+        <button id="b_goal" class="on" onclick="setBasis('goal')">Цели</button>
+        <button id="b_cur" onclick="setBasis('cur')">Текущей формы</button>
+      </div>
+      <div class="hint" id="basisHint">Темпы подобраны под форму, необходимую для цели — к ним нужно прийти по ходу подготовки.</div>
+    </div>
+    <div id="paces"></div>
+  </div>
+
+  <div id="view_races" class="hidden">
+    <div class="panel">
+      <div class="label">Прогноз времени и темпа по дистанциям</div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Дистанция</th><th class="r">Цель</th><th class="r cur-col">Сейчас</th></tr></thead>
+          <tbody id="races"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;"><button class="btn" id="moreBtn" onclick="toggleMore()">+ Все дистанции</button></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><b>Как считается.</b> Результат гонки переводится в VDOT (модель Дэниелса) — показатель беговой формы. От VDOT считаются эквивалентные результаты на других дистанциях и скорость на уровне МПК (vVO₂max). Остальные темпы заданы долями этой скорости.</p>
+    <p><b>Выносливые темпы</b> — доли МПК по Дэниелсу: лёгкий 65–74%, восстановительный 59–65%, длинная — 62–76%, пороговый (vLT) — 88% МПК. Критическая скорость (CV) — темп 30-минутной гонки.</p>
+    <p><b>Темпы на выносливость и скорость</b> — доли порогового темпа и vVO₂max соответственно (ориентиры, а не точные значения): стайерам с хорошей выносливостью ближе нижний край диапазонов, спринтерам — верхний. Профили «выносливость» и «скорость» отличаются запасом скорости на коротких отрезках.</p>
+    <p><b>Обратный поиск.</b> Двойной клик (на телефоне — двойное касание) по любому темпу — введите свой (м:сс). Калькулятор подберёт форму (VDOT), при которой именно такой темп получается в этой строке, и пересчитает все остальные темпы и времена; время в блоке «Ваша цель» (или «Недавний результат» при расчёте по текущей форме) обновится само. Любая правка полей возвращает обычный режим.</p>
+    <p><b>Прогноз по дистанциям.</b> От 1500 м до марафона — по VDOT. Короче 1500 м и длиннее марафона — по формуле Ригеля (степень 1,06) от ближайшей опорной дистанции; на 50 км – 100 миль и на отрезках до 600 м прогноз грубый. Чем ближе недавний результат к цели по дистанции и по времени, тем точнее.</p>
+  </div>
+
+  <footer>Модель: VDOT (Дэниелс) · Ригель (1,06) за пределами 1500 м – марафон</footer>
+</div>
+
+<script>
+  const $=id=>document.getElementById(id);
+
+  // ================= Дистанции (ключи совместимы с параметрами ссылки mcmillanrunning.com) =================
+  const MI=1609.344;
+  const DISTS=[
+    ['100m','100 м',100],['200m','200 м',200],['400m','400 м',400],['500m','500 м',500],['600m','600 м',600],
+    ['800m','800 м',800],['1000m','1000 м',1000],['1500m','1500 м',1500],['1600m','1600 м',1600],
+    ['Mile','Миля',MI],['2000m','2000 м',2000],['1.5 Miles','1,5 мили',1.5*MI],['3000m','3000 м',3000],
+    ['3200m','3200 м',3200],['2 Miles','2 мили',2*MI],['4000m','4000 м',4000],['3 Miles','3 мили',3*MI],
+    ['5000m','5 км',5000],['6000m','6 км',6000],['4 Miles','4 мили',4*MI],['8000m','8 км',8000],
+    ['5 Miles','5 миль',5*MI],['10km','10 км',10000],['12km','12 км',12000],['15km','15 км',15000],
+    ['10 Miles','10 миль',10*MI],['20km','20 км',20000],['1/2 Marathon','Полумарафон',21097.5],
+    ['15 Miles','15 миль',15*MI],['25km','25 км',25000],['30km','30 км',30000],['20 Miles','20 миль',20*MI],
+    ['25 Miles','25 миль',25*MI],['Marathon','Марафон',42195],['50km','50 км',50000],
+    ['50 Miles','50 миль',50*MI],['100km','100 км',100000],['100 Miles','100 миль',100*MI]
+  ];
+  const DMAP={}; DISTS.forEach(d=>DMAP[d[0]]=d);
+  const GOAL_KEYS=DISTS.filter(d=>d[2]>=400).map(d=>d[0]);
+  const SHORT_RACES=['400m','800m','1500m','Mile','3000m','5000m','10km','15km','10 Miles','1/2 Marathon','Marathon','50km'];
+
+  // ================= Физиология: VDOT (Дэниелс) =================
+  function vo2At(v){return -4.60+0.182258*v+0.000104*v*v;}         // v: м/мин
+  function vFromVo2(x){return (-0.182258+Math.sqrt(0.182258*0.182258+4*0.000104*(x+4.60)))/(2*0.000104);}
+  function pctAt(t){return 0.8+0.1894393*Math.exp(-0.012778*t)+0.2989558*Math.exp(-0.1932605*t);} // t: мин
+  function vdotRaw(distM,sec){const t=sec/60;return vo2At(distM/t)/pctAt(t);}
+  function timeRaw(distM,vd){let lo=distM/9,hi=distM/1.0;
+    for(let i=0;i<70;i++){const mid=(lo+hi)/2;(vdotRaw(distM,mid)>vd)?lo=mid:hi=mid;}return (lo+hi)/2;}
+  const RIEGEL=1.06, D_LO=1500, D_HI=42195;
+  function vdotAny(d,s){
+    if(d>D_HI){s=s*Math.pow(D_HI/d,RIEGEL);d=D_HI;}
+    else if(d<D_LO){s=s*Math.pow(D_LO/d,RIEGEL);d=D_LO;}
+    return vdotRaw(d,s);
+  }
+  function timeAny(d,vd){
+    if(d>D_HI) return timeRaw(D_HI,vd)*Math.pow(d/D_HI,RIEGEL);
+    if(d<D_LO) return timeRaw(D_LO,vd)*Math.pow(d/D_LO,RIEGEL);
+    return timeRaw(d,vd);
+  }
+
+  // ================= Набор темпов (сек/км) для заданного VDOT =================
+  const paceOfV=v=>60000/v;
+  // эндурансные: доля МПК (Дэниелс: E 59–74%, T ≈ 88%); диапазон [быстрый, медленный] по темпу
+  function pr(vd,pFast,pSlow){return [paceOfV(vFromVo2(pFast*vd)),paceOfV(vFromVo2(pSlow*vd))];}
+  function spd(v,sFast,sSlow){return [paceOfV(v*sFast),paceOfV(v*sSlow)];}
+  const SPEED_END={400:[1.00,1.07],600:[0.99,1.05],800:[0.97,1.03],1000:[0.96,1.01],1200:[0.95,1.00],1600:[0.92,0.97]};
+  const SPEED_SPD={400:[1.05,1.12],600:[1.03,1.10],800:[1.00,1.07],1000:[0.98,1.03],1200:[0.97,1.02],1600:[0.95,1.00]};
+  const SPRINT_END={100:[1.12,1.24],200:[1.10,1.22],300:[1.08,1.18],400:[1.06,1.16],600:[1.02,1.10]};
+  const SPRINT_SPD={100:[1.18,1.30],200:[1.15,1.27],300:[1.12,1.23],400:[1.10,1.20],600:[1.06,1.14]};
+
+  function paceSet(vd,goalPaceSecKm){
+    const v100=vFromVo2(vd);
+    const vLT=vFromVo2(0.88*vd);
+    const vCV=vFromVo2(vd*pctAt(30));
+    const P={
+      goal:goalPaceSecKm,
+      lt:paceOfV(vLT), cv:paceOfV(vCV), vo2:paceOfV(v100),
+      rec:pr(vd,0.65,0.59), long:pr(vd,0.76,0.62), easy:pr(vd,0.74,0.65),
+      bak:spd(vLT,0.99,0.97), steady:spd(vLT,0.97,0.92), tempo:spd(vLT,1.02,0.99),
+      tint:spd(vLT,1.05,1.02), cruise:spd(vLT,1.07,1.04),
+      speedEnd:{}, speedSpd:{}, sprintEnd:{}, sprintSpd:{}
+    };
+    for(const k in SPEED_END){P.speedEnd[k]=spd(v100,SPEED_END[k][1],SPEED_END[k][0]);P.speedSpd[k]=spd(v100,SPEED_SPD[k][1],SPEED_SPD[k][0]);}
+    for(const k in SPRINT_END){P.sprintEnd[k]=spd(v100,SPRINT_END[k][1],SPRINT_END[k][0]);P.sprintSpd[k]=spd(v100,SPRINT_SPD[k][1],SPRINT_SPD[k][0]);}
+    return P;
+  }
+
+  // ================= Форматирование =================
+  let unit='km';
+  const UF=()=>unit==='km'?1:MI/1000;       // сек/км → сек/ед.
+  const UL=()=>unit==='km'?'/км':'/миля';
+  function fmtMS(sec){sec=Math.round(sec);const m=Math.floor(sec/60),s=sec%60;return m+':'+String(s).padStart(2,'0');}
+  function fmtPace(secKm){return fmtMS(secKm*UF());}
+  function fmtRange(r){return fmtPace(r[0])+' – '+fmtPace(r[1]);}
+  function fmtTime(sec){ // целые секунды: ч:мм:сс
+    sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+    return h>0?h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'):m+':'+String(s).padStart(2,'0');
+  }
+  function fmtRace(sec){ // до 15 мин — десятые доли
+    if(sec>=900) return fmtTime(sec);
+    const t=Math.round(sec*10), whole=Math.floor(t/10), tenth=t%10;
+    if(whole<60) return whole+'.'+tenth;
+    return Math.floor(whole/60)+':'+String(whole%60).padStart(2,'0')+'.'+tenth;
+  }
+  function fmtSplit(sec){
+    if(sec<60){const t=Math.round(sec*10)/10; return t.toFixed(1);}
+    return fmtMS(sec);
+  }
+
+  // ================= Состояние/ввод =================
+  let tab='paces', basis='goal', showAll=false, current=null, manual=null; // manual={side:'g'|'c',vd} — форма, найденная по введённому вручную темпу
+  const secOf=p=>(parseInt($(p+'_h').value,10)||0)*3600+(parseInt($(p+'_m').value,10)||0)*60+(parseInt($(p+'_s').value,10)||0);
+  function setSec(p,t){$(p+'_h').value=Math.floor(t/3600);$(p+'_m').value=Math.floor((t%3600)/60);$(p+'_s').value=t%60;}
+  function bump(id,x,max){const el=$(id);let v=(parseInt(el.value,10)||0)+x;if(v<0)v=max;if(v>max)v=0;el.value=v;manual=null;render();}
+
+  function fillSelects(){
+    $('goalDist').innerHTML=GOAL_KEYS.map(k=>`<option value="${k}">${DMAP[k][1]}</option>`).join('');
+    $('curDist').innerHTML='<option value="N/A">Давно не стартовал(а)</option>'+DISTS.filter(d=>d[2]>=400).map(d=>`<option value="${d[0]}">${d[1]}</option>`).join('');
+    $('goalDist').value='Marathon'; $('curDist').value='Marathon';
+  }
+
+  function setUnit(u){unit=u;$('u_km').classList.toggle('on',u==='km');$('u_mi').classList.toggle('on',u==='mi');render();}
+  function setTab(t){tab=t;$('tab_paces').classList.toggle('on',t==='paces');$('tab_races').classList.toggle('on',t==='races');
+    $('view_paces').classList.toggle('hidden',t!=='paces');$('view_races').classList.toggle('hidden',t!=='races');}
+  function setBasis(b){basis=b;$('b_goal').classList.toggle('on',b==='goal');$('b_cur').classList.toggle('on',b==='cur');render();}
+  function toggleMore(){showAll=!showAll;render();}
+  function resetAll(){
+    $('goalDist').value='Marathon';setSec('g',3*3600+15*60);
+    $('curDist').value='Marathon';setSec('c',3*3600+15*60);
+    basis='goal';manual=null;$('b_goal').classList.add('on');$('b_cur').classList.remove('on');
+    render();
+  }
+
+  // ================= Рендер =================
+  function paceCard(title,color,rows){
+    return `<div class="panel grp" style="--gc:${color}"><div class="label">${title}</div><div class="tablewrap"><table><tbody>${rows}</tbody></table></div></div>`;
+  }
+  // Редактируемый темп: двойной клик → ввод вручную → обратный подбор формы (см. applyPace)
+  function ed(text,key){return `<span class="ed" data-pk="${key}" title="Двойной клик — ввести темп вручную">${text}</span>`;}
+  function edR(r,key){return ed(fmtPace(r[0]),key+':0')+' – '+ed(fmtPace(r[1]),key+':1');}
+  function row(name,val,sub){
+    return `<tr><td><span class="zname">${name}</span>${sub?`<span class="zsub">${sub}</span>`:''}</td><td class="r mono"><b>${val}</b> <small>${UL()}</small></td></tr>`;
+  }
+  function speedTable(title,obj,distKeys,name){
+    const rows=distKeys.map(k=>{
+      const r=obj[k], d=+k;
+      return `<tr><td class="mono">${d} м</td><td class="r mono">${edR(r,name+':'+k)}</td><td class="r mono"><small>${fmtSplit(r[0]*d/1000)} – ${fmtSplit(r[1]*d/1000)}</small></td></tr>`;
+    }).join('');
+    return `<div class="subh">${title}</div><div class="tablewrap"><table><thead><tr><th>Отрезок</th><th class="r">Темп ${UL()}</th><th class="r">Время</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+
+  function render(){
+    const gk=$('goalDist').value, ck=$('curDist').value;
+    const gd=DMAP[gk][2], gt=secOf('g');
+    const noCur=(ck==='N/A');
+    $('curTime').classList.toggle('hidden',noCur);
+    $('basisPanel').classList.toggle('hidden',noCur);
+    document.querySelectorAll('.cur-col').forEach(e=>e.classList.toggle('hidden',noCur));
+    const cd=noCur?gd:DMAP[ck][2], ct=noCur?gt:secOf('c');
+
+    if(gt<=0||ct<=0){
+      current=null;
+      $('paces').innerHTML='<div class="panel" style="color:var(--muted)">Введите время цели'+(noCur?'':' и недавней гонки')+'.</div>';
+      $('races').innerHTML='';
+      ['o_vg','o_vc','o_gap'].forEach(i=>$(i).textContent='—');
+      $('gc_goal').textContent='—';$('gc_from').textContent='';
+      return;
+    }
+    let vg=vdotAny(gd,gt), vc=noCur?vg:vdotAny(cd,ct);
+    if(manual){ if(manual.side==='g'){vg=manual.vd;if(noCur)vc=vg;} else if(!noCur){vc=manual.vd;} }
+    const useBasis=noCur?'goal':basis;
+    const vd=useBasis==='goal'?vg:vc;
+    const goalPace=gt/(gd/1000);
+    const P=paceSet(vd,useBasis==='goal'?goalPace:timeAny(gd,vc)/(gd/1000));
+
+    $('o_vg').textContent=vg.toFixed(1);
+    $('o_vc').textContent=noCur?'—':vc.toFixed(1);
+    $('o_gap').textContent=noCur?'—':((vg/vc-1)*100>=0?'+':'')+((vg/vc-1)*100).toFixed(1)+'%';
+    $('gc_goal').textContent=DMAP[gk][1]+' · '+fmtTime(gt);
+    $('gc_from').textContent=(noCur?'без недавнего результата':'от результата: '+DMAP[ck][1]+' · '+fmtTime(ct))+(manual?' · пересчитано по введённому темпу':'');
+    $('basisHint').textContent=useBasis==='goal'
+      ?'Темпы подобраны под форму, необходимую для цели — к ним нужно прийти по ходу подготовки.'
+      :'Темпы подобраны под вашу текущую форму по недавнему результату.';
+
+    current={gk,gt,ck,ct};
+    updateSavedBadge();
+
+    const gl=useBasis==='goal'?'Целевой темп':'Темп цели при текущей форме';
+    const spec=
+      row(gl,ed(fmtPace(P.goal),'goal'),DMAP[gk][1]+' · '+fmtTime(useBasis==='goal'?gt:timeAny(gd,vc)))+
+      row('Пороговый темп (vLT)',ed(fmtPace(P.lt),'lt'),'Темп около лактатного порога: примерно 1 час предельного усилия.')+
+      row('Критическая скорость (CV)',ed(fmtPace(P.cv),'cv'),'Темп примерно 30-минутной гонки: граница тяжёлой и очень тяжёлой нагрузки.')+
+      row('Темп МПК (vVO₂max)',ed(fmtPace(P.vo2),'vo2'),'Скорость, на которой достигается максимальное потребление кислорода.');
+    const endu=
+      row('Восстановительные пробежки',edR(P.rec,'rec'),'Очень лёгкий бег для восстановления между тяжёлыми днями.')+
+      row('Длинные',edR(P.long,'long'),'Широкий диапазон: начало медленнее, финиш можно ускорить.')+
+      row('Лёгкие',edR(P.easy,'easy'),'Основной объём недели, разговорный темп.');
+    const stam=
+      row('Бэккен / норвежский',edR(P.bak,'bak'),'Субпороговые отрезки чуть ниже порога (метод норвежских тренеров).')+
+      row('Устойчивый бег (steady-state)',edR(P.steady,'steady'),'Продолжительный бег ниже порога, между марафонским и пороговым темпом.')+
+      row('Темповые',edR(P.tempo,'tempo'),'Непрерывный бег на пороге 20–40 минут.')+
+      row('Темповые интервалы',edR(P.tint,'tint'),'Повторы на пороге и чуть быстрее с короткими паузами.')+
+      row('Круизные интервалы',edR(P.cruise,'cruise'),'Повторы 1–3 км на пороге с паузой 1 минута.');
+    const speed=
+      speedTable('Стайер · выносливость',P.speedEnd,Object.keys(SPEED_END),'speedEnd')+
+      speedTable('Средняя дистанция · скорость',P.speedSpd,Object.keys(SPEED_SPD),'speedSpd');
+    const sprint=
+      speedTable('Стайер · выносливость',P.sprintEnd,Object.keys(SPRINT_END),'sprintEnd')+
+      speedTable('Средняя дистанция · скорость',P.sprintSpd,Object.keys(SPRINT_SPD),'sprintSpd');
+    $('paces').innerHTML=
+      paceCard('Специальные темпы','var(--z-mp)',spec)+
+      paceCard('Темпы на выносливость','var(--z-rec)',endu)+
+      paceCard('Темпы на стамину','var(--z-thr)',stam)+
+      `<div class="panel grp" style="--gc:var(--z-vo2)"><div class="label">Темпы на скорость</div>${speed}</div>`+
+      `<div class="panel grp" style="--gc:var(--z-vo2)"><div class="label">Спринтерские темпы</div>${sprint}</div>`;
+
+    const keys=showAll?DISTS.map(d=>d[0]):SHORT_RACES;
+    $('races').innerHTML=keys.map(k=>{
+      const d=DMAP[k][2];
+      const cell=(vv,sd)=>{const s=timeAny(d,vv);return `<span class="mono"><b>${fmtRace(s)}</b> <small>(${ed(fmtPace(s/(d/1000)),'race:'+k+':'+sd)}${UL()})</small></span>`;};
+      const mark=(k===gk)?' style="background:#fbeee9"':'';
+      return `<tr${mark}><td><span class="zname">${DMAP[k][1]}</span></td><td class="r">${cell(vg,'g')}</td><td class="r cur-col${noCur?' hidden':''}">${cell(vc,'c')}</td></tr>`;
+    }).join('');
+    $('moreBtn').textContent=showAll?'− Меньше дистанций':'+ Все дистанции';
+  }
+
+  // ================= Сохранение (localStorage) и ссылка =================
+  const LS='mcmillan_saved_goals';
+  function loadSaved(){try{return JSON.parse(localStorage.getItem(LS)||'[]');}catch(e){return [];}}
+  function storeSaved(a){try{localStorage.setItem(LS,JSON.stringify(a));}catch(e){}}
+  const sameGoal=(a,b)=>a.gk===b.gk&&a.gt===b.gt&&a.ck===b.ck&&a.ct===b.ct;
+  function updateSavedBadge(){
+    const s=current&&loadSaved().some(x=>sameGoal(x,current));
+    $('gc_badge').textContent=s?'Сохранено':'Не сохранено';
+    $('gc_badge').classList.toggle('saved',!!s);
+  }
+  function saveCurrent(){
+    if(!current)return;
+    const a=loadSaved();
+    if(!a.some(x=>sameGoal(x,current))){a.unshift(Object.assign({ts:Date.now()},current));storeSaved(a.slice(0,30));}
+    renderSaved();updateSavedBadge();
+  }
+  function renderSaved(){
+    const a=loadSaved();
+    $('savedPanel').classList.toggle('hidden',!a.length);
+    $('savedList').innerHTML=a.map((x,i)=>{
+      const cur=x.ck==='N/A'?'':` <small>← ${DMAP[x.ck][1]} · ${fmtTime(x.ct)}</small>`;
+      return `<div class="saved-item"><span><b>${DMAP[x.gk][1]} · ${fmtTime(x.gt)}</b>${cur}</span><span><button onclick="loadGoal(${i})">Открыть</button><button onclick="delGoal(${i})" style="color:var(--muted)">Удалить</button></span></div>`;
+    }).join('');
+  }
+  function loadGoal(i){
+    const x=loadSaved()[i]; if(!x)return;
+    $('goalDist').value=x.gk;setSec('g',x.gt);$('curDist').value=x.ck;if(x.ck!=='N/A')setSec('c',x.ct);manual=null;render();
+  }
+  function delGoal(i){const a=loadSaved();a.splice(i,1);storeSaved(a);renderSaved();updateSavedBadge();}
+
+  function hms(t){return Math.floor(t/3600)+':'+Math.floor((t%3600)/60)+':'+(t%60);}
+  function parseHms(s){const p=(s||'').split(':').map(x=>parseInt(x,10));if(p.some(isNaN)||!p.length)return null;
+    while(p.length<3)p.unshift(0);return p[0]*3600+p[1]*60+p[2];}
+  function shareUrl(){
+    if(!current)return location.href;
+    const q=new URLSearchParams({distance:current.gk,time:hms(current.gt),current_distance:current.ck,current_time:hms(current.ct),units:unit});
+    return location.href.split('#')[0].split('?')[0]+'?'+q.toString();
+  }
+  function shareLink(){
+    const url=shareUrl();
+    const done=()=>{$('shareBtn').textContent='Ссылка скопирована';setTimeout(()=>$('shareBtn').textContent='Поделиться ссылкой',1800);};
+    try{navigator.clipboard.writeText(url).then(done,()=>{prompt('Ссылка:',url);});}catch(e){prompt('Ссылка:',url);}
+  }
+
+  // ================= Автозаполнение из параметров ссылки =================
+  // distance, time (ч:мм:сс), current_distance, current_time, units (km|mi) — те же ключи, что в исходном калькуляторе.
+  function applyPrefill(){
+    try{
+      const qp=new URLSearchParams(location.hash&&location.hash.length>1?location.hash.slice(1):location.search);
+      if(qp.has('distance')&&DMAP[qp.get('distance')]&&GOAL_KEYS.includes(qp.get('distance')))$('goalDist').value=qp.get('distance');
+      if(qp.has('time')){const t=parseHms(qp.get('time'));if(t>0)setSec('g',t);}
+      if(qp.has('current_distance')){const k=qp.get('current_distance');if(k==='N/A'||GOAL_KEYS.includes(k))$('curDist').value=k;}
+      if(qp.has('current_time')){const t=parseHms(qp.get('current_time'));if(t>0)setSec('c',t);}
+      if(qp.get('units')==='mi')setUnit('mi');
+    }catch(e){}
+  }
+
+  fillSelects();
+  applyPrefill();
+  const userChange=()=>{manual=null;render();};
+  ['goalDist','curDist'].forEach(id=>$(id).addEventListener('change',userChange));
+  ['g_h','g_m','g_s','c_h','c_m','c_s'].forEach(id=>$(id).addEventListener('input',userChange));
+
+  // ================= Обратный поиск: ввод темпа вручную (двойной клик по любому темпу) =================
+  // Темп из выбранной строки → VDOT (бисекцией, темп монотонно падает с ростом VDOT) → время на дистанции
+  // активной стороны (цель или текущая форма) записывается в поля, и весь калькулятор перестраивается.
+  function paceFor(vd,key){
+    const p=key.split(':'), n=p[0];
+    if(n==='goal'){const gd=DMAP[$('goalDist').value][2];return timeAny(gd,vd)/(gd/1000);}
+    if(n==='race'){const d=DMAP[p[1]][2];return timeAny(d,vd)/(d/1000);}
+    const P=paceSet(vd,0);
+    if(n==='lt'||n==='cv'||n==='vo2')return P[n];
+    return p.length===3?P[n][p[1]][+p[2]]:P[n][+p[1]];
+  }
+  function parsePace(txt){
+    txt=(txt||'').trim().replace(',','.');
+    if(!txt)return null;
+    let sec;
+    if(txt.includes(':')){const q=txt.split(':').map(Number);if(q.some(isNaN)||q.length>2)return null;sec=q[0]*60+q[1];}
+    else{const m=parseFloat(txt);if(isNaN(m))return null;sec=m*60;}
+    return sec>0?sec:null;
+  }
+  function applyPace(key,txt){
+    const perUnit=parsePace(txt);
+    if(perUnit==null){render();return;}
+    const target=perUnit/UF();                       // сек/км
+    const LO=15, HI=90;
+    if(!(target<=paceFor(LO,key)&&target>=paceFor(HI,key))){
+      render();$('gc_from').textContent='Темп вне допустимого диапазона (VDOT '+LO+'–'+HI+')';return;
+    }
+    let lo=LO,hi=HI;
+    for(let i=0;i<60;i++){const mid=(lo+hi)/2;(paceFor(mid,key)>target)?lo=mid:hi=mid;}
+    const vd=(lo+hi)/2;
+    const noCur=$('curDist').value==='N/A';
+    let side='g';
+    if(key.startsWith('race:'))side=key.split(':')[2];
+    else if(basis==='cur'&&!noCur)side='c';
+    if(side==='c'&&noCur)side='g';
+    const dist=side==='g'?DMAP[$('goalDist').value][2]:DMAP[$('curDist').value][2];
+    setSec(side,Math.round(timeAny(dist,vd)));
+    manual={side,vd};
+    render();
+  }
+  // setSec принимает префикс поля ('g'/'c')
+  let editing=false;
+  document.addEventListener('dblclick',e=>{
+    const el=e.target.closest&&e.target.closest('.ed');
+    if(!el||editing)return;
+    const key=el.dataset.pk, old=el.textContent;
+    editing=true;
+    const inp=document.createElement('input');
+    inp.type='text';inp.className='ed-in mono';inp.value=old;inp.inputMode='decimal';
+    inp.setAttribute('aria-label','Темп, мин:сек'+UL());
+    el.replaceWith(inp);inp.focus();inp.select();
+    let done=false;
+    const finish=ok=>{if(done)return;done=true;editing=false;ok?applyPace(key,inp.value):render();};
+    inp.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();finish(true);}else if(ev.key==='Escape'){finish(false);}});
+    inp.addEventListener('blur',()=>finish(true));
+  });
+  renderSaved();
+  render();
+</script>
+</body>
+</html>

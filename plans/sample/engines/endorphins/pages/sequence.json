@@ -1,0 +1,303 @@
+[
+  {
+    "order": 16,
+    "name": "advanced-training",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=advanced-training&edit=1",
+    "html": "16-advanced-training.html",
+    "metadata": "16-advanced-training.json"
+  },
+  {
+    "order": 17,
+    "name": "plan-complete-after-volume-edit",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=plan-complete",
+    "html": "17-plan-complete-after-volume-edit.html",
+    "metadata": "17-plan-complete-after-volume-edit.json"
+  },
+  {
+    "order": 14,
+    "name": "coaching-suggestions",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=coaching-suggestions",
+    "html": "14-coaching-suggestions.html",
+    "metadata": "14-coaching-suggestions.json"
+  },
+  {
+    "order": 13,
+    "name": "plan-start-generic-after-edit",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=plan-start",
+    "html": "13-plan-start-generic-after-edit.html",
+    "metadata": "13-plan-start-generic-after-edit.json"
+  },
+  {
+    "order": 12,
+    "name": "recent-race-data",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=recent-race-data",
+    "html": "12-recent-race-data.html",
+    "metadata": "12-recent-race-data.json"
+  },
+  {
+    "order": 11,
+    "name": "long-run-day",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=long-run",
+    "html": "11-long-run-day.html",
+    "metadata": "11-long-run-day.json"
+  },
+  {
+    "order": 10,
+    "name": "available-days",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=training-days",
+    "html": "10-available-days.html",
+    "metadata": "10-available-days.json"
+  },
+  {
+    "order": 9,
+    "name": "pacing-system",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=goal-hype",
+    "html": "09-pacing-system.html",
+    "metadata": "09-pacing-system.json"
+  },
+  {
+    "order": 8,
+    "name": "runs-per-week",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=level",
+    "html": "08-runs-per-week.html",
+    "metadata": "08-runs-per-week.json"
+  },
+  {
+    "order": 7,
+    "name": "goal-generic-after-edit",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=goal-selection",
+    "html": "07-goal-generic-after-edit.html",
+    "metadata": "07-goal-generic-after-edit.json"
+  },
+  {
+    "order": 5,
+    "name": "find-your-race",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=find-your-race",
+    "html": "05-find-your-race.html",
+    "metadata": "05-find-your-race.json"
+  },
+  {
+    "order": 4,
+    "name": "device-connection",
+    "url": "https://endorphinsrunning.com/onboarding/race?step=device-connection",
+    "html": "04-device-connection.html",
+    "metadata": "04-device-connection.json"
+  },
+  {
+    "order": 2,
+    "name": "training-choice",
+    "url": "https://endorphinsrunning.com/onboarding?step=training-choice",
+    "html": "02-training-choice.html",
+    "metadata": "02-training-choice.json"
+  },
+  {
+    "order": 18,
+    "name": "download-app",
+    "url": "https://endorphinsrunning.com/app-handoff",
+    "html": "18-download-app.html",
+    "metadata": "18-download-app.json"
+  },
+  {
+    "order": 19,
+    "name": "active-plan",
+    "url": "https://endorphinsrunning.com/training",
+    "html": "19-active-plan.html",
+    "metadata": "19-active-plan.json"
+  },
+  {
+    "order": 20,
+    "name": "week-01-overview",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/1",
+    "html": "20-week-01-overview.html",
+    "metadata": "20-week-01-overview.json"
+  },
+  {
+    "order": 21,
+    "name": "workout-tempo",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a290d",
+    "html": "21-workout-tempo.html",
+    "metadata": "21-workout-tempo.json"
+  },
+  {
+    "order": 101,
+    "name": "week-01",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/1",
+    "html": "101-week-01.html",
+    "metadata": "101-week-01.json"
+  },
+  {
+    "order": 210,
+    "name": "week-1-workout-1",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a290d",
+    "html": "210-week-1-workout-1.html",
+    "metadata": "210-week-1-workout-1.json"
+  },
+  {
+    "order": 211,
+    "name": "week-1-workout-2",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a290f",
+    "html": "211-week-1-workout-2.html",
+    "metadata": "211-week-1-workout-2.json"
+  },
+  {
+    "order": 212,
+    "name": "week-1-workout-3",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a2910",
+    "html": "212-week-1-workout-3.html",
+    "metadata": "212-week-1-workout-3.json"
+  },
+  {
+    "order": 102,
+    "name": "week-02",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/2",
+    "html": "102-week-02.html",
+    "metadata": "102-week-02.json"
+  },
+  {
+    "order": 220,
+    "name": "week-2-workout-1",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a2911",
+    "html": "220-week-2-workout-1.html",
+    "metadata": "220-week-2-workout-1.json"
+  },
+  {
+    "order": 221,
+    "name": "week-2-workout-2",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a2912",
+    "html": "221-week-2-workout-2.html",
+    "metadata": "221-week-2-workout-2.json"
+  },
+  {
+    "order": 222,
+    "name": "week-2-workout-3",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/workout/6ae253d42fd82455250a2913",
+    "html": "222-week-2-workout-3.html",
+    "metadata": "222-week-2-workout-3.json"
+  },
+  {
+    "order": 223,
+    "name": "week-2-workout-4",
+    "url": "https://endorphinsrunning.com/training-purchase?source=week_view_workout_lock",
+    "html": "223-week-2-workout-4.html",
+    "metadata": "223-week-2-workout-4.json"
+  },
+  {
+    "order": 224,
+    "name": "week-2-workout-5",
+    "url": "https://endorphinsrunning.com/training-purchase?source=week_view_workout_lock",
+    "html": "224-week-2-workout-5.html",
+    "metadata": "224-week-2-workout-5.json"
+  },
+  {
+    "order": 225,
+    "name": "week-2-workout-6",
+    "url": "https://endorphinsrunning.com/training-purchase?source=week_view_workout_lock",
+    "html": "225-week-2-workout-6.html",
+    "metadata": "225-week-2-workout-6.json"
+  },
+  {
+    "order": 103,
+    "name": "week-03",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/3",
+    "html": "103-week-03.html",
+    "metadata": "103-week-03.json"
+  },
+  {
+    "order": 104,
+    "name": "week-04",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/4",
+    "html": "104-week-04.html",
+    "metadata": "104-week-04.json"
+  },
+  {
+    "order": 105,
+    "name": "week-05",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/5",
+    "html": "105-week-05.html",
+    "metadata": "105-week-05.json"
+  },
+  {
+    "order": 106,
+    "name": "week-06",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/6",
+    "html": "106-week-06.html",
+    "metadata": "106-week-06.json"
+  },
+  {
+    "order": 107,
+    "name": "week-07",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/7",
+    "html": "107-week-07.html",
+    "metadata": "107-week-07.json"
+  },
+  {
+    "order": 108,
+    "name": "week-08",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/8",
+    "html": "108-week-08.html",
+    "metadata": "108-week-08.json"
+  },
+  {
+    "order": 109,
+    "name": "week-09",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/9",
+    "html": "109-week-09.html",
+    "metadata": "109-week-09.json"
+  },
+  {
+    "order": 110,
+    "name": "week-10",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/10",
+    "html": "110-week-10.html",
+    "metadata": "110-week-10.json"
+  },
+  {
+    "order": 111,
+    "name": "week-11",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/11",
+    "html": "111-week-11.html",
+    "metadata": "111-week-11.json"
+  },
+  {
+    "order": 112,
+    "name": "week-12",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/12",
+    "html": "112-week-12.html",
+    "metadata": "112-week-12.json"
+  },
+  {
+    "order": 113,
+    "name": "week-13",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/13",
+    "html": "113-week-13.html",
+    "metadata": "113-week-13.json"
+  },
+  {
+    "order": 114,
+    "name": "week-14",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/14",
+    "html": "114-week-14.html",
+    "metadata": "114-week-14.json"
+  },
+  {
+    "order": 115,
+    "name": "week-15",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/15",
+    "html": "115-week-15.html",
+    "metadata": "115-week-15.json"
+  },
+  {
+    "order": 116,
+    "name": "week-16",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/16",
+    "html": "116-week-16.html",
+    "metadata": "116-week-16.json"
+  },
+  {
+    "order": 117,
+    "name": "week-17",
+    "url": "https://endorphinsrunning.com/training-plan/6ae24f7cf02d8aece188b784/week/17",
+    "html": "117-week-17.html",
+    "metadata": "117-week-17.json"
+  }
+]

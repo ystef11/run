@@ -1,0 +1,233 @@
+{
+  "source": "Endorphins",
+  "profileKm": 80,
+  "distance": {
+    "id": "half",
+    "text": "Half",
+    "weeks": 16
+  },
+  "inputs": [
+    {
+      "label": "Starting weekly distance",
+      "value": "80",
+      "min": "8",
+      "max": "129"
+    },
+    {
+      "label": "Peak weekly distance",
+      "value": "96",
+      "min": "8",
+      "max": "129"
+    },
+    {
+      "label": "Plan length in weeks",
+      "value": "16",
+      "min": "8",
+      "max": "24"
+    }
+  ],
+  "chartLabel": "20-week build, starting at 20 and peaking at 40 mi per week.",
+  "weeks": [
+    {
+      "week": 1,
+      "km": 20.09,
+      "class": "sc-dKWFQQ zzXxd"
+    },
+    {
+      "week": 2,
+      "km": 20.09,
+      "class": "sc-dKWFQQ zzXxd"
+    },
+    {
+      "week": 3,
+      "km": 20.09,
+      "class": "sc-dKWFQQ zzXxd"
+    },
+    {
+      "week": 4,
+      "km": 20.09,
+      "class": "sc-dKWFQQ zzXxd"
+    },
+    {
+      "week": 5,
+      "km": 22.1,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 6,
+      "km": 25.11,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 7,
+      "km": 24.11,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 8,
+      "km": 27.12,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 9,
+      "km": 30.13,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 10,
+      "km": 23.1,
+      "class": "sc-dKWFQQ jxLCqy"
+    },
+    {
+      "week": 11,
+      "km": 27.12,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 12,
+      "km": 31.14,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 13,
+      "km": 35.16,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 14,
+      "km": 26.12,
+      "class": "sc-dKWFQQ jxLCqy"
+    },
+    {
+      "week": 15,
+      "km": 31.14,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 16,
+      "km": 36.16,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 17,
+      "km": 40.18,
+      "class": "sc-dKWFQQ iXyA-dc"
+    },
+    {
+      "week": 18,
+      "km": 30.13,
+      "class": "sc-dKWFQQ jxLCqy"
+    },
+    {
+      "week": 19,
+      "km": 32.14,
+      "class": "sc-dKWFQQ gcFfTx"
+    },
+    {
+      "week": 20,
+      "km": 32.14,
+      "class": "sc-dKWFQQ gcFfTx"
+    },
+    {
+      "week": 21,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 22,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 23,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 24,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 25,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 26,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 27,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 28,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 29,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 30,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 31,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 32,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 33,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 34,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 35,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 36,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 37,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 38,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 39,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    },
+    {
+      "week": 40,
+      "km": 45,
+      "class": "sc-fBSkTF gTpwfl"
+    }
+  ],
+  "svg": "<svg viewBox=\"0 0 640 300\" role=\"img\" aria-label=\"20-week build, starting at 20 and peaking at 40 mi per week.\" class=\"sc-gKXsAz hOdMIo\"><defs><linearGradient id=\"planBuildArea\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#4B9EFF\" stop-opacity=\"0.28\"></stop><stop offset=\"100%\" stop-color=\"#4B9EFF\" stop-opacity=\"0.02\"></stop></linearGradient></defs><g><line x1=\"58\" y1=\"260\" x2=\"622\" y2=\"260\" stroke=\"rgba(255,255,255,0.08)\" stroke-width=\"1\"></line><text x=\"40\" y=\"264\" class=\"sc-fBvRaW lgTnvN\">0</text></g><g><line x1=\"58\" y1=\"179.33333333333334\" x2=\"622\" y2=\"179.33333333333334\" stroke=\"rgba(255,255,255,0.08)\" stroke-width=\"1\"></line><text x=\"40\" y=\"183.33333333333334\" class=\"sc-fBvRaW lgTnvN\">15</text></g><g><line x1=\"58\" y1=\"98.66666666666669\" x2=\"622\" y2=\"98.66666666666669\" stroke=\"rgba(255,255,255,0.08)\" stroke-width=\"1\"></line><text x=\"40\" y=\"102.66666666666669\" class=\"sc-fBvRaW lgTnvN\">30</text></g><g><line x1=\"58\" y1=\"18\" x2=\"622\" y2=\"18\" stroke=\"rgba(255,255,255,0.08)\" stroke-width=\"1\"></line><text x=\"40\" y=\"22\" class=\"sc-fBvRaW lgTnvN\">45</text></g><rect x=\"62.512\" y=\"151.96428571428572\" width=\"19.176\" height=\"108.03571428571428\" rx=\"2\" class=\"sc-dKWFQQ zzXxd\"></rect><rect x=\"90.712\" y=\"151.96428571428572\" width=\"19.176\" height=\"108.03571428571428\" rx=\"2\" class=\"sc-dKWFQQ zzXxd\"></rect><rect x=\"118.912\" y=\"151.96428571428572\" width=\"19.176\" height=\"108.03571428571428\" rx=\"2\" class=\"sc-dKWFQQ zzXxd\"></rect><rect x=\"147.112\" y=\"151.96428571428572\" width=\"19.176\" height=\"108.03571428571428\" rx=\"2\" class=\"sc-dKWFQQ zzXxd\"></rect><rect x=\"175.312\" y=\"141.16071428571428\" width=\"19.176\" height=\"118.83928571428572\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"203.512\" y=\"124.95535714285717\" width=\"19.176\" height=\"135.04464285714283\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"231.712\" y=\"130.35714285714286\" width=\"19.176\" height=\"129.64285714285714\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"259.91200000000003\" y=\"114.15178571428572\" width=\"19.176\" height=\"145.84821428571428\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"288.112\" y=\"97.94642857142858\" width=\"19.176\" height=\"162.05357142857142\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"316.31199999999995\" y=\"135.75892857142858\" width=\"19.176\" height=\"124.24107142857142\" rx=\"2\" class=\"sc-dKWFQQ jxLCqy\"></rect><rect x=\"344.512\" y=\"114.15178571428572\" width=\"19.176\" height=\"145.84821428571428\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"372.712\" y=\"92.54464285714286\" width=\"19.176\" height=\"167.45535714285714\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"400.912\" y=\"70.93750000000003\" width=\"19.176\" height=\"189.06249999999997\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"429.11199999999997\" y=\"119.55357142857144\" width=\"19.176\" height=\"140.44642857142856\" rx=\"2\" class=\"sc-dKWFQQ jxLCqy\"></rect><rect x=\"457.312\" y=\"92.54464285714286\" width=\"19.176\" height=\"167.45535714285714\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"485.512\" y=\"65.5357142857143\" width=\"19.176\" height=\"194.4642857142857\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"513.712\" y=\"43.928571428571445\" width=\"19.176\" height=\"216.07142857142856\" rx=\"2\" class=\"sc-dKWFQQ iXyA-dc\"></rect><rect x=\"541.912\" y=\"97.94642857142858\" width=\"19.176\" height=\"162.05357142857142\" rx=\"2\" class=\"sc-dKWFQQ jxLCqy\"></rect><rect x=\"570.1119999999999\" y=\"87.14285714285717\" width=\"19.176\" height=\"172.85714285714283\" rx=\"2\" class=\"sc-dKWFQQ gcFfTx\"></rect><rect x=\"598.3119999999999\" y=\"87.14285714285717\" width=\"19.176\" height=\"172.85714285714283\" rx=\"2\" class=\"sc-dKWFQQ gcFfTx\"></rect><path d=\"M 72.1 151.96428571428572 L 100.3 151.96428571428572 L 128.5 151.96428571428572 L 156.7 151.96428571428572 L 184.9 141.16071428571428 L 213.1 124.95535714285717 L 241.29999999999998 130.35714285714286 L 269.50000000000006 114.15178571428572 L 297.70000000000005 97.94642857142858 L 325.9 135.75892857142858 L 354.1 114.15178571428572 L 382.3 92.54464285714286 L 410.5 70.93750000000003 L 438.7 119.55357142857144 L 466.90000000000003 92.54464285714286 L 495.1 65.5357142857143 L 523.3 43.928571428571445 L 551.5 97.94642857142858 L 579.6999999999998 87.14285714285717 L 607.8999999999999 87.14285714285717 L 607.8999999999999 260 L 72.1 260 Z\" class=\"sc-hvOjLu eaSddS\"></path><path d=\"M 72.1 151.96428571428572 L 100.3 151.96428571428572 L 128.5 151.96428571428572 L 156.7 151.96428571428572 L 184.9 141.16071428571428 L 213.1 124.95535714285717 L 241.29999999999998 130.35714285714286 L 269.50000000000006 114.15178571428572 L 297.70000000000005 97.94642857142858 L 325.9 135.75892857142858 L 354.1 114.15178571428572 L 382.3 92.54464285714286 L 410.5 70.93750000000003 L 438.7 119.55357142857144 L 466.90000000000003 92.54464285714286 L 495.1 65.5357142857143 L 523.3 43.928571428571445 L 551.5 97.94642857142858 L 579.6999999999998 87.14285714285717 L 607.8999999999999 87.14285714285717\" class=\"sc-jmJOOj dZeHsr\"></path><circle cx=\"523.3\" cy=\"43.928571428571445\" r=\"4\" class=\"sc-bwvqYz ehyeyx\"></circle><line x1=\"58\" y1=\"260\" x2=\"622\" y2=\"260\" stroke=\"rgba(255,255,255,0.14)\" stroke-width=\"1\"></line><text x=\"72.1\" y=\"276\" class=\"sc-hsrwdL ebQPzi\">1</text><text x=\"156.7\" y=\"276\" class=\"sc-hsrwdL ebQPzi\">4</text><text x=\"241.29999999999998\" y=\"276\" class=\"sc-hsrwdL ebQPzi\">7</text><text x=\"325.9\" y=\"276\" class=\"sc-hsrwdL ebQPzi\">10</text><text x=\"410.5\" y=\"276\" class=\"sc-hsrwdL ebQPzi\">13</text><text x=\"495.1\" y=\"276\" class=\"sc-hsrwdL ebQPzi\">16</text><text x=\"579.6999999999998\" y=\"276\" class=\"sc-hsrwdL ebQPzi\">19</text><text x=\"607.8999999999999\" y=\"276\" class=\"sc-hsrwdL ebQPzi\">20</text><rect x=\"58\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 1: 20 mi, Foundation\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"86.2\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 2: 20 mi, Foundation\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"114.4\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 3: 20 mi, Foundation\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"142.6\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 4: 20 mi, Foundation\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"170.8\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 5: 22 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"199\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 6: 25 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"227.2\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 7: 24 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"255.4\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 8: 27 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"283.6\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 9: 30 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"311.79999999999995\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 10: 23 mi, Recovery\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"340\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 11: 27 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"368.2\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 12: 31 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"396.4\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 13: 35 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"424.59999999999997\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 14: 26 mi, Recovery\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"452.8\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 15: 31 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"481\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 16: 36 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"509.2\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 17: 40 mi, Build\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"537.4\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 18: 30 mi, Recovery\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"565.5999999999999\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 19: 32 mi, Taper\" class=\"sc-fBSkTF gTpwfl\"></rect><rect x=\"593.8\" y=\"18\" width=\"28.2\" height=\"242\" tabindex=\"0\" role=\"img\" aria-label=\"Week 20: 32 mi, Taper\" class=\"sc-fBSkTF gTpwfl\"></rect></svg>"
+}

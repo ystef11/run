@@ -140,9 +140,19 @@
       <button data-s="0.2" onclick="setStep(0.2)">200 м</button>
       <button data-s="0.4" onclick="setStep(0.4)">400 м</button>
       <button data-s="1" onclick="setStep(1)">1 км</button>
+      <button data-s="1.609344" onclick="setStep(1.609344)">1 миля</button>
       <button data-s="5" onclick="setStep(5)">5 км</button>
       <button data-s="10" onclick="setStep(10)">10 км</button>
     </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">Единицы отметок и темпа</div>
+    <div class="tabs">
+      <button id="un_km" class="on" onclick="setUnit('km')">Километры</button>
+      <button id="un_mi" onclick="setUnit('mi')">Мили</button>
+    </div>
+    <div class="hint">Расстояния в таблице и темп считаются в выбранных единицах; ввод дистанции и длины отсечки остаётся в километрах. Для миль нажмите «1 миля» в длине отсечки.</div>
   </div>
 
   <div class="panel">
@@ -197,7 +207,7 @@
 
   <div class="note">
     <p><b>Как считается.</b> Дистанция делится на отрезки заданной длины («длина отсечки»); если она не делится нацело, остаток попадает в первый круг — длинным или коротким, по выбору. Средний темп берётся из отношения времени к дистанции. Если задан сплит, темп меняется от отсечки к отсечке на указанный процент по нарастающей (компаундом), при этом итоговое время на финише остаётся равным заданному.</p>
-    <p><b>В таблице:</b> «Отсечка» — расстояние от старта нарастающим итогом, «Время» — время от старта до этой отметки, «Темп» — темп именно этого отрезка. Отметки на целых километрах выделены жирным.</p>
+    <p><b>В таблице:</b> «Отсечка» — расстояние от старта нарастающим итогом, «Время» — время от старта до этой отметки, «Темп» — темп именно этого отрезка. Отметки на целых километрах (милях) выделены жирным.</p>
   </div>
 
   <footer>Равномерный или прогрессивный/регрессивный темп по сплиту · для интервальных тренировок используйте план тренировок</footer>
@@ -224,13 +234,25 @@
     return m+':'+String(s).padStart(2,'0');
   }
 
+  let U='km'; const KMI=1.609344;
   function fmtPace(secPerKm){
     if(!isFinite(secPerKm) || secPerKm<=0) return '—';
-    const m=Math.floor(secPerKm/60), s=Math.round(secPerKm%60);
+    const v=Math.round(secPerKm*(U==='mi'?KMI:1));
+    const m=Math.floor(v/60), s=v%60;
     return m+':'+String(s).padStart(2,'0');
+  }
+  function setUnit(u){
+    U=u; $('un_km').classList.toggle('on',u==='km'); $('un_mi').classList.toggle('on',u==='mi');
+    render();
   }
 
   function fmtDist(km){
+    if(U==='mi'){
+      const mi=Math.round(km/KMI*100)/100;
+      if(Math.abs(mi-Math.round(mi))<0.001){ const n=Math.round(mi), l=n%100;
+        return n+' '+((n%10===1&&l!==11)?'миля':(n%10>=2&&n%10<=4&&(l<12||l>14))?'мили':'миль'); }
+      return mi.toFixed(2)+' мили';
+    }
     const rounded = Math.round(km*100)/100;
     if(Math.abs(rounded-Math.round(rounded))<0.001) return Math.round(rounded)+' км';
     return rounded.toFixed(2)+' км';
@@ -278,7 +300,7 @@
 
     $('o_finish').textContent = fmtTime(totalSec, totalSec>=3600);
     const avgPace = d>0 ? totalSec/d : 0;
-    $('o_pace').textContent = fmtPace(avgPace)+' /км';
+    $('o_pace').textContent = fmtPace(avgPace)+(U==='mi'?' /миля':' /км');
 
     if(totalSec<=0 || d<=0 || stepKm<=0){
       $('o_count').textContent='—';
@@ -304,7 +326,7 @@
       cumDist += seg;
       cumTime += segTime;
       const isFinish = i===segs.length-1;
-      const isKeyKm = Math.abs(cumDist-Math.round(cumDist))<0.005;
+      const cu = U==="mi" ? cumDist/KMI : cumDist; const isKeyKm = Math.abs(cu-Math.round(cu))<0.005;
       const cls = isFinish ? 'finish' : (isKeyKm ? 'key' : '');
       const label = isFinish ? fmtDist(cumDist)+' · Финиш' : fmtDist(cumDist);
       return `<tr class="${cls}"><td class="num">${i+1}</td><td class="dist">${label}</td><td class="cum">${fmtTime(cumTime, cumTime>=3600)}</td><td>${fmtPace(segPace)}</td></tr>`;

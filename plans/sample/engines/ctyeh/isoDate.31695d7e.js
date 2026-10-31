@@ -1,0 +1,1 @@
+function n(t=Date.now()){return new Date(t+288e5).toISOString().slice(0,10)}function s(t,e){const a=new Date(`${t}T00:00:00Z`);return a.setUTCDate(a.getUTCDate()+e),a.toISOString().slice(0,10)}function o(t,e){return Math.round((Date.parse(`${e}T00:00:00Z`)-Date.parse(`${t}T00:00:00Z`))/864e5)}export{s as a,o as d,n as t};

@@ -1,0 +1,1 @@
+import{c as n,v as s}from"./entry.79f5757a.js";import{u as i}from"./useSnackbar.6a280e7b.js";function f(){const t=n(),o=i(),u=s(()=>t.isLoggedIn);function e(r="請先登入才能使用此功能"){return t.isLoggedIn?!0:(r&&o.info(r),t.setLoginDialog(!0),!1)}return{isLoggedIn:u,requireAuth:e}}export{f as u};

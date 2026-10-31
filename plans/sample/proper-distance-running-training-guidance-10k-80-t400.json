@@ -1,0 +1,1469 @@
+{
+  "meta": {
+    "tag": "[PROPER-DISTANCE-RUNNING-TRAINING-GUIDANCE]",
+    "schema": 1,
+    "name": "proper-distance-running-training-guidance · 10 км · 80 км/нед · ПАНО 4:00",
+    "generated": "2026-10-29",
+    "marathon": "2027-01-24",
+    "source": {
+      "url": "https://github.com/PatrickWiloak/proper-distance-running-training-guidance",
+      "retrieved": "2026-10-29",
+      "raw": "raw/proper-distance-running-training-guidance-10k-80-t400.source.json",
+      "commit": "3394795",
+      "engine": "engines/proper-distance-running-training-guidance/source.zip",
+      "file": "templates/12-week-10k-training-plan-advanced.md",
+      "permalink": "https://github.com/PatrickWiloak/proper-distance-running-training-guidance/blob/3394795/templates/12-week-10k-training-plan-advanced.md"
+    },
+    "profile": {
+      "id": "80-t400",
+      "km": 80,
+      "t": 240,
+      "level": "advanced",
+      "days": 6,
+      "long": 24,
+      "vdot": 53.450573239692226,
+      "benchmark": {
+        "distance": 10000,
+        "time": 2342
+      }
+    },
+    "generatorInput": {
+      "template": "12-week-10k-training-plan-advanced.md",
+      "level": "advanced",
+      "weeklyVolumeScaling": false,
+      "thresholdScaling": false
+    },
+    "conversion": {
+      "detail": "volume-summary",
+      "notes": [
+        "Статический Markdown-план, а не персональный генератор. Выбраны версии Advanced / Intermediate / Beginner; исходный объём не масштабировался.",
+        "Автор PatrickWiloak; лицензия CC BY 4.0. Адаптация: календарные даты и перевод явных суммарных миль в метры; тексты дней сохранены.",
+        "Сводные шаги передают только объём. Двойные пробежки, интервалы и альтернативы сохранены в тексте; зоны и темпы автоматически не назначались.",
+        "В вариантах Rest or ... выбран отдых. Неразобранные объёмы оставлены открытыми шагами, без выдуманной дистанции. Количество таких дней: 1.",
+        "У продвинутых шаблонов пик может значительно превышать 80 км/нед; вводной профиль здесь служит для выбора уровня, а не обещает совпадение объёма."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-11-02",
+      "goalISO": "2027-01-24",
+      "goalDist": 10000,
+      "planMode": "goal",
+      "tag": "[PROPER-DISTANCE-RUNNING-TRAINING-GUIDANCE]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-11-02",
+      "kind": "run",
+      "name": "Monday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 1,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-03",
+      "kind": "run",
+      "name": "Tuesday · Threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Threshold - 2mi warmup + 25 min continuous at T + 2mi cooldown = 9 miles",
+      "sourceWeek": 1,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-04",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 6 miles, PM easy 4 miles = 10 miles",
+      "sourceWeek": 1,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-05",
+      "kind": "run",
+      "name": "Thursday · Easy 8 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 8 miles + 8x100m strides",
+      "sourceWeek": 1,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-06",
+      "kind": "run",
+      "name": "Friday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 1,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-07",
+      "kind": "run",
+      "name": "Saturday · Easy 6 miles with 8x10-second hill sprints (full walk-down recovery)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 6 miles with 8x10-second hill sprints (full walk-down recovery)",
+      "sourceWeek": 1,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "run",
+      "name": "Sunday · Long run 12 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 12 miles easy",
+      "sourceWeek": 1,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-09",
+      "kind": "run",
+      "name": "Monday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 2,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-10",
+      "kind": "run",
+      "name": "Tuesday · Threshold (cruise intervals)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Threshold (cruise intervals) - 2mi warmup + 5x1 mile at T w/60sec jog + 2mi cooldown = 9 miles",
+      "sourceWeek": 2,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-11",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 7 miles, PM easy 4 miles = 11 miles",
+      "sourceWeek": 2,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-12",
+      "kind": "run",
+      "name": "Thursday · Easy 9 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 9 miles + 8x100m strides",
+      "sourceWeek": 2,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-13",
+      "kind": "run",
+      "name": "Friday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 2,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-14",
+      "kind": "run",
+      "name": "Saturday · Easy 7 miles with 10x10-second hill sprints",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11265,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 7 miles with 10x10-second hill sprints",
+      "sourceWeek": 2,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "run",
+      "name": "Sunday · Long run 14 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 22531,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 14 miles easy",
+      "sourceWeek": 2,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-16",
+      "kind": "run",
+      "name": "Monday · Recovery 6 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 6 miles",
+      "sourceWeek": 3,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-17",
+      "kind": "run",
+      "name": "Tuesday · Threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Threshold - 2mi warmup + 30 min continuous at T + 2mi cooldown = 10 miles",
+      "sourceWeek": 3,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-18",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 7 miles, PM easy 5 miles = 12 miles",
+      "sourceWeek": 3,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-19",
+      "kind": "run",
+      "name": "Thursday · Easy 9 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 9 miles + 8x100m strides",
+      "sourceWeek": 3,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-20",
+      "kind": "run",
+      "name": "Friday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 3,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-21",
+      "kind": "run",
+      "name": "Saturday · Repetition",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11265,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Repetition - 2mi warmup + 10x200m at R w/200m jog + 2mi cooldown = 7 miles",
+      "sourceWeek": 3,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "run",
+      "name": "Sunday · Long run 16 miles easy (last 3 at M pace if feeling strong)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 25750,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 16 miles easy (last 3 at M pace if feeling strong)",
+      "sourceWeek": 3,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-23",
+      "kind": "run",
+      "name": "Monday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 4,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-24",
+      "kind": "run",
+      "name": "Tuesday · Easy 9 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 9 miles + 8x100m strides",
+      "sourceWeek": 4,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "run",
+      "name": "Wednesday · Easy 8 miles (single run, no double this week)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 8 miles (single run, no double this week)",
+      "sourceWeek": 4,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "run",
+      "name": "Thursday · Light Threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11265,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Light Threshold - 2mi warmup + 3x1 mile at T w/60sec jog + 2mi cooldown = 7 miles",
+      "sourceWeek": 4,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-27",
+      "kind": "run",
+      "name": "Friday · Recovery 4 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 4 miles",
+      "sourceWeek": 4,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-28",
+      "kind": "run",
+      "name": "Saturday · Easy 6 miles + 6x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 6 miles + 6x100m strides",
+      "sourceWeek": 4,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "run",
+      "name": "Sunday · Long run 11 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 11 miles easy",
+      "sourceWeek": 4,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-30",
+      "kind": "run",
+      "name": "Monday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 5,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "Tuesday · Intervals (VO2max)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Intervals (VO2max) - 3mi warmup + 5x1000m at I w/3min jog recovery + 3mi cooldown = 10 miles",
+      "sourceWeek": 5,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-02",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 7 miles, PM easy 5 miles = 12 miles",
+      "sourceWeek": 5,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-03",
+      "kind": "run",
+      "name": "Thursday · Easy 9 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 9 miles + 8x100m strides",
+      "sourceWeek": 5,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-04",
+      "kind": "run",
+      "name": "Friday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 5,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-05",
+      "kind": "run",
+      "name": "Saturday · Threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Threshold - 3mi warmup + 2x(15 min at T) w/3min jog between + 3mi cooldown = 11 miles",
+      "sourceWeek": 5,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "Sunday · Long run 13 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20921,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 13 miles easy",
+      "sourceWeek": 5,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-07",
+      "kind": "run",
+      "name": "Monday · Recovery 6 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 6 miles",
+      "sourceWeek": 6,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "Tuesday · Intervals (VO2max)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Intervals (VO2max) - 3mi warmup + 6x800m at I w/2:30 jog recovery + 3mi cooldown = 10 miles",
+      "sourceWeek": 6,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20921,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 8 miles, PM easy 5 miles = 13 miles",
+      "sourceWeek": 6,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-10",
+      "kind": "run",
+      "name": "Thursday · Easy 10 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 10 miles + 8x100m strides",
+      "sourceWeek": 6,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-11",
+      "kind": "run",
+      "name": "Friday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 6,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-12",
+      "kind": "run",
+      "name": "Saturday · Threshold (cruise intervals)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Threshold (cruise intervals) - 3mi warmup + 6x1 mile at T w/60sec jog + 3mi cooldown = 12 miles",
+      "sourceWeek": 6,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "Sunday · Long run 14 miles easy (last 4 at M pace)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 22531,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 14 miles easy (last 4 at M pace)",
+      "sourceWeek": 6,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-14",
+      "kind": "run",
+      "name": "Monday · Recovery 6 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 6 miles",
+      "sourceWeek": 7,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "Tuesday · Intervals (VO2max)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Intervals (VO2max) - 3mi warmup + 5x1200m at I w/3min jog recovery + 3mi cooldown = 11 miles",
+      "sourceWeek": 7,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-16",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 22531,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 9 miles, PM easy 5 miles = 14 miles",
+      "sourceWeek": 7,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-17",
+      "kind": "run",
+      "name": "Thursday · Easy 10 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 10 miles + 8x100m strides",
+      "sourceWeek": 7,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-18",
+      "kind": "run",
+      "name": "Friday · Recovery 6 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 6 miles",
+      "sourceWeek": 7,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-19",
+      "kind": "run",
+      "name": "Saturday · Threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20921,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Threshold - 3mi warmup + 2x(20 min at T) w/4min jog between + 3mi cooldown = 13 miles",
+      "sourceWeek": 7,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "Sunday · Long run 15 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24140,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 15 miles easy",
+      "sourceWeek": 7,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-21",
+      "kind": "run",
+      "name": "Monday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 8,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "Tuesday · Easy 9 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 9 miles + 8x100m strides",
+      "sourceWeek": 8,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-23",
+      "kind": "run",
+      "name": "Wednesday · Easy 8 miles (single run)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 8 miles (single run)",
+      "sourceWeek": 8,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-24",
+      "kind": "run",
+      "name": "Thursday · Pre-race sharpener",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Pre-race sharpener - 2mi warmup + 6x200m at R w/200m jog + 2mi cooldown = 6 miles",
+      "sourceWeek": 8,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-25",
+      "kind": "run",
+      "name": "Friday · Recovery 4 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 4 miles",
+      "sourceWeek": 8,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-26",
+      "kind": "run",
+      "name": "Saturday · TUNE-UP RACE (5K)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "TUNE-UP RACE (5K) - 3mi warmup + 5K race + 3mi cooldown = 9 miles",
+      "sourceWeek": 8,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "Sunday · Long run 15 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24140,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 15 miles easy",
+      "sourceWeek": 8,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-28",
+      "kind": "run",
+      "name": "Monday · Recovery 6 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 6 miles",
+      "sourceWeek": 9,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "Tuesday · Intervals (VO2max)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Intervals (VO2max) - 3mi warmup + 6x1000m at I w/2:30 jog recovery + 3mi cooldown = 11 miles",
+      "sourceWeek": 9,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-30",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20921,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 8 miles, PM easy 5 miles = 13 miles",
+      "sourceWeek": 9,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-31",
+      "kind": "run",
+      "name": "Thursday · Easy 10 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 10 miles + 8x100m strides",
+      "sourceWeek": 9,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-01",
+      "kind": "run",
+      "name": "Friday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 9,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-02",
+      "kind": "run",
+      "name": "Saturday · Threshold + Race Pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Threshold + Race Pace - 3mi warmup + 4x1 mile at T w/60sec jog + 4min rest + 3x1000m at goal 10K pace w/2min jog + 3mi cooldown = 12 miles",
+      "sourceWeek": 9,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "Sunday · Long run 13 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20921,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 13 miles easy",
+      "sourceWeek": 9,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-04",
+      "kind": "run",
+      "name": "Monday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 10,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "Tuesday · Intervals (VO2max)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Intervals (VO2max) - 3mi warmup + 5x1000m at I w/3min jog recovery + 3mi cooldown = 10 miles",
+      "sourceWeek": 10,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-06",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 7 miles, PM easy 4 miles = 11 miles",
+      "sourceWeek": 10,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-07",
+      "kind": "run",
+      "name": "Thursday · Easy 9 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 9 miles + 8x100m strides",
+      "sourceWeek": 10,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-08",
+      "kind": "run",
+      "name": "Friday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 10,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-09",
+      "kind": "run",
+      "name": "Saturday · Race-Pace Specific",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Race-Pace Specific - 3mi warmup + 5 miles continuous at goal 10K pace + 3mi cooldown = 11 miles",
+      "sourceWeek": 10,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "Sunday · Long run 12 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 12 miles easy",
+      "sourceWeek": 10,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-11",
+      "kind": "run",
+      "name": "Monday · Recovery 5 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 5 miles",
+      "sourceWeek": 11,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-12",
+      "kind": "run",
+      "name": "Tuesday · Intervals (VO2max)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Intervals (VO2max) - 2mi warmup + 12x400m at I w/400m jog recovery + 2mi cooldown = 10 miles",
+      "sourceWeek": 11,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-13",
+      "kind": "run",
+      "name": "Wednesday · Double",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Double - AM easy 5 miles, PM easy 4 miles = 9 miles",
+      "sourceWeek": 11,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-14",
+      "kind": "run",
+      "name": "Thursday · Easy 8 miles + 8x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 8 miles + 8x100m strides",
+      "sourceWeek": 11,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-15",
+      "kind": "run",
+      "name": "Friday · Recovery 4 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 4 miles",
+      "sourceWeek": 11,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-16",
+      "kind": "run",
+      "name": "Saturday · Threshold + Repetition",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Threshold + Repetition - 2mi warmup + 3x1 mile at T w/60sec jog + 4x200m at R w/200m jog + 2mi cooldown = 8 miles",
+      "sourceWeek": 11,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "Sunday · Long run 10 miles easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Long run 10 miles easy",
+      "sourceWeek": 11,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-18",
+      "kind": "run",
+      "name": "Monday · Recovery 4 miles",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Recovery 4 miles",
+      "sourceWeek": 12,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "Tuesday · Sharpener",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Sharpener - 2mi warmup + 2 miles at T + 3min rest + 4x400m at I w/400m jog + 2mi cooldown = 8 miles",
+      "sourceWeek": 12,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-20",
+      "kind": "run",
+      "name": "Wednesday · Easy 5 miles + 6x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 5 miles + 6x100m strides",
+      "sourceWeek": 12,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-21",
+      "kind": "run",
+      "name": "Thursday · Easy 5 miles with 4x200m at R (relaxed, not straining)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "Easy 5 miles with 4x200m at R (relaxed, not straining)",
+      "sourceWeek": 12,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-23",
+      "kind": "run",
+      "name": "Saturday · Shakeout 3 miles easy + 4x100m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "open",
+          "v": 0,
+          "tg": {},
+          "d": "Объём не разобран автоматически: см. исходное описание"
+        }
+      ],
+      "desc": "Shakeout 3 miles easy + 4x100m strides",
+      "sourceWeek": 12,
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "Sunday · RACE DAY",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Суммарная дистанция дня; подробности в описании"
+        }
+      ],
+      "desc": "RACE DAY - 10K Goal Race - 3mi warmup + 10K race + 2mi cooldown = 11 miles",
+      "sourceWeek": 12,
+      "conversionDetail": "volume-summary"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+import{o as t,O as o,s as u}from"./entry.79f5757a.js";function s(){const n=u(!1),e=()=>{n.value=typeof document<"u"&&!!document.fullscreenElement};return t(()=>{e(),document.addEventListener("fullscreenchange",e)}),o(()=>{typeof document<"u"&&document.removeEventListener("fullscreenchange",e)}),n}export{s as u};

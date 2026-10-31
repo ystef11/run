@@ -192,6 +192,25 @@
     </div>
   </div>
 
+  <div class="panel">
+    <div class="label">Шесть зон по резерву ЧСС (метод Карвонена)</div>
+    <div class="field" style="max-width:260px;">
+      <div class="fl" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Пульс покоя, уд/мин</div>
+      <div class="stepper sm">
+        <button onclick="bumpRhr(-1)">−</button>
+        <input id="rhr" class="mono" type="number" min="30" max="120" value="50" inputmode="numeric">
+        <button onclick="bumpRhr(1)">+</button>
+      </div>
+    </div>
+    <div class="hint">Резерв ЧСС = ЧСС макс − пульс покоя. Зона = пульс покоя + доля резерва. Берётся ЧСС макс из блока выше (введённая или оценка).</div>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Зона</th><th class="r">Пульс, уд/мин</th><th class="r">% резерва</th></tr></thead>
+      <tbody id="karv"></tbody>
+    </table>
+    </div>
+  </div>
+
   <div class="note">
     <p><b>Как считается.</b> По дистанции и времени гонки оценивается VDOT (модель Дэниелса) — показатель текущей беговой формы. От него прогнозируются эквивалентные результаты на 10 км и марафоне, а из них — диапазоны темпа для каждой зоны.</p>
     <p><b>Границы зон пульса</b> заданы как доля от ПАНО (порога): Z1 65–81%, Z2 81–89%, Z3 88–92%, Z4 95–100%, Z5 100–106% от ПАНО, с потолком по расчётному HRmax.</p>
@@ -199,7 +218,7 @@
     <p><b>Точность.</b> Чем ближе дистанция и свежесть результата к вашей цели (5–21 км), тем точнее прогноз. Тёплая погода, рельеф или давний результат смещают реальный темп относительно расчётного — ориентируйтесь и на пульс, и на самочувствие.</p>
   </div>
 
-  <footer>Модель: VDOT (Дэниелс) · зоны пульса — % от ПАНО (порога), как в калькуляторе беговых планов</footer>
+  <footer>Модель: VDOT (Дэниелс) · зоны пульса — % от ПАНО (порога) и шесть зон по резерву ЧСС (Карвонен)</footer>
 </div>
 
 <script>
@@ -301,6 +320,7 @@
     if(t<=0){
       $('o_vdot').textContent='0.0';
       $('zones').innerHTML='<tr><td colspan="4" style="color:var(--muted)">Впишите результат гонки</td></tr>';
+      { const a2=getAge(); const hm=getHrmaxInput()||(sex==='f'?Math.round(206-0.88*a2):Math.round(208-0.7*a2)); renderKarvonen(hm); }
       return;
     }
     const vd=vdot(d,t);
@@ -309,6 +329,7 @@
     const hrmaxInput=getHrmaxInput();
     const hrmax = hrmaxInput || (sex==='f' ? Math.round(206-0.88*age) : Math.round(208-0.7*age));
     $('o_hrmax').textContent=hrmax + (hrmaxInput? '' : ' (оценка)');
+    renderKarvonen(hrmax);
 
     const lthrInput=getLthrInput();
     const lthr = lthrInput || Math.round(hrmax*0.90);
@@ -328,6 +349,27 @@
     }).join('');
   }
 
+
+  // ================= шесть зон по резерву ЧСС (Карвонен), как в калькуляторе McMillan =================
+  const KARV=[
+    {n:'Z1 · Восстановительные пробежки',lo:55,hi:65,c:'z-rec',d:'Очень лёгкий бег или быстрая ходьба: паузы между повторами, восстановление.'},
+    {n:'Z2 · Лёгкие и длинные',lo:55,hi:78,c:'z-easy',d:'Разговорный бег; к концу пульс может дрейфовать к верху зоны.'},
+    {n:'Z3 · Ранний порог / устойчивый бег',lo:75,hi:80,c:'z-mp',d:'Непрерывный бег чуть ниже порога (steady-state), начало стамины.'},
+    {n:'Z4 · Лактатный порог',lo:80,hi:85,c:'z-thr',d:'Темповые пробежки: «комфортно тяжело», не слишком быстро.'},
+    {n:'Z5 · Высокий порог / круизные интервалы',lo:82,hi:87,c:'z-thr',d:'Повторы 1–5 мин с короткой паузой, чуть быстрее порога.'},
+    {n:'Z6 · Скорость и спринт',lo:90,hi:100,c:'z-vo2',d:'Быстрые повторы; пульс может не успеть дойти до цели внутри повтора.'}
+  ];
+  function renderKarvonen(hrmax){
+    let rhr=parseInt($('rhr').value,10);
+    if(isNaN(rhr)||rhr<30||rhr>=hrmax){ $('karv').innerHTML='<tr><td colspan="3" style="color:var(--muted)">Введите пульс покоя (меньше ЧСС макс)</td></tr>'; return; }
+    const res=hrmax-rhr;
+    $('karv').innerHTML=KARV.map(z=>{
+      const lo=Math.round(rhr+res*z.lo/100), hi=Math.round(rhr+res*z.hi/100);
+      return `<tr><td><span class="zdot" style="background:var(--${z.c})"></span><span class="zname">${z.n}</span><span class="zsub">${z.d}</span></td>`+
+        `<td class="r mono">${lo}–${hi}</td><td class="r mono">${z.lo}–${z.hi}%</td></tr>`;
+    }).join('');
+  }
+  function bumpRhr(x){ $('rhr').value=Math.max(0,(parseInt($('rhr').value,10)||0)+x)||''; render(); }
   function bumpAge(x){ $('age').value=(parseInt($('age').value,10)||0)+x; render(); }
   function bumpLthr(x){ const cur=parseInt($('lthr').value,10)||0; $('lthr').value=Math.max(0,cur+x)||''; render(); }
   function bumpHrmax(x){ const cur=parseInt($('hrmaxIn').value,10)||0; $('hrmaxIn').value=Math.max(0,cur+x)||''; render(); }
@@ -345,6 +387,7 @@
   $('age').addEventListener('input', render);
   $('lthr').addEventListener('input', render);
   $('hrmaxIn').addEventListener('input', render);
+  $('rhr').addEventListener('input', render);
   ['t_h','t_m','t_s'].forEach(id=>$(id).addEventListener('input', render));
 
   // ================= автозаполнение из приложения (аналитика Гармин + профиль) =================
@@ -357,6 +400,7 @@
       if(qp.has('sex') && (qp.get('sex')==='m'||qp.get('sex')==='f')) setSex(qp.get('sex'));
       if(qp.has('age')){ const a=parseInt(qp.get('age'),10); if(!isNaN(a)) $('age').value=a; }
       if(qp.has('pano')){ const v=parseInt(qp.get('pano'),10); if(!isNaN(v)) $('lthr').value=v; }
+      if(qp.has('rhr')){ const v=parseInt(qp.get('rhr'),10); if(!isNaN(v)) $('rhr').value=v; }
       if(qp.has('hrmax')){ const v=parseInt(qp.get('hrmax'),10); if(!isNaN(v)) $('hrmaxIn').value=v; }
       if(qp.has('dist')){ const d=parseFloat(qp.get('dist')); if(!isNaN(d)&&d>0) $('dist').value=d; }
       if(qp.has('t')){

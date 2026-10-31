@@ -1,0 +1,921 @@
+{
+  "plan": {
+    "source": "generated",
+    "params": {
+      "distance": "5K",
+      "weeks": 12,
+      "category": "race-prep",
+      "recent_race": null,
+      "goal_time": null,
+      "weekly_km": 80,
+      "fixed_days": [],
+      "long_run_day": "sun",
+      "injury_history": false,
+      "race_date": "2027-01-24",
+      "long_run_target_km": null,
+      "long_run_peak_week": null,
+      "runs_per_week": 6,
+      "current_long_run_km": 24,
+      "injury_recent_months": null,
+      "injury_area": null,
+      "wants_intervals": null,
+      "coach": {
+        "intervals": "weekly",
+        "long_run_target_km": null,
+        "quality_emphasis": "mixed",
+        "cautions": [
+          "The 10K result is labeled an estimate, so anchor workout effort to current fitness rather than a goal time"
+        ],
+        "rationale": {
+          "intervals": "Advanced runner on high volume and six days a week can absorb a weekly interval session",
+          "quality_emphasis": "A 5K peak benefits from mixing threshold work with faster interval sessions"
+        }
+      }
+    },
+    "aiProvider": "kimi",
+    "detectedLang": "en",
+    "suggestedSlug": "couch-to-5k-8week",
+    "engine": {
+      "version": "plan-v3.2",
+      "commit": "73f6084"
+    },
+    "vdot": null,
+    "paceBasis": null,
+    "goal": null,
+    "paces": null,
+    "prediction": null,
+    "plan": {
+      "title": "12-Week 5K Plan",
+      "weeks": [
+        {
+          "num": 1,
+          "label": "Base Building",
+          "km": 82,
+          "dates": {
+            "start": "2026-11-02",
+            "end": "2026-11-08"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 1,
+              "dow": "mon",
+              "date": "2026-11-02",
+              "workout": "Easy 16km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 2,
+              "dow": "tue",
+              "date": "2026-11-03",
+              "workout": "Easy 16km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 3,
+              "dow": "wed",
+              "date": "2026-11-04",
+              "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+              "purpose": "Sustained output ability at threshold",
+              "type": "key",
+              "highlight": "3km Tempo"
+            },
+            {
+              "day": 4,
+              "dow": "thu",
+              "date": "2026-11-05",
+              "workout": "Easy 16km, last 1km at race pace (race effort)",
+              "purpose": "Pace switch practice under fatigue",
+              "type": "easy"
+            },
+            {
+              "day": 5,
+              "dow": "fri",
+              "date": "2026-11-06",
+              "workout": "Easy 16km + 4 hill strides on a gentle slope",
+              "purpose": "Adapt to climbing rhythm",
+              "type": "easy"
+            },
+            {
+              "day": 6,
+              "dow": "sat",
+              "date": "2026-11-07",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 7,
+              "dow": "sun",
+              "date": "2026-11-08",
+              "workout": "Long 12km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "label": "Base Building",
+          "km": 82,
+          "dates": {
+            "start": "2026-11-09",
+            "end": "2026-11-15"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 8,
+              "dow": "mon",
+              "date": "2026-11-09",
+              "workout": "Easy 16km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 9,
+              "dow": "tue",
+              "date": "2026-11-10",
+              "workout": "Easy 16km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 10,
+              "dow": "wed",
+              "date": "2026-11-11",
+              "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+              "purpose": "Sustained output ability at threshold",
+              "type": "key",
+              "highlight": "3km Tempo"
+            },
+            {
+              "day": 11,
+              "dow": "thu",
+              "date": "2026-11-12",
+              "workout": "Easy 16km, last 1km at race pace (race effort)",
+              "purpose": "Pace switch practice under fatigue",
+              "type": "easy"
+            },
+            {
+              "day": 12,
+              "dow": "fri",
+              "date": "2026-11-13",
+              "workout": "Easy 16km + 4 hill strides on a gentle slope",
+              "purpose": "Adapt to climbing rhythm",
+              "type": "easy"
+            },
+            {
+              "day": 13,
+              "dow": "sat",
+              "date": "2026-11-14",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 14,
+              "dow": "sun",
+              "date": "2026-11-15",
+              "workout": "Long 12km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "label": "Base Building",
+          "km": 82,
+          "dates": {
+            "start": "2026-11-16",
+            "end": "2026-11-22"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 15,
+              "dow": "mon",
+              "date": "2026-11-16",
+              "workout": "Easy 16km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 16,
+              "dow": "tue",
+              "date": "2026-11-17",
+              "workout": "Easy 16km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 17,
+              "dow": "wed",
+              "date": "2026-11-18",
+              "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+              "purpose": "Sustained output ability at threshold",
+              "type": "key",
+              "highlight": "3km Tempo"
+            },
+            {
+              "day": 18,
+              "dow": "thu",
+              "date": "2026-11-19",
+              "workout": "Easy 16km, last 1km at race pace (race effort)",
+              "purpose": "Pace switch practice under fatigue",
+              "type": "easy"
+            },
+            {
+              "day": 19,
+              "dow": "fri",
+              "date": "2026-11-20",
+              "workout": "Easy 16km + 4 hill strides on a gentle slope",
+              "purpose": "Adapt to climbing rhythm",
+              "type": "easy"
+            },
+            {
+              "day": 20,
+              "dow": "sat",
+              "date": "2026-11-21",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 21,
+              "dow": "sun",
+              "date": "2026-11-22",
+              "workout": "Long 12km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "label": "Base Building",
+          "km": 82,
+          "dates": {
+            "start": "2026-11-23",
+            "end": "2026-11-29"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 22,
+              "dow": "mon",
+              "date": "2026-11-23",
+              "workout": "Easy 16km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 23,
+              "dow": "tue",
+              "date": "2026-11-24",
+              "workout": "Easy 16km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 24,
+              "dow": "wed",
+              "date": "2026-11-25",
+              "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+              "purpose": "Sustained output ability at threshold",
+              "type": "key",
+              "highlight": "3km Tempo"
+            },
+            {
+              "day": 25,
+              "dow": "thu",
+              "date": "2026-11-26",
+              "workout": "Easy 16km, last 1km at race pace (race effort)",
+              "purpose": "Pace switch practice under fatigue",
+              "type": "easy"
+            },
+            {
+              "day": 26,
+              "dow": "fri",
+              "date": "2026-11-27",
+              "workout": "Easy 16km + 4 hill strides on a gentle slope",
+              "purpose": "Adapt to climbing rhythm",
+              "type": "easy"
+            },
+            {
+              "day": 27,
+              "dow": "sat",
+              "date": "2026-11-28",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 28,
+              "dow": "sun",
+              "date": "2026-11-29",
+              "workout": "Long 12km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "label": "Build",
+          "km": 74,
+          "dates": {
+            "start": "2026-11-30",
+            "end": "2026-12-06"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 29,
+              "dow": "mon",
+              "date": "2026-11-30",
+              "workout": "Easy 16km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 30,
+              "dow": "tue",
+              "date": "2026-12-01",
+              "workout": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+              "purpose": "Pace feel + VO2max stimulus",
+              "type": "key",
+              "highlight": "5×1000m"
+            },
+            {
+              "day": 31,
+              "dow": "wed",
+              "date": "2026-12-02",
+              "workout": "Easy 16km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 32,
+              "dow": "thu",
+              "date": "2026-12-03",
+              "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+              "purpose": "Sustained output ability at threshold",
+              "type": "key",
+              "highlight": "3km Tempo"
+            },
+            {
+              "day": 33,
+              "dow": "fri",
+              "date": "2026-12-04",
+              "workout": "Easy 16km, last 1km at race pace (race effort)",
+              "purpose": "Pace switch practice under fatigue",
+              "type": "easy"
+            },
+            {
+              "day": 34,
+              "dow": "sat",
+              "date": "2026-12-05",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 35,
+              "dow": "sun",
+              "date": "2026-12-06",
+              "workout": "Long 12km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "label": "Build",
+          "km": 74,
+          "dates": {
+            "start": "2026-12-07",
+            "end": "2026-12-13"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 36,
+              "dow": "mon",
+              "date": "2026-12-07",
+              "workout": "Easy 16km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 37,
+              "dow": "tue",
+              "date": "2026-12-08",
+              "workout": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+              "purpose": "Pace feel + VO2max stimulus",
+              "type": "key",
+              "highlight": "5×1000m"
+            },
+            {
+              "day": 38,
+              "dow": "wed",
+              "date": "2026-12-09",
+              "workout": "Easy 16km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 39,
+              "dow": "thu",
+              "date": "2026-12-10",
+              "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+              "purpose": "Sustained output ability at threshold",
+              "type": "key",
+              "highlight": "3km Tempo"
+            },
+            {
+              "day": 40,
+              "dow": "fri",
+              "date": "2026-12-11",
+              "workout": "Easy 16km, last 1km at race pace (race effort)",
+              "purpose": "Pace switch practice under fatigue",
+              "type": "easy"
+            },
+            {
+              "day": 41,
+              "dow": "sat",
+              "date": "2026-12-12",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 42,
+              "dow": "sun",
+              "date": "2026-12-13",
+              "workout": "Long 12km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "label": "Recovery Week",
+          "km": 68,
+          "dates": {
+            "start": "2026-12-14",
+            "end": "2026-12-20"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 43,
+              "dow": "mon",
+              "date": "2026-12-14",
+              "workout": "Easy 13km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 44,
+              "dow": "tue",
+              "date": "2026-12-15",
+              "workout": "Easy 13km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 45,
+              "dow": "wed",
+              "date": "2026-12-16",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 46,
+              "dow": "thu",
+              "date": "2026-12-17",
+              "workout": "Easy 13km, last 1km at race pace (race effort)",
+              "purpose": "Pace switch practice under fatigue",
+              "type": "easy"
+            },
+            {
+              "day": 47,
+              "dow": "fri",
+              "date": "2026-12-18",
+              "workout": "Easy 13km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 48,
+              "dow": "sat",
+              "date": "2026-12-19",
+              "workout": "Rest / very easy 5km",
+              "purpose": "Active recovery, keep legs loose",
+              "type": "rest"
+            },
+            {
+              "day": 49,
+              "dow": "sun",
+              "date": "2026-12-20",
+              "workout": "Long 11km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "label": "Peak",
+          "km": 74,
+          "dates": {
+            "start": "2026-12-21",
+            "end": "2026-12-27"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 50,
+              "dow": "mon",
+              "date": "2026-12-21",
+              "workout": "Easy 16km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 51,
+              "dow": "tue",
+              "date": "2026-12-22",
+              "workout": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+              "purpose": "Pace feel + VO2max stimulus",
+              "type": "key",
+              "highlight": "5×1000m"
+            },
+            {
+              "day": 52,
+              "dow": "wed",
+              "date": "2026-12-23",
+              "workout": "Easy 16km + 4 hill strides on a gentle slope",
+              "purpose": "Adapt to climbing rhythm",
+              "type": "easy"
+            },
+            {
+              "day": 53,
+              "dow": "thu",
+              "date": "2026-12-24",
+              "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+              "purpose": "Sustained output ability at threshold",
+              "type": "key",
+              "highlight": "3km Tempo"
+            },
+            {
+              "day": 54,
+              "dow": "fri",
+              "date": "2026-12-25",
+              "workout": "Easy 16km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 55,
+              "dow": "sat",
+              "date": "2026-12-26",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 56,
+              "dow": "sun",
+              "date": "2026-12-27",
+              "workout": "Long 12km, last 1km at race pace (race effort)",
+              "purpose": "Long run + race pace finish practice",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 9,
+          "label": "Peak",
+          "km": 74,
+          "dates": {
+            "start": "2026-12-28",
+            "end": "2027-01-03"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 57,
+              "dow": "mon",
+              "date": "2026-12-28",
+              "workout": "Easy 16km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 58,
+              "dow": "tue",
+              "date": "2026-12-29",
+              "workout": "Warm-up 2km + 5×1000m @ hard/km, 2min + Cool-down 1km",
+              "purpose": "Pace feel + VO2max stimulus",
+              "type": "key",
+              "highlight": "5×1000m"
+            },
+            {
+              "day": 59,
+              "dow": "wed",
+              "date": "2026-12-30",
+              "workout": "Easy 16km + 4 hill strides on a gentle slope",
+              "purpose": "Adapt to climbing rhythm",
+              "type": "easy"
+            },
+            {
+              "day": 60,
+              "dow": "thu",
+              "date": "2026-12-31",
+              "workout": "Warm-up 2km + 3km Tempo @ comfortably hard/km + Cool-down 1km",
+              "purpose": "Sustained output ability at threshold",
+              "type": "key",
+              "highlight": "3km Tempo"
+            },
+            {
+              "day": 61,
+              "dow": "fri",
+              "date": "2027-01-01",
+              "workout": "Easy 16km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 62,
+              "dow": "sat",
+              "date": "2027-01-02",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 63,
+              "dow": "sun",
+              "date": "2027-01-03",
+              "workout": "Long 12km, last 1km at race pace (race effort)",
+              "purpose": "Long run + race pace finish practice",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 10,
+          "label": "Recovery Week",
+          "km": 68,
+          "dates": {
+            "start": "2027-01-04",
+            "end": "2027-01-10"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 64,
+              "dow": "mon",
+              "date": "2027-01-04",
+              "workout": "Easy 13km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 65,
+              "dow": "tue",
+              "date": "2027-01-05",
+              "workout": "Easy 13km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 66,
+              "dow": "wed",
+              "date": "2027-01-06",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 67,
+              "dow": "thu",
+              "date": "2027-01-07",
+              "workout": "Easy 13km, last 1km at race pace (race effort)",
+              "purpose": "Pace switch practice under fatigue",
+              "type": "easy"
+            },
+            {
+              "day": 68,
+              "dow": "fri",
+              "date": "2027-01-08",
+              "workout": "Easy 13km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 69,
+              "dow": "sat",
+              "date": "2027-01-09",
+              "workout": "Rest / very easy 5km",
+              "purpose": "Active recovery, keep legs loose",
+              "type": "rest"
+            },
+            {
+              "day": 70,
+              "dow": "sun",
+              "date": "2027-01-10",
+              "workout": "Long 11km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 11,
+          "label": "Taper",
+          "km": 51,
+          "dates": {
+            "start": "2027-01-11",
+            "end": "2027-01-17"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 71,
+              "dow": "mon",
+              "date": "2027-01-11",
+              "workout": "Easy 12km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 72,
+              "dow": "tue",
+              "date": "2027-01-12",
+              "workout": "Warm-up 2km + 3×800m @ fast/km, full recovery + Cool-down 1km",
+              "purpose": "Activate fast-twitch fibers for race sharpness",
+              "type": "key",
+              "highlight": "3×800m"
+            },
+            {
+              "day": 73,
+              "dow": "wed",
+              "date": "2027-01-13",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 74,
+              "dow": "thu",
+              "date": "2027-01-14",
+              "workout": "Easy 12km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 75,
+              "dow": "fri",
+              "date": "2027-01-15",
+              "workout": "Easy 12km + 4 hill strides on a gentle slope",
+              "purpose": "Adapt to climbing rhythm",
+              "type": "easy"
+            },
+            {
+              "day": 76,
+              "dow": "sat",
+              "date": "2027-01-16",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 77,
+              "dow": "sun",
+              "date": "2027-01-17",
+              "workout": "Long 10km @ easy effort/km",
+              "purpose": "Build endurance and capillary density",
+              "type": "key"
+            }
+          ]
+        },
+        {
+          "num": 12,
+          "label": "Race Week",
+          "km": 28,
+          "dates": {
+            "start": "2027-01-18",
+            "end": "2027-01-24"
+          },
+          "focus": null,
+          "days": [
+            {
+              "day": 78,
+              "dow": "mon",
+              "date": "2027-01-18",
+              "workout": "Easy 9km",
+              "purpose": "Wake up the body, promote blood flow",
+              "type": "easy"
+            },
+            {
+              "day": 79,
+              "dow": "tue",
+              "date": "2027-01-19",
+              "workout": "Warm-up 2km + 3×800m @ fast/km, full recovery + Cool-down 1km",
+              "purpose": "Activate fast-twitch fibers for race sharpness",
+              "type": "key",
+              "highlight": "3×800m"
+            },
+            {
+              "day": 80,
+              "dow": "wed",
+              "date": "2027-01-20",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 81,
+              "dow": "thu",
+              "date": "2027-01-21",
+              "workout": "Easy 9km + 4–6 strides at the end",
+              "purpose": "Maintain elasticity and leg turnover",
+              "type": "easy"
+            },
+            {
+              "day": 82,
+              "dow": "fri",
+              "date": "2027-01-22",
+              "workout": "Rest",
+              "purpose": "Full recovery and adaptation",
+              "type": "rest"
+            },
+            {
+              "day": 83,
+              "dow": "sat",
+              "date": "2027-01-23",
+              "workout": "Rest / very easy 5km",
+              "purpose": "Active recovery, keep legs loose",
+              "type": "rest"
+            },
+            {
+              "day": 84,
+              "dow": "sun",
+              "date": "2027-01-24",
+              "workout": "RACE DAY — 5K",
+              "purpose": "Race day — trust the training",
+              "type": "race"
+            }
+          ]
+        }
+      ],
+      "tips": [
+        {
+          "icon": "1",
+          "text": "Volume starts at your current <strong>80 km/week</strong> and grows ~10%/week to a peak of 80 km (week 8); recovery weeks drop to 80%."
+        },
+        {
+          "icon": "2",
+          "text": "<strong>Strides</strong> = 80–100m accelerations (~20s), build to 90% effort, walk back to recover, repeat"
+        },
+        {
+          "icon": "3",
+          "text": "<strong>Uphill: watch heart rate, not pace</strong> — use downhill to recover time"
+        },
+        {
+          "icon": "4",
+          "text": "Adrenaline is high at the start — <strong>deliberately hold back for the first 2km</strong>"
+        },
+        {
+          "icon": "5",
+          "text": "On easy runs, find a gentle slope for a few <strong>hill strides</strong> to adapt to climbing rhythm"
+        }
+      ],
+      "toolsCalled": [],
+      "dataSource": "rundida-tool-chain",
+      "volume": {
+        "startKm": 80,
+        "peakKm": 80,
+        "peakWeek": 8,
+        "floored": false
+      },
+      "longRun": null,
+      "goals": null,
+      "warnings": [],
+      "gates": [],
+      "coach": null
+    },
+    "requestedLang": "en",
+    "clientLang": "en"
+  },
+  "narrative": "{\"key\":\"{\\\"distance\\\":\\\"5K\\\",\\\"weeks\\\":12,\\\"category\\\":\\\"race-prep\\\",\\\"recent_race\\\":null,\\\"goal_time\\\":null,\\\"weekly_km\\\":80,\\\"fixed_days\\\":[],\\\"long_run_day\\\":\\\"sun\\\",\\\"injury_history\\\":false,\\\"race_date\\\":\\\"2027-01-24\\\",\\\"long_run_target_km\\\":null,\\\"long_run_peak_week\\\":null,\\\"runs_per_week\\\":6,\\\"current_long_run_km\\\":24,\\\"injury_recent_months\\\":null,\\\"injury_area\\\":null,\\\"wants_intervals\\\":null,\\\"coach\\\":{\\\"intervals\\\":\\\"weekly\\\",\\\"long_run_target_km\\\":null,\\\"quality_emphasis\\\":\\\"mixed\\\",\\\"cautions\\\":[\\\"The 10K result is labeled an estimate, so anchor workout effort to current fitness rather than a goal time\\\"],\\\"rationale\\\":{\\\"intervals\\\":\\\"Advanced runner on high volume and six days a week can absorb a weekly interval session\\\",\\\"quality_emphasis\\\":\\\"A 5K peak benefits from mixing threshold work with faster interval sessions\\\"}}}|en\",\"narrative\":{\"intro\":\"Since we don't have a recent race time to calibrate from, this 12-week 5K race-prep plan starts conservatively with four weeks of base building to establish your aerobic foundation. The structure then progresses through build and peak phases with recovery weeks to manage fatigue, finishing with a taper and race week to have you ready on the line.\",\"weekNotes\":[{\"num\":1,\"note\":\"Focus on establishing consistent easy mileage to build your aerobic foundation.\"},{\"num\":2,\"note\":\"Continue building your base with steady, comfortable running volume.\"},{\"num\":3,\"note\":\"Keep accumulating base miles while maintaining easy, controlled effort.\"},{\"num\":4,\"note\":\"Consolidate your aerobic base before intensity increases.\"},{\"num\":5,\"note\":\"Introduce sustained tempo efforts to raise your lactate threshold.\"},{\"num\":6,\"note\":\"Build further with race-specific workouts and increased volume.\"},{\"num\":7,\"note\":\"Cut back volume this week to absorb training and recover.\"},{\"num\":8,\"note\":\"Peak phase begins with high-intensity intervals to sharpen race pace.\"},{\"num\":9,\"note\":\"Continue peak training with challenging race-specific speedwork.\"},{\"num\":10,\"note\":\"Reduce load this week to recover before the final taper.\"},{\"num\":11,\"note\":\"Taper your volume while keeping some intensity to stay sharp.\"},{\"num\":12,\"note\":\"Race week—keep runs short and easy, then go run your 5K.\"}],\"cautions\":[\"If you feel sharp pain or excessive fatigue, ease off and see a professional.\",\"Without a recent race baseline, listen to your body and adjust effort by feel rather than chasing numbers.\"]}}"
+}

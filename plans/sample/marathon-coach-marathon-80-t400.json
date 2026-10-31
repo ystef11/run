@@ -1,0 +1,3204 @@
+{
+  "meta": {
+    "tag": "[MARATHON-COACH]",
+    "schema": 1,
+    "name": "marathon-coach · 42.195 км · 80 км/нед · ПАНО 4:00",
+    "generated": "2026-10-29",
+    "marathon": "2027-03-07",
+    "source": {
+      "url": "https://github.com/Melvin2306/marathon-coach",
+      "retrieved": "2026-10-29",
+      "raw": "raw/marathon-coach-marathon-80-t400.source.json",
+      "commit": "af0ca83",
+      "engine": "engines/marathon-coach/source.zip",
+      "file": "src/lib/plan.ts",
+      "permalink": "https://github.com/Melvin2306/marathon-coach/blob/af0ca83/src/lib/plan.ts"
+    },
+    "profile": {
+      "id": "80-t400",
+      "km": 80,
+      "t": 240,
+      "level": "advanced",
+      "days": 6,
+      "long": 24,
+      "vdot": 53.450573239692226,
+      "benchmark": {
+        "distance": 10000,
+        "time": 2342
+      }
+    },
+    "generatorInput": {
+      "name": "80-t400",
+      "raceName": "Sample",
+      "raceDate": "2027-03-07",
+      "planStart": "2026-11-02",
+      "goalTime": null,
+      "recentRace": {
+        "distance": 10000,
+        "time": 2342
+      },
+      "weeklyVolume": 80000,
+      "longestRun": 24000,
+      "daysPerWeek": 6,
+      "longRunDay": 6,
+      "experience": "experienced",
+      "units": "km"
+    },
+    "conversion": {
+      "detail": "structured",
+      "notes": [
+        "Запущен оригинальный generatePlan. Движок поддерживает только марафон.",
+        "Длинная до начала плана условно 24 / 14 / 9 км; стаж experienced / returning / first. Целевое улучшение времени не задано.",
+        "Темпы и структура шагов из движка. Для jog использован E; walk также получил E только для оценки, исходная метка сохранена."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-11-02",
+      "goalISO": "2027-03-07",
+      "goalDist": 42195,
+      "planMode": "goal",
+      "tag": "[MARATHON-COACH]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-11-02",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 1,
+      "sourceWeeklyM": 79000
+    },
+    {
+      "date": "2026-11-03",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 1,
+      "sourceWeeklyM": 79000
+    },
+    {
+      "date": "2026-11-04",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 1,
+      "sourceWeeklyM": 79000
+    },
+    {
+      "date": "2026-11-05",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 1,
+      "sourceWeeklyM": 79000
+    },
+    {
+      "date": "2026-11-07",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 1,
+      "sourceWeeklyM": 79000
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 25000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "25 km at easy pace (4:51–5:21/km). Time on feet matters more than speed.",
+      "sourceDistanceM": 25000,
+      "sourceWeek": 1,
+      "sourceWeeklyM": 79000
+    },
+    {
+      "date": "2026-11-09",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 2,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2026-11-10",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 2,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2026-11-11",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 2,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2026-11-12",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 2,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2026-11-14",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 2,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 26000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "26 km at easy pace (4:51–5:21/km). Time on feet matters more than speed.",
+      "sourceDistanceM": 26000,
+      "sourceWeek": 2,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2026-11-16",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "14 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 14000,
+      "sourceWeek": 3,
+      "sourceWeeklyM": 84000
+    },
+    {
+      "date": "2026-11-17",
+      "kind": "run",
+      "name": "Hill repeats",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "time",
+              "v": 60,
+              "tg": {},
+              "d": "hill"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 90,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km warm-up, 6×60 s uphill at hard effort, jog back down. 2 km cool-down.",
+      "sourceDistanceM": 6000,
+      "sourceWeek": 3,
+      "sourceWeeklyM": 84000
+    },
+    {
+      "date": "2026-11-18",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "14 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 14000,
+      "sourceWeek": 3,
+      "sourceWeeklyM": 84000
+    },
+    {
+      "date": "2026-11-19",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 3,
+      "sourceWeeklyM": 84000
+    },
+    {
+      "date": "2026-11-21",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "14 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 14000,
+      "sourceWeek": 3,
+      "sourceWeeklyM": 84000
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 27000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "27 km at easy pace (4:51–5:21/km). Time on feet matters more than speed.",
+      "sourceDistanceM": 27000,
+      "sourceWeek": 3,
+      "sourceWeeklyM": 84000
+    },
+    {
+      "date": "2026-11-23",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 4,
+      "sourceWeeklyM": 63000
+    },
+    {
+      "date": "2026-11-24",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "7 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 7000,
+      "sourceWeek": 4,
+      "sourceWeeklyM": 63000
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 4,
+      "sourceWeeklyM": 63000
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 4,
+      "sourceWeeklyM": 63000
+    },
+    {
+      "date": "2026-11-28",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 4,
+      "sourceWeeklyM": 63000
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "20 km at easy pace (4:51–5:21/km). Time on feet matters more than speed.",
+      "sourceDistanceM": 20000,
+      "sourceWeek": 4,
+      "sourceWeeklyM": 63000
+    },
+    {
+      "date": "2026-11-30",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "13 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 5,
+      "sourceWeeklyM": 86000
+    },
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 5,
+      "sourceWeeklyM": 86000
+    },
+    {
+      "date": "2026-12-02",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "13 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 5,
+      "sourceWeeklyM": 86000
+    },
+    {
+      "date": "2026-12-03",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 5,
+      "sourceWeeklyM": 86000
+    },
+    {
+      "date": "2026-12-05",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "13 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 5,
+      "sourceWeeklyM": 86000
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 29000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "29 km at easy pace (4:51–5:21/km). Time on feet matters more than speed.",
+      "sourceDistanceM": 29000,
+      "sourceWeek": 5,
+      "sourceWeeklyM": 86000
+    },
+    {
+      "date": "2026-12-07",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 6,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "Fitness check: 5K time trial",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "5K"
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "Easy warm-up with a few strides, then 5 km as fast as you can run evenly (your current paces predict about 18:50). Easy cool-down. Log it as a race: if you were faster, the coach offers to update your paces.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 6,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 6,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-10",
+      "kind": "run",
+      "name": "Intervals",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 5,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 1000,
+              "tg": {
+                "pace": [
+                  "3:42",
+                  "3:42"
+                ]
+              },
+              "d": "I"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 222,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 5×1,000 m at interval pace (3:42/km) with an equal-time easy jog between. 2 km cool-down.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 6,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-12",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 6,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 26000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 900,
+          "tg": {},
+          "d": "steady"
+        }
+      ],
+      "desc": "30 km at easy pace (4:51–5:21/km). Run the last 15 minutes at a steady effort, but no faster than marathon pace (4:16/km).",
+      "sourceDistanceM": 30000,
+      "sourceWeek": 6,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-14",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 7,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "Threshold",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 4,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "time",
+              "v": 480,
+              "tg": {
+                "pace": [
+                  "4:02",
+                  "4:02"
+                ]
+              },
+              "d": "T"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 120,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 4×8 min at threshold pace (4:02/km) with 2 min easy jog between. 2 km cool-down.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 7,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-16",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 7,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-17",
+      "kind": "run",
+      "name": "Intervals",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 800,
+              "tg": {
+                "pace": [
+                  "3:42",
+                  "3:42"
+                ]
+              },
+              "d": "I"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 178,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 6×800 m at interval pace (3:42/km) with an equal-time easy jog between. 2 km cool-down.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 7,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-19",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 7,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 26000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 900,
+          "tg": {},
+          "d": "steady"
+        }
+      ],
+      "desc": "30 km at easy pace (4:51–5:21/km). Run the last 15 minutes at a steady effort, but no faster than marathon pace (4:16/km).",
+      "sourceDistanceM": 30000,
+      "sourceWeek": 7,
+      "sourceWeeklyM": 88000
+    },
+    {
+      "date": "2026-12-21",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 8,
+      "sourceWeeklyM": 66000
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "7 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 7000,
+      "sourceWeek": 8,
+      "sourceWeeklyM": 66000
+    },
+    {
+      "date": "2026-12-23",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 8,
+      "sourceWeeklyM": 66000
+    },
+    {
+      "date": "2026-12-24",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 8,
+      "sourceWeeklyM": 66000
+    },
+    {
+      "date": "2026-12-26",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 8,
+      "sourceWeeklyM": 66000
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 23000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "23 km at easy pace (4:51–5:21/km). Time on feet matters more than speed.",
+      "sourceDistanceM": 23000,
+      "sourceWeek": 8,
+      "sourceWeeklyM": 66000
+    },
+    {
+      "date": "2026-12-28",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 9,
+      "sourceWeeklyM": 91000
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "Threshold",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 2,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "time",
+              "v": 900,
+              "tg": {
+                "pace": [
+                  "4:02",
+                  "4:02"
+                ]
+              },
+              "d": "T"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 180,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 2×15 min at threshold pace (4:02/km) with 3 min easy jog between. 2 km cool-down.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 9,
+      "sourceWeeklyM": 91000
+    },
+    {
+      "date": "2026-12-30",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 9,
+      "sourceWeeklyM": 91000
+    },
+    {
+      "date": "2026-12-31",
+      "kind": "run",
+      "name": "Intervals",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 1000,
+              "tg": {
+                "pace": [
+                  "3:42",
+                  "3:42"
+                ]
+              },
+              "d": "I"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 222,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 6×1,000 m at interval pace (3:42/km) with an equal-time easy jog between. 2 km cool-down.",
+      "sourceDistanceM": 14000,
+      "sourceWeek": 9,
+      "sourceWeeklyM": 91000
+    },
+    {
+      "date": "2027-01-02",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 9,
+      "sourceWeeklyM": 91000
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 28000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 900,
+          "tg": {},
+          "d": "steady"
+        }
+      ],
+      "desc": "32 km at easy pace (4:51–5:21/km). Run the last 15 minutes at a steady effort, but no faster than marathon pace (4:16/km).",
+      "sourceDistanceM": 32000,
+      "sourceWeek": 9,
+      "sourceWeeklyM": 91000
+    },
+    {
+      "date": "2027-01-04",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "16 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 16000,
+      "sourceWeek": 10,
+      "sourceWeeklyM": 92000
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "10 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 10000,
+      "sourceWeek": 10,
+      "sourceWeeklyM": 92000
+    },
+    {
+      "date": "2027-01-06",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "16 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 16000,
+      "sourceWeek": 10,
+      "sourceWeeklyM": 92000
+    },
+    {
+      "date": "2027-01-07",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "10 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 10000,
+      "sourceWeek": 10,
+      "sourceWeeklyM": 92000
+    },
+    {
+      "date": "2027-01-09",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "16 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 16000,
+      "sourceWeek": 10,
+      "sourceWeeklyM": 92000
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "Tune-up: half marathon",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "Race a half marathon (or a solo time trial). Your current fitness predicts about 1:26:23. 2 km warm-up and cool-down. Log it as a race to recalibrate your paces.",
+      "sourceDistanceM": 24000,
+      "sourceWeek": 10,
+      "sourceWeeklyM": 92000
+    },
+    {
+      "date": "2027-01-11",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 11,
+      "sourceWeeklyM": 93000
+    },
+    {
+      "date": "2027-01-12",
+      "kind": "run",
+      "name": "Threshold",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 2,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "time",
+              "v": 900,
+              "tg": {
+                "pace": [
+                  "4:02",
+                  "4:02"
+                ]
+              },
+              "d": "T"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 180,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 2×15 min at threshold pace (4:02/km) with 3 min easy jog between. 2 km cool-down.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 11,
+      "sourceWeeklyM": 93000
+    },
+    {
+      "date": "2027-01-13",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 11,
+      "sourceWeeklyM": 93000
+    },
+    {
+      "date": "2027-01-14",
+      "kind": "run",
+      "name": "Marathon-pace run",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:16",
+              "4:16"
+            ]
+          },
+          "d": "M"
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 1000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 8 km at marathon pace (4:16/km), 1 km cool-down. Lock into rhythm and practise drinking on the move.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 11,
+      "sourceWeeklyM": 93000
+    },
+    {
+      "date": "2027-01-16",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "12 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 11,
+      "sourceWeeklyM": 93000
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 34000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "34 km at easy pace (4:51–5:21/km). Practise your race-day fuelling and drinking.",
+      "sourceDistanceM": 34000,
+      "sourceWeek": 11,
+      "sourceWeeklyM": 93000
+    },
+    {
+      "date": "2027-01-18",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 12,
+      "sourceWeeklyM": 69000
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "7 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 7000,
+      "sourceWeek": 12,
+      "sourceWeeklyM": 69000
+    },
+    {
+      "date": "2027-01-20",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 12,
+      "sourceWeeklyM": 69000
+    },
+    {
+      "date": "2027-01-21",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 12,
+      "sourceWeeklyM": 69000
+    },
+    {
+      "date": "2027-01-23",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "9 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 12,
+      "sourceWeeklyM": 69000
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 26000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "26 km at easy pace (4:51–5:21/km). Practise your race-day fuelling and drinking.",
+      "sourceDistanceM": 26000,
+      "sourceWeek": 12,
+      "sourceWeeklyM": 69000
+    },
+    {
+      "date": "2027-01-25",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "13 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 13,
+      "sourceWeeklyM": 96000
+    },
+    {
+      "date": "2027-01-26",
+      "kind": "run",
+      "name": "Threshold",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 1200,
+          "tg": {
+            "pace": [
+              "4:02",
+              "4:02"
+            ]
+          },
+          "d": "T"
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 20 min continuous at threshold pace (4:02/km). 2 km cool-down.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 13,
+      "sourceWeeklyM": 96000
+    },
+    {
+      "date": "2027-01-27",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "13 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 13,
+      "sourceWeeklyM": 96000
+    },
+    {
+      "date": "2027-01-28",
+      "kind": "run",
+      "name": "Marathon-pace run",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {
+            "pace": [
+              "4:16",
+              "4:16"
+            ]
+          },
+          "d": "M"
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 1000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 10 km at marathon pace (4:16/km), 1 km cool-down. Lock into rhythm and practise drinking on the move.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 13,
+      "sourceWeeklyM": 96000
+    },
+    {
+      "date": "2027-01-30",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "13 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 13000,
+      "sourceWeek": 13,
+      "sourceWeeklyM": 96000
+    },
+    {
+      "date": "2027-01-31",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 35000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "35 km at easy pace (4:51–5:21/km). Practise your race-day fuelling and drinking.",
+      "sourceDistanceM": 35000,
+      "sourceWeek": 13,
+      "sourceWeeklyM": 96000
+    },
+    {
+      "date": "2027-02-01",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "15 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 15000,
+      "sourceWeek": 14,
+      "sourceWeeklyM": 99000
+    },
+    {
+      "date": "2027-02-02",
+      "kind": "run",
+      "name": "Threshold",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 1200,
+          "tg": {
+            "pace": [
+              "4:02",
+              "4:02"
+            ]
+          },
+          "d": "T"
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 20 min continuous at threshold pace (4:02/km). 2 km cool-down.",
+      "sourceDistanceM": 9000,
+      "sourceWeek": 14,
+      "sourceWeeklyM": 99000
+    },
+    {
+      "date": "2027-02-03",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "15 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 15000,
+      "sourceWeek": 14,
+      "sourceWeeklyM": 99000
+    },
+    {
+      "date": "2027-02-04",
+      "kind": "run",
+      "name": "Easy + strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "10 km at easy pace (4:51–5:21/km), then 6×20 s relaxed strides, around 3:27/km, walking back to recover.",
+      "sourceDistanceM": 10000,
+      "sourceWeek": 14,
+      "sourceWeeklyM": 99000
+    },
+    {
+      "date": "2027-02-06",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "15 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 15000,
+      "sourceWeek": 14,
+      "sourceWeeklyM": 99000
+    },
+    {
+      "date": "2027-02-07",
+      "kind": "run",
+      "name": "Long run with marathon pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 27000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:16",
+              "4:16"
+            ]
+          },
+          "d": "M"
+        }
+      ],
+      "desc": "35 km: start at easy pace (4:51–5:21/km), then run the final 8 km at marathon pace (4:16/km). Practise race fuelling: a gel every 20–25 min.",
+      "sourceDistanceM": 35000,
+      "sourceWeek": 14,
+      "sourceWeeklyM": 99000
+    },
+    {
+      "date": "2027-02-08",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 15,
+      "sourceWeeklyM": 98000
+    },
+    {
+      "date": "2027-02-09",
+      "kind": "run",
+      "name": "Threshold",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 4,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "time",
+              "v": 600,
+              "tg": {
+                "pace": [
+                  "4:02",
+                  "4:02"
+                ]
+              },
+              "d": "T"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 120,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 4×10 min at threshold pace (4:02/km) with 2 min easy jog between. 2 km cool-down.",
+      "sourceDistanceM": 15000,
+      "sourceWeek": 15,
+      "sourceWeeklyM": 98000
+    },
+    {
+      "date": "2027-02-10",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 15,
+      "sourceWeeklyM": 98000
+    },
+    {
+      "date": "2027-02-11",
+      "kind": "run",
+      "name": "Marathon-pace run",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {
+            "pace": [
+              "4:16",
+              "4:16"
+            ]
+          },
+          "d": "M"
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 1000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 12 km at marathon pace (4:16/km), 1 km cool-down. Lock into rhythm and practise drinking on the move.",
+      "sourceDistanceM": 15000,
+      "sourceWeek": 15,
+      "sourceWeeklyM": 98000
+    },
+    {
+      "date": "2027-02-13",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 15,
+      "sourceWeeklyM": 98000
+    },
+    {
+      "date": "2027-02-14",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 35000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "35 km at easy pace (4:51–5:21/km). Practise your race-day fuelling and drinking.",
+      "sourceDistanceM": 35000,
+      "sourceWeek": 15,
+      "sourceWeeklyM": 98000
+    },
+    {
+      "date": "2027-02-15",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 16,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2027-02-16",
+      "kind": "run",
+      "name": "Threshold",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 3,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "time",
+              "v": 600,
+              "tg": {
+                "pace": [
+                  "4:02",
+                  "4:02"
+                ]
+              },
+              "d": "T"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 120,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 3×10 min at threshold pace (4:02/km) with 2 min easy jog between. 2 km cool-down.",
+      "sourceDistanceM": 12000,
+      "sourceWeek": 16,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2027-02-17",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 16,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2027-02-18",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 16,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2027-02-20",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "11 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 11000,
+      "sourceWeek": 16,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2027-02-21",
+      "kind": "run",
+      "name": "Long run with marathon pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:16",
+              "4:16"
+            ]
+          },
+          "d": "M"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "24 km with the middle 8 km at marathon pace (4:16/km), the rest easy (4:51–5:21/km). Final dress rehearsal: race kit, breakfast, gels.",
+      "sourceDistanceM": 24000,
+      "sourceWeek": 16,
+      "sourceWeeklyM": 80000
+    },
+    {
+      "date": "2027-02-22",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "8 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 8000,
+      "sourceWeek": 17,
+      "sourceWeeklyM": 60000
+    },
+    {
+      "date": "2027-02-23",
+      "kind": "run",
+      "name": "Marathon-pace sharpener",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 3,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 2000,
+              "tg": {
+                "pace": [
+                  "4:16",
+                  "4:16"
+                ]
+              },
+              "d": "M"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 120,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy warm-up, 3×2 km at marathon pace (4:16/km) with 2 min jog, 2 km cool-down.",
+      "sourceDistanceM": 10000,
+      "sourceWeek": 17,
+      "sourceWeeklyM": 60000
+    },
+    {
+      "date": "2027-02-24",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "8 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 8000,
+      "sourceWeek": 17,
+      "sourceWeeklyM": 60000
+    },
+    {
+      "date": "2027-02-25",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "8 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 8000,
+      "sourceWeek": 17,
+      "sourceWeeklyM": 60000
+    },
+    {
+      "date": "2027-02-27",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "8 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 8000,
+      "sourceWeek": 17,
+      "sourceWeeklyM": 60000
+    },
+    {
+      "date": "2027-02-28",
+      "kind": "run",
+      "name": "Long run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 18000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "18 km at easy pace (4:51–5:21/km). Time on feet matters more than speed.",
+      "sourceDistanceM": 18000,
+      "sourceWeek": 17,
+      "sourceWeeklyM": 60000
+    },
+    {
+      "date": "2027-03-01",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "3 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 3000,
+      "sourceWeek": 18,
+      "sourceWeeklyM": 19000
+    },
+    {
+      "date": "2027-03-02",
+      "kind": "run",
+      "name": "Race-week tune-up",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "distance",
+          "v": 2000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        },
+        {
+          "t": "repeat",
+          "n": 3,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 1000,
+              "tg": {
+                "pace": [
+                  "4:16",
+                  "4:16"
+                ]
+              },
+              "d": "M"
+            },
+            {
+              "t": "recovery",
+              "end": "time",
+              "v": 120,
+              "tg": {
+                "pace": [
+                  "4:51",
+                  "5:21"
+                ]
+              },
+              "d": "jog"
+            }
+          ]
+        },
+        {
+          "t": "cooldown",
+          "end": "distance",
+          "v": 1000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": "E"
+        }
+      ],
+      "desc": "2 km easy, 3×1 km at marathon pace (4:16/km) with 2 min jog, 1 km easy.",
+      "sourceDistanceM": 7000,
+      "sourceWeek": 18,
+      "sourceWeeklyM": 19000
+    },
+    {
+      "date": "2027-03-03",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "3 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 3000,
+      "sourceWeek": 18,
+      "sourceWeeklyM": 19000
+    },
+    {
+      "date": "2027-03-04",
+      "kind": "run",
+      "name": "Easy run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "3 km relaxed at easy pace (4:51–5:21/km). You should be able to hold a conversation.",
+      "sourceDistanceM": 3000,
+      "sourceWeek": 18,
+      "sourceWeeklyM": 19000
+    },
+    {
+      "date": "2027-03-06",
+      "kind": "run",
+      "name": "Shakeout",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {
+            "pace": [
+              "4:51",
+              "5:21"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "15–20 min very easy with 3 short strides. Lay out your kit.",
+      "sourceDistanceM": 3000,
+      "sourceWeek": 18,
+      "sourceWeeklyM": 19000
+    },
+    {
+      "date": "2027-03-07",
+      "kind": "run",
+      "name": "Sample",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 42195,
+          "tg": {
+            "pace": [
+              "4:16",
+              "4:16"
+            ]
+          },
+          "d": ""
+        }
+      ],
+      "desc": "Race day. Run the first 5 km a little slower, then settle into marathon pace (4:16/km). Fuel early and often.",
+      "sourceDistanceM": 42195,
+      "sourceWeek": 18,
+      "sourceWeeklyM": 19000
+    }
+  ]
+}

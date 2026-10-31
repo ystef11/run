@@ -1,0 +1,3267 @@
+{
+  "profile": {
+    "id": "40-t545",
+    "km": 40,
+    "t": 345,
+    "level": "intermediate",
+    "days": 4,
+    "long": 14,
+    "vdot": 34.056702733267706,
+    "benchmark": {
+      "distance": 10000,
+      "time": 3441
+    }
+  },
+  "distance": {
+    "id": "marathon",
+    "km": 42.195,
+    "weeks": 18,
+    "z": "marathon",
+    "mc": "Marathon"
+  },
+  "goal": "2027-03-07",
+  "source": "marathon-coach",
+  "input": {
+    "name": "40-t545",
+    "raceName": "Sample",
+    "raceDate": "2027-03-07",
+    "planStart": "2026-11-02",
+    "goalTime": null,
+    "recentRace": {
+      "distance": 10000,
+      "time": 3441
+    },
+    "weeklyVolume": 40000,
+    "longestRun": 14000,
+    "daysPerWeek": 4,
+    "longRunDay": 6,
+    "experience": "returning",
+    "units": "km"
+  },
+  "output": {
+    "weeks": [
+      {
+        "index": 0,
+        "start": "2026-11-02",
+        "phase": "base",
+        "cutback": false,
+        "volume": 41000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.base.focus"
+        },
+        "workouts": [
+          {
+            "date": "2026-11-02",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-03",
+            "type": "strides",
+            "title": {
+              "key": "w.strides"
+            },
+            "description": {
+              "key": "w.strides.desc",
+              "params": {
+                "dist": {
+                  "meters": 6000
+                }
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E",
+              "R"
+            ],
+            "titleText": "Easy + strides",
+            "descriptionText": "6 km at easy pace (6:56–7:37/km), then 6×20 s relaxed strides, around 5:05/km, walking back to recover."
+          },
+          {
+            "date": "2026-11-04",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-05",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "10 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-11-06",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-07",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "10 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-11-08",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc",
+              "params": {
+                "dist": {
+                  "meters": 15000
+                }
+              }
+            },
+            "distance": 15000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "15 km at easy pace (6:56–7:37/km). Time on feet matters more than speed."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 1,
+        "start": "2026-11-09",
+        "phase": "base",
+        "cutback": false,
+        "volume": 41000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.base.focus"
+        },
+        "workouts": [
+          {
+            "date": "2026-11-09",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-10",
+            "type": "strides",
+            "title": {
+              "key": "w.strides"
+            },
+            "description": {
+              "key": "w.strides.desc",
+              "params": {
+                "dist": {
+                  "meters": 6000
+                }
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E",
+              "R"
+            ],
+            "titleText": "Easy + strides",
+            "descriptionText": "6 km at easy pace (6:56–7:37/km), then 6×20 s relaxed strides, around 5:05/km, walking back to recover."
+          },
+          {
+            "date": "2026-11-11",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-12",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 9000
+                }
+              }
+            },
+            "distance": 9000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "9 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-11-13",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-14",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 9000
+                }
+              }
+            },
+            "distance": 9000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "9 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-11-15",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc",
+              "params": {
+                "dist": {
+                  "meters": 17000
+                }
+              }
+            },
+            "distance": 17000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "17 km at easy pace (6:56–7:37/km). Time on feet matters more than speed."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 2,
+        "start": "2026-11-16",
+        "phase": "base",
+        "cutback": false,
+        "volume": 43000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.base.focus"
+        },
+        "workouts": [
+          {
+            "date": "2026-11-16",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-17",
+            "type": "hills",
+            "title": {
+              "key": "w.hills"
+            },
+            "description": {
+              "key": "w.hills.desc",
+              "params": {
+                "reps": 6
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "repeat": 6,
+                "steps": [
+                  {
+                    "kind": "work",
+                    "seconds": 60,
+                    "pace": "hill"
+                  },
+                  {
+                    "kind": "recover",
+                    "seconds": 90,
+                    "pace": "jog"
+                  }
+                ]
+              },
+              {
+                "kind": "cooldown",
+                "distance": 2000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Hill repeats",
+            "descriptionText": "2 km warm-up, 6×60 s uphill at hard effort, jog back down. 2 km cool-down."
+          },
+          {
+            "date": "2026-11-18",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-19",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 9000
+                }
+              }
+            },
+            "distance": 9000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "9 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-11-20",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-21",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 9000
+                }
+              }
+            },
+            "distance": 9000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "9 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-11-22",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc",
+              "params": {
+                "dist": {
+                  "meters": 19000
+                }
+              }
+            },
+            "distance": 19000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "19 km at easy pace (6:56–7:37/km). Time on feet matters more than speed."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 3,
+        "start": "2026-11-23",
+        "phase": "base",
+        "cutback": true,
+        "volume": 33000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "focus.cutback"
+        },
+        "workouts": [
+          {
+            "date": "2026-11-23",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-24",
+            "type": "strides",
+            "title": {
+              "key": "w.strides"
+            },
+            "description": {
+              "key": "w.strides.desc",
+              "params": {
+                "dist": {
+                  "meters": 5000
+                }
+              }
+            },
+            "distance": 5000,
+            "paces": [
+              "E",
+              "R"
+            ],
+            "titleText": "Easy + strides",
+            "descriptionText": "5 km at easy pace (6:56–7:37/km), then 6×20 s relaxed strides, around 5:05/km, walking back to recover."
+          },
+          {
+            "date": "2026-11-25",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-26",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 7000
+                }
+              }
+            },
+            "distance": 7000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "7 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-11-27",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-11-28",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 7000
+                }
+              }
+            },
+            "distance": 7000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "7 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-11-29",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc",
+              "params": {
+                "dist": {
+                  "meters": 14000
+                }
+              }
+            },
+            "distance": 14000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "14 km at easy pace (6:56–7:37/km). Time on feet matters more than speed."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 4,
+        "start": "2026-11-30",
+        "phase": "base",
+        "cutback": false,
+        "volume": 47000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.base.focus"
+        },
+        "workouts": [
+          {
+            "date": "2026-11-30",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-01",
+            "type": "strides",
+            "title": {
+              "key": "w.strides"
+            },
+            "description": {
+              "key": "w.strides.desc",
+              "params": {
+                "dist": {
+                  "meters": 6000
+                }
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E",
+              "R"
+            ],
+            "titleText": "Easy + strides",
+            "descriptionText": "6 km at easy pace (6:56–7:37/km), then 6×20 s relaxed strides, around 5:05/km, walking back to recover."
+          },
+          {
+            "date": "2026-12-02",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-03",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "10 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-12-04",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-05",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "10 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-12-06",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc",
+              "params": {
+                "dist": {
+                  "meters": 21000
+                }
+              }
+            },
+            "distance": 21000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "21 km at easy pace (6:56–7:37/km). Time on feet matters more than speed."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 5,
+        "start": "2026-12-07",
+        "phase": "build",
+        "cutback": false,
+        "volume": 48000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "focus.fitnessCheck"
+        },
+        "workouts": [
+          {
+            "date": "2026-12-07",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-08",
+            "type": "timetrial",
+            "title": {
+              "key": "w.timetrial"
+            },
+            "description": {
+              "key": "w.timetrial.desc"
+            },
+            "distance": 9000,
+            "paces": [
+              "E"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "distance": 5000,
+                "pace": "5K"
+              },
+              {
+                "kind": "cooldown",
+                "distance": 2000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Fitness check: 5K time trial",
+            "descriptionText": "Easy warm-up with a few strides, then 5 km as fast as you can run evenly (your current paces predict about 27:36). Easy cool-down. Log it as a race: if you were faster, the coach offers to update your paces."
+          },
+          {
+            "date": "2026-12-09",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-10",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 8000
+                }
+              }
+            },
+            "distance": 8000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "8 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-12-11",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-12",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 8000
+                }
+              }
+            },
+            "distance": 8000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "8 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-12-13",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc.steady",
+              "params": {
+                "dist": {
+                  "meters": 23000
+                }
+              }
+            },
+            "distance": 23000,
+            "paces": [
+              "E"
+            ],
+            "steps": [
+              {
+                "kind": "run",
+                "distance": 21000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "seconds": 900,
+                "pace": "steady"
+              }
+            ],
+            "titleText": "Long run",
+            "descriptionText": "23 km at easy pace (6:56–7:37/km). Run the last 15 minutes at a steady effort, but no faster than marathon pace (6:12/km)."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 6,
+        "start": "2026-12-14",
+        "phase": "build",
+        "cutback": false,
+        "volume": 50000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.build.focus"
+        },
+        "workouts": [
+          {
+            "date": "2026-12-14",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-15",
+            "type": "intervals",
+            "title": {
+              "key": "w.intervals"
+            },
+            "description": {
+              "key": "w.intervals.desc",
+              "params": {
+                "reps": 5,
+                "length": 1000
+              }
+            },
+            "distance": 13000,
+            "paces": [
+              "E",
+              "I"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "repeat": 5,
+                "steps": [
+                  {
+                    "kind": "work",
+                    "distance": 1000,
+                    "pace": "I"
+                  },
+                  {
+                    "kind": "recover",
+                    "seconds": 320,
+                    "pace": "jog"
+                  }
+                ]
+              },
+              {
+                "kind": "cooldown",
+                "distance": 2000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Intervals",
+            "descriptionText": "2 km easy warm-up, 5×1,000 m at interval pace (5:20/km) with an equal-time easy jog between. 2 km cool-down."
+          },
+          {
+            "date": "2026-12-16",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-17",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 6000
+                }
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "6 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-12-18",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-19",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 6000
+                }
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "6 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-12-20",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc.steady",
+              "params": {
+                "dist": {
+                  "meters": 25000
+                }
+              }
+            },
+            "distance": 25000,
+            "paces": [
+              "E"
+            ],
+            "steps": [
+              {
+                "kind": "run",
+                "distance": 23000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "seconds": 900,
+                "pace": "steady"
+              }
+            ],
+            "titleText": "Long run",
+            "descriptionText": "25 km at easy pace (6:56–7:37/km). Run the last 15 minutes at a steady effort, but no faster than marathon pace (6:12/km)."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 7,
+        "start": "2026-12-21",
+        "phase": "build",
+        "cutback": true,
+        "volume": 36000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "focus.cutback"
+        },
+        "workouts": [
+          {
+            "date": "2026-12-21",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-22",
+            "type": "strides",
+            "title": {
+              "key": "w.strides"
+            },
+            "description": {
+              "key": "w.strides.desc",
+              "params": {
+                "dist": {
+                  "meters": 5000
+                }
+              }
+            },
+            "distance": 5000,
+            "paces": [
+              "E",
+              "R"
+            ],
+            "titleText": "Easy + strides",
+            "descriptionText": "5 km at easy pace (6:56–7:37/km), then 6×20 s relaxed strides, around 5:05/km, walking back to recover."
+          },
+          {
+            "date": "2026-12-23",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-24",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 6000
+                }
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "6 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-12-25",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-26",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 6000
+                }
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "6 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2026-12-27",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc",
+              "params": {
+                "dist": {
+                  "meters": 19000
+                }
+              }
+            },
+            "distance": 19000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "19 km at easy pace (6:56–7:37/km). Time on feet matters more than speed."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 8,
+        "start": "2026-12-28",
+        "phase": "build",
+        "cutback": false,
+        "volume": 52000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.build.focus"
+        },
+        "workouts": [
+          {
+            "date": "2026-12-28",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-29",
+            "type": "intervals",
+            "title": {
+              "key": "w.intervals"
+            },
+            "description": {
+              "key": "w.intervals.desc",
+              "params": {
+                "reps": 6,
+                "length": 800
+              }
+            },
+            "distance": 12000,
+            "paces": [
+              "E",
+              "I"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "repeat": 6,
+                "steps": [
+                  {
+                    "kind": "work",
+                    "distance": 800,
+                    "pace": "I"
+                  },
+                  {
+                    "kind": "recover",
+                    "seconds": 256,
+                    "pace": "jog"
+                  }
+                ]
+              },
+              {
+                "kind": "cooldown",
+                "distance": 2000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Intervals",
+            "descriptionText": "2 km easy warm-up, 6×800 m at interval pace (5:20/km) with an equal-time easy jog between. 2 km cool-down."
+          },
+          {
+            "date": "2026-12-30",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2026-12-31",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 7000
+                }
+              }
+            },
+            "distance": 7000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "7 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-01",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-02",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 7000
+                }
+              }
+            },
+            "distance": 7000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "7 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-03",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc.steady",
+              "params": {
+                "dist": {
+                  "meters": 26000
+                }
+              }
+            },
+            "distance": 26000,
+            "paces": [
+              "E"
+            ],
+            "steps": [
+              {
+                "kind": "run",
+                "distance": 24000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "seconds": 900,
+                "pace": "steady"
+              }
+            ],
+            "titleText": "Long run",
+            "descriptionText": "26 km at easy pace (6:56–7:37/km). Run the last 15 minutes at a steady effort, but no faster than marathon pace (6:12/km)."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 9,
+        "start": "2027-01-04",
+        "phase": "build",
+        "cutback": false,
+        "volume": 53000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "focus.tuneup"
+        },
+        "workouts": [
+          {
+            "date": "2027-01-04",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-05",
+            "type": "strides",
+            "title": {
+              "key": "w.strides"
+            },
+            "description": {
+              "key": "w.strides.desc",
+              "params": {
+                "dist": {
+                  "meters": 7000
+                }
+              }
+            },
+            "distance": 7000,
+            "paces": [
+              "E",
+              "R"
+            ],
+            "titleText": "Easy + strides",
+            "descriptionText": "7 km at easy pace (6:56–7:37/km), then 6×20 s relaxed strides, around 5:05/km, walking back to recover."
+          },
+          {
+            "date": "2027-01-06",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-07",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 11000
+                }
+              }
+            },
+            "distance": 11000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "11 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-08",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-09",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 11000
+                }
+              }
+            },
+            "distance": 11000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "11 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-10",
+            "type": "tuneup",
+            "title": {
+              "key": "w.tuneup"
+            },
+            "description": {
+              "key": "w.tuneup.desc"
+            },
+            "distance": 24000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Tune-up: half marathon",
+            "descriptionText": "Race a half marathon (or a solo time trial). Your current fitness predicts about 2:07:07. 2 km warm-up and cool-down. Log it as a race to recalibrate your paces."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 10,
+        "start": "2027-01-11",
+        "phase": "specific",
+        "cutback": false,
+        "volume": 55000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.specific.focus"
+        },
+        "workouts": [
+          {
+            "date": "2027-01-11",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-12",
+            "type": "marathon",
+            "title": {
+              "key": "w.mp"
+            },
+            "description": {
+              "key": "w.mp.desc",
+              "params": {
+                "mp": {
+                  "meters": 8000
+                }
+              }
+            },
+            "distance": 11000,
+            "paces": [
+              "E",
+              "M"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "distance": 8000,
+                "pace": "M"
+              },
+              {
+                "kind": "cooldown",
+                "distance": 1000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Marathon-pace run",
+            "descriptionText": "2 km easy warm-up, 8 km at marathon pace (6:12/km), 1 km cool-down. Lock into rhythm and practise drinking on the move."
+          },
+          {
+            "date": "2027-01-13",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-14",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 9000
+                }
+              }
+            },
+            "distance": 9000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "9 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-15",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-16",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 9000
+                }
+              }
+            },
+            "distance": 9000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "9 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-17",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc.fuel",
+              "params": {
+                "dist": {
+                  "meters": 26000
+                }
+              }
+            },
+            "distance": 26000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "26 km at easy pace (6:56–7:37/km). Practise your race-day fuelling and drinking."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 11,
+        "start": "2027-01-18",
+        "phase": "specific",
+        "cutback": true,
+        "volume": 42000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "focus.cutback"
+        },
+        "workouts": [
+          {
+            "date": "2027-01-18",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-19",
+            "type": "strides",
+            "title": {
+              "key": "w.strides"
+            },
+            "description": {
+              "key": "w.strides.desc",
+              "params": {
+                "dist": {
+                  "meters": 6000
+                }
+              }
+            },
+            "distance": 6000,
+            "paces": [
+              "E",
+              "R"
+            ],
+            "titleText": "Easy + strides",
+            "descriptionText": "6 km at easy pace (6:56–7:37/km), then 6×20 s relaxed strides, around 5:05/km, walking back to recover."
+          },
+          {
+            "date": "2027-01-20",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-21",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 8000
+                }
+              }
+            },
+            "distance": 8000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "8 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-22",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-23",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 8000
+                }
+              }
+            },
+            "distance": 8000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "8 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-24",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc.fuel",
+              "params": {
+                "dist": {
+                  "meters": 20000
+                }
+              }
+            },
+            "distance": 20000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "20 km at easy pace (6:56–7:37/km). Practise your race-day fuelling and drinking."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 12,
+        "start": "2027-01-25",
+        "phase": "specific",
+        "cutback": false,
+        "volume": 59000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.specific.focus"
+        },
+        "workouts": [
+          {
+            "date": "2027-01-25",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-26",
+            "type": "marathon",
+            "title": {
+              "key": "w.mp"
+            },
+            "description": {
+              "key": "w.mp.desc",
+              "params": {
+                "mp": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 13000,
+            "paces": [
+              "E",
+              "M"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "distance": 10000,
+                "pace": "M"
+              },
+              {
+                "kind": "cooldown",
+                "distance": 1000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Marathon-pace run",
+            "descriptionText": "2 km easy warm-up, 10 km at marathon pace (6:12/km), 1 km cool-down. Lock into rhythm and practise drinking on the move."
+          },
+          {
+            "date": "2027-01-27",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-28",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "10 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-29",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-01-30",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "10 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-01-31",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc.fuel",
+              "params": {
+                "dist": {
+                  "meters": 26000
+                }
+              }
+            },
+            "distance": 26000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "26 km at easy pace (6:56–7:37/km). Practise your race-day fuelling and drinking."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 13,
+        "start": "2027-02-01",
+        "phase": "specific",
+        "cutback": false,
+        "volume": 61000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.specific.focus"
+        },
+        "workouts": [
+          {
+            "date": "2027-02-01",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-02",
+            "type": "tempo",
+            "title": {
+              "key": "w.tempo"
+            },
+            "description": {
+              "key": "w.tempo.continuous",
+              "params": {
+                "min": 20
+              }
+            },
+            "distance": 7000,
+            "paces": [
+              "E",
+              "T"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "seconds": 1200,
+                "pace": "T"
+              },
+              {
+                "kind": "cooldown",
+                "distance": 2000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Threshold",
+            "descriptionText": "2 km easy warm-up, 20 min continuous at threshold pace (5:48/km). 2 km cool-down."
+          },
+          {
+            "date": "2027-02-03",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-04",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 14000
+                }
+              }
+            },
+            "distance": 14000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "14 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-02-05",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-06",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 14000
+                }
+              }
+            },
+            "distance": 14000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "14 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-02-07",
+            "type": "long-mp",
+            "title": {
+              "key": "w.longMp"
+            },
+            "description": {
+              "key": "w.longMp.desc",
+              "params": {
+                "dist": {
+                  "meters": 26000
+                },
+                "mp": {
+                  "meters": 8000
+                }
+              }
+            },
+            "distance": 26000,
+            "paces": [
+              "E",
+              "M"
+            ],
+            "steps": [
+              {
+                "kind": "run",
+                "distance": 18000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "distance": 8000,
+                "pace": "M"
+              }
+            ],
+            "titleText": "Long run with marathon pace",
+            "descriptionText": "26 km: start at easy pace (6:56–7:37/km), then run the final 8 km at marathon pace (6:12/km). Practise race fuelling: a gel every 20–25 min."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 14,
+        "start": "2027-02-08",
+        "phase": "specific",
+        "cutback": false,
+        "volume": 61000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.specific.focus"
+        },
+        "workouts": [
+          {
+            "date": "2027-02-08",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-09",
+            "type": "marathon",
+            "title": {
+              "key": "w.mp"
+            },
+            "description": {
+              "key": "w.mp.desc",
+              "params": {
+                "mp": {
+                  "meters": 12000
+                }
+              }
+            },
+            "distance": 15000,
+            "paces": [
+              "E",
+              "M"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "distance": 12000,
+                "pace": "M"
+              },
+              {
+                "kind": "cooldown",
+                "distance": 1000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Marathon-pace run",
+            "descriptionText": "2 km easy warm-up, 12 km at marathon pace (6:12/km), 1 km cool-down. Lock into rhythm and practise drinking on the move."
+          },
+          {
+            "date": "2027-02-10",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-11",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "10 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-02-12",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-13",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 10000
+                }
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "10 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-02-14",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc.fuel",
+              "params": {
+                "dist": {
+                  "meters": 26000
+                }
+              }
+            },
+            "distance": 26000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "26 km at easy pace (6:56–7:37/km). Practise your race-day fuelling and drinking."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 15,
+        "start": "2027-02-15",
+        "phase": "taper",
+        "cutback": false,
+        "volume": 48000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.taper.focus"
+        },
+        "workouts": [
+          {
+            "date": "2027-02-15",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-16",
+            "type": "tempo",
+            "title": {
+              "key": "w.tempo"
+            },
+            "description": {
+              "key": "w.tempo.desc",
+              "params": {
+                "reps": 3,
+                "min": 10,
+                "jog": 2
+              }
+            },
+            "distance": 10000,
+            "paces": [
+              "E",
+              "T"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "repeat": 3,
+                "steps": [
+                  {
+                    "kind": "work",
+                    "seconds": 600,
+                    "pace": "T"
+                  },
+                  {
+                    "kind": "recover",
+                    "seconds": 120,
+                    "pace": "jog"
+                  }
+                ]
+              },
+              {
+                "kind": "cooldown",
+                "distance": 2000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Threshold",
+            "descriptionText": "2 km easy warm-up, 3×10 min at threshold pace (5:48/km) with 2 min easy jog between. 2 km cool-down."
+          },
+          {
+            "date": "2027-02-17",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-18",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 7000
+                }
+              }
+            },
+            "distance": 7000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "7 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-02-19",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-20",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 7000
+                }
+              }
+            },
+            "distance": 7000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "7 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-02-21",
+            "type": "long-mp",
+            "title": {
+              "key": "w.longMp"
+            },
+            "description": {
+              "key": "w.longMp.rehearsal",
+              "params": {
+                "dist": {
+                  "meters": 24000
+                },
+                "mp": {
+                  "meters": 8000
+                }
+              }
+            },
+            "distance": 24000,
+            "paces": [
+              "E",
+              "M"
+            ],
+            "steps": [
+              {
+                "kind": "run",
+                "distance": 8000,
+                "pace": "E"
+              },
+              {
+                "kind": "work",
+                "distance": 8000,
+                "pace": "M"
+              },
+              {
+                "kind": "run",
+                "distance": 8000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Long run with marathon pace",
+            "descriptionText": "24 km with the middle 8 km at marathon pace (6:12/km), the rest easy (6:56–7:37/km). Final dress rehearsal: race kit, breakfast, gels."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 16,
+        "start": "2027-02-22",
+        "phase": "taper",
+        "cutback": false,
+        "volume": 36000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "phase.taper.focus"
+        },
+        "workouts": [
+          {
+            "date": "2027-02-22",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-23",
+            "type": "marathon",
+            "title": {
+              "key": "w.sharpener"
+            },
+            "description": {
+              "key": "w.sharpener.desc"
+            },
+            "distance": 10000,
+            "paces": [
+              "E",
+              "M"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "repeat": 3,
+                "steps": [
+                  {
+                    "kind": "work",
+                    "distance": 2000,
+                    "pace": "M"
+                  },
+                  {
+                    "kind": "recover",
+                    "seconds": 120,
+                    "pace": "jog"
+                  }
+                ]
+              },
+              {
+                "kind": "cooldown",
+                "distance": 2000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Marathon-pace sharpener",
+            "descriptionText": "2 km easy warm-up, 3×2 km at marathon pace (6:12/km) with 2 min jog, 2 km cool-down."
+          },
+          {
+            "date": "2027-02-24",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-25",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 4000
+                }
+              }
+            },
+            "distance": 4000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "4 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-02-26",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-02-27",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 4000
+                }
+              }
+            },
+            "distance": 4000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "4 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-02-28",
+            "type": "long",
+            "title": {
+              "key": "w.long"
+            },
+            "description": {
+              "key": "w.long.desc",
+              "params": {
+                "dist": {
+                  "meters": 18000
+                }
+              }
+            },
+            "distance": 18000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Long run",
+            "descriptionText": "18 km at easy pace (6:56–7:37/km). Time on feet matters more than speed."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      },
+      {
+        "index": 17,
+        "start": "2027-03-01",
+        "phase": "taper",
+        "cutback": false,
+        "volume": 13000,
+        "vdot": 34.05231604930321,
+        "scheduledVdot": 34.05231604930321,
+        "focus": {
+          "key": "focus.raceWeek"
+        },
+        "workouts": [
+          {
+            "date": "2027-03-01",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-03-02",
+            "type": "marathon",
+            "title": {
+              "key": "w.raceWeekTuneup"
+            },
+            "description": {
+              "key": "w.raceWeekTuneup.desc"
+            },
+            "distance": 7000,
+            "paces": [
+              "E",
+              "M"
+            ],
+            "steps": [
+              {
+                "kind": "warmup",
+                "distance": 2000,
+                "pace": "E"
+              },
+              {
+                "repeat": 3,
+                "steps": [
+                  {
+                    "kind": "work",
+                    "distance": 1000,
+                    "pace": "M"
+                  },
+                  {
+                    "kind": "recover",
+                    "seconds": 120,
+                    "pace": "jog"
+                  }
+                ]
+              },
+              {
+                "kind": "cooldown",
+                "distance": 1000,
+                "pace": "E"
+              }
+            ],
+            "titleText": "Race-week tune-up",
+            "descriptionText": "2 km easy, 3×1 km at marathon pace (6:12/km) with 2 min jog, 1 km easy."
+          },
+          {
+            "date": "2027-03-03",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-03-04",
+            "type": "easy",
+            "title": {
+              "key": "w.easy"
+            },
+            "description": {
+              "key": "w.easy.desc",
+              "params": {
+                "dist": {
+                  "meters": 3000
+                }
+              }
+            },
+            "distance": 3000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Easy run",
+            "descriptionText": "3 km relaxed at easy pace (6:56–7:37/km). You should be able to hold a conversation."
+          },
+          {
+            "date": "2027-03-05",
+            "type": "rest",
+            "title": {
+              "key": "w.rest"
+            },
+            "description": {
+              "key": "w.rest.desc"
+            },
+            "distance": 0,
+            "paces": [],
+            "titleText": "Rest",
+            "descriptionText": "Full rest or light cross-training, mobility and strength work."
+          },
+          {
+            "date": "2027-03-06",
+            "type": "easy",
+            "title": {
+              "key": "w.shakeout"
+            },
+            "description": {
+              "key": "w.shakeout.desc"
+            },
+            "distance": 3000,
+            "paces": [
+              "E"
+            ],
+            "titleText": "Shakeout",
+            "descriptionText": "15–20 min very easy with 3 short strides. Lay out your kit."
+          },
+          {
+            "date": "2027-03-07",
+            "type": "race",
+            "title": {
+              "key": "w.race.named",
+              "params": {
+                "name": "Sample"
+              }
+            },
+            "description": {
+              "key": "w.race.desc"
+            },
+            "distance": 42195,
+            "paces": [
+              "M"
+            ],
+            "titleText": "Sample",
+            "descriptionText": "Race day. Run the first 5 km a little slower, then settle into marathon pace (6:12/km). Fuel early and often."
+          }
+        ],
+        "paces": {
+          "E": [
+            416.1910372660536,
+            457.1509856233025
+          ],
+          "M": [
+            372.3517926508587,
+            372.3517926508587
+          ],
+          "T": [
+            347.53164172505456,
+            347.53164172505456
+          ],
+          "I": [
+            320.22090099993585,
+            320.22090099993585
+          ],
+          "R": [
+            305.22090099993585,
+            305.22090099993585
+          ]
+        }
+      }
+    ],
+    "currentVdot": 34.05231604930321,
+    "goalVdot": null,
+    "targetVdot": 34.05231604930321
+  }
+}

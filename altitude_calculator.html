@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Поправка на высоту</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --z-rec:#7f95a3;--z-easy:#5b8c5a;--z-mp:#df4a2e;--z-thr:#d98a1f;--z-vo2:#7d5bd6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+  select{width:100%;height:48px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:16px;padding:0 12px;margin-bottom:12px;}
+  select:focus,.field input:focus{outline:2px solid var(--accent);outline-offset:-2px;}
+
+  .triofields{display:flex;gap:10px;flex-wrap:wrap;}
+  .field{flex:1;min-width:80px;}
+  .field .fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .field .box{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .field input{flex:1;width:100%;border:none;height:52px;text-align:center;font-size:22px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;min-width:0;}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field .arrows{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .field .arrows button{border:none;background:#f0eee9;color:var(--ink);width:26px;height:26px;cursor:pointer;padding:0;font-size:10px;line-height:1;}
+  .field .arrows button:first-child{border-bottom:1px solid var(--line);}
+  .field .arrows button:active{background:var(--accent);color:#fff;}
+  .colon{align-self:flex-end;font-size:22px;font-weight:800;color:var(--muted);padding-bottom:14px;}
+
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-top:6px;}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);}
+  .btn:hover{border-color:var(--accent);color:var(--accent);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .btn.primary:hover{color:#fff;opacity:.9;}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  .goalcard{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .goalcard .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .goalcard .v{font-size:22px;font-weight:800;margin-top:2px;}
+  .goalcard .f{font-size:13px;color:var(--muted);}
+  .badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;border:1px solid var(--line);border-radius:6px;padding:3px 9px;color:var(--muted);}
+  .badge.saved{color:var(--z-easy);border-color:var(--z-easy);}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:22px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:13px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+
+  .tablewrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  th.r,td.r{text-align:right;}
+  td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:14.5px;}
+  tr:last-child td{border-bottom:none;}
+  .zdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:middle;}
+  .zname{font-weight:700;}
+  .zsub{font-size:12px;color:var(--muted);display:block;margin-top:1px;}
+  .grp{border-left:5px solid var(--gc,var(--line));}
+  .subh{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:14px 0 2px;}
+  .subh:first-of-type{margin-top:2px;}
+  td small{color:var(--muted);}
+  .saved-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .saved-item:last-child{border-bottom:none;}
+  .saved-item button{border:none;background:none;color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;padding:2px 6px;}
+  .hidden{display:none !important;}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+  @media(max-width:480px){.outs{grid-template-columns:1fr;}}
+
+  .opts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+  .numrow{display:flex;gap:12px;flex-wrap:wrap;}
+  .numrow .field{min-width:120px;}
+  .numrow input.plain{width:100%;height:48px;border:1px solid var(--line);border-radius:8px;text-align:center;font-size:20px;font-weight:800;font-family:ui-monospace,monospace;background:#fff;color:var(--ink);-moz-appearance:textfield;}
+  .numrow input.plain::-webkit-outer-spin-button,.numrow input.plain::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .verdict{font-size:24px;font-weight:800;margin:2px 0 6px;}
+  .verdict.ok{color:var(--z-easy);} .verdict.near{color:var(--z-thr);} .verdict.far{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Высота · темп · время</div>
+    <h1>Поправка на высоту</h1>
+    <div class="sub">Как высота над уровнем моря меняет тренировочные темпы и времена на дистанциях</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Недавний результат или текущая форма</div>
+    <select id="dist"></select>
+    <div class="triofields"><div class="field"><div class="fl">Часы</div><div class="box"><input id="t_h" class="mono" type="number" min="0" max="99" value="3" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('t_h',1,99)">▲</button><button onclick="bump('t_h',-1,99)">▼</button></div></div></div><div class="colon">:</div><div class="field"><div class="fl">Минуты</div><div class="box"><input id="t_m" class="mono" type="number" min="0" max="59" value="15" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('t_m',1,59)">▲</button><button onclick="bump('t_m',-1,59)">▼</button></div></div></div><div class="colon">:</div><div class="field"><div class="fl">Секунды</div><div class="box"><input id="t_s" class="mono" type="number" min="0" max="59" value="0" inputmode="numeric">
+        <div class="arrows"><button onclick="bump('t_s',1,59)">▲</button><button onclick="bump('t_s',-1,59)">▼</button></div></div></div></div>
+    <div class="toolbar" style="margin-top:16px;"><div class="tabs"><span style="font-size:12px;color:var(--muted);align-self:center;margin-right:2px;">Темп</span>
+        <button id="u_km" class="on" onclick="setUnit('km')">мин/км</button><button id="u_mi" onclick="setUnit('mi')">мин/миля</button></div></div>
+  </div>
+  <div class="panel">
+    <div class="opts"><div class="label" style="margin:0;">Единицы высоты</div>
+      <div class="tabs"><button id="au_ft" class="on" onclick="setAU('ft')">футы</button><button id="au_m" onclick="setAU('m')">метры</button></div></div>
+    <div class="numrow">
+      <div class="field"><div class="fl">Текущая высота, <span class="aul">фт</span></div><input id="a0" class="plain" type="number" value="1" min="0" max="12000" inputmode="numeric"></div>
+      <div class="field"><div class="fl">Высота старта, <span class="aul">фт</span></div><input id="a1" class="plain" type="number" value="5000" min="0" max="12000" inputmode="numeric"></div>
+    </div>
+  </div>
+  <div class="outs">
+    <div class="out hl"><div class="k">Замедление</div><div class="v"><span id="o_pct">—</span></div></div>
+    <div class="out"><div class="k">Потеря сейчас</div><div class="v"><span id="o_p0">—</span></div></div>
+    <div class="out"><div class="k">Потеря на старте</div><div class="v"><span id="o_p1">—</span></div></div>
+  </div>
+  <div class="panel"><div class="tabs">
+      <button id="tab_paces" class="on" onclick="setTab('paces')">Тренировочные темпы</button>
+      <button id="tab_races" onclick="setTab('races')">Времена на дистанциях</button></div></div>
+  <div id="view_paces"><div id="paces"></div></div>
+  <div id="view_races" class="hidden"><div class="panel"><div class="label">Прогноз времени и темпа</div><div class="tablewrap">
+    <table><thead><tr><th>Дистанция</th><th class="r">Сейчас</th><th class="r">С поправкой</th></tr></thead><tbody id="races"></tbody></table></div>
+    <div style="margin-top:12px;"><button class="btn" id="moreBtn" onclick="toggleMore()">+ Все дистанции</button></div></div></div>
+  <div class="note">
+    <p><b>Как считается.</b> До 2000 фт (≈610 м) влияние высоты незаметно. Выше замедление нарастает линейно — около 0,95% на каждые 1000 фт (≈300 м) сверх 2000 фт, то есть ≈9,5% на 12 000 фт (≈3660 м). Темпы и времена умножаются на отношение потерь на высоте старта и на текущей высоте; при спуске ниже получаются быстрее.</p>
+    <p>Поправка применяется к гонкам от 1500 м и к тренировочным темпам кроме спринтерских. Не учитывает акклиматизацию: чем дольше вы живёте на высоте, тем меньше реальная потеря.</p>
+  </div>
+  <footer>Модель: VDOT (Дэниелс) · потеря ≈0,95% на 1000 фт выше 2000 фт</footer>
+</div>
+<script>
+  // ================= Дистанции (ключи совместимы с параметрами ссылки mcmillanrunning.com) =================
+  const MI=1609.344;
+  const DISTS=[
+    ['100m','100 м',100],['200m','200 м',200],['400m','400 м',400],['500m','500 м',500],['600m','600 м',600],
+    ['800m','800 м',800],['1000m','1000 м',1000],['1500m','1500 м',1500],['1600m','1600 м',1600],
+    ['Mile','Миля',MI],['2000m','2000 м',2000],['1.5 Miles','1,5 мили',1.5*MI],['3000m','3000 м',3000],
+    ['3200m','3200 м',3200],['2 Miles','2 мили',2*MI],['4000m','4000 м',4000],['3 Miles','3 мили',3*MI],
+    ['5000m','5 км',5000],['6000m','6 км',6000],['4 Miles','4 мили',4*MI],['8000m','8 км',8000],
+    ['5 Miles','5 миль',5*MI],['10km','10 км',10000],['12km','12 км',12000],['15km','15 км',15000],
+    ['10 Miles','10 миль',10*MI],['20km','20 км',20000],['1/2 Marathon','Полумарафон',21097.5],
+    ['15 Miles','15 миль',15*MI],['25km','25 км',25000],['30km','30 км',30000],['20 Miles','20 миль',20*MI],
+    ['25 Miles','25 миль',25*MI],['Marathon','Марафон',42195],['50km','50 км',50000],
+    ['50 Miles','50 миль',50*MI],['100km','100 км',100000],['100 Miles','100 миль',100*MI]
+  ];
+  const DMAP={}; DISTS.forEach(d=>DMAP[d[0]]=d);
+  const GOAL_KEYS=DISTS.filter(d=>d[2]>=400).map(d=>d[0]);
+  const SHORT_RACES=['400m','800m','1500m','Mile','3000m','5000m','10km','15km','10 Miles','1/2 Marathon','Marathon','50km'];
+
+  // ================= Физиология: VDOT (Дэниелс) =================
+  function vo2At(v){return -4.60+0.182258*v+0.000104*v*v;}         // v: м/мин
+  function vFromVo2(x){return (-0.182258+Math.sqrt(0.182258*0.182258+4*0.000104*(x+4.60)))/(2*0.000104);}
+  function pctAt(t){return 0.8+0.1894393*Math.exp(-0.012778*t)+0.2989558*Math.exp(-0.1932605*t);} // t: мин
+  function vdotRaw(distM,sec){const t=sec/60;return vo2At(distM/t)/pctAt(t);}
+  function timeRaw(distM,vd){let lo=distM/9,hi=distM/1.0;
+    for(let i=0;i<70;i++){const mid=(lo+hi)/2;(vdotRaw(distM,mid)>vd)?lo=mid:hi=mid;}return (lo+hi)/2;}
+  const RIEGEL=1.06, D_LO=1500, D_HI=42195;
+  function vdotAny(d,s){
+    if(d>D_HI){s=s*Math.pow(D_HI/d,RIEGEL);d=D_HI;}
+    else if(d<D_LO){s=s*Math.pow(D_LO/d,RIEGEL);d=D_LO;}
+    return vdotRaw(d,s);
+  }
+  function timeAny(d,vd){
+    if(d>D_HI) return timeRaw(D_HI,vd)*Math.pow(d/D_HI,RIEGEL);
+    if(d<D_LO) return timeRaw(D_LO,vd)*Math.pow(d/D_LO,RIEGEL);
+    return timeRaw(d,vd);
+  }
+
+  // ================= Набор темпов (сек/км) для заданного VDOT =================
+  const paceOfV=v=>60000/v;
+  // эндурансные: доля МПК (Дэниелс: E 59–74%, T ≈ 88%); диапазон [быстрый, медленный] по темпу
+  function pr(vd,pFast,pSlow){return [paceOfV(vFromVo2(pFast*vd)),paceOfV(vFromVo2(pSlow*vd))];}
+  function spd(v,sFast,sSlow){return [paceOfV(v*sFast),paceOfV(v*sSlow)];}
+  const SPEED_END={400:[1.00,1.07],600:[0.99,1.05],800:[0.97,1.03],1000:[0.96,1.01],1200:[0.95,1.00],1600:[0.92,0.97]};
+  const SPEED_SPD={400:[1.05,1.12],600:[1.03,1.10],800:[1.00,1.07],1000:[0.98,1.03],1200:[0.97,1.02],1600:[0.95,1.00]};
+  const SPRINT_END={100:[1.12,1.24],200:[1.10,1.22],300:[1.08,1.18],400:[1.06,1.16],600:[1.02,1.10]};
+  const SPRINT_SPD={100:[1.18,1.30],200:[1.15,1.27],300:[1.12,1.23],400:[1.10,1.20],600:[1.06,1.14]};
+
+  function paceSet(vd,goalPaceSecKm){
+    const v100=vFromVo2(vd);
+    const vLT=vFromVo2(0.88*vd);
+    const vCV=vFromVo2(vd*pctAt(30));
+    const P={
+      goal:goalPaceSecKm,
+      lt:paceOfV(vLT), cv:paceOfV(vCV), vo2:paceOfV(v100),
+      rec:pr(vd,0.65,0.59), long:pr(vd,0.76,0.62), easy:pr(vd,0.74,0.65),
+      bak:spd(vLT,0.99,0.97), steady:spd(vLT,0.97,0.92), tempo:spd(vLT,1.02,0.99),
+      tint:spd(vLT,1.05,1.02), cruise:spd(vLT,1.07,1.04),
+      speedEnd:{}, speedSpd:{}, sprintEnd:{}, sprintSpd:{}
+    };
+    for(const k in SPEED_END){P.speedEnd[k]=spd(v100,SPEED_END[k][1],SPEED_END[k][0]);P.speedSpd[k]=spd(v100,SPEED_SPD[k][1],SPEED_SPD[k][0]);}
+    for(const k in SPRINT_END){P.sprintEnd[k]=spd(v100,SPRINT_END[k][1],SPRINT_END[k][0]);P.sprintSpd[k]=spd(v100,SPRINT_SPD[k][1],SPRINT_SPD[k][0]);}
+    return P;
+  }
+
+  // ================= Форматирование =================
+  let unit='km';
+  const UF=()=>unit==='km'?1:MI/1000;       // сек/км → сек/ед.
+  const UL=()=>unit==='km'?'/км':'/миля';
+  function fmtMS(sec){sec=Math.round(sec);const m=Math.floor(sec/60),s=sec%60;return m+':'+String(s).padStart(2,'0');}
+  function fmtPace(secKm){return fmtMS(secKm*UF());}
+  function fmtRange(r){return fmtPace(r[0])+' – '+fmtPace(r[1]);}
+  function fmtTime(sec){ // целые секунды: ч:мм:сс
+    sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+    return h>0?h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'):m+':'+String(s).padStart(2,'0');
+  }
+  function fmtRace(sec){ // до 15 мин — десятые доли
+    if(sec>=900) return fmtTime(sec);
+    const t=Math.round(sec*10), whole=Math.floor(t/10), tenth=t%10;
+    if(whole<60) return whole+'.'+tenth;
+    return Math.floor(whole/60)+':'+String(whole%60).padStart(2,'0')+'.'+tenth;
+  }
+  function fmtSplit(sec){
+    if(sec<60){const t=Math.round(sec*10)/10; return t.toFixed(1);}
+    return fmtMS(sec);
+  }
+
+  const $=id=>document.getElementById(id);
+  let tab='paces', showAll=false, SPEED_MIN=0, RACE_MIN=1500;
+  const secOf=p=>(parseInt($(p+'_h').value,10)||0)*3600+(parseInt($(p+'_m').value,10)||0)*60+(parseInt($(p+'_s').value,10)||0);
+  function bump(id,x,max){const el=$(id);let v=(parseInt(el.value,10)||0)+x;if(v<0)v=max;if(v>max)v=0;el.value=v;render();}
+  function fillDist(){
+    $('dist').innerHTML=DISTS.filter(d=>d[2]>=400).map(d=>`<option value="${d[0]}">${d[1]}</option>`).join('');
+    $('dist').value='Marathon';
+  }
+  function setUnit(u){unit=u;$('u_km').classList.toggle('on',u==='km');$('u_mi').classList.toggle('on',u==='mi');render();}
+  function setTab(t){tab=t;$('tab_paces').classList.toggle('on',t==='paces');$('tab_races').classList.toggle('on',t==='races');
+    $('view_paces').classList.toggle('hidden',t!=='paces');$('view_races').classList.toggle('hidden',t!=='races');}
+  function toggleMore(){showAll=!showAll;render();}
+
+  const SCAL=['goal','lt','cv','vo2','rec','long','easy','bak','steady','tempo','tint','cruise'];
+  const sc=(r,f)=>Array.isArray(r)?r.map(x=>x*f):r*f;
+  function adjustSet(P,f){
+    const A=JSON.parse(JSON.stringify(P));
+    SCAL.forEach(k=>A[k]=sc(P[k],f));
+    ['speedEnd','speedSpd'].forEach(g=>{for(const k in P[g]) if(+k>=SPEED_MIN) A[g][k]=sc(P[g][k],f);});
+    return A;
+  }
+  function cmpRow(name,a,b,range,sub){
+    const F=range?fmtRange:fmtPace;
+    return `<tr><td><span class="zname">${name}</span>${sub?`<span class="zsub">${sub}</span>`:''}</td><td class="r mono">${F(a)}</td><td class="r mono"><b>${F(b)}</b></td></tr>`;
+  }
+  function cmpCard(title,color,rows){
+    return `<div class="panel grp" style="--gc:${color}"><div class="label">${title}</div><div class="tablewrap"><table><thead><tr><th>Темп ${UL()}</th><th class="r">Сейчас</th><th class="r">С поправкой</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }
+  function cmpSpeed(title,A,B){
+    const rows=Object.keys(A).map(k=>{const d=+k;const ra=A[k],rb=B[k];
+      return `<tr><td class="mono">${d} м</td><td class="r mono">${fmtRange(ra)}</td><td class="r mono"><b>${fmtRange(rb)}</b></td></tr>`;}).join('');
+    return `<div class="subh">${title}</div><div class="tablewrap"><table><thead><tr><th>Отрезок</th><th class="r">Сейчас</th><th class="r">С поправкой</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  function renderAll(vd,goalPace,f){
+    const P=paceSet(vd,goalPace), A=adjustSet(P,f);
+    const R=(n,k,rg,sub)=>cmpRow(n,P[k],A[k],rg,sub);
+    $('paces').innerHTML=
+      cmpCard('Специальные темпы','var(--z-mp)',R('Пороговый (vLT)','lt',false)+R('Критическая скорость (CV)','cv',false)+R('Темп МПК (vVO₂max)','vo2',false))+
+      cmpCard('Темпы на выносливость','var(--z-rec)',R('Восстановительные','rec',true)+R('Длинные','long',true)+R('Лёгкие','easy',true))+
+      cmpCard('Темпы на стамину','var(--z-thr)',R('Бэккен / норвежский','bak',true)+R('Устойчивый бег','steady',true)+R('Темповые','tempo',true)+R('Темповые интервалы','tint',true)+R('Круизные интервалы','cruise',true))+
+      `<div class="panel grp" style="--gc:var(--z-vo2)"><div class="label">Темпы на скорость</div>${cmpSpeed('Стайер · выносливость',P.speedEnd,A.speedEnd)}${cmpSpeed('Средняя дистанция · скорость',P.speedSpd,A.speedSpd)}<div class="hint">Спринтерские темпы (до 600 м) поправка не меняет.</div></div>`;
+    const keys=showAll?DISTS.map(d=>d[0]):SHORT_RACES;
+    $('races').innerHTML=keys.map(k=>{const d=DMAP[k][2];const s0=timeAny(d,vd), s1=d>=RACE_MIN?s0*f:s0;
+      const c=s=>`<span class="mono"><b>${fmtRace(s)}</b> <small>(${fmtPace(s/(d/1000))}${UL()})</small></span>`;
+      return `<tr><td><span class="zname">${DMAP[k][1]}</span></td><td class="r">${c(s0)}</td><td class="r">${c(s1)}</td></tr>`;}).join('');
+    $('moreBtn').textContent=showAll?'− Меньше дистанций':'+ Все дистанции';
+  }
+
+  let aU='ft';
+  const FT=aU=>aU==='ft'?1:3.28084;
+  function setAU(u){
+    if(u===aU)return;
+    ['a0','a1'].forEach(id=>{const e=$(id);if(e.value!==''){const v=parseFloat(e.value);e.value=Math.round(u==='m'?v/3.28084:v*3.28084);}});
+    aU=u;$('au_ft').classList.toggle('on',u==='ft');$('au_m').classList.toggle('on',u==='m');
+    document.querySelectorAll('.aul').forEach(e=>e.textContent=u==='ft'?'фт':'м');
+    $('a0').max=$('a1').max=u==='ft'?12000:3660;render();
+  }
+  const loss=ft=>Math.max(0,ft-2000)*0.0000095;
+  function render(){
+    const sec=secOf('t'),d=DMAP[$('dist').value][2];
+    const e0=$('a0').value,e1=$('a1').value;
+    if(sec<=0||e0===''||e1===''){
+      ['o_pct','o_p0','o_p1'].forEach(i=>$(i).textContent='—');
+      $('paces').innerHTML='<div class="panel" style="color:var(--muted)">Введите результат и обе высоты.</div>';$('races').innerHTML='';return;}
+    const a0=parseFloat(e0)*(aU==='ft'?1:3.28084),a1=parseFloat(e1)*(aU==='ft'?1:3.28084);
+    const p0=loss(a0),p1=loss(a1),f=(1+p1)/(1+p0);
+    $('o_pct').textContent=((f-1)*100>=0?'+':'')+((f-1)*100).toFixed(1)+'%';
+    $('o_p0').textContent=(p0*100).toFixed(1)+'%';$('o_p1').textContent=(p1*100).toFixed(1)+'%';
+    SPEED_MIN=0;RACE_MIN=1500;
+    const vd=vdotAny(d,sec);renderAll(vd,sec/(d/1000),f);
+  }
+  fillDist();
+  ['a0','a1','dist'].forEach(id=>$(id).addEventListener('input',render));
+  ['t_h','t_m','t_s'].forEach(id=>$(id).addEventListener('input',render));
+  $('dist').addEventListener('change',render);
+  render();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,2638 @@
+{
+  "meta": {
+    "tag": "[MARATHON-TRAINING-PLAN]",
+    "schema": 1,
+    "name": "marathon-training-plan · 5 км · 40 км/нед · ПАНО 5:45",
+    "generated": "2026-10-29",
+    "marathon": "2027-01-24",
+    "source": {
+      "url": "https://github.com/mcclowes/marathon-training-plan",
+      "retrieved": "2026-10-29",
+      "raw": "raw/marathon-training-plan-5k-40-t545.source.json",
+      "commit": "33e532f",
+      "engine": "engines/marathon-training-plan/source.zip",
+      "file": "web/lib/engine/planGenerator.ts",
+      "permalink": "https://github.com/mcclowes/marathon-training-plan/blob/33e532f/web/lib/engine/planGenerator.ts"
+    },
+    "profile": {
+      "id": "40-t545",
+      "km": 40,
+      "t": 345,
+      "level": "intermediate",
+      "days": 4,
+      "long": 14,
+      "vdot": 34.056702733267706,
+      "benchmark": {
+        "distance": 10000,
+        "time": 3441
+      }
+    },
+    "generatorInput": {
+      "raceDate": "2027-01-24",
+      "sessionsPerWeek": 4,
+      "currentMileage": 40,
+      "targetMileage": 48,
+      "raceDistance": "5km",
+      "currentPace": "0:27:36",
+      "targetPace": "0:27:36",
+      "style": "Endurance"
+    },
+    "conversion": {
+      "detail": "volume-summary",
+      "notes": [
+        "Оригинальный generateTrainingPlan запущен с датой расчёта 2026-10-29, TZ=UTC. Целевой объём: текущий × 1,2; текущий и целевой результат равны.",
+        "Сводный шаг сохраняет totalDistance (км). Детали повторов, разминка, заминка, отдых и строки темпа сохранены дословно в sourceDay и описании.",
+        "Встречаются некорректные диапазоны вроде 3:31–0:09/км. Они не исправлялись и не превращались в целевые темпы; пульсовые зоны не назначены.",
+        "Этот экспорт пригоден для сравнения объёма и структуры дней; не для автоматического анализа минут по зонам."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-11-03",
+      "goalISO": "2027-01-24",
+      "goalDist": 5000,
+      "planMode": "goal",
+      "tag": "[MARATHON-TRAINING-PLAN]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-11-03",
+      "kind": "run",
+      "name": "Speed · Even Blocks",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "20 x 200\n200's @ 4:27 to 0:09 min/km\nRecovery: 60 seconds",
+      "sourceDay": {
+        "dayCount": 2,
+        "date": "2026-11-03T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-11-03",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Even Blocks",
+        "sessionDescription": "20 x 200",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "60 seconds",
+        "block": "Speed",
+        "stimulus": "Hold Top Speed",
+        "reps": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "paces": "200's @ 4:27 to 0:09 min/km",
+        "weekNumber": 1,
+        "blockNumber": 1,
+        "weeklyMileage": 41,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4000,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 1,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 41,
+          "intensityMileage": 4000,
+          "baseMileage": 9,
+          "longRunMileage": 16,
+          "paceIndex": 13
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-05",
+      "kind": "run",
+      "name": "Speed Endurance · Even Blocks",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "5 x 800\n800's @ 5:09 to 0:10 min/km\nRecovery: 60 seconds",
+      "sourceDay": {
+        "dayCount": 4,
+        "date": "2026-11-05T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-11-05",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "Even Blocks",
+        "sessionDescription": "5 x 800",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "60 seconds",
+        "block": "Speed Endurance",
+        "stimulus": "Build Speed Endurance",
+        "reps": [
+          800,
+          800,
+          800,
+          800,
+          800
+        ],
+        "paces": "800's @ 5:09 to 0:10 min/km",
+        "weekNumber": 1,
+        "blockNumber": 1,
+        "weeklyMileage": 41,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4000,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 1,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 41,
+          "intensityMileage": 4000,
+          "baseMileage": 9,
+          "longRunMileage": 16,
+          "paceIndex": 13
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-07",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides\nEasy Running @ 6:39 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 6,
+        "date": "2026-11-07T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2026-11-07",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 6:39 to 0:13 min/km",
+        "weekNumber": 1,
+        "blockNumber": 1,
+        "weeklyMileage": 41,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 1,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 41,
+          "intensityMileage": 4000,
+          "baseMileage": 9,
+          "longRunMileage": 16,
+          "paceIndex": 13
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 16km easy running, easy warm down\nStart steady @ 6:52 to 0:13 min/km\nBuild to @ 5:56 to 0:13 min/km\nFinish strong @ 5:39 to 0:12 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 7,
+        "date": "2026-11-08T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2026-11-08",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 16km easy running, easy warm down",
+        "totalDistance": 16,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 6:52 to 0:13 min/km\nBuild to @ 5:56 to 0:13 min/km\nFinish strong @ 5:39 to 0:12 min/km",
+        "weekNumber": 1,
+        "blockNumber": 1,
+        "weeklyMileage": 41,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 1,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 41,
+          "intensityMileage": 4000,
+          "baseMileage": 9,
+          "longRunMileage": 16,
+          "paceIndex": 12
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-10",
+      "kind": "run",
+      "name": "Speed · Pyramid",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "200, 300, 400, 500, 2 x 600, 500, 400, 300, 200\n200's @ 4:20 to 0:09 min/km\n300's @ 4:36 to 0:05 min/km\n400's @ 4:37 to 0:06 min/km\n500's @ 4:41 to 0:08 min/km\n600's @ 4:44 to 0:10 min/km\nRecovery: 90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+      "sourceDay": {
+        "dayCount": 9,
+        "date": "2026-11-10T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-11-10",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Pyramid",
+        "sessionDescription": "200, 300, 400, 500, 2 x 600, 500, 400, 300, 200",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+        "block": "Speed",
+        "stimulus": "Finish Fast",
+        "reps": [
+          200,
+          300,
+          400,
+          500,
+          600,
+          600,
+          500,
+          400,
+          300,
+          200
+        ],
+        "paces": "200's @ 4:20 to 0:09 min/km\n300's @ 4:36 to 0:05 min/km\n400's @ 4:37 to 0:06 min/km\n500's @ 4:41 to 0:08 min/km\n600's @ 4:44 to 0:10 min/km",
+        "weekNumber": 2,
+        "blockNumber": 1,
+        "weeklyMileage": 42,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4000,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 2,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 42,
+          "intensityMileage": 4000,
+          "baseMileage": 9,
+          "longRunMileage": 17,
+          "paceIndex": 12
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-12",
+      "kind": "run",
+      "name": "Speed Endurance · Pyramid",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8800,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "600, 800, 1000, 800, 600\n600's @ 4:55 to 0:10 min/km\n800's @ 5:00 to 0:10 min/km\n1000's @ 5:08 to 0:06 min/km\nRecovery: 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+      "sourceDay": {
+        "dayCount": 11,
+        "date": "2026-11-12T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-11-12",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "Pyramid",
+        "sessionDescription": "600, 800, 1000, 800, 600",
+        "totalDistance": 8.8,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 1200/1000s, 60 seconds for 800/600s",
+        "block": "Speed Endurance",
+        "stimulus": "Finish Fast",
+        "reps": [
+          600,
+          800,
+          1000,
+          800,
+          600
+        ],
+        "paces": "600's @ 4:55 to 0:10 min/km\n800's @ 5:00 to 0:10 min/km\n1000's @ 5:08 to 0:06 min/km",
+        "weekNumber": 2,
+        "blockNumber": 1,
+        "weeklyMileage": 42,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 3800,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 2,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 42,
+          "intensityMileage": 4000,
+          "baseMileage": 9,
+          "longRunMileage": 17,
+          "paceIndex": 12
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-14",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides\nEasy Running @ 6:27 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 13,
+        "date": "2026-11-14T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2026-11-14",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 6:27 to 0:13 min/km",
+        "weekNumber": 2,
+        "blockNumber": 1,
+        "weeklyMileage": 42,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 2,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 42,
+          "intensityMileage": 4000,
+          "baseMileage": 9,
+          "longRunMileage": 17,
+          "paceIndex": 12
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 17km easy running, easy warm down\nStart steady @ 6:40 to 0:14 min/km\nBuild to @ 5:43 to 0:12 min/km\nFinish strong @ 5:26 to 0:12 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 14,
+        "date": "2026-11-15T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2026-11-15",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 17km easy running, easy warm down",
+        "totalDistance": 17,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 6:40 to 0:14 min/km\nBuild to @ 5:43 to 0:12 min/km\nFinish strong @ 5:26 to 0:12 min/km",
+        "weekNumber": 2,
+        "blockNumber": 1,
+        "weeklyMileage": 42,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 2,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 42,
+          "intensityMileage": 4000,
+          "baseMileage": 9,
+          "longRunMileage": 17,
+          "paceIndex": 11
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-17",
+      "kind": "run",
+      "name": "Speed · Cut Downs",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "2 x 600, 2 x 500, 2 x 400, 2 x 300, 2 x 200\n200's @ 4:10 to 0:04 min/km\n300's @ 4:26 to 0:10 min/km\n400's @ 4:27 to 0:09 min/km\n500's @ 4:31 to 0:08 min/km\n600's @ 4:34 to 0:07 min/km\nRecovery: 90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+      "sourceDay": {
+        "dayCount": 16,
+        "date": "2026-11-17T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-11-17",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Cut Downs",
+        "sessionDescription": "2 x 600, 2 x 500, 2 x 400, 2 x 300, 2 x 200",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+        "block": "Speed",
+        "stimulus": "Start Strong, Finish Fast",
+        "reps": [
+          600,
+          600,
+          500,
+          500,
+          400,
+          400,
+          300,
+          300,
+          200,
+          200
+        ],
+        "paces": "200's @ 4:10 to 0:04 min/km\n300's @ 4:26 to 0:10 min/km\n400's @ 4:27 to 0:09 min/km\n500's @ 4:31 to 0:08 min/km\n600's @ 4:34 to 0:07 min/km",
+        "weekNumber": 3,
+        "blockNumber": 1,
+        "weeklyMileage": 43,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4000,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 3,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 43,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 17,
+          "paceIndex": 11
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-19",
+      "kind": "run",
+      "name": "Speed Endurance · Cut Downs",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9200,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "1600, 1200, 800, 600\n600's @ 4:45 to 0:11 min/km\n800's @ 4:50 to 0:11 min/km\n1200's @ 5:02 to 0:12 min/km\n1600's @ 5:05 to 0:09 min/km\nRecovery: 120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+      "sourceDay": {
+        "dayCount": 18,
+        "date": "2026-11-19T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-11-19",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "Cut Downs",
+        "sessionDescription": "1600, 1200, 800, 600",
+        "totalDistance": 9.2,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+        "block": "Speed Endurance",
+        "stimulus": "Start Strong, Finish Fast",
+        "reps": [
+          1600,
+          1200,
+          800,
+          600
+        ],
+        "paces": "600's @ 4:45 to 0:11 min/km\n800's @ 4:50 to 0:11 min/km\n1200's @ 5:02 to 0:12 min/km\n1600's @ 5:05 to 0:09 min/km",
+        "weekNumber": 3,
+        "blockNumber": 1,
+        "weeklyMileage": 43,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4200,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 3,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 43,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 17,
+          "paceIndex": 11
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-21",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides\nEasy Running @ 6:15 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 20,
+        "date": "2026-11-21T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2026-11-21",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 6:15 to 0:13 min/km",
+        "weekNumber": 3,
+        "blockNumber": 1,
+        "weeklyMileage": 43,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 3,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 43,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 17,
+          "paceIndex": 11
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 17km easy running, easy warm down\nStart steady @ 6:28 to 0:13 min/km\nBuild to @ 5:30 to 0:13 min/km\nFinish strong @ 5:15 to 0:12 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 21,
+        "date": "2026-11-22T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2026-11-22",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 17km easy running, easy warm down",
+        "totalDistance": 17,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 6:28 to 0:13 min/km\nBuild to @ 5:30 to 0:13 min/km\nFinish strong @ 5:15 to 0:12 min/km",
+        "weekNumber": 3,
+        "blockNumber": 1,
+        "weeklyMileage": 43,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 3,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 43,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 17,
+          "paceIndex": 10
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-24",
+      "kind": "run",
+      "name": "Speed · Even Blocks",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9800,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "12 x 400\n400's @ 4:17 to 0:10 min/km\nRecovery: 60 seconds",
+      "sourceDay": {
+        "dayCount": 23,
+        "date": "2026-11-24T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-11-24",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Even Blocks",
+        "sessionDescription": "12 x 400",
+        "totalDistance": 9.8,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "60 seconds",
+        "block": "Speed",
+        "stimulus": "Build Speed Endurance",
+        "reps": [
+          400,
+          400,
+          400,
+          400,
+          400,
+          400,
+          400,
+          400,
+          400,
+          400,
+          400,
+          400
+        ],
+        "paces": "400's @ 4:17 to 0:10 min/km",
+        "weekNumber": 4,
+        "blockNumber": 1,
+        "weeklyMileage": 44,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4800,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 4,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 44,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 18,
+          "paceIndex": 10
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "run",
+      "name": "Speed Endurance · Even Blocks",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9800,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "6 x 800\n800's @ 4:38 to 0:10 min/km\nRecovery: 60 seconds",
+      "sourceDay": {
+        "dayCount": 25,
+        "date": "2026-11-26T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-11-26",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "Even Blocks",
+        "sessionDescription": "6 x 800",
+        "totalDistance": 9.8,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "60 seconds",
+        "block": "Speed Endurance",
+        "stimulus": "Build Speed Endurance",
+        "reps": [
+          800,
+          800,
+          800,
+          800,
+          800,
+          800
+        ],
+        "paces": "800's @ 4:38 to 0:10 min/km",
+        "weekNumber": 4,
+        "blockNumber": 1,
+        "weeklyMileage": 44,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4800,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 4,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 44,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 18,
+          "paceIndex": 10
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-28",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides\nEasy Running @ 6:04 to 0:14 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 27,
+        "date": "2026-11-28T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2026-11-28",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 6:04 to 0:14 min/km",
+        "weekNumber": 4,
+        "blockNumber": 1,
+        "weeklyMileage": 44,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 4,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 44,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 18,
+          "paceIndex": 10
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 18000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 18km easy running, easy warm down\nStart steady @ 6:14 to 0:11 min/km\nBuild to @ 5:17 to 0:11 min/km\nFinish strong @ 5:01 to 0:12 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 28,
+        "date": "2026-11-29T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2026-11-29",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 18km easy running, easy warm down",
+        "totalDistance": 18,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 6:14 to 0:11 min/km\nBuild to @ 5:17 to 0:11 min/km\nFinish strong @ 5:01 to 0:12 min/km",
+        "weekNumber": 4,
+        "blockNumber": 1,
+        "weeklyMileage": 44,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 4,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 44,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 18,
+          "paceIndex": 9
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "Speed · M Sets",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9800,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "200, 400, 2 x 600, 400, 2 x 200, 400, 2 x 600, 400, 200\n200's @ 3:53 to 0:09 min/km\n400's @ 4:07 to 0:08 min/km\n600's @ 4:14 to 0:08 min/km\nRecovery: 90 seconds for 600s, 60 seconds for 400s, 30 seconds for 200s",
+      "sourceDay": {
+        "dayCount": 30,
+        "date": "2026-12-01T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-12-01",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "M Sets",
+        "sessionDescription": "200, 400, 2 x 600, 400, 2 x 200, 400, 2 x 600, 400, 200",
+        "totalDistance": 9.8,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 600s, 60 seconds for 400s, 30 seconds for 200s",
+        "block": "Speed",
+        "stimulus": "Mix of Speed and Tempos, Finish Fast",
+        "reps": [
+          200,
+          400,
+          600,
+          600,
+          400,
+          200,
+          200,
+          400,
+          600,
+          600,
+          400,
+          200
+        ],
+        "paces": "200's @ 3:53 to 0:09 min/km\n400's @ 4:07 to 0:08 min/km\n600's @ 4:14 to 0:08 min/km",
+        "weekNumber": 5,
+        "blockNumber": 1,
+        "weeklyMileage": 45,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4800,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 5,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 45,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 18,
+          "paceIndex": 9
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-03",
+      "kind": "run",
+      "name": "Speed Endurance · M Sets",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9400,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "800, 1000, 800, 1000, 800  \n800's @ 4:28 to 0:10 min/km\n1000's @ 4:34 to 0:11 min/km\nRecovery: 120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+      "sourceDay": {
+        "dayCount": 32,
+        "date": "2026-12-03T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-12-03",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "M Sets",
+        "sessionDescription": "800, 1000, 800, 1000, 800  ",
+        "totalDistance": 9.4,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+        "block": "Speed Endurance",
+        "stimulus": "Mix of  Tempos, Finish Fast",
+        "reps": [
+          800,
+          1000,
+          800,
+          1000,
+          800
+        ],
+        "paces": "800's @ 4:28 to 0:10 min/km\n1000's @ 4:34 to 0:11 min/km",
+        "weekNumber": 5,
+        "blockNumber": 1,
+        "weeklyMileage": 45,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4400,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 5,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 45,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 18,
+          "paceIndex": 9
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-05",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides\nEasy Running @ 5:51 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 34,
+        "date": "2026-12-05T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2026-12-05",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 9km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 5:51 to 0:13 min/km",
+        "weekNumber": 5,
+        "blockNumber": 1,
+        "weeklyMileage": 45,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 5,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 45,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 18,
+          "paceIndex": 9
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 18000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 18km easy running, easy warm down\nStart steady @ 6:02 to 0:13 min/km\nBuild to @ 5:04 to 0:13 min/km\nFinish strong @ 4:50 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 35,
+        "date": "2026-12-06T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2026-12-06",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 18km easy running, easy warm down",
+        "totalDistance": 18,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 6:02 to 0:13 min/km\nBuild to @ 5:04 to 0:13 min/km\nFinish strong @ 4:50 to 0:13 min/km",
+        "weekNumber": 5,
+        "blockNumber": 1,
+        "weeklyMileage": 45,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 5,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 45,
+          "intensityMileage": 4500,
+          "baseMileage": 9,
+          "longRunMileage": 18,
+          "paceIndex": 8
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "Speed · Cut Downs",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "2 x 600, 2 x 500, 2 x 400, 2 x 300, 2 x 200\n200's @ 3:45 to 0:06 min/km\n300's @ 3:56 to 0:09 min/km\n400's @ 3:58 to 0:09 min/km\n500's @ 4:01 to 0:09 min/km\n600's @ 4:03 to 0:08 min/km\nRecovery: 90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+      "sourceDay": {
+        "dayCount": 37,
+        "date": "2026-12-08T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-12-08",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Cut Downs",
+        "sessionDescription": "2 x 600, 2 x 500, 2 x 400, 2 x 300, 2 x 200",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+        "block": "Speed",
+        "stimulus": "Start Strong, Finish Fast",
+        "reps": [
+          600,
+          600,
+          500,
+          500,
+          400,
+          400,
+          300,
+          300,
+          200,
+          200
+        ],
+        "paces": "200's @ 3:45 to 0:06 min/km\n300's @ 3:56 to 0:09 min/km\n400's @ 3:58 to 0:09 min/km\n500's @ 4:01 to 0:09 min/km\n600's @ 4:03 to 0:08 min/km",
+        "weekNumber": 6,
+        "blockNumber": 1,
+        "weeklyMileage": 46,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4000,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 6,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 46,
+          "intensityMileage": 4500,
+          "baseMileage": 10,
+          "longRunMileage": 18,
+          "paceIndex": 8
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-10",
+      "kind": "run",
+      "name": "Speed Endurance · Cut Downs",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9800,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "2 x 1000, 2 x 800, 2 x 600\n600's @ 4:12 to 0:10 min/km\n800's @ 4:18 to 0:11 min/km\n1000's @ 4:23 to 0:12 min/km\nRecovery: 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+      "sourceDay": {
+        "dayCount": 39,
+        "date": "2026-12-10T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-12-10",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "Cut Downs",
+        "sessionDescription": "2 x 1000, 2 x 800, 2 x 600",
+        "totalDistance": 9.8,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 1200/1000s, 60 seconds for 800/600s",
+        "block": "Speed Endurance",
+        "stimulus": "Start Strong, Finish Fast",
+        "reps": [
+          1000,
+          1000,
+          800,
+          800,
+          600,
+          600
+        ],
+        "paces": "600's @ 4:12 to 0:10 min/km\n800's @ 4:18 to 0:11 min/km\n1000's @ 4:23 to 0:12 min/km",
+        "weekNumber": 6,
+        "blockNumber": 1,
+        "weeklyMileage": 46,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4800,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 6,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 46,
+          "intensityMileage": 4500,
+          "baseMileage": 10,
+          "longRunMileage": 18,
+          "paceIndex": 8
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-12",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 10km total easy running, warm down with 10 sets of strides\nEasy Running @ 5:39 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 41,
+        "date": "2026-12-12T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2026-12-12",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 10km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 10,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 5:39 to 0:13 min/km",
+        "weekNumber": 6,
+        "blockNumber": 1,
+        "weeklyMileage": 46,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 6,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 46,
+          "intensityMileage": 4500,
+          "baseMileage": 10,
+          "longRunMileage": 18,
+          "paceIndex": 8
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 18000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 18km easy running, easy warm down\nStart steady @ 5:49 to 0:13 min/km\nBuild to @ 4:51 to 0:13 min/km\nFinish strong @ 4:38 to 0:12 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 42,
+        "date": "2026-12-13T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2026-12-13",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 18km easy running, easy warm down",
+        "totalDistance": 18,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 5:49 to 0:13 min/km\nBuild to @ 4:51 to 0:13 min/km\nFinish strong @ 4:38 to 0:12 min/km",
+        "weekNumber": 6,
+        "blockNumber": 1,
+        "weeklyMileage": 46,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 6,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 46,
+          "intensityMileage": 4500,
+          "baseMileage": 10,
+          "longRunMileage": 18,
+          "paceIndex": 7
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "Speed · Even Blocks",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "10 x 500\n500's @ 3:51 to 0:09 min/km\nRecovery: 90 seconds",
+      "sourceDay": {
+        "dayCount": 44,
+        "date": "2026-12-15T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-12-15",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Even Blocks",
+        "sessionDescription": "10 x 500",
+        "totalDistance": 10,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds",
+        "block": "Speed",
+        "stimulus": "Build Speed Endurance",
+        "reps": [
+          500,
+          500,
+          500,
+          500,
+          500,
+          500,
+          500,
+          500,
+          500,
+          500
+        ],
+        "paces": "500's @ 3:51 to 0:09 min/km",
+        "weekNumber": 7,
+        "blockNumber": 1,
+        "weeklyMileage": 48,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 5000,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 7,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 48,
+          "intensityMileage": 5000,
+          "baseMileage": 10,
+          "longRunMileage": 19,
+          "paceIndex": 7
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-17",
+      "kind": "run",
+      "name": "Speed Endurance · Even Blocks",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9800,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "6 x 800\n800's @ 4:06 to 0:10 min/km\nRecovery: 60 seconds",
+      "sourceDay": {
+        "dayCount": 46,
+        "date": "2026-12-17T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-12-17",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "Even Blocks",
+        "sessionDescription": "6 x 800",
+        "totalDistance": 9.8,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "60 seconds",
+        "block": "Speed Endurance",
+        "stimulus": "Build Speed Endurance",
+        "reps": [
+          800,
+          800,
+          800,
+          800,
+          800,
+          800
+        ],
+        "paces": "800's @ 4:06 to 0:10 min/km",
+        "weekNumber": 7,
+        "blockNumber": 1,
+        "weeklyMileage": 48,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4800,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 7,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 48,
+          "intensityMileage": 5000,
+          "baseMileage": 10,
+          "longRunMileage": 19,
+          "paceIndex": 7
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-19",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 10km total easy running, warm down with 10 sets of strides\nEasy Running @ 5:25 to 0:11 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 48,
+        "date": "2026-12-19T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2026-12-19",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 10km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 10,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 5:25 to 0:11 min/km",
+        "weekNumber": 7,
+        "blockNumber": 1,
+        "weeklyMileage": 48,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 7,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 48,
+          "intensityMileage": 5000,
+          "baseMileage": 10,
+          "longRunMileage": 19,
+          "paceIndex": 7
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 19km easy running, easy warm down\nStart steady @ 5:35 to 0:13 min/km\nBuild to @ 4:38 to 0:13 min/km\nFinish strong @ 4:25 to 0:11 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 49,
+        "date": "2026-12-20T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2026-12-20",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 19km easy running, easy warm down",
+        "totalDistance": 19,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 5:35 to 0:13 min/km\nBuild to @ 4:38 to 0:13 min/km\nFinish strong @ 4:25 to 0:11 min/km",
+        "weekNumber": 7,
+        "blockNumber": 1,
+        "weeklyMileage": 48,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 7,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 48,
+          "intensityMileage": 5000,
+          "baseMileage": 10,
+          "longRunMileage": 19,
+          "paceIndex": 6
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "Speed · Reverse Pyramid",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9800,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "2 x 600, 2 x 400, 4 x 200, 2 x 400, 2 x 600\n200's @ 3:27 to 0:08 min/km\n400's @ 3:37 to 0:10 min/km\n600's @ 3:43 to 0:10 min/km\nRecovery: 90 seconds for 600s, 60 seconds for 400s, 30 seconds for 200s",
+      "sourceDay": {
+        "dayCount": 51,
+        "date": "2026-12-22T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-12-22",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Reverse Pyramid",
+        "sessionDescription": "2 x 600, 2 x 400, 4 x 200, 2 x 400, 2 x 600",
+        "totalDistance": 9.8,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 600s, 60 seconds for 400s, 30 seconds for 200s",
+        "block": "Speed",
+        "stimulus": "Finish Strong",
+        "reps": [
+          600,
+          600,
+          400,
+          400,
+          200,
+          200,
+          200,
+          200,
+          400,
+          400,
+          600,
+          600
+        ],
+        "paces": "200's @ 3:27 to 0:08 min/km\n400's @ 3:37 to 0:10 min/km\n600's @ 3:43 to 0:10 min/km",
+        "weekNumber": 8,
+        "blockNumber": 1,
+        "weeklyMileage": 48,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4800,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 8,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 48,
+          "intensityMileage": 5000,
+          "baseMileage": 10,
+          "longRunMileage": 19,
+          "paceIndex": 6
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-24",
+      "kind": "run",
+      "name": "Speed Endurance · Reverse Pyramid",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10200,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "1200, 800, 600, 600, 800, 2000\n600's @ 3:51 to 0:10 min/km\n800's @ 3:55 to 0:08 min/km\n1200's @ 4:04 to 0:09 min/km\nRecovery: 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+      "sourceDay": {
+        "dayCount": 53,
+        "date": "2026-12-24T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-12-24",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "Reverse Pyramid",
+        "sessionDescription": "1200, 800, 600, 600, 800, 2000",
+        "totalDistance": 10.2,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 1200/1000s, 60 seconds for 800/600s",
+        "block": "Speed Endurance",
+        "stimulus": "Finish Strong",
+        "reps": [
+          1200,
+          800,
+          600,
+          600,
+          800,
+          1200
+        ],
+        "paces": "600's @ 3:51 to 0:10 min/km\n800's @ 3:55 to 0:08 min/km\n1200's @ 4:04 to 0:09 min/km",
+        "weekNumber": 8,
+        "blockNumber": 1,
+        "weeklyMileage": 48,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 5200,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 8,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 48,
+          "intensityMileage": 5000,
+          "baseMileage": 10,
+          "longRunMileage": 19,
+          "paceIndex": 6
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-26",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 10km total easy running, warm down with 10 sets of strides\nEasy Running @ 5:12 to 0:12 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 55,
+        "date": "2026-12-26T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2026-12-26",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 10km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 10,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 5:12 to 0:12 min/km",
+        "weekNumber": 8,
+        "blockNumber": 1,
+        "weeklyMileage": 48,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 8,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 48,
+          "intensityMileage": 5000,
+          "baseMileage": 10,
+          "longRunMileage": 19,
+          "paceIndex": 6
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 19km easy running, easy warm down\nStart steady @ 5:23 to 0:11 min/km\nBuild to @ 4:25 to 0:13 min/km\nFinish strong @ 4:12 to 0:11 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 56,
+        "date": "2026-12-27T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2026-12-27",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 19km easy running, easy warm down",
+        "totalDistance": 19,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 5:23 to 0:11 min/km\nBuild to @ 4:25 to 0:13 min/km\nFinish strong @ 4:12 to 0:11 min/km",
+        "weekNumber": 8,
+        "blockNumber": 1,
+        "weeklyMileage": 48,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 8,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 48,
+          "intensityMileage": 5000,
+          "baseMileage": 10,
+          "longRunMileage": 19,
+          "paceIndex": 5
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "Speed · W Sets",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8600,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "400, 300, 2 x 200, 300, 2 x 400, 300, 2 x 200, 300, 400\n200's @ 3:18 to 0:09 min/km\n300's @ 3:27 to 0:09 min/km\n400's @ 3:28 to 0:08 min/km\nRecovery: 90 seconds for 600s, 60 seconds for 400s, 30 seconds for 200s",
+      "sourceDay": {
+        "dayCount": 58,
+        "date": "2026-12-29T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2026-12-29",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "W Sets",
+        "sessionDescription": "400, 300, 2 x 200, 300, 2 x 400, 300, 2 x 200, 300, 400",
+        "totalDistance": 8.6,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 600s, 60 seconds for 400s, 30 seconds for 200s",
+        "block": "Speed",
+        "stimulus": "Mix of Speed and Tempos, Finish Strong",
+        "reps": [
+          400,
+          300,
+          200,
+          200,
+          300,
+          400,
+          400,
+          300,
+          200,
+          200,
+          300,
+          400
+        ],
+        "paces": "200's @ 3:18 to 0:09 min/km\n300's @ 3:27 to 0:09 min/km\n400's @ 3:28 to 0:08 min/km",
+        "weekNumber": 9,
+        "blockNumber": 1,
+        "weeklyMileage": 38,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 3600,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 9,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 38,
+          "intensityMileage": 4000,
+          "baseMileage": 8,
+          "longRunMileage": 15,
+          "paceIndex": 5
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-31",
+      "kind": "run",
+      "name": "Speed Endurance · W Sets",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8600,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "800, 600, 800, 600, 800  \n600's @ 3:40 to 0:11 min/km\n800's @ 3:44 to 0:12 min/km\nRecovery: 120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+      "sourceDay": {
+        "dayCount": 60,
+        "date": "2026-12-31T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2026-12-31",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "W Sets",
+        "sessionDescription": "800, 600, 800, 600, 800  ",
+        "totalDistance": 8.6,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+        "block": "Speed Endurance",
+        "stimulus": "Mix of  Tempos, Finish Strong",
+        "reps": [
+          800,
+          600,
+          800,
+          600,
+          800
+        ],
+        "paces": "600's @ 3:40 to 0:11 min/km\n800's @ 3:44 to 0:12 min/km",
+        "weekNumber": 9,
+        "blockNumber": 1,
+        "weeklyMileage": 38,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 3600,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 9,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 38,
+          "intensityMileage": 4000,
+          "baseMileage": 8,
+          "longRunMileage": 15,
+          "paceIndex": 5
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-02",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills, 8km total easy running, warm down with 10 sets of strides\nEasy Running @ 4:60 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 62,
+        "date": "2027-01-02T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2027-01-02",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills, 8km total easy running, warm down with 10 sets of strides",
+        "totalDistance": 8,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 4:60 to 0:13 min/km",
+        "weekNumber": 9,
+        "blockNumber": 1,
+        "weeklyMileage": 38,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 9,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 38,
+          "intensityMileage": 4000,
+          "baseMileage": 8,
+          "longRunMileage": 15,
+          "paceIndex": 5
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "Long Run · Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 15km easy running, easy warm down\nStart steady @ 5:09 to 0:12 min/km\nBuild to @ 4:12 to 0:12 min/km\nFinish strong @ 4:00 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 63,
+        "date": "2027-01-03T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2027-01-03",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Endurance",
+        "sessionDescription": "Warm Up with drills then 15km easy running, easy warm down",
+        "totalDistance": 15,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 5:09 to 0:12 min/km\nBuild to @ 4:12 to 0:12 min/km\nFinish strong @ 4:00 to 0:13 min/km",
+        "weekNumber": 9,
+        "blockNumber": 1,
+        "weeklyMileage": 38,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 9,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 38,
+          "intensityMileage": 4000,
+          "baseMileage": 8,
+          "longRunMileage": 15,
+          "paceIndex": 4
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "Speed · Cut Downs",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "2 x 600, 2 x 500, 2 x 400, 2 x 300, 2 x 200\n200's @ 3:08 to 0:08 min/km\n300's @ 3:17 to 0:10 min/km\n400's @ 3:18 to 0:09 min/km\n500's @ 3:20 to 0:09 min/km\n600's @ 3:22 to 0:09 min/km\nRecovery: 90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+      "sourceDay": {
+        "dayCount": 65,
+        "date": "2027-01-05T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2027-01-05",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Cut Downs",
+        "sessionDescription": "2 x 600, 2 x 500, 2 x 400, 2 x 300, 2 x 200",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+        "block": "Speed",
+        "stimulus": "Start Strong, Finish Fast",
+        "reps": [
+          600,
+          600,
+          500,
+          500,
+          400,
+          400,
+          300,
+          300,
+          200,
+          200
+        ],
+        "paces": "200's @ 3:08 to 0:08 min/km\n300's @ 3:17 to 0:10 min/km\n400's @ 3:18 to 0:09 min/km\n500's @ 3:20 to 0:09 min/km\n600's @ 3:22 to 0:09 min/km",
+        "weekNumber": 10,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 4000,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 10,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 34,
+          "intensityMileage": 3500,
+          "baseMileage": 7,
+          "longRunMileage": 14,
+          "paceIndex": 4
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-07",
+      "kind": "run",
+      "name": "Speed Endurance · Cut Downs",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8600,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "1200, 1000, 800, 600\n600's @ 3:29 to 0:11 min/km\n800's @ 3:33 to 0:12 min/km\n1000's @ 3:37 to 0:10 min/km\n1200's @ 3:40 to 0:12 min/km\nRecovery: 120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+      "sourceDay": {
+        "dayCount": 67,
+        "date": "2027-01-07T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2027-01-07",
+        "weekDay": 4,
+        "focusArea": "Speed Endurance",
+        "sessionSummary": "Cut Downs",
+        "sessionDescription": "1200, 1000, 800, 600",
+        "totalDistance": 8.6,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+        "block": "Speed Endurance",
+        "stimulus": "Start Strong, Finish Fast",
+        "reps": [
+          1200,
+          1000,
+          800,
+          600
+        ],
+        "paces": "600's @ 3:29 to 0:11 min/km\n800's @ 3:33 to 0:12 min/km\n1000's @ 3:37 to 0:10 min/km\n1200's @ 3:40 to 0:12 min/km",
+        "weekNumber": 10,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": false,
+        "isRest": false,
+        "sessionsCount": 4,
+        "sessionDistance": 3600,
+        "_debug": {
+          "blockCount": 1,
+          "weekInBlock": 10,
+          "blockWeeks": 10,
+          "sessionsCount": 4,
+          "totalWeeklyMileage": 34,
+          "intensityMileage": 3500,
+          "baseMileage": 7,
+          "longRunMileage": 14,
+          "paceIndex": 4
+        }
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-09",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 5km easy running, easy warm down\nEasy Running @ 4:47 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 69,
+        "date": "2027-01-09T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2027-01-09",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills then 5km easy running, easy warm down",
+        "totalDistance": 10,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 4:47 to 0:13 min/km",
+        "weekNumber": 10,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "Long Run · Steady running, practice finishing strong",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 30000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 24km easy running, easy warm down\nStart steady @ 4:55 to 0:11 min/km\nBuild to @ 3:59 to 0:11 min/km\nFinish strong @ 3:48 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 70,
+        "date": "2027-01-10T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2027-01-10",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Steady running, practice finishing strong",
+        "sessionDescription": "Warm Up with drills then 24km easy running, easy warm down",
+        "totalDistance": 30,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 4:55 to 0:11 min/km\nBuild to @ 3:59 to 0:11 min/km\nFinish strong @ 3:48 to 0:13 min/km",
+        "weekNumber": 10,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-12",
+      "kind": "run",
+      "name": "Speed · Cut Downs",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15400,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "2 x 1600, 2 x 1200, 2 x 1000, 2 x 800, 2 x 600\n600's @ 3:12 to 0:11 min/km\nRecovery: 120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+      "sourceDay": {
+        "dayCount": 72,
+        "date": "2027-01-12T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2027-01-12",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Cut Downs",
+        "sessionDescription": "2 x 1600, 2 x 1200, 2 x 1000, 2 x 800, 2 x 600",
+        "totalDistance": 15.4,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "120 seconds for 1600s, 90 seconds for 1200/1000s, 60 seconds for 800/600s",
+        "block": "Speed Endurance",
+        "stimulus": "Hit Tempo, Run Strong, Finish Fast",
+        "reps": [
+          1600,
+          1600,
+          1200,
+          1200,
+          1000,
+          1000,
+          800,
+          800,
+          600,
+          600
+        ],
+        "paces": "600's @ 3:12 to 0:11 min/km",
+        "weekNumber": 11,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-14",
+      "kind": "run",
+      "name": "Speed · Even Blocks",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "2 x 5000\n\nRecovery: 5 minutes",
+      "sourceDay": {
+        "dayCount": 74,
+        "date": "2027-01-14T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2027-01-14",
+        "weekDay": 4,
+        "focusArea": "Speed",
+        "sessionSummary": "Even Blocks",
+        "sessionDescription": "2 x 5000",
+        "totalDistance": 15,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "5 minutes",
+        "block": "Tempo",
+        "stimulus": "Hold Tempo",
+        "reps": [
+          5000,
+          5000
+        ],
+        "paces": "",
+        "weekNumber": 11,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-16",
+      "kind": "run",
+      "name": "Base · Easy Running",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 5km easy running, easy warm down\nEasy Running @ 4:33 to 0:13 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 76,
+        "date": "2027-01-16T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2027-01-16",
+        "weekDay": 6,
+        "focusArea": "Base",
+        "sessionSummary": "Easy Running",
+        "sessionDescription": "Warm Up with drills then 5km easy running, easy warm down",
+        "totalDistance": 10,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Easy Running @ 4:33 to 0:13 min/km",
+        "weekNumber": 11,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "Long Run · Steady running, practice finishing strong",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 21000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Warm Up with drills then 15km steady running, easy warm down\nStart steady @ 4:42 to 0:12 min/km\nBuild to @ 3:45 to 0:12 min/km\nFinish strong @ 3:35 to 0:12 min/km\nRecovery: N/A",
+      "sourceDay": {
+        "dayCount": 77,
+        "date": "2027-01-17T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2027-01-17",
+        "weekDay": 0,
+        "focusArea": "Long Run",
+        "sessionSummary": "Steady running, practice finishing strong",
+        "sessionDescription": "Warm Up with drills then 15km steady running, easy warm down",
+        "totalDistance": 21,
+        "warmUp": 3,
+        "warmDown": 3,
+        "recoveries": "N/A",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "Start steady @ 4:42 to 0:12 min/km\nBuild to @ 3:45 to 0:12 min/km\nFinish strong @ 3:35 to 0:12 min/km",
+        "weekNumber": 11,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "Speed · Even Blocks",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "3 x 2000\n\nRecovery: 2 minutes",
+      "sourceDay": {
+        "dayCount": 79,
+        "date": "2027-01-19T00:00:00.000Z",
+        "dayOfWeek": "Tuesday",
+        "dateStr": "2027-01-19",
+        "weekDay": 2,
+        "focusArea": "Speed",
+        "sessionSummary": "Even Blocks",
+        "sessionDescription": "3 x 2000",
+        "totalDistance": 11,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "2 minutes",
+        "block": "Tempo",
+        "stimulus": "Hold Pace",
+        "reps": [
+          2000,
+          2000,
+          2000
+        ],
+        "paces": "",
+        "weekNumber": 12,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-21",
+      "kind": "run",
+      "name": "Speed · Cut Downs",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "2 x 600, 2 x 500, 2 x 400, 2 x 300, 2 x 200\n200's @ 2:46 to 0:09 min/km\n300's @ 2:54 to 0:09 min/km\n400's @ 2:54 to 0:08 min/km\n500's @ 2:56 to 0:09 min/km\n600's @ 2:57 to 0:10 min/km\nRecovery: 90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+      "sourceDay": {
+        "dayCount": 81,
+        "date": "2027-01-21T00:00:00.000Z",
+        "dayOfWeek": "Thursday",
+        "dateStr": "2027-01-21",
+        "weekDay": 4,
+        "focusArea": "Speed",
+        "sessionSummary": "Cut Downs",
+        "sessionDescription": "2 x 600, 2 x 500, 2 x 400, 2 x 300, 2 x 200",
+        "totalDistance": 9,
+        "warmUp": 2.5,
+        "warmDown": 2.5,
+        "recoveries": "90 seconds for 600/500s, 60 seconds for 400/300s, 30 seconds for 200s",
+        "block": "Speed",
+        "stimulus": "Start Strong, Finish Fast",
+        "reps": [
+          600,
+          600,
+          500,
+          500,
+          400,
+          400,
+          300,
+          300,
+          200,
+          200
+        ],
+        "paces": "200's @ 2:46 to 0:09 min/km\n300's @ 2:54 to 0:09 min/km\n400's @ 2:54 to 0:08 min/km\n500's @ 2:56 to 0:09 min/km\n600's @ 2:57 to 0:10 min/km",
+        "weekNumber": 12,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-23",
+      "kind": "run",
+      "name": "Pre-Race Shakeout · 5km super easy jogging plus strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Shake the legs out, some small relaxed strides and get excited for the race\n\nRecovery: ",
+      "sourceDay": {
+        "dayCount": 83,
+        "date": "2027-01-23T00:00:00.000Z",
+        "dayOfWeek": "Saturday",
+        "dateStr": "2027-01-23",
+        "weekDay": 6,
+        "focusArea": "Pre-Race Shakeout",
+        "sessionSummary": "5km super easy jogging plus strides",
+        "sessionDescription": "Shake the legs out, some small relaxed strides and get excited for the race",
+        "totalDistance": 5,
+        "warmUp": 0,
+        "warmDown": 0,
+        "recoveries": "",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "",
+        "weekNumber": 12,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "Race Day · Fly or Die Trying",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 42200,
+          "tg": {},
+          "d": "Объём дня; структуру и темпы см. в исходном описании"
+        }
+      ],
+      "desc": "Start relaxed, stay strong, come through the half slightly back from your target and then start cranking up the pace before sending it all out for the final 10k, empty the tank and enjoy\n\nRecovery: ",
+      "sourceDay": {
+        "dayCount": 84,
+        "date": "2027-01-24T00:00:00.000Z",
+        "dayOfWeek": "Sunday",
+        "dateStr": "2027-01-24",
+        "weekDay": 0,
+        "focusArea": "Race Day",
+        "sessionSummary": "Fly or Die Trying",
+        "sessionDescription": "Start relaxed, stay strong, come through the half slightly back from your target and then start cranking up the pace before sending it all out for the final 10k, empty the tank and enjoy",
+        "totalDistance": 42.2,
+        "warmUp": 0,
+        "warmDown": 0,
+        "recoveries": "",
+        "block": "",
+        "stimulus": "",
+        "reps": [],
+        "paces": "",
+        "weekNumber": 12,
+        "blockNumber": 1,
+        "weeklyMileage": 34,
+        "isTaper": true,
+        "isRest": false,
+        "sessionsCount": 4
+      },
+      "conversionDetail": "volume-summary"
+    }
+  ]
+}

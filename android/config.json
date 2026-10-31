@@ -58,6 +58,48 @@
         "description": "ИМТ и влияние состава изменения веса на темп бега",
         "icon": "weight",
         "url": "https://ystef11.github.io/run/weight_calculator.html"
+      },
+      {
+        "id": "altitude",
+        "title": "Поправка на высоту",
+        "description": "Как высота меняет тренировочные темпы и времена",
+        "icon": "terrain",
+        "url": "https://ystef11.github.io/run/altitude_calculator.html"
+      },
+      {
+        "id": "bq",
+        "title": "Бостонский норматив (BQ)",
+        "description": "Проходит ли прогноз марафона норматив BAA",
+        "icon": "trophy",
+        "url": "https://ystef11.github.io/run/bq_calculator.html"
+      },
+      {
+        "id": "heat",
+        "title": "Поправка на жару",
+        "description": "Как температура и влажность меняют темпы",
+        "icon": "weather",
+        "url": "https://ystef11.github.io/run/heat_calculator.html"
+      },
+      {
+        "id": "mcmillan_pace",
+        "title": "Тренировочные темпы (McMillan)",
+        "description": "Темпы тренировок и прогноз времени на дистанциях",
+        "icon": "timer",
+        "url": "https://ystef11.github.io/run/mcmillan_pace_calculator.html"
+      },
+      {
+        "id": "nutrition",
+        "title": "Калорийность и макро",
+        "description": "Суточные калории и макронутриенты бегуна",
+        "icon": "nutrition",
+        "url": "https://ystef11.github.io/run/nutrition_calculator.html"
+      },
+      {
+        "id": "power_zone",
+        "title": "Зоны мощности",
+        "description": "Беговые зоны по критической мощности",
+        "icon": "bolt",
+        "url": "https://ystef11.github.io/run/power_zone_calculator.html"
       }
     ]
   },

@@ -1,0 +1,73 @@
+{
+  "profiles": [
+    {
+      "id": "80-t400",
+      "km": 80,
+      "t": 240,
+      "level": "advanced",
+      "days": 6,
+      "long": 24,
+      "vdot": 53.450573239692226,
+      "benchmark": {
+        "distance": 10000,
+        "time": 2342
+      }
+    },
+    {
+      "id": "40-t545",
+      "km": 40,
+      "t": 345,
+      "level": "intermediate",
+      "days": 4,
+      "long": 14,
+      "vdot": 34.056702733267706,
+      "benchmark": {
+        "distance": 10000,
+        "time": 3441
+      }
+    },
+    {
+      "id": "25-t630",
+      "km": 25,
+      "t": 390,
+      "level": "beginner",
+      "days": 3,
+      "long": 9,
+      "vdot": 29.16781241199083,
+      "benchmark": {
+        "distance": 10000,
+        "time": 3920
+      }
+    }
+  ],
+  "distances": [
+    {
+      "id": "5k",
+      "km": 5,
+      "weeks": 12,
+      "z": "5K",
+      "mc": "5km"
+    },
+    {
+      "id": "10k",
+      "km": 10,
+      "weeks": 12,
+      "z": "10K",
+      "mc": "10km"
+    },
+    {
+      "id": "half",
+      "km": 21.0975,
+      "weeks": 16,
+      "z": "semi",
+      "mc": "1/2 Marathon"
+    },
+    {
+      "id": "marathon",
+      "km": 42.195,
+      "weeks": 18,
+      "z": "marathon",
+      "mc": "Marathon"
+    }
+  ]
+}

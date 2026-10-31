@@ -1,0 +1,1621 @@
+{
+  "meta": {
+    "tag": "[ENDORPHINS]",
+    "schema": 1,
+    "name": "endorphins · 0 км · 80 км/нед · ПАНО 4:00",
+    "generated": "2026-10-29",
+    "marathon": "2027-02-18",
+    "source": {
+      "url": "https://endorphinsrunning.com/training-plan-generator",
+      "retrieved": "2026-10-29",
+      "raw": "raw/endorphins-personalized-80-t400.source.json",
+      "reportedTotalKm": 1412.4,
+      "visibleWorkoutsTotalKm": 1377.7
+    },
+    "profile": {
+      "id": "80-t400",
+      "km": 80,
+      "t": 240,
+      "level": "advanced",
+      "days": 6,
+      "long": 24,
+      "vdot": 53.450573239692226,
+      "benchmark": {
+        "distance": 10000,
+        "time": 2342
+      }
+    },
+    "generatorInput": {
+      "requestedRace": "Marathon",
+      "requestedRaceDate": "2027-03-07",
+      "recent10k": "39:02",
+      "weeklyKmRangeDisplayed": [
+        80,
+        97
+      ],
+      "daysPerWeek": 6,
+      "longRunRangeKm": [
+        24,
+        35
+      ],
+      "actualResult": "17 Week Personalized Training Plan",
+      "actualDates": [
+        "2026-10-29",
+        "2027-02-18"
+      ]
+    },
+    "conversion": {
+      "detail": "volume-summary",
+      "notes": [
+        "Фактический календарь авторизованного аккаунта. После редактирования объёма сайт потерял привязку к марафону и выдал Personalized Training Plan; файл не назван марафонским.",
+        "В интерфейсе 80–97 км/нед вместо запрошенного пика 96: сайт округляет внутренние мили. Сводные шаги равны видимым дистанциям календаря; тренировочные зоны не выдуманы.",
+        "Детальная структура доступна для первых шести тренировок; дальнейшие переходы ведут к подписке. Все 17 видимых недель и экран ограничения сохранены в engines/endorphins/pages.",
+        "Данные профиля для расчёта в сервисе отличались от условных 35 лет других движков; возраст и параметры account setup не нормализовывались. Сравнивать как наблюдаемый вывод сервиса, а не одинаковый физиологический эксперимент.",
+        "Расхождение самого сервиса: шапка 1412,4 км, видимые 97 тренировок — 1377.7 км. Последняя неделя показывает 6 тренировок, но на экране перечислены четыре."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-10-29",
+      "goalISO": "2027-02-18",
+      "goalDist": 0,
+      "planMode": "goal",
+      "tag": "[ENDORPHINS]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-10-29",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11700,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 11.7 km",
+      "sourceWeek": 1
+    },
+    {
+      "date": "2026-10-31",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 1
+    },
+    {
+      "date": "2026-11-01",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 1
+    },
+    {
+      "date": "2026-11-02",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-11-03",
+      "kind": "run",
+      "name": "Hills",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10100,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Hills 10.1 km",
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-11-04",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-11-05",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 12.0 km",
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-11-07",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-11-09",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-11-10",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12400,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 12.4 km",
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-11-11",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-11-12",
+      "kind": "run",
+      "name": "Strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Strides 12.0 km",
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-11-14",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-11-16",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11200,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.2 km",
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-11-17",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 12.5 km",
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-11-18",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11300,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.3 km",
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-11-19",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 12.0 km",
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-11-21",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11400,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.4 km",
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-11-23",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 5
+    },
+    {
+      "date": "2026-11-24",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12900,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 12.9 km",
+      "sourceWeek": 5
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 5
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 13.0 km",
+      "sourceWeek": 5
+    },
+    {
+      "date": "2026-11-28",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 5
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 5
+    },
+    {
+      "date": "2026-11-30",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11200,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.2 km",
+      "sourceWeek": 6
+    },
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 13.0 km",
+      "sourceWeek": 6
+    },
+    {
+      "date": "2026-12-02",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11300,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.3 km",
+      "sourceWeek": 6
+    },
+    {
+      "date": "2026-12-03",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 13.0 km",
+      "sourceWeek": 6
+    },
+    {
+      "date": "2026-12-05",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11400,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.4 km",
+      "sourceWeek": 6
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 6
+    },
+    {
+      "date": "2026-12-07",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 7
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 13.5 km",
+      "sourceWeek": 7
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 7
+    },
+    {
+      "date": "2026-12-10",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14100,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 14.1 km",
+      "sourceWeek": 7
+    },
+    {
+      "date": "2026-12-12",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 7
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 7
+    },
+    {
+      "date": "2026-12-14",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.0 km",
+      "sourceWeek": 8
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "Hills",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12100,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Hills 12.1 km",
+      "sourceWeek": 8
+    },
+    {
+      "date": "2026-12-16",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 8
+    },
+    {
+      "date": "2026-12-17",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 14.0 km",
+      "sourceWeek": 8
+    },
+    {
+      "date": "2026-12-19",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 8
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 8
+    },
+    {
+      "date": "2026-12-21",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 9
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12400,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 12.4 km",
+      "sourceWeek": 9
+    },
+    {
+      "date": "2026-12-23",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 9
+    },
+    {
+      "date": "2026-12-24",
+      "kind": "run",
+      "name": "Strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Strides 12.0 km",
+      "sourceWeek": 9
+    },
+    {
+      "date": "2026-12-26",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 9
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 9
+    },
+    {
+      "date": "2026-12-28",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 10
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 13.0 km",
+      "sourceWeek": 10
+    },
+    {
+      "date": "2026-12-30",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 10
+    },
+    {
+      "date": "2026-12-31",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 13.0 km",
+      "sourceWeek": 10
+    },
+    {
+      "date": "2027-01-02",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 10
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 10
+    },
+    {
+      "date": "2027-01-04",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12800,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.8 km",
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 14.0 km",
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-01-06",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11800,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.8 km",
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-01-07",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 14.0 km",
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-01-09",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11900,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.9 km",
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24200,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.2 km",
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-01-11",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.0 km",
+      "sourceWeek": 12
+    },
+    {
+      "date": "2027-01-12",
+      "kind": "run",
+      "name": "Hills",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12200,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Hills 12.2 km",
+      "sourceWeek": 12
+    },
+    {
+      "date": "2027-01-13",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.5 km",
+      "sourceWeek": 12
+    },
+    {
+      "date": "2027-01-14",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 14.0 km",
+      "sourceWeek": 12
+    },
+    {
+      "date": "2027-01-16",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.5 km",
+      "sourceWeek": 12
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 12
+    },
+    {
+      "date": "2027-01-18",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 13
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 12.0 km",
+      "sourceWeek": 13
+    },
+    {
+      "date": "2027-01-20",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 13
+    },
+    {
+      "date": "2027-01-21",
+      "kind": "run",
+      "name": "Strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Strides 12.0 km",
+      "sourceWeek": 13
+    },
+    {
+      "date": "2027-01-23",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 13
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24100,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.1 km",
+      "sourceWeek": 13
+    },
+    {
+      "date": "2027-01-25",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 14
+    },
+    {
+      "date": "2027-01-26",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 13.5 km",
+      "sourceWeek": 14
+    },
+    {
+      "date": "2027-01-27",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 14
+    },
+    {
+      "date": "2027-01-28",
+      "kind": "run",
+      "name": "Strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Strides 14.0 km",
+      "sourceWeek": 14
+    },
+    {
+      "date": "2027-01-30",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 12.0 km",
+      "sourceWeek": 14
+    },
+    {
+      "date": "2027-01-31",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 14
+    },
+    {
+      "date": "2027-02-01",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.0 km",
+      "sourceWeek": 15
+    },
+    {
+      "date": "2027-02-02",
+      "kind": "run",
+      "name": "Strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Strides 14.0 km",
+      "sourceWeek": 15
+    },
+    {
+      "date": "2027-02-03",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.0 km",
+      "sourceWeek": 15
+    },
+    {
+      "date": "2027-02-04",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 14.5 km",
+      "sourceWeek": 15
+    },
+    {
+      "date": "2027-02-06",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.0 km",
+      "sourceWeek": 15
+    },
+    {
+      "date": "2027-02-07",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24200,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.2 km",
+      "sourceWeek": 15
+    },
+    {
+      "date": "2027-02-08",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 14.5 km",
+      "sourceWeek": 16
+    },
+    {
+      "date": "2027-02-09",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 15.0 km",
+      "sourceWeek": 16
+    },
+    {
+      "date": "2027-02-10",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.5 km",
+      "sourceWeek": 16
+    },
+    {
+      "date": "2027-02-11",
+      "kind": "run",
+      "name": "Tempo",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Tempo 15.0 km",
+      "sourceWeek": 16
+    },
+    {
+      "date": "2027-02-13",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 13.5 km",
+      "sourceWeek": 16
+    },
+    {
+      "date": "2027-02-14",
+      "kind": "run",
+      "name": "Long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Long 24.0 km",
+      "sourceWeek": 16
+    },
+    {
+      "date": "2027-02-15",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 11.5 km",
+      "sourceWeek": 17
+    },
+    {
+      "date": "2027-02-16",
+      "kind": "run",
+      "name": "Speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Speed 12.0 km",
+      "sourceWeek": 17
+    },
+    {
+      "date": "2027-02-17",
+      "kind": "run",
+      "name": "Easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10500,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Easy 10.5 km",
+      "sourceWeek": 17
+    },
+    {
+      "date": "2027-02-18",
+      "kind": "run",
+      "name": "Strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12000,
+          "tg": {},
+          "d": "Колонка календаря Endorphins"
+        }
+      ],
+      "desc": "Strides 12.0 km",
+      "sourceWeek": 17
+    }
+  ]
+}

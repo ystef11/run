@@ -1,0 +1,62 @@
+[
+  {
+    "file": "macro/endorphins-macro-5k-80.html",
+    "profileKm": 80,
+    "distance": "5k"
+  },
+  {
+    "file": "macro/endorphins-macro-10k-80.html",
+    "profileKm": 80,
+    "distance": "10k"
+  },
+  {
+    "file": "macro/endorphins-macro-half-80.html",
+    "profileKm": 80,
+    "distance": "half"
+  },
+  {
+    "file": "macro/endorphins-macro-marathon-80.html",
+    "profileKm": 80,
+    "distance": "marathon"
+  },
+  {
+    "file": "macro/endorphins-macro-5k-40.html",
+    "profileKm": 40,
+    "distance": "5k"
+  },
+  {
+    "file": "macro/endorphins-macro-10k-40.html",
+    "profileKm": 40,
+    "distance": "10k"
+  },
+  {
+    "file": "macro/endorphins-macro-half-40.html",
+    "profileKm": 40,
+    "distance": "half"
+  },
+  {
+    "file": "macro/endorphins-macro-marathon-40.html",
+    "profileKm": 40,
+    "distance": "marathon"
+  },
+  {
+    "file": "macro/endorphins-macro-5k-25.html",
+    "profileKm": 25,
+    "distance": "5k"
+  },
+  {
+    "file": "macro/endorphins-macro-10k-25.html",
+    "profileKm": 25,
+    "distance": "10k"
+  },
+  {
+    "file": "macro/endorphins-macro-half-25.html",
+    "profileKm": 25,
+    "distance": "half"
+  },
+  {
+    "file": "macro/endorphins-macro-marathon-25.html",
+    "profileKm": 25,
+    "distance": "marathon"
+  }
+]

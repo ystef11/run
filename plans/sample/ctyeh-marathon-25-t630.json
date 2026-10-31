@@ -1,0 +1,1614 @@
+{
+  "meta": {
+    "tag": "[CTYEH]",
+    "schema": 1,
+    "name": "ctyeh · 42.195 км · 25 км/нед · ПАНО 6:30",
+    "generated": "2026-10-29",
+    "marathon": "2027-03-07",
+    "source": {
+      "url": "https://ctyeh.com/running/training-plan?lang=en",
+      "retrieved": "2026-10-29",
+      "raw": "raw/ctyeh-marathon-25-t630.source.json"
+    },
+    "profile": {
+      "id": "25-t630",
+      "km": 25,
+      "t": 390,
+      "level": "beginner",
+      "days": 3,
+      "long": 9,
+      "vdot": 29.16781241199083,
+      "benchmark": {
+        "distance": 10000,
+        "time": 3920
+      }
+    },
+    "generatorInput": {
+      "race": {
+        "id": "marathon",
+        "value": "FM",
+        "weeks": 18,
+        "goal": "2027-03-07"
+      },
+      "level": "novice",
+      "startKm": 25,
+      "peakKm": 30,
+      "recentRace10k": "1:05:20",
+      "actualWeeks": "18"
+    },
+    "conversion": {
+      "detail": "volume-summary",
+      "notes": [
+        "План получен в интерфейсе сайта без регистрации. Все дни и строки тренировок сохранены.",
+        "Сводный шаг равен колонке Distance; текст темпов, повторов и отдыха сохранён в описании и raw. В источнике встречаются расхождения текста и колонки Distance.",
+        "42 км на race day сохранены как выдал сайт, без замены на 42,195. Условные даты: старт 2026-11-02.",
+        "Для анализа зон этот сводный экспорт не подходит: нет искусственного назначения всей тренировки одной зоне."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-11-03",
+      "goalISO": "2027-03-07",
+      "goalDist": 42195,
+      "planMode": "goal",
+      "tag": "[CTYEH]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-11-03",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 11/3",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-04",
+      "kind": "run",
+      "name": "Intervals: 4×1 km @ I pace + 400 m easy recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+      "sourceRow": [
+        "Wed 11/4",
+        "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+        "5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-06",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 11/6",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "run",
+      "name": "Long Run 11 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 11/8",
+        "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "11 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-10",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 11/10",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-11",
+      "kind": "run",
+      "name": "Hill repeats: 8×400 m uphill @ hard + easy jog back",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Hill repeats: 8×400 m uphill @ hard + easy jog back\nby feel",
+      "sourceRow": [
+        "Wed 11/11",
+        "Hill repeats: 8×400 m uphill @ hard + easy jog back\nby feel",
+        "5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-13",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 11/13",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "run",
+      "name": "Long Run 11 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 11/15",
+        "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "11 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-17",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 11/17",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-18",
+      "kind": "run",
+      "name": "R-pace: 8×400 m @ 5K-1500 m pace + 200 m walk",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "R-pace: 8×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+      "sourceRow": [
+        "Wed 11/18",
+        "R-pace: 8×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+        "5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-20",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 11/20",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "run",
+      "name": "Long Run 11 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 11/22",
+        "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "11 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-24",
+      "kind": "run",
+      "name": "Easy 2.6 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2600,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2.6 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 11/24",
+        "Easy 2.6 km @ E pace (conversational)\nE 7:49/km",
+        "2.6 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "run",
+      "name": "Intervals: 4×1 km @ I pace + 400 m easy recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+      "sourceRow": [
+        "Wed 11/25",
+        "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+        "2.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-27",
+      "kind": "run",
+      "name": "Easy 2.7 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2700,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2.7 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 11/27",
+        "Easy 2.7 km @ E pace (conversational)\nE 7:49/km",
+        "2.7 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "run",
+      "name": "Long Run 10.8 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10800,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 10.8 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 11/29",
+        "Long Run 10.8 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "10.8 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 12/1",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-02",
+      "kind": "run",
+      "name": "Hill repeats: 8×400 m uphill @ hard + easy jog back",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Hill repeats: 8×400 m uphill @ hard + easy jog back\nby feel",
+      "sourceRow": [
+        "Wed 12/2",
+        "Hill repeats: 8×400 m uphill @ hard + easy jog back\nby feel",
+        "5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-04",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 12/4",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "Long Run 11 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 12/6",
+        "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "11 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 12/8",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "run",
+      "name": "R-pace: 8×400 m @ 5K-1500 m pace + 200 m walk",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "R-pace: 8×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+      "sourceRow": [
+        "Wed 12/9",
+        "R-pace: 8×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+        "5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-11",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 12/11",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "Long Run 11 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 12/13",
+        "Long Run 11 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "11 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "Easy 4.4 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4400,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.4 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 12/15",
+        "Easy 4.4 km @ E pace (conversational)\nE 7:49/km",
+        "4.4 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-16",
+      "kind": "run",
+      "name": "Intervals: 4×1 km @ I pace + 400 m easy recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+      "sourceRow": [
+        "Wed 12/16",
+        "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+        "4.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-18",
+      "kind": "run",
+      "name": "Easy 4.5 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4500,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 12/18",
+        "Easy 4.5 km @ E pace (conversational)\nE 7:49/km",
+        "4.5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "Long Run 11.2 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11200,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 11.2 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 12/20",
+        "Long Run 11.2 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "11.2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "Easy 2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 12/22",
+        "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+        "2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-23",
+      "kind": "run",
+      "name": "Hill repeats: 4×400 m uphill @ hard + easy jog back",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2200,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Hill repeats: 4×400 m uphill @ hard + easy jog back\nby feel",
+      "sourceRow": [
+        "Wed 12/23",
+        "Hill repeats: 4×400 m uphill @ hard + easy jog back\nby feel",
+        "2.2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-25",
+      "kind": "run",
+      "name": "Easy 2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 12/25",
+        "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+        "2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "Long Run 12.8 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12800,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 12.8 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 12/27",
+        "Long Run 12.8 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "12.8 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "Easy 3.4 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3400,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 3.4 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 12/29",
+        "Easy 3.4 km @ E pace (conversational)\nE 7:49/km",
+        "3.4 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2026-12-30",
+      "kind": "run",
+      "name": "R-pace: 6×400 m @ 5K-1500 m pace + 200 m walk",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3800,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "R-pace: 6×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+      "sourceRow": [
+        "Wed 12/30",
+        "R-pace: 6×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+        "3.8 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-01",
+      "kind": "run",
+      "name": "Easy 3.4 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3400,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 3.4 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 1/1",
+        "Easy 3.4 km @ E pace (conversational)\nE 7:49/km",
+        "3.4 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "Long Run 14.4 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14400,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 14.4 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 1/3",
+        "Long Run 14.4 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "14.4 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "Easy 3.2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3200,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 3.2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 1/5",
+        "Easy 3.2 km @ E pace (conversational)\nE 7:49/km",
+        "3.2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-06",
+      "kind": "run",
+      "name": "Intervals: 4×1 km @ I pace + 400 m easy recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3600,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+      "sourceRow": [
+        "Wed 1/6",
+        "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+        "3.6 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-08",
+      "kind": "run",
+      "name": "Easy 3.2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3200,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 3.2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 1/8",
+        "Easy 3.2 km @ E pace (conversational)\nE 7:49/km",
+        "3.2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "Long Run 16 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 16 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 1/10",
+        "Long Run 16 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "16 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-12",
+      "kind": "run",
+      "name": "Easy 1.9 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 1/12",
+        "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+        "1.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-13",
+      "kind": "run",
+      "name": "Hill repeats: 4×400 m uphill @ hard + easy jog back",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2100,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Hill repeats: 4×400 m uphill @ hard + easy jog back\nby feel",
+      "sourceRow": [
+        "Wed 1/13",
+        "Hill repeats: 4×400 m uphill @ hard + easy jog back\nby feel",
+        "2.1 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-15",
+      "kind": "run",
+      "name": "Easy 2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 1/15",
+        "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+        "2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "Long Run 20 km (including 8 km @ MP)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 20 km (including 8 km @ MP)\nE 7:49/km · M 6:55/km",
+      "sourceRow": [
+        "Sun 1/17",
+        "Long Run 20 km (including 8 km @ MP)\nE 7:49/km · M 6:55/km",
+        "20 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "Easy 1.9 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 1/19",
+        "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+        "1.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-20",
+      "kind": "run",
+      "name": "R-pace: 4×400 m @ 5K-1500 m pace + 200 m walk",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2100,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "R-pace: 4×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+      "sourceRow": [
+        "Wed 1/20",
+        "R-pace: 4×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+        "2.1 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-22",
+      "kind": "run",
+      "name": "Easy 2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 1/22",
+        "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+        "2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "Long Run 21 km (including 8 km @ MP)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 21000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 21 km (including 8 km @ MP)\nE 7:49/km · M 6:55/km",
+      "sourceRow": [
+        "Sun 1/24",
+        "Long Run 21 km (including 8 km @ MP)\nE 7:49/km · M 6:55/km",
+        "21 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-26",
+      "kind": "run",
+      "name": "Easy 1.9 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 1/26",
+        "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+        "1.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-27",
+      "kind": "run",
+      "name": "Intervals: 4×1 km @ I pace + 400 m easy recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2200,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+      "sourceRow": [
+        "Wed 1/27",
+        "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+        "2.2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-29",
+      "kind": "run",
+      "name": "Easy 1.9 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 1/29",
+        "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+        "1.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-01-31",
+      "kind": "run",
+      "name": "Long Run 22 km (including 9 km @ MP)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 22000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 22 km (including 9 km @ MP)\nE 7:49/km · M 6:55/km",
+      "sourceRow": [
+        "Sun 1/31",
+        "Long Run 22 km (including 9 km @ MP)\nE 7:49/km · M 6:55/km",
+        "22 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-02",
+      "kind": "run",
+      "name": "Easy 1.9 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 2/2",
+        "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+        "1.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-03",
+      "kind": "run",
+      "name": "Hill repeats: 4×400 m uphill @ hard + easy jog back",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2100,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Hill repeats: 4×400 m uphill @ hard + easy jog back\nby feel",
+      "sourceRow": [
+        "Wed 2/3",
+        "Hill repeats: 4×400 m uphill @ hard + easy jog back\nby feel",
+        "2.1 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-05",
+      "kind": "run",
+      "name": "Easy 2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 2/5",
+        "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+        "2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-07",
+      "kind": "run",
+      "name": "Long Run 23 km (including 9 km @ MP)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 23000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 23 km (including 9 km @ MP)\nE 7:49/km · M 6:55/km",
+      "sourceRow": [
+        "Sun 2/7",
+        "Long Run 23 km (including 9 km @ MP)\nE 7:49/km · M 6:55/km",
+        "23 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-09",
+      "kind": "run",
+      "name": "Easy 1.9 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 2/9",
+        "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+        "1.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-10",
+      "kind": "run",
+      "name": "R-pace: 4×400 m @ 5K-1500 m pace + 200 m walk",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2100,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "R-pace: 4×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+      "sourceRow": [
+        "Wed 2/10",
+        "R-pace: 4×400 m @ 5K-1500 m pace + 200 m walk\nR 5:24/km",
+        "2.1 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-12",
+      "kind": "run",
+      "name": "Easy 2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 2/12",
+        "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+        "2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-14",
+      "kind": "run",
+      "name": "Long Run 24 km (including 10 km @ MP)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 24 km (including 10 km @ MP)\nE 7:49/km · M 6:55/km",
+      "sourceRow": [
+        "Sun 2/14",
+        "Long Run 24 km (including 10 km @ MP)\nE 7:49/km · M 6:55/km",
+        "24 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-16",
+      "kind": "run",
+      "name": "Easy 2.8 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2800,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2.8 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 2/16",
+        "Easy 2.8 km @ E pace (conversational)\nE 7:49/km",
+        "2.8 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-17",
+      "kind": "run",
+      "name": "Intervals: 4×1 km @ I pace + 400 m easy recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3100,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+      "sourceRow": [
+        "Wed 2/17",
+        "Intervals: 4×1 km @ I pace + 400 m easy recovery\nI 5:55/km",
+        "3.1 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-19",
+      "kind": "run",
+      "name": "Easy 2.8 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2800,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2.8 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 2/19",
+        "Easy 2.8 km @ E pace (conversational)\nE 7:49/km",
+        "2.8 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-21",
+      "kind": "run",
+      "name": "Long Run 17.3 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17300,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 17.3 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 2/21",
+        "Long Run 17.3 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "17.3 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-23",
+      "kind": "run",
+      "name": "Easy 1.9 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1900,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Tue 2/23",
+        "Easy 1.9 km @ E pace (conversational)\nE 7:49/km",
+        "1.9 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-24",
+      "kind": "run",
+      "name": "Hill repeats: 4×400 m uphill @ hard + easy jog back",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2100,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Hill repeats: 4×400 m uphill @ hard + easy jog back\nby feel",
+      "sourceRow": [
+        "Wed 2/24",
+        "Hill repeats: 4×400 m uphill @ hard + easy jog back\nby feel",
+        "2.1 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-26",
+      "kind": "run",
+      "name": "Easy 2 km @ E pace (conversational)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 2000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+      "sourceRow": [
+        "Fri 2/26",
+        "Easy 2 km @ E pace (conversational)\nE 7:49/km",
+        "2 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-02-28",
+      "kind": "run",
+      "name": "Long Run 14 km @ Easy + 6×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Long Run 14 km @ Easy + 6×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sun 2/28",
+        "Long Run 14 km @ Easy + 6×100 m strides\nE 7:49/km",
+        "14 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-03-01",
+      "kind": "run",
+      "name": "Easy 30 min",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 30 min\nE 7:49/km",
+      "sourceRow": [
+        "Mon 3/1",
+        "Easy 30 min\nE 7:49/km",
+        "5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-03-02",
+      "kind": "run",
+      "name": "5-6 km @ MP (final quality touch)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "5-6 km @ MP (final quality touch)\nM 6:55/km",
+      "sourceRow": [
+        "Tue 3/2",
+        "5-6 km @ MP (final quality touch)\nM 6:55/km",
+        "6 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-03-03",
+      "kind": "run",
+      "name": "Easy 40 min + 4×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 40 min + 4×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Wed 3/3",
+        "Easy 40 min + 4×100 m strides\nE 7:49/km",
+        "7 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-03-04",
+      "kind": "run",
+      "name": "Easy 30 min",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 30 min\nE 7:49/km",
+      "sourceRow": [
+        "Thu 3/4",
+        "Easy 30 min\nE 7:49/km",
+        "5 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-03-06",
+      "kind": "run",
+      "name": "Easy 20 min + 4×100 m strides",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "Easy 20 min + 4×100 m strides\nE 7:49/km",
+      "sourceRow": [
+        "Sat 3/6",
+        "Easy 20 min + 4×100 m strides\nE 7:49/km",
+        "3 km"
+      ],
+      "conversionDetail": "volume-summary"
+    },
+    {
+      "date": "2027-03-07",
+      "kind": "run",
+      "name": "🏁 Race day!",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 42000,
+          "tg": {},
+          "d": "Колонка Distance сайта"
+        }
+      ],
+      "desc": "🏁 Race day!",
+      "sourceRow": [
+        "Sun 3/7",
+        "🏁 Race day!",
+        "42 km"
+      ],
+      "conversionDetail": "volume-summary"
+    }
+  ]
+}

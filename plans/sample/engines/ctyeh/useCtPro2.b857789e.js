@@ -1,0 +1,1 @@
+import{c as u,v as r}from"./entry.79f5757a.js";const a=()=>{const e=u(),s=r(()=>e.isCtPro2),c=r(()=>{var t,o;return((o=(t=e.user)==null?void 0:t.ct_pro2)==null?void 0:o.license_key)||""}),n=r(()=>{var t,o;return((o=(t=e.user)==null?void 0:t.ct_pro2)==null?void 0:o.expiration_date)||null});return{isCtPro2:s,ctPro2LicenseKey:c,ctPro2ExpirationDate:n}};export{a as u};

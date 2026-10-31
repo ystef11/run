@@ -1,0 +1,5360 @@
+{
+  "meta": {
+    "tag": "[RUN_PLAN_GENERATOR]",
+    "schema": 1,
+    "name": "run_plan_generator · 42.195 км · 80 км/нед · ПАНО 4:00",
+    "generated": "2026-10-29",
+    "marathon": "2027-03-07",
+    "source": {
+      "url": "https://github.com/KenShabby/run_plan_generator",
+      "retrieved": "2026-10-29",
+      "raw": "raw/run_plan_generator-marathon-80-t400.source.json",
+      "commit": "e7acae5",
+      "engine": "engines/run_plan_generator/source.zip",
+      "file": "seeds/marathon_55mi_18wk.yaml",
+      "permalink": "https://github.com/KenShabby/run_plan_generator/blob/e7acae5/seeds/marathon_55mi_18wk.yaml"
+    },
+    "profile": {
+      "id": "80-t400",
+      "km": 80,
+      "t": 240,
+      "level": "advanced",
+      "days": 6,
+      "long": 24,
+      "vdot": 53.450573239692226,
+      "benchmark": {
+        "distance": 10000,
+        "time": 2342
+      }
+    },
+    "generatorInput": {
+      "template": "marathon_55mi_18wk",
+      "startDate": "2026-11-02",
+      "thresholdUsed": false,
+      "weeklyVolumeUsed": false
+    },
+    "conversion": {
+      "detail": "structured",
+      "notes": [
+        "Преобразован оригинальный YAML-шаблон: приложение только переносит его на календарь, индивидуального масштабирования по пробегу или ПАНО нет.",
+        "Выбран ближайший уровень; объём шаблона сохранён даже при расхождении с профилем. Это сравнительный образец, не персональная рекомендация.",
+        "Мили × 1609,344 → метры; секунды и группы повторений сохранены. Диапазоны HR сохранены в sourceZoneRange; tg.hr задан только для одной явно указанной зоны."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-11-03",
+      "goalISO": "2027-03-07",
+      "goalDist": 42195,
+      "planMode": "goal",
+      "tag": "[RUN_PLAN_GENERATOR]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-11-03",
+      "kind": "run",
+      "name": "lactate_threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 3
+          },
+          "d": "Lactate Threshold",
+          "sourceZoneRange": [
+            3,
+            3
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Lactate threshold 8 mi w/ 4 mi @ 15K to half marathon race pace",
+      "sourceRun": {
+        "day_offset": 1,
+        "run_type": "lactate_threshold",
+        "notes": "Lactate threshold 8 mi w/ 4 mi @ 15K to half marathon race pace",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Lactate Threshold",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 3
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 3.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-05",
+      "kind": "run",
+      "name": "general_aerobic",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        }
+      ],
+      "desc": "General aerobic 9 mi",
+      "sourceRun": {
+        "day_offset": 3,
+        "run_type": "general_aerobic",
+        "notes": "General aerobic 9 mi",
+        "distance": 9.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 9.0,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-07",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 5,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16898,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 12 mi",
+      "sourceRun": {
+        "day_offset": 6,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 12 mi",
+        "distance": 12.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 10.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-10",
+      "kind": "run",
+      "name": "general_aerobic_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10875,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 10,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "General aerobic + speed 8 mi w/ 10 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 8,
+        "run_type": "general_aerobic_speed",
+        "notes": "General aerobic + speed 8 mi w/ 10 × 100 m strides",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 6.7573,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 10
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 10
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-12",
+      "kind": "run",
+      "name": "general_aerobic",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        }
+      ],
+      "desc": "General aerobic 10 mi",
+      "sourceRun": {
+        "day_offset": 10,
+        "run_type": "general_aerobic",
+        "notes": "General aerobic 10 mi",
+        "distance": 10.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 10.0,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-14",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 12,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Marathon Race Pace",
+          "sourceZoneRange": [
+            3,
+            4
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Marathon-pace run 13 mi w/ 8 mi @ marathon race pace",
+      "sourceRun": {
+        "day_offset": 13,
+        "run_type": "race_pace",
+        "notes": "Marathon-pace run 13 mi w/ 8 mi @ marathon race pace",
+        "distance": 13.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Marathon Race Pace",
+            "effort_type": "distance",
+            "distance": 8.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 4
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-17",
+      "kind": "run",
+      "name": "general_aerobic",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        }
+      ],
+      "desc": "General aerobic 10 mi",
+      "sourceRun": {
+        "day_offset": 15,
+        "run_type": "general_aerobic",
+        "notes": "General aerobic 10 mi",
+        "distance": 10.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 10.0,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-18",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 16,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-19",
+      "kind": "run",
+      "name": "lactate_threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 3
+          },
+          "d": "Lactate Threshold",
+          "sourceZoneRange": [
+            3,
+            3
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Lactate threshold 8 mi w/ 4 mi @ 15K to half marathon race pace",
+      "sourceRun": {
+        "day_offset": 17,
+        "run_type": "lactate_threshold",
+        "notes": "Lactate threshold 8 mi w/ 4 mi @ 15K to half marathon race pace",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Lactate Threshold",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 3
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 3.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 19,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20117,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 14 mi",
+      "sourceRun": {
+        "day_offset": 20,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 14 mi",
+        "distance": 14.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 12.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-24",
+      "kind": "run",
+      "name": "general_aerobic_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10875,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 10,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "General aerobic + speed 8 mi w/ 10 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 22,
+        "run_type": "general_aerobic_speed",
+        "notes": "General aerobic + speed 8 mi w/ 10 × 100 m strides",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 6.7573,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 10
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 10
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 23,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "run",
+      "name": "general_aerobic",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        }
+      ],
+      "desc": "General aerobic 10 mi",
+      "sourceRun": {
+        "day_offset": 24,
+        "run_type": "general_aerobic",
+        "notes": "General aerobic 10 mi",
+        "distance": 10.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 10.0,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-28",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 26,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 21726,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 15 mi",
+      "sourceRun": {
+        "day_offset": 27,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 15 mi",
+        "distance": 15.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 13.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "lactate_threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 3
+          },
+          "d": "Lactate Threshold",
+          "sourceZoneRange": [
+            3,
+            3
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Lactate threshold 9 mi w/ 5 mi @ 15K to half marathon race pace",
+      "sourceRun": {
+        "day_offset": 29,
+        "run_type": "lactate_threshold",
+        "notes": "Lactate threshold 9 mi w/ 5 mi @ 15K to half marathon race pace",
+        "distance": 9.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Lactate Threshold",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 3
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 3.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-02",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 30,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-03",
+      "kind": "run",
+      "name": "general_aerobic",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        }
+      ],
+      "desc": "General aerobic 10 mi",
+      "sourceRun": {
+        "day_offset": 31,
+        "run_type": "general_aerobic",
+        "notes": "General aerobic 10 mi",
+        "distance": 10.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 10.0,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-05",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 33,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Marathon Race Pace",
+          "sourceZoneRange": [
+            3,
+            4
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Marathon-pace run 16 mi w/ 10 mi @ marathon race pace",
+      "sourceRun": {
+        "day_offset": 34,
+        "run_type": "race_pace",
+        "notes": "Marathon-pace run 16 mi w/ 10 mi @ marathon race pace",
+        "distance": 16.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Marathon Race Pace",
+            "effort_type": "distance",
+            "distance": 10.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 4
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "general_aerobic_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10875,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 10,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "General aerobic + speed 8 mi w/ 10 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 36,
+        "run_type": "general_aerobic_speed",
+        "notes": "General aerobic + speed 8 mi w/ 10 × 100 m strides",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 6.7573,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 10
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 10
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 37,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-10",
+      "kind": "run",
+      "name": "general_aerobic",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        }
+      ],
+      "desc": "General aerobic 8 mi",
+      "sourceRun": {
+        "day_offset": 38,
+        "run_type": "general_aerobic",
+        "notes": "General aerobic 8 mi",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 8.0,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-12",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 40,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16898,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 12 mi",
+      "sourceRun": {
+        "day_offset": 41,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 12 mi",
+        "distance": 12.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 10.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "general_aerobic_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10875,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 10,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "General aerobic + speed 8 mi w/ 10 × 100 m strides p.m.",
+      "sourceRun": {
+        "day_offset": 43,
+        "run_type": "general_aerobic_speed",
+        "notes": "General aerobic + speed 8 mi w/ 10 × 100 m strides p.m.",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 6.7573,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 10
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 10
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-17",
+      "kind": "run",
+      "name": "general_aerobic",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        }
+      ],
+      "desc": "General aerobic 9 mi",
+      "sourceRun": {
+        "day_offset": 45,
+        "run_type": "general_aerobic",
+        "notes": "General aerobic 9 mi",
+        "distance": 9.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 9.0,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-19",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 47,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Marathon Race Pace",
+          "sourceZoneRange": [
+            3,
+            4
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Marathon-pace run 13 mi w/ 8 mi @ marathon race pace",
+      "sourceRun": {
+        "day_offset": 48,
+        "run_type": "race_pace",
+        "notes": "Marathon-pace run 13 mi w/ 8 mi @ marathon race pace",
+        "distance": 13.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Marathon Race Pace",
+            "effort_type": "distance",
+            "distance": 8.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 4
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15289,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 11 mi",
+      "sourceRun": {
+        "day_offset": 50,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 11 mi",
+        "distance": 11.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 9.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-24",
+      "kind": "run",
+      "name": "lactate_threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 3
+          },
+          "d": "Lactate Threshold",
+          "sourceZoneRange": [
+            3,
+            3
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Lactate threshold 8 mi w/ 4 mi @ 15K to half marathon race pace",
+      "sourceRun": {
+        "day_offset": 52,
+        "run_type": "lactate_threshold",
+        "notes": "Lactate threshold 8 mi w/ 4 mi @ 15K to half marathon race pace",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Lactate Threshold",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 3
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 3.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-26",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 54,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 21726,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Long run 15 mi",
+      "sourceRun": {
+        "day_offset": 55,
+        "run_type": "long_run",
+        "notes": "Long run 15 mi",
+        "distance": 15.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 13.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "general_aerobic_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10875,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 10,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "General aerobic + speed 8 mi w/ 10 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 57,
+        "run_type": "general_aerobic_speed",
+        "notes": "General aerobic + speed 8 mi w/ 10 × 100 m strides",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 6.7573,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 10
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 10
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-30",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 58,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2026-12-31",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15289,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 11 mi",
+      "sourceRun": {
+        "day_offset": 59,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 11 mi",
+        "distance": 11.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 9.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-02",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 61,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16093,
+          "tg": {},
+          "d": "Marathon Race Pace",
+          "sourceZoneRange": [
+            3,
+            4
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Marathon-pace run 16 mi w/ 10 mi @ marathon race pace",
+      "sourceRun": {
+        "day_offset": 62,
+        "run_type": "race_pace",
+        "notes": "Marathon-pace run 16 mi w/ 10 mi @ marathon race pace",
+        "distance": 16.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Marathon Race Pace",
+            "effort_type": "distance",
+            "distance": 10.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 4
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 64,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-06",
+      "kind": "run",
+      "name": "lactate_threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 3
+          },
+          "d": "Lactate Threshold",
+          "sourceZoneRange": [
+            3,
+            3
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Lactate threshold 10 mi w/ 5 mi @ 15K to half marathon race pace",
+      "sourceRun": {
+        "day_offset": 65,
+        "run_type": "lactate_threshold",
+        "notes": "Lactate threshold 10 mi w/ 5 mi @ 15K to half marathon race pace",
+        "distance": 10.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Lactate Threshold",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 3
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-07",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15289,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 11 mi",
+      "sourceRun": {
+        "day_offset": 66,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 11 mi",
+        "distance": 11.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 9.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-09",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 68,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24945,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Long run 17 mi",
+      "sourceRun": {
+        "day_offset": 69,
+        "run_type": "long_run",
+        "notes": "Long run 17 mi",
+        "distance": 17.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 15.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-13",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16898,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 12 mi",
+      "sourceRun": {
+        "day_offset": 72,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 12 mi",
+        "distance": 12.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 10.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-15",
+      "kind": "run",
+      "name": "lactate_threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 3
+          },
+          "d": "Lactate Threshold",
+          "sourceZoneRange": [
+            3,
+            3
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Lactate threshold 9 mi w/ 4 mi @ 15K to half marathon race pace",
+      "sourceRun": {
+        "day_offset": 74,
+        "run_type": "lactate_threshold",
+        "notes": "Lactate threshold 9 mi w/ 4 mi @ 15K to half marathon race pace",
+        "distance": 9.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Lactate Threshold",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 3
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-16",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 75,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 23335,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Long run 16 mi",
+      "sourceRun": {
+        "day_offset": 76,
+        "run_type": "long_run",
+        "notes": "Long run 16 mi",
+        "distance": 16.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 14.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 78,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-20",
+      "kind": "run",
+      "name": "vo2_max",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 5,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 600,
+              "tg": {
+                "hr": 5
+              },
+              "d": "VO2max Interval",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 600,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery Jog",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6875,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "VO2max 10 mi w/ 5 × 600 m @ 5K race pace; jog 50 to 90% interval time between",
+      "sourceRun": {
+        "day_offset": 79,
+        "run_type": "vo2_max",
+        "notes": "VO2max 10 mi w/ 5 × 600 m @ 5K race pace; jog 50 to 90% interval time between",
+        "distance": 10.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 2.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "VO2max Interval",
+            "effort_type": "distance",
+            "distance": 0.3728,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 5
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery Jog",
+            "effort_type": "distance",
+            "distance": 0.3728,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 5
+          },
+          {
+            "order_index": 4,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 4.2718,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-21",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16898,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 12 mi",
+      "sourceRun": {
+        "day_offset": 80,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 12 mi",
+        "distance": 12.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 10.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-23",
+      "kind": "run",
+      "name": "recovery_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8456,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "Recovery + speed 6 mi w/ 6 × 100 m strides p.m.",
+      "sourceRun": {
+        "day_offset": 82,
+        "run_type": "recovery_speed",
+        "notes": "Recovery + speed 6 mi w/ 6 × 100 m strides p.m.",
+        "distance": 6.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.2544,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 6
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 6
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Marathon Race Pace",
+          "sourceZoneRange": [
+            3,
+            4
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Marathon-pace run 15 mi w/ 12 mi @ marathon race pace",
+      "sourceRun": {
+        "day_offset": 83,
+        "run_type": "race_pace",
+        "notes": "Marathon-pace run 15 mi w/ 12 mi @ marathon race pace",
+        "distance": 15.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Marathon Race Pace",
+            "effort_type": "distance",
+            "distance": 12.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 4
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 2.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-26",
+      "kind": "run",
+      "name": "recovery_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8456,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "Recovery + speed 6 mi w/ 6 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 85,
+        "run_type": "recovery_speed",
+        "notes": "Recovery + speed 6 mi w/ 6 × 100 m strides",
+        "distance": 6.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.2544,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 6
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 6
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-27",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16898,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 12 mi",
+      "sourceRun": {
+        "day_offset": 86,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 12 mi",
+        "distance": 12.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 10.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-29",
+      "kind": "run",
+      "name": "lactate_threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11265,
+          "tg": {
+            "hr": 3
+          },
+          "d": "Lactate Threshold",
+          "sourceZoneRange": [
+            3,
+            3
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Lactate threshold 12 mi w/ 7 mi @ 15K to half marathon race pace",
+      "sourceRun": {
+        "day_offset": 88,
+        "run_type": "lactate_threshold",
+        "notes": "Lactate threshold 12 mi w/ 7 mi @ 15K to half marathon race pace",
+        "distance": 12.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Lactate Threshold",
+            "effort_type": "distance",
+            "distance": 7.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 3
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-30",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 5 mi",
+      "sourceRun": {
+        "day_offset": 89,
+        "run_type": "recovery",
+        "notes": "Recovery 5 mi",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-01-31",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 29773,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Long run 20 mi",
+      "sourceRun": {
+        "day_offset": 90,
+        "run_type": "long_run",
+        "notes": "Long run 20 mi",
+        "distance": 20.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 18.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-02",
+      "kind": "run",
+      "name": "vo2_max",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 5,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 600,
+              "tg": {
+                "hr": 5
+              },
+              "d": "VO2max Interval",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 600,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery Jog",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3656,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "VO2max 8 mi w/ 5 × 600 m @ 5K race pace; jog 50 to 90% interval time between",
+      "sourceRun": {
+        "day_offset": 92,
+        "run_type": "vo2_max",
+        "notes": "VO2max 8 mi w/ 5 × 600 m @ 5K race pace; jog 50 to 90% interval time between",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 2.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "VO2max Interval",
+            "effort_type": "distance",
+            "distance": 0.3728,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 5
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery Jog",
+            "effort_type": "distance",
+            "distance": 0.3728,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 5
+          },
+          {
+            "order_index": 4,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 2.2718,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-03",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15289,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 11 mi",
+      "sourceRun": {
+        "day_offset": 93,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 11 mi",
+        "distance": 11.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 9.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-05",
+      "kind": "run",
+      "name": "recovery_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5237,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "Recovery + speed 4 mi w/ 6 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 95,
+        "run_type": "recovery_speed",
+        "notes": "Recovery + speed 4 mi w/ 6 × 100 m strides",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 3.2544,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 6
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 6
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-06",
+      "kind": "run",
+      "name": "race",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15289,
+          "tg": {},
+          "d": "8K-15K tune-up race (total 9-13 mi/14-21 km)"
+        }
+      ],
+      "desc": "8K-15K tune-up race (total 9-13 mi/14-21 km)",
+      "sourceRun": {
+        "day_offset": 96,
+        "run_type": "race",
+        "notes": "8K-15K tune-up race (total 9-13 mi/14-21 km)",
+        "distance": 9.5
+      }
+    },
+    {
+      "date": "2027-02-07",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24945,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Long run 17 mi",
+      "sourceRun": {
+        "day_offset": 97,
+        "run_type": "long_run",
+        "notes": "Long run 17 mi",
+        "distance": 17.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 15.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-09",
+      "kind": "run",
+      "name": "recovery_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10065,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "Recovery + speed 7 mi w/ 6 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 99,
+        "run_type": "recovery_speed",
+        "notes": "Recovery + speed 7 mi w/ 6 × 100 m strides",
+        "distance": 7.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 6.2544,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 6
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 6
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-10",
+      "kind": "run",
+      "name": "vo2_max",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 4,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 1200,
+              "tg": {
+                "hr": 5
+              },
+              "d": "VO2max Interval",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 1200,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery Jog",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3275,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "VO2max 10 mi w/ 4 × 1200 m @ 5K race pace; jog 50 to 90% interval time between",
+      "sourceRun": {
+        "day_offset": 100,
+        "run_type": "vo2_max",
+        "notes": "VO2max 10 mi w/ 4 × 1200 m @ 5K race pace; jog 50 to 90% interval time between",
+        "distance": 10.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 2.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "VO2max Interval",
+            "effort_type": "distance",
+            "distance": 0.7456,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 4
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery Jog",
+            "effort_type": "distance",
+            "distance": 0.7456,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 4
+          },
+          {
+            "order_index": 4,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 2.0348,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-12",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15289,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 11 mi",
+      "sourceRun": {
+        "day_offset": 102,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 11 mi",
+        "distance": 11.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 9.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-13",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 103,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-14",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 29773,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Long run 20 mi",
+      "sourceRun": {
+        "day_offset": 104,
+        "run_type": "long_run",
+        "notes": "Long run 20 mi",
+        "distance": 20.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 18.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-16",
+      "kind": "run",
+      "name": "vo2_max",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 5,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 600,
+              "tg": {
+                "hr": 5
+              },
+              "d": "VO2max Interval",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 600,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery Jog",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3656,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "VO2max 8 mi w/ 5 × 600 m @ 5K race pace; jog 50 to 90% interval time between",
+      "sourceRun": {
+        "day_offset": 106,
+        "run_type": "vo2_max",
+        "notes": "VO2max 8 mi w/ 5 × 600 m @ 5K race pace; jog 50 to 90% interval time between",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 2.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "VO2max Interval",
+            "effort_type": "distance",
+            "distance": 0.3728,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 5
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery Jog",
+            "effort_type": "distance",
+            "distance": 0.3728,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 5
+          },
+          {
+            "order_index": 4,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 2.2718,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-17",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 6 mi",
+      "sourceRun": {
+        "day_offset": 107,
+        "run_type": "recovery",
+        "notes": "Recovery 6 mi",
+        "distance": 6.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 6.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-19",
+      "kind": "run",
+      "name": "recovery_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5237,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "Recovery + speed 4 mi w/ 6 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 109,
+        "run_type": "recovery_speed",
+        "notes": "Recovery + speed 4 mi w/ 6 × 100 m strides",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 3.2544,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 6
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 6
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-20",
+      "kind": "run",
+      "name": "race",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15289,
+          "tg": {},
+          "d": "8K-10K tune-up race (total 9-11 mi/14-18 km)"
+        }
+      ],
+      "desc": "8K-10K tune-up race (total 9-11 mi/14-18 km)",
+      "sourceRun": {
+        "day_offset": 110,
+        "run_type": "race",
+        "notes": "8K-10K tune-up race (total 9-11 mi/14-18 km)",
+        "distance": 9.5
+      }
+    },
+    {
+      "date": "2027-02-21",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 23335,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Long run 16 mi",
+      "sourceRun": {
+        "day_offset": 111,
+        "run_type": "long_run",
+        "notes": "Long run 16 mi",
+        "distance": 16.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 14.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-23",
+      "kind": "run",
+      "name": "general_aerobic_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9665,
+          "tg": {
+            "hr": 2
+          },
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 8,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "General aerobic + speed 7 mi w/ 8 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 113,
+        "run_type": "general_aerobic_speed",
+        "notes": "General aerobic + speed 7 mi w/ 8 × 100 m strides",
+        "distance": 7.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 6.0058,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 8
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 8
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-24",
+      "kind": "run",
+      "name": "vo2_max",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 3,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 1600,
+              "tg": {
+                "hr": 5
+              },
+              "d": "VO2max Interval",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 1600,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery Jog",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "VO2max 8 mi w/ 3 × 1600 m @ 5K race pace; jog 50 to 90% interval time between",
+      "sourceRun": {
+        "day_offset": 114,
+        "run_type": "vo2_max",
+        "notes": "VO2max 8 mi w/ 3 × 1600 m @ 5K race pace; jog 50 to 90% interval time between",
+        "distance": 8.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 2.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "VO2max Interval",
+            "effort_type": "distance",
+            "distance": 0.9942,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 3
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery Jog",
+            "effort_type": "distance",
+            "distance": 0.9942,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 3
+          },
+          {
+            "order_index": 4,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-26",
+      "kind": "run",
+      "name": "recovery_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6847,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "Recovery + speed 5 mi w/ 6 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 116,
+        "run_type": "recovery_speed",
+        "notes": "Recovery + speed 5 mi w/ 6 × 100 m strides",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.2544,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 6
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 6
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-02-28",
+      "kind": "run",
+      "name": "medium_long",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 1609,
+          "tg": {},
+          "d": "Warmup",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16898,
+          "tg": {
+            "hr": 2
+          },
+          "d": "Main Effort",
+          "sourceZoneRange": [
+            2,
+            2
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 805,
+          "tg": {},
+          "d": "Cooldown",
+          "sourceZoneRange": [
+            1,
+            2
+          ]
+        }
+      ],
+      "desc": "Medium-long run 12 mi",
+      "sourceRun": {
+        "day_offset": 118,
+        "run_type": "medium_long",
+        "notes": "Medium-long run 12 mi",
+        "distance": 12.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Warmup",
+            "effort_type": "distance",
+            "distance": 1.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 2,
+            "description": "Main Effort",
+            "effort_type": "distance",
+            "distance": 10.5,
+            "hr_zone_min": 2,
+            "hr_zone_max": 2
+          },
+          {
+            "order_index": 3,
+            "description": "Cooldown",
+            "effort_type": "distance",
+            "distance": 0.5,
+            "hr_zone_min": 1,
+            "hr_zone_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-03-02",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 6 mi",
+      "sourceRun": {
+        "day_offset": 120,
+        "run_type": "recovery",
+        "notes": "Recovery 6 mi",
+        "distance": 6.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 6.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-03-03",
+      "kind": "run",
+      "name": "vo2_max",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "General Aerobic",
+          "sourceZoneRange": [
+            3,
+            4
+          ]
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Race Pace",
+          "sourceZoneRange": [
+            3,
+            4
+          ]
+        }
+      ],
+      "desc": "Dress rehearsal 7 mi w/ 2 mi @ marathon race pace",
+      "sourceRun": {
+        "day_offset": 121,
+        "run_type": "vo2_max",
+        "notes": "Dress rehearsal 7 mi w/ 2 mi @ marathon race pace",
+        "distance": 7.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "General Aerobic",
+            "effort_type": "distance",
+            "distance": 5.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 4
+          },
+          {
+            "order_index": 2,
+            "description": "Race Pace",
+            "effort_type": "distance",
+            "distance": 2.0,
+            "hr_zone_min": 3,
+            "hr_zone_max": 4
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-03-05",
+      "kind": "run",
+      "name": "recovery_speed",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6847,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        },
+        {
+          "t": "repeat",
+          "n": 6,
+          "steps": [
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 5
+              },
+              "d": "Stride",
+              "sourceZoneRange": [
+                5,
+                5
+              ]
+            },
+            {
+              "t": "interval",
+              "end": "distance",
+              "v": 100,
+              "tg": {
+                "hr": 1
+              },
+              "d": "Recovery",
+              "sourceZoneRange": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ],
+      "desc": "Recovery + speed 5 mi w/ 6 × 100 m strides",
+      "sourceRun": {
+        "day_offset": 123,
+        "run_type": "recovery_speed",
+        "notes": "Recovery + speed 5 mi w/ 6 × 100 m strides",
+        "distance": 5.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.2544,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          },
+          {
+            "order_index": 2,
+            "description": "Stride",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 5,
+            "hr_zone_max": 5,
+            "set_index": 1,
+            "set_repetitions": 6
+          },
+          {
+            "order_index": 3,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 0.0621,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1,
+            "set_index": 1,
+            "set_repetitions": 6
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-03-06",
+      "kind": "run",
+      "name": "recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {
+            "hr": 1
+          },
+          "d": "Recovery",
+          "sourceZoneRange": [
+            1,
+            1
+          ]
+        }
+      ],
+      "desc": "Recovery 4 mi",
+      "sourceRun": {
+        "day_offset": 124,
+        "run_type": "recovery",
+        "notes": "Recovery 4 mi",
+        "distance": 4.0,
+        "segments": [
+          {
+            "order_index": 1,
+            "description": "Recovery",
+            "effort_type": "distance",
+            "distance": 4.0,
+            "hr_zone_min": 1,
+            "hr_zone_max": 1
+          }
+        ]
+      }
+    },
+    {
+      "date": "2027-03-07",
+      "kind": "run",
+      "name": "race",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 42165,
+          "tg": {},
+          "d": "Race day! Hydrate!"
+        }
+      ],
+      "desc": "Race day! Hydrate!",
+      "sourceRun": {
+        "day_offset": 125,
+        "run_type": "race",
+        "notes": "Race day! Hydrate!",
+        "distance": 26.2
+      }
+    }
+  ]
+}

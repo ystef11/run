@@ -1,0 +1,526 @@
+{
+  "profile": {
+    "id": "80-t400",
+    "km": 80,
+    "level": "advanced",
+    "time": "39:02"
+  },
+  "distance": {
+    "id": "5k",
+    "value": "5K",
+    "weeks": 12,
+    "goal": "2027-01-24"
+  },
+  "actualWeeks": "12",
+  "selected": [
+    "5K",
+    "advanced"
+  ],
+  "paceText": "\nVDOT 53.5; each day shows the matching pace\nE · Easy\n4:51/km\nM · Marathon\n4:16/km\nT · Threshold\n4:02/km\nI · Interval\n3:38/km\nR · Repetition\n3:19/km\n",
+  "tables": [
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 11/2",
+        "Easy 8 km @ E pace (conversational)\nE 4:51/km",
+        "8 km"
+      ],
+      [
+        "Tue 11/3",
+        "Intervals: 9×1 km @ I pace + 400 m easy recovery\nI 3:38/km",
+        "14.4 km"
+      ],
+      [
+        "Wed 11/4",
+        "Medium 14.4 km @ E-M pace\nE–M 4:16–4:51/km",
+        "14.4 km"
+      ],
+      [
+        "Thu 11/5",
+        "Easy 8 km @ E pace (conversational)\nE 4:51/km",
+        "8 km"
+      ],
+      [
+        "Fri 11/6",
+        "Tempo 10.4 km @ T/LT pace (comfortably hard)\nT 4:02/km",
+        "10.4 km"
+      ],
+      [
+        "Sat 11/7",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 11/8",
+        "Long Run 24.8 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "24.8 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 11/9",
+        "Easy 8 km @ E pace (conversational)\nE 4:51/km",
+        "8 km"
+      ],
+      [
+        "Tue 11/10",
+        "Hill repeats: 12×400 m uphill @ hard + easy jog back\nby feel",
+        "14.4 km"
+      ],
+      [
+        "Wed 11/11",
+        "Medium 14.4 km @ E-M pace\nE–M 4:16–4:51/km",
+        "14.4 km"
+      ],
+      [
+        "Thu 11/12",
+        "Easy 8 km @ E pace (conversational)\nE 4:51/km",
+        "8 km"
+      ],
+      [
+        "Fri 11/13",
+        "Tempo 10.4 km @ T/LT pace (comfortably hard)\nT 4:02/km",
+        "10.4 km"
+      ],
+      [
+        "Sat 11/14",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 11/15",
+        "Long Run 24.8 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "24.8 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 11/16",
+        "Easy 8.1 km @ E pace (conversational)\nE 4:51/km",
+        "8.1 km"
+      ],
+      [
+        "Tue 11/17",
+        "R-pace: 12×400 m @ 5K-1500 m pace + 200 m walk\nR 3:19/km",
+        "14.6 km"
+      ],
+      [
+        "Wed 11/18",
+        "Medium 14.6 km @ E-M pace\nE–M 4:16–4:51/km",
+        "14.6 km"
+      ],
+      [
+        "Thu 11/19",
+        "Easy 8.1 km @ E pace (conversational)\nE 4:51/km",
+        "8.1 km"
+      ],
+      [
+        "Fri 11/20",
+        "Tempo 10.5 km @ T/LT pace (comfortably hard)\nT 4:02/km",
+        "10.5 km"
+      ],
+      [
+        "Sat 11/21",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 11/22",
+        "Long Run 25.1 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "25.1 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 11/23",
+        "Easy 6.1 km @ E pace (conversational)\nE 4:51/km",
+        "6.1 km"
+      ],
+      [
+        "Tue 11/24",
+        "Intervals: 7×1 km @ I pace + 400 m easy recovery\nI 3:38/km",
+        "11 km"
+      ],
+      [
+        "Wed 11/25",
+        "Medium 11 km @ E-M pace\nE–M 4:16–4:51/km",
+        "11 km"
+      ],
+      [
+        "Thu 11/26",
+        "Easy 6.1 km @ E pace (conversational)\nE 4:51/km",
+        "6.1 km"
+      ],
+      [
+        "Fri 11/27",
+        "Tempo 7.9 km @ T/LT pace (comfortably hard)\nT 4:02/km",
+        "7.9 km"
+      ],
+      [
+        "Sat 11/28",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 11/29",
+        "Long Run 18.9 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "18.9 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 11/30",
+        "Easy 8.1 km @ E pace (conversational)\nE 4:51/km",
+        "8.1 km"
+      ],
+      [
+        "Tue 12/1",
+        "Hill repeats: 12×400 m uphill @ hard + easy jog back\nby feel",
+        "14.6 km"
+      ],
+      [
+        "Wed 12/2",
+        "Medium 14.6 km @ E-M pace\nE–M 4:16–4:51/km",
+        "14.6 km"
+      ],
+      [
+        "Thu 12/3",
+        "Easy 8.1 km @ E pace (conversational)\nE 4:51/km",
+        "8.1 km"
+      ],
+      [
+        "Fri 12/4",
+        "Tempo 10.5 km @ T/LT pace (comfortably hard)\nT 4:02/km",
+        "10.5 km"
+      ],
+      [
+        "Sat 12/5",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 12/6",
+        "Long Run 25.1 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "25.1 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 12/7",
+        "Easy 8.1 km @ E pace (conversational)\nE 4:51/km",
+        "8.1 km"
+      ],
+      [
+        "Tue 12/8",
+        "R-pace: 12×400 m @ 5K-1500 m pace + 200 m walk\nR 3:19/km",
+        "14.6 km"
+      ],
+      [
+        "Wed 12/9",
+        "Medium 14.6 km @ E-M pace\nE–M 4:16–4:51/km",
+        "14.6 km"
+      ],
+      [
+        "Thu 12/10",
+        "Easy 8.1 km @ E pace (conversational)\nE 4:51/km",
+        "8.1 km"
+      ],
+      [
+        "Fri 12/11",
+        "Tempo 10.5 km @ T/LT pace (comfortably hard)\nT 4:02/km",
+        "10.5 km"
+      ],
+      [
+        "Sat 12/12",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 12/13",
+        "Long Run 25.1 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "25.1 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 12/14",
+        "Easy 8.2 km @ E pace (conversational)\nE 4:51/km",
+        "8.2 km"
+      ],
+      [
+        "Tue 12/15",
+        "Intervals: 9×1 km @ I pace + 400 m easy recovery\nI 3:38/km",
+        "14.8 km"
+      ],
+      [
+        "Wed 12/16",
+        "Medium 14.8 km @ E-M pace\nE–M 4:16–4:51/km",
+        "14.8 km"
+      ],
+      [
+        "Thu 12/17",
+        "Easy 8.2 km @ E pace (conversational)\nE 4:51/km",
+        "8.2 km"
+      ],
+      [
+        "Fri 12/18",
+        "Tempo 10.6 km @ T/LT pace (comfortably hard)\nT 4:02/km",
+        "10.6 km"
+      ],
+      [
+        "Sat 12/19",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 12/20",
+        "Long Run 25.4 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "25.4 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 12/21",
+        "Easy 8.2 km @ E pace (conversational)\nE 4:51/km",
+        "8.2 km"
+      ],
+      [
+        "Tue 12/22",
+        "Hill repeats: 12×400 m uphill @ hard + easy jog back\nby feel",
+        "14.8 km"
+      ],
+      [
+        "Wed 12/23",
+        "Medium 14.8 km @ E-M pace\nE–M 4:16–4:51/km",
+        "14.8 km"
+      ],
+      [
+        "Thu 12/24",
+        "Easy 8.2 km @ E pace (conversational)\nE 4:51/km",
+        "8.2 km"
+      ],
+      [
+        "Fri 12/25",
+        "Tempo: 1 km easy + 6 km @ T pace + 1 km easy\nT 4:02/km",
+        "10.6 km"
+      ],
+      [
+        "Sat 12/26",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 12/27",
+        "Long Run 25.4 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "25.4 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 12/28",
+        "Easy 8.9 km @ E pace (conversational)\nE 4:51/km",
+        "8.9 km"
+      ],
+      [
+        "Tue 12/29",
+        "R-pace: 12×400 m @ 5K-1500 m pace + 200 m walk\nR 3:19/km",
+        "16 km"
+      ],
+      [
+        "Wed 12/30",
+        "Medium 16 km @ E-M pace\nE–M 4:16–4:51/km",
+        "16 km"
+      ],
+      [
+        "Thu 12/31",
+        "Easy 8.9 km @ E pace (conversational)\nE 4:51/km",
+        "8.9 km"
+      ],
+      [
+        "Fri 1/1",
+        "Tempo: 1 km easy + 7 km @ T pace + 1 km easy\nT 4:02/km",
+        "11.6 km"
+      ],
+      [
+        "Sat 1/2",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 1/3",
+        "Long Run 27.6 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "27.6 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 1/4",
+        "Easy 9.6 km @ E pace (conversational)\nE 4:51/km",
+        "9.6 km"
+      ],
+      [
+        "Tue 1/5",
+        "Intervals: 10×1 km @ I pace + 400 m easy recovery\nI 3:38/km",
+        "17.3 km"
+      ],
+      [
+        "Wed 1/6",
+        "Medium 17.3 km @ E-M pace\nE–M 4:16–4:51/km",
+        "17.3 km"
+      ],
+      [
+        "Thu 1/7",
+        "Easy 9.6 km @ E pace (conversational)\nE 4:51/km",
+        "9.6 km"
+      ],
+      [
+        "Fri 1/8",
+        "Tempo: 1 km easy + 7 km @ T pace + 1 km easy\nT 4:02/km",
+        "12.4 km"
+      ],
+      [
+        "Sat 1/9",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 1/10",
+        "Long Run 29.8 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "29.8 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 1/11",
+        "Easy 8.2 km @ E pace (conversational)\nE 4:51/km",
+        "8.2 km"
+      ],
+      [
+        "Tue 1/12",
+        "Hill repeats: 12×400 m uphill @ hard + easy jog back\nby feel",
+        "14.8 km"
+      ],
+      [
+        "Wed 1/13",
+        "Medium 14.8 km @ E-M pace\nE–M 4:16–4:51/km",
+        "14.8 km"
+      ],
+      [
+        "Thu 1/14",
+        "Easy 8.2 km @ E pace (conversational)\nE 4:51/km",
+        "8.2 km"
+      ],
+      [
+        "Fri 1/15",
+        "Tempo: 1 km easy + 6 km @ T pace + 1 km easy\nT 4:02/km",
+        "10.6 km"
+      ],
+      [
+        "Sat 1/16",
+        "Rest or 30 min cross-training",
+        "—"
+      ],
+      [
+        "Sun 1/17",
+        "Long Run 25.4 km @ Easy + 6×100 m strides\nE 4:51/km",
+        "25.4 km"
+      ]
+    ],
+    [
+      [
+        "Day",
+        "Workout",
+        "Distance"
+      ],
+      [
+        "Mon 1/18",
+        "Easy 30 min\nE 4:51/km",
+        "5 km"
+      ],
+      [
+        "Tue 1/19",
+        "5-6 km @ MP (final quality touch)\nM 4:16/km",
+        "6 km"
+      ],
+      [
+        "Wed 1/20",
+        "Easy 40 min + 4×100 m strides\nE 4:51/km",
+        "7 km"
+      ],
+      [
+        "Thu 1/21",
+        "Easy 30 min\nE 4:51/km",
+        "5 km"
+      ],
+      [
+        "Fri 1/22",
+        "Rest or 30 min walk",
+        "—"
+      ],
+      [
+        "Sat 1/23",
+        "Easy 20 min + 4×100 m strides\nE 4:51/km",
+        "3 km"
+      ],
+      [
+        "Sun 1/24",
+        "🏁 Race day!",
+        "5 km"
+      ]
+    ]
+  ]
+}

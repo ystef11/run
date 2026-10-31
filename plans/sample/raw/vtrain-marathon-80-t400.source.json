@@ -1,0 +1,632 @@
+{
+  "profile": {
+    "id": "80-t400",
+    "km": 80,
+    "t": 240,
+    "level": "advanced",
+    "days": 6,
+    "long": 24,
+    "vdot": 53.450573239692226,
+    "benchmark": {
+      "distance": 10000,
+      "time": 2342
+    }
+  },
+  "distance": {
+    "id": "marathon",
+    "km": 42.195,
+    "weeks": 18,
+    "z": "marathon",
+    "mc": "Marathon"
+  },
+  "goal": "2027-03-07",
+  "source": "vtrain",
+  "input": {
+    "distance": 42.195,
+    "raceDate": "2027-01-24",
+    "raceTime": "3:00:13"
+  },
+  "output": {
+    "weeks": [
+      {
+        "week": 1,
+        "phase": "FI",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-11-02",
+            "value": "12S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-11-03",
+            "value": "20S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-11-04",
+            "value": "8S + 8 A/D + 4S (12k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-11-05",
+            "value": "18S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2026-11-06",
+            "value": "12S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2026-11-07",
+            "value": "22S (22k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2026-11-08",
+            "value": "26S",
+            "type": "long"
+          }
+        ],
+        "km": "122k"
+      },
+      {
+        "week": 2,
+        "phase": "FI",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-11-09",
+            "value": "12S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-11-10",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-11-11",
+            "value": "10S + 8 A/D + 4S (14k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-11-12",
+            "value": "20S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2026-11-13",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2026-11-14",
+            "value": "24S (24k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2026-11-15",
+            "value": "26S",
+            "type": "long"
+          }
+        ],
+        "km": "132k"
+      },
+      {
+        "week": 3,
+        "phase": "FI",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-11-16",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-11-17",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-11-18",
+            "value": "10S + 10 A/D + 4S (14k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-11-19",
+            "value": "20S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2026-11-20",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2026-11-21",
+            "value": "26S (26k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2026-11-22",
+            "value": "26S",
+            "type": "long"
+          }
+        ],
+        "km": "136k"
+      },
+      {
+        "week": 4,
+        "phase": "EQ",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-11-23",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-11-24",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-11-25",
+            "value": "3S + 8 X 200 R C/200 TR + 4S (12k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-11-26",
+            "value": "20S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2026-11-27",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2026-11-28",
+            "value": "28S (28k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2026-11-29",
+            "value": "28S",
+            "type": "long"
+          }
+        ],
+        "km": "138k"
+      },
+      {
+        "week": 5,
+        "phase": "EQ",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-11-30",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-12-01",
+            "value": "24S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-12-02",
+            "value": "3S + 6 X 400 R C/400 TR + 4S (14k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-12-03",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2026-12-04",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2026-12-05",
+            "value": "30S (30k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2026-12-06",
+            "value": "28S",
+            "type": "long"
+          }
+        ],
+        "km": "146k"
+      },
+      {
+        "week": 6,
+        "phase": "EQ",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-12-07",
+            "value": "16S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-12-08",
+            "value": "24S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-12-09",
+            "value": "4S + 8 X 400 R C/400 TR + 4S (16k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-12-10",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2026-12-11",
+            "value": "16S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2026-12-12",
+            "value": "32S (32k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2026-12-13",
+            "value": "28S",
+            "type": "long"
+          }
+        ],
+        "km": "154k"
+      },
+      {
+        "week": 7,
+        "phase": "TQ",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-12-14",
+            "value": "12S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-12-15",
+            "value": "28S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-12-16",
+            "value": "6S + 5 X 1000 I C/3 MIN TR + 5S (16k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-12-17",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2026-12-18",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2026-12-19",
+            "value": "6S + 5 X 1.5U C/2 MIN S + 5S (19k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2026-12-20",
+            "value": "26S",
+            "type": "long"
+          }
+        ],
+        "km": "137k"
+      },
+      {
+        "week": 8,
+        "phase": "TQ",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-12-21",
+            "value": "12S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-12-22",
+            "value": "28S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-12-23",
+            "value": "6S + 6 X 1000 I C/3 MIN TR + 5S (17k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-12-24",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2026-12-25",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2026-12-26",
+            "value": "30S + 6 A/D + 2S (34k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2026-12-27",
+            "value": "26S",
+            "type": "long"
+          }
+        ],
+        "km": "153k"
+      },
+      {
+        "week": 9,
+        "phase": "TQ",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2026-12-28",
+            "value": "12S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2026-12-29",
+            "value": "28S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2026-12-30",
+            "value": "5S + 5 X 1200 I C/3 MIN TR + 5S (16k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2026-12-31",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2027-01-01",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2027-01-02",
+            "value": "6S + 4 X 2U C/2 MIN S + 6S (20k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2027-01-03",
+            "value": "26S",
+            "type": "long"
+          }
+        ],
+        "km": "138k"
+      },
+      {
+        "week": 10,
+        "phase": "FQ",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2027-01-04",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2027-01-05",
+            "value": "26S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2027-01-06",
+            "value": "3S + 16M + 3S (22k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2027-01-07",
+            "value": "22S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2027-01-08",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2027-01-09",
+            "value": "4S + 5 X 2U C/2 MIN S + 4S (18k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2027-01-10",
+            "value": "24S",
+            "type": "long"
+          }
+        ],
+        "km": "140k"
+      },
+      {
+        "week": 11,
+        "phase": "FQ",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2027-01-11",
+            "value": "14S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2027-01-12",
+            "value": "24S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2027-01-13",
+            "value": "4S + 22M + 2S (28k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2027-01-14",
+            "value": "20S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2027-01-15",
+            "value": "12S",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2027-01-16",
+            "value": "4S + 4 X 1.5U C/2 MIN S + 4S (14k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2027-01-17",
+            "value": "22S",
+            "type": "long"
+          }
+        ],
+        "km": "134k"
+      },
+      {
+        "week": 12,
+        "phase": "TAPER",
+        "schedule": [
+          {
+            "day": "mon",
+            "date": "2027-01-18",
+            "value": "8S",
+            "type": "easy"
+          },
+          {
+            "day": "tue",
+            "date": "2027-01-19",
+            "value": "10S",
+            "type": "easy"
+          },
+          {
+            "day": "wed",
+            "date": "2027-01-20",
+            "value": "3S + 4 X 1000 M C/2 MIN S + 3S (10k)",
+            "type": "q1"
+          },
+          {
+            "day": "thu",
+            "date": "2027-01-21",
+            "value": "8S",
+            "type": "easy"
+          },
+          {
+            "day": "fri",
+            "date": "2027-01-22",
+            "value": "",
+            "type": "easy"
+          },
+          {
+            "day": "sat",
+            "date": "2027-01-23",
+            "value": "6S (6k)",
+            "type": "q2"
+          },
+          {
+            "day": "sun",
+            "date": "2027-01-24",
+            "value": null,
+            "type": "race"
+          }
+        ],
+        "km": "42k"
+      }
+    ],
+    "vdot": 53,
+    "paces": {
+      "Easy": "4:43 - 5:19",
+      "Marathon": "4:18",
+      "Threshold": "4:04",
+      "Interval": "3:44",
+      "Repetition": "1:24"
+    },
+    "distance": 42.195,
+    "raceDate": "2027-01-24",
+    "raceTime": "3:00:13"
+  }
+}

@@ -1,0 +1,77 @@
+[
+  {
+    "source": "running-plan-engine",
+    "profile": "25-t630",
+    "distance": "marathon",
+    "reason": {
+      "code": "VALIDATION_FAILED",
+      "message_fr": "Template v1 disponible: 5k/10k/half beginner 3 séances, intermediate/advanced 4 séances. Marathon en phase suivante.",
+      "details": {
+        "level": "beginner",
+        "goal_distance_key": "marathon",
+        "sessions_per_week": 3,
+        "supported": [
+          "beginner_5k_3x_v1",
+          "intermediate_5k_4x_v1",
+          "advanced_5k_4x_v1",
+          "beginner_10k_3x_v1",
+          "intermediate_10k_4x_v1",
+          "advanced_10k_4x_v1",
+          "beginner_half_3x_v1",
+          "intermediate_half_4x_v1",
+          "advanced_half_4x_v1"
+        ]
+      }
+    }
+  },
+  {
+    "source": "running-plan-engine",
+    "profile": "40-t545",
+    "distance": "marathon",
+    "reason": {
+      "code": "VALIDATION_FAILED",
+      "message_fr": "Template v1 disponible: 5k/10k/half beginner 3 séances, intermediate/advanced 4 séances. Marathon en phase suivante.",
+      "details": {
+        "level": "intermediate",
+        "goal_distance_key": "marathon",
+        "sessions_per_week": 4,
+        "supported": [
+          "beginner_5k_3x_v1",
+          "intermediate_5k_4x_v1",
+          "advanced_5k_4x_v1",
+          "beginner_10k_3x_v1",
+          "intermediate_10k_4x_v1",
+          "advanced_10k_4x_v1",
+          "beginner_half_3x_v1",
+          "intermediate_half_4x_v1",
+          "advanced_half_4x_v1"
+        ]
+      }
+    }
+  },
+  {
+    "source": "running-plan-engine",
+    "profile": "80-t400",
+    "distance": "marathon",
+    "reason": {
+      "code": "VALIDATION_FAILED",
+      "message_fr": "Template v1 disponible: 5k/10k/half beginner 3 séances, intermediate/advanced 4 séances. Marathon en phase suivante.",
+      "details": {
+        "level": "advanced",
+        "goal_distance_key": "marathon",
+        "sessions_per_week": 4,
+        "supported": [
+          "beginner_5k_3x_v1",
+          "intermediate_5k_4x_v1",
+          "advanced_5k_4x_v1",
+          "beginner_10k_3x_v1",
+          "intermediate_10k_4x_v1",
+          "advanced_10k_4x_v1",
+          "beginner_half_3x_v1",
+          "intermediate_half_4x_v1",
+          "advanced_half_4x_v1"
+        ]
+      }
+    }
+  }
+]

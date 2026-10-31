@@ -1,0 +1,1568 @@
+{
+  "meta": {
+    "tag": "[RUN_PLAN_GENERATOR]",
+    "schema": 1,
+    "name": "run_plan_generator · 42.195 км · 40 км/нед · ПАНО 5:45",
+    "generated": "2026-10-29",
+    "marathon": "2027-03-07",
+    "source": {
+      "url": "https://github.com/KenShabby/run_plan_generator",
+      "retrieved": "2026-10-29",
+      "raw": "raw/run_plan_generator-marathon-40-t545.source.json",
+      "commit": "e7acae5",
+      "engine": "engines/run_plan_generator/source.zip",
+      "file": "seeds/novice_2_marathon.yaml",
+      "permalink": "https://github.com/KenShabby/run_plan_generator/blob/e7acae5/seeds/novice_2_marathon.yaml"
+    },
+    "profile": {
+      "id": "40-t545",
+      "km": 40,
+      "t": 345,
+      "level": "intermediate",
+      "days": 4,
+      "long": 14,
+      "vdot": 34.056702733267706,
+      "benchmark": {
+        "distance": 10000,
+        "time": 3441
+      }
+    },
+    "generatorInput": {
+      "template": "novice_2_marathon",
+      "startDate": "2026-11-02",
+      "thresholdUsed": false,
+      "weeklyVolumeUsed": false
+    },
+    "conversion": {
+      "detail": "structured",
+      "notes": [
+        "Преобразован оригинальный YAML-шаблон: приложение только переносит его на календарь, индивидуального масштабирования по пробегу или ПАНО нет.",
+        "Выбран ближайший уровень; объём шаблона сохранён даже при расхождении с профилем. Это сравнительный образец, не персональная рекомендация.",
+        "Мили × 1609,344 → метры; секунды и группы повторений сохранены. Диапазоны HR сохранены в sourceZoneRange; tg.hr задан только для одной явно указанной зоны."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-11-03",
+      "goalISO": "2027-03-07",
+      "goalDist": 42195,
+      "planMode": "goal",
+      "tag": "[RUN_PLAN_GENERATOR]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-11-03",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 1,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-04",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 2,
+        "run_type": "race_pace",
+        "distance": 5.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2026-11-05",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 3,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-07",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 5,
+        "run_type": "long_run",
+        "distance": 8.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2026-11-10",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 8,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-11",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 9,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-12",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 10,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-14",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 12,
+        "run_type": "long_run",
+        "distance": 9.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2026-11-17",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 15,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-18",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 16,
+        "run_type": "race_pace",
+        "distance": 5.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2026-11-19",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 17,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Stepback long run — easy effort"
+        }
+      ],
+      "desc": "Stepback long run — easy effort",
+      "sourceRun": {
+        "day_offset": 19,
+        "run_type": "long_run",
+        "distance": 6.0,
+        "notes": "Stepback long run — easy effort"
+      }
+    },
+    {
+      "date": "2026-11-24",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 22,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 23,
+        "run_type": "race_pace",
+        "distance": 6.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2026-11-26",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 24,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-11-28",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 17703,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 26,
+        "run_type": "long_run",
+        "distance": 11.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 29,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-02",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 30,
+        "run_type": "easy",
+        "distance": 6.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-03",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 31,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-05",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 33,
+        "run_type": "long_run",
+        "distance": 12.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 36,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9656,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 37,
+        "run_type": "race_pace",
+        "distance": 6.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2026-12-10",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 38,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-12",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14484,
+          "tg": {},
+          "d": "Stepback long run — easy effort"
+        }
+      ],
+      "desc": "Stepback long run — easy effort",
+      "sourceRun": {
+        "day_offset": 40,
+        "run_type": "long_run",
+        "distance": 9.0,
+        "notes": "Stepback long run — easy effort"
+      }
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 43,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-16",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11265,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 44,
+        "run_type": "race_pace",
+        "distance": 7.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2026-12-17",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 45,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-19",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 22531,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 47,
+        "run_type": "long_run",
+        "distance": 14.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 50,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-23",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11265,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 51,
+        "run_type": "easy",
+        "distance": 7.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-24",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 52,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-26",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 24140,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 54,
+        "run_type": "long_run",
+        "distance": 15.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 57,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2026-12-30",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11265,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 58,
+        "run_type": "race_pace",
+        "distance": 7.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2026-12-31",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 59,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "race",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 21082,
+          "tg": {},
+          "d": "Half marathon tune-up race"
+        }
+      ],
+      "desc": "Half marathon tune-up race",
+      "sourceRun": {
+        "day_offset": 62,
+        "run_type": "race",
+        "distance": 13.1,
+        "notes": "Half marathon tune-up race"
+      }
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 64,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-06",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 65,
+        "run_type": "race_pace",
+        "distance": 8.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2027-01-07",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 66,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-09",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 27359,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 68,
+        "run_type": "long_run",
+        "distance": 17.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2027-01-12",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 71,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-13",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 72,
+        "run_type": "easy",
+        "distance": 8.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-14",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 73,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-16",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 28968,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 75,
+        "run_type": "long_run",
+        "distance": 18.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 78,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-20",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 79,
+        "run_type": "race_pace",
+        "distance": 8.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2027-01-21",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 80,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-23",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 20921,
+          "tg": {},
+          "d": "Stepback long run — easy effort"
+        }
+      ],
+      "desc": "Stepback long run — easy effort",
+      "sourceRun": {
+        "day_offset": 82,
+        "run_type": "long_run",
+        "distance": 13.0,
+        "notes": "Stepback long run — easy effort"
+      }
+    },
+    {
+      "date": "2027-01-26",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 85,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-27",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 86,
+        "run_type": "race_pace",
+        "distance": 5.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2027-01-28",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 87,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-01-30",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 30578,
+          "tg": {},
+          "d": "Long run — easy effort"
+        }
+      ],
+      "desc": "Long run — easy effort",
+      "sourceRun": {
+        "day_offset": 89,
+        "run_type": "long_run",
+        "distance": 19.0,
+        "notes": "Long run — easy effort"
+      }
+    },
+    {
+      "date": "2027-02-02",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 92,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-03",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 93,
+        "run_type": "easy",
+        "distance": 8.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-04",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 94,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-06",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Stepback long run — easy effort"
+        }
+      ],
+      "desc": "Stepback long run — easy effort",
+      "sourceRun": {
+        "day_offset": 96,
+        "run_type": "long_run",
+        "distance": 12.0,
+        "notes": "Stepback long run — easy effort"
+      }
+    },
+    {
+      "date": "2027-02-09",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 99,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-10",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 100,
+        "run_type": "race_pace",
+        "distance": 5.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2027-02-11",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 101,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-13",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 32187,
+          "tg": {},
+          "d": "Peak long run — easy effort, this is the big one"
+        }
+      ],
+      "desc": "Peak long run — easy effort, this is the big one",
+      "sourceRun": {
+        "day_offset": 103,
+        "run_type": "long_run",
+        "distance": 20.0,
+        "notes": "Peak long run — easy effort, this is the big one"
+      }
+    },
+    {
+      "date": "2027-02-16",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 106,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-17",
+      "kind": "run",
+      "name": "race_pace",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Pace run"
+        }
+      ],
+      "desc": "Pace run",
+      "sourceRun": {
+        "day_offset": 107,
+        "run_type": "race_pace",
+        "distance": 4.0,
+        "notes": "Pace run"
+      }
+    },
+    {
+      "date": "2027-02-18",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8047,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 108,
+        "run_type": "easy",
+        "distance": 5.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-20",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 19312,
+          "tg": {},
+          "d": "Taper long run — easy effort"
+        }
+      ],
+      "desc": "Taper long run — easy effort",
+      "sourceRun": {
+        "day_offset": 110,
+        "run_type": "long_run",
+        "distance": 12.0,
+        "notes": "Taper long run — easy effort"
+      }
+    },
+    {
+      "date": "2027-02-23",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 113,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-24",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 114,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-25",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6437,
+          "tg": {},
+          "d": "Easy run"
+        }
+      ],
+      "desc": "Easy run",
+      "sourceRun": {
+        "day_offset": 115,
+        "run_type": "easy",
+        "distance": 4.0,
+        "notes": "Easy run"
+      }
+    },
+    {
+      "date": "2027-02-27",
+      "kind": "run",
+      "name": "long_run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12875,
+          "tg": {},
+          "d": "Taper long run — easy effort"
+        }
+      ],
+      "desc": "Taper long run — easy effort",
+      "sourceRun": {
+        "day_offset": 117,
+        "run_type": "long_run",
+        "distance": 8.0,
+        "notes": "Taper long run — easy effort"
+      }
+    },
+    {
+      "date": "2027-03-02",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 4828,
+          "tg": {},
+          "d": "Easy shakeout"
+        }
+      ],
+      "desc": "Easy shakeout",
+      "sourceRun": {
+        "day_offset": 120,
+        "run_type": "easy",
+        "distance": 3.0,
+        "notes": "Easy shakeout"
+      }
+    },
+    {
+      "date": "2027-03-03",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Easy shakeout"
+        }
+      ],
+      "desc": "Easy shakeout",
+      "sourceRun": {
+        "day_offset": 121,
+        "run_type": "easy",
+        "distance": 2.0,
+        "notes": "Easy shakeout"
+      }
+    },
+    {
+      "date": "2027-03-06",
+      "kind": "run",
+      "name": "easy",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 3219,
+          "tg": {},
+          "d": "Short shakeout, stay loose"
+        }
+      ],
+      "desc": "Short shakeout, stay loose",
+      "sourceRun": {
+        "day_offset": 124,
+        "run_type": "easy",
+        "distance": 2.0,
+        "notes": "Short shakeout, stay loose"
+      }
+    },
+    {
+      "date": "2027-03-07",
+      "kind": "run",
+      "name": "race",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 42165,
+          "tg": {},
+          "d": "Race day! You got this."
+        }
+      ],
+      "desc": "Race day! You got this.",
+      "sourceRun": {
+        "day_offset": 125,
+        "run_type": "race",
+        "distance": 26.2,
+        "notes": "Race day! You got this."
+      }
+    }
+  ]
+}

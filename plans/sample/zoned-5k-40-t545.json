@@ -1,0 +1,1954 @@
+{
+  "meta": {
+    "tag": "[ZONED]",
+    "schema": 1,
+    "name": "zoned · 5 км · 40 км/нед · ПАНО 5:45",
+    "generated": "2026-10-29",
+    "marathon": "2027-01-24",
+    "source": {
+      "url": "https://github.com/alarboulletmarin/zoned",
+      "retrieved": "2026-10-29",
+      "raw": "raw/zoned-5k-40-t545.source.json",
+      "commit": "739e366",
+      "engine": "engines/zoned/source.zip",
+      "file": "src/lib/planGenerator/index.ts",
+      "permalink": "https://github.com/alarboulletmarin/zoned/blob/739e366/src/lib/planGenerator/index.ts"
+    },
+    "profile": {
+      "id": "40-t545",
+      "km": 40,
+      "t": 345,
+      "level": "intermediate",
+      "days": 4,
+      "long": 14,
+      "vdot": 34.056702733267706,
+      "benchmark": {
+        "distance": 10000,
+        "time": 3441
+      }
+    },
+    "generatorInput": {
+      "id": "sample-40-t545-5k",
+      "createdAt": "2026-10-29T07:00:00Z",
+      "startDate": "2026-11-02",
+      "raceDate": "2027-01-24",
+      "raceDistance": "5K",
+      "runnerLevel": "intermediate",
+      "daysPerWeek": 4,
+      "longRunDay": 6,
+      "trainingGoal": "time",
+      "planPurpose": "race",
+      "totalWeeksOverride": 12,
+      "currentWeeklyKm": 40,
+      "currentLongRunKm": 14,
+      "vma": 11.857707509881424,
+      "includeStrength": false
+    },
+    "conversion": {
+      "detail": "duration-summary",
+      "notes": [
+        "Запущен оригинальный generatePlan; VMA = скорость ПАНО / 0,88. Это оценка VMA, а не результат теста.",
+        "Сводный шаг сохраняет estimatedDurationMin; targetDistanceKm, targetDurationMin и подробный шаблон сохранены в raw и sourceSession. Эти величины у движка иногда расходятся.",
+        "Шестизонная модель не приравнивалась к пяти пульсовым зонам. Сводному шагу не назначен темп всей качественной тренировки.",
+        "Экспорт для сравнения дней, длительностей и текстов тренировок; детальный пересчёт минут по зонам требует отдельного адаптера."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-11-02",
+      "goalISO": "2027-01-24",
+      "goalDist": 5000,
+      "planMode": "goal",
+      "tag": "[ZONED]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-11-02",
+      "kind": "run",
+      "name": "Mental Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4320,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nRun in challenging conditions (rain, cold, wind) to build mental toughness. The goal is as much psychological as physical.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Adaptation aux conditions\", \"descriptionEn\": \"Adapting to conditions\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2 malgré les conditions\", \"descriptionEn\": \"Z2 jog despite conditions\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour et réchauffement rapide\", \"descriptionEn\": \"Return and quick warm-up indoors\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-012",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 72,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 72,
+        "loadScore": 53.8,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "END-012",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-04",
+      "kind": "run",
+      "name": "Rolling Hills Continuous Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3960,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Marathon pace: 6:27 - 6:42/km\n40-50 minute continuous run on undulating terrain without interval structure. Constant perceived effort: push on uphills, ease slightly on downhills. Lydiard method.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif sur les premiers vallonnements\", \"descriptionEn\": \"Progressive jog on the first rolling sections\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 30, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"35-45min course continue sur terrain vallonné. Effort constant (Z2-Z3). Pousser dans les montées sans exploser. Relâcher dans les descentes sans sprinter.\", \"descriptionEn\": \"35-45min continuous run on undulating terrain. Constant effort (Z2-Z3). Push on uphills without blowing up. Ease on downhills without sprinting.\", \"durationSec\": 2400, \"zone\": \"Z3\", \"intensityType\": \"M\", \"elevationGainM\": 240, \"gradientPercent\": 4, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération sur terrain plat\", \"descriptionEn\": \"Recovery jog on flat terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "HIL-014",
+        "sessionType": "hills",
+        "isKeySession": true,
+        "estimatedDurationMin": 66,
+        "notes": "Allure marathon : 6:27 - 6:42/km",
+        "notesEn": "Marathon pace: 6:27 - 6:42/km",
+        "targetDurationMin": 71,
+        "loadScore": 91.8,
+        "paceNotes": [
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "HIL-014",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-06",
+      "kind": "run",
+      "name": "Endurance with Drills",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4320,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nJogging interspersed with technical drills. Improves running economy while developing endurance.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2\", \"descriptionEn\": \"Z2 jog\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes techniques (talons-fesses, montées genoux, pas chassés)\", \"descriptionEn\": \"Technical drills (butt kicks, high knees, lateral shuffles)\", \"durationSec\": 300, \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Footing Z2\", \"descriptionEn\": \"Z2 jog\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing lent\", \"descriptionEn\": \"Slow jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "END-005",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 72,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 72,
+        "loadScore": 53.8,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "END-005",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-08",
+      "kind": "run",
+      "name": "Progressive Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 5580,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Marathon pace: 6:27 - 6:42/km\nLong run: 7 km (~51 min)\nLong run with progressive finish. First half in Z2, accelerating to Z3 in the second half.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début très lent\", \"descriptionEn\": \"Very slow start\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course en Z2 confortable\", \"descriptionEn\": \"Comfortable Z2 running\", \"durationSec\": 3000, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Accélération progressive vers Z3\", \"descriptionEn\": \"Progressive acceleration to Z3\", \"durationSec\": 1800, \"zone\": \"Z2-Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour au calme\", \"descriptionEn\": \"Cool down\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-001",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 93,
+        "notes": "Allure marathon : 6:27 - 6:42/km\nSortie longue : 7 km (~51 min)",
+        "notesEn": "Marathon pace: 6:27 - 6:42/km\nLong run: 7 km (~51 min)",
+        "targetDurationMin": 51,
+        "loadScore": 65.1,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          }
+        ],
+        "targetDistanceKm": 7
+      },
+      "sourceTemplateId": "SL-001",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-09",
+      "kind": "run",
+      "name": "Hilly Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4980,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nEndurance run on hilly terrain. Develops strength and adaptation to terrain variations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing plat\", \"descriptionEn\": \"Flat jog\", \"durationSec\": 600, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course sur terrain vallonné, effort constant\", \"descriptionEn\": \"Run on hilly terrain, constant effort\", \"durationSec\": 2400, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 130, \"gradientPercent\": 4, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour sur le plat\", \"descriptionEn\": \"Return on flat terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-004",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 83,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 83,
+        "loadScore": 60.4,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 11.5
+      },
+      "sourceTemplateId": "END-004",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-11",
+      "kind": "run",
+      "name": "Beginner Short Threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 2820,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Threshold pace: 5:37 - 5:53/km\n4 repetitions\nIntroduction to threshold training. Short blocks of 4-5 minutes.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 4, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"4min seuil\", \"descriptionEn\": \"4min threshold\", \"durationSec\": 240, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"2min footing Z1\", \"descriptionEn\": \"2min jog Z1\", \"durationSec\": 120, \"zone\": \"Z1\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "THR-003",
+        "sessionType": "threshold",
+        "isKeySession": true,
+        "estimatedDurationMin": 47,
+        "notes": "Allure seuil : 5:37 - 5:53/km\n4 répétitions",
+        "notesEn": "Threshold pace: 5:37 - 5:53/km\n4 repetitions",
+        "targetDurationMin": 48,
+        "loadScore": 62.2,
+        "paceNotes": [
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          }
+        ],
+        "scaledRepetitions": 4,
+        "targetDistanceKm": 7
+      },
+      "sourceTemplateId": "THR-003",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-13",
+      "kind": "run",
+      "name": "Endurance with Drills",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4320,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nJogging interspersed with technical drills. Improves running economy while developing endurance.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2\", \"descriptionEn\": \"Z2 jog\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes techniques (talons-fesses, montées genoux, pas chassés)\", \"descriptionEn\": \"Technical drills (butt kicks, high knees, lateral shuffles)\", \"durationSec\": 300, \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Footing Z2\", \"descriptionEn\": \"Z2 jog\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing lent\", \"descriptionEn\": \"Slow jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "END-005",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 72,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 72,
+        "loadScore": 53.8,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "END-005",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-15",
+      "kind": "run",
+      "name": "Hilly Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 5400,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nLong run: 8 km (~58 min)\nLong run on hilly terrain. Develops strength and endurance.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début sur terrain facile\", \"descriptionEn\": \"Start on easy terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course sur terrain vallonné, effort Z2\", \"descriptionEn\": \"Running on hilly terrain, Z2 effort\", \"durationSec\": 4500, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 190, \"gradientPercent\": 3.5, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour tranquille\", \"descriptionEn\": \"Easy return\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-005",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 90,
+        "notes": "Allure endurance : 6:40 - 7:47/km\nSortie longue : 8 km (~58 min)",
+        "notesEn": "Easy pace: 6:40 - 7:47/km\nLong run: 8 km (~58 min)",
+        "targetDurationMin": 58,
+        "loadScore": 63,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 8
+      },
+      "sourceTemplateId": "SL-005",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-16",
+      "kind": "run",
+      "name": "Hilly Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4980,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nEndurance run on hilly terrain. Develops strength and adaptation to terrain variations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing plat\", \"descriptionEn\": \"Flat jog\", \"durationSec\": 600, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course sur terrain vallonné, effort constant\", \"descriptionEn\": \"Run on hilly terrain, constant effort\", \"durationSec\": 2400, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 130, \"gradientPercent\": 4, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour sur le plat\", \"descriptionEn\": \"Return on flat terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-004",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 83,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 83,
+        "loadScore": 56.8,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 11.5
+      },
+      "sourceTemplateId": "END-004",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-18",
+      "kind": "run",
+      "name": "Group Fartlek",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3900,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Threshold pace: 5:37 - 5:53/km\nFartlek run with others. Each person takes turns leading an effort.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing de groupe\", \"descriptionEn\": \"Group jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Fartlek en groupe : chacun lance un effort à son tour\", \"descriptionEn\": \"Group fartlek: each person leads an effort in turn\", \"durationSec\": 1800, \"zone\": \"Z2-Z4\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing ensemble\", \"descriptionEn\": \"Jog together\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "FAR-007",
+        "sessionType": "fartlek",
+        "isKeySession": true,
+        "estimatedDurationMin": 65,
+        "notes": "Allure seuil : 5:37 - 5:53/km",
+        "notesEn": "Threshold pace: 5:37 - 5:53/km",
+        "targetDurationMin": 65,
+        "loadScore": 110,
+        "paceNotes": [
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "FAR-007",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-20",
+      "kind": "run",
+      "name": "Mental Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4320,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nRun in challenging conditions (rain, cold, wind) to build mental toughness. The goal is as much psychological as physical.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Adaptation aux conditions\", \"descriptionEn\": \"Adapting to conditions\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2 malgré les conditions\", \"descriptionEn\": \"Z2 jog despite conditions\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour et réchauffement rapide\", \"descriptionEn\": \"Return and quick warm-up indoors\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "END-012",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 72,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 72,
+        "loadScore": 50,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "END-012",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-22",
+      "kind": "run",
+      "name": "Hilly Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 5700,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nLong run: 6.5 km (~47 min)\nLong run on hilly terrain. Develops strength and endurance.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début sur terrain facile\", \"descriptionEn\": \"Start on easy terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course sur terrain vallonné, effort Z2\", \"descriptionEn\": \"Running on hilly terrain, Z2 effort\", \"durationSec\": 4500, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 190, \"gradientPercent\": 3.5, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour tranquille\", \"descriptionEn\": \"Easy return\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-005",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 95,
+        "notes": "Allure endurance : 6:40 - 7:47/km\nSortie longue : 6.5 km (~47 min)",
+        "notesEn": "Easy pace: 6:40 - 7:47/km\nLong run: 6.5 km (~47 min)",
+        "targetDurationMin": 47,
+        "loadScore": 66.5,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 6.5
+      },
+      "sourceTemplateId": "SL-005",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-23",
+      "kind": "run",
+      "name": "Light Aerobic Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3240,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\n40-minute steady Z2 jog for taper and recovery periods. Maintains acquired aerobic adaptations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing lent\", \"descriptionEn\": \"Slow jog\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course continue Z2 stable\", \"descriptionEn\": \"Steady continuous Z2 run\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour en Z1 et étirements\", \"descriptionEn\": \"Return in Z1 and stretching\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-014",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 54,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 54,
+        "loadScore": 43,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 7.5
+      },
+      "sourceTemplateId": "END-014",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-25",
+      "kind": "run",
+      "name": "Hilly Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4140,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nEndurance run on hilly terrain. Develops strength and adaptation to terrain variations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing plat\", \"descriptionEn\": \"Flat jog\", \"durationSec\": 600, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course sur terrain vallonné, effort constant\", \"descriptionEn\": \"Run on hilly terrain, constant effort\", \"durationSec\": 2400, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 130, \"gradientPercent\": 4, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour sur le plat\", \"descriptionEn\": \"Return on flat terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "END-004",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 69,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 69,
+        "loadScore": 57,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 9.5
+      },
+      "sourceTemplateId": "END-004",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-27",
+      "kind": "run",
+      "name": "Endurance with Drills",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3480,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nJogging interspersed with technical drills. Improves running economy while developing endurance.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2\", \"descriptionEn\": \"Z2 jog\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes techniques (talons-fesses, montées genoux, pas chassés)\", \"descriptionEn\": \"Technical drills (butt kicks, high knees, lateral shuffles)\", \"durationSec\": 300, \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Footing Z2\", \"descriptionEn\": \"Z2 jog\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing lent\", \"descriptionEn\": \"Slow jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "END-005",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 58,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 58,
+        "loadScore": 46.7,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 8
+      },
+      "sourceTemplateId": "END-005",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-29",
+      "kind": "run",
+      "name": "Hilly Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4800,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nLong run: 6.5 km (~46 min)\nLong run on hilly terrain. Develops strength and endurance.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début sur terrain facile\", \"descriptionEn\": \"Start on easy terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course sur terrain vallonné, effort Z2\", \"descriptionEn\": \"Running on hilly terrain, Z2 effort\", \"durationSec\": 4500, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 190, \"gradientPercent\": 3.5, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour tranquille\", \"descriptionEn\": \"Easy return\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-005",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 80,
+        "notes": "Allure endurance : 6:40 - 7:47/km\nSortie longue : 6.5 km (~46 min)",
+        "notesEn": "Easy pace: 6:40 - 7:47/km\nLong run: 6.5 km (~46 min)",
+        "targetDurationMin": 46,
+        "loadScore": 56,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 6.5
+      },
+      "sourceTemplateId": "SL-005",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-11-30",
+      "kind": "run",
+      "name": "Mental Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4320,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nRun in challenging conditions (rain, cold, wind) to build mental toughness. The goal is as much psychological as physical.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Adaptation aux conditions\", \"descriptionEn\": \"Adapting to conditions\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2 malgré les conditions\", \"descriptionEn\": \"Z2 jog despite conditions\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour et réchauffement rapide\", \"descriptionEn\": \"Return and quick warm-up indoors\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-012",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 72,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 72,
+        "loadScore": 50,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "END-012",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-02",
+      "kind": "run",
+      "name": "Descending Fartlek",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3660,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "VO2max pace: 5:04 - 5:20/km\nFartlek with progressively shorter but faster efforts. Pattern: 5min-4min-3min-2min-1min with 90-second recovery. Increasing intensity from tempo to sprint. Develops ability to accelerate in late race stages.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes et 3x accélérations\", \"descriptionEn\": \"Drills and 3x accelerations\", \"durationSec\": 300, \"zone\": \"Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"5min à allure tempo\", \"descriptionEn\": \"5min at tempo pace\", \"durationSec\": 300, \"zone\": \"Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"90s récupération footing\", \"descriptionEn\": \"90s recovery jog\", \"durationSec\": 90, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"4min à allure seuil\", \"descriptionEn\": \"4min at threshold pace\", \"durationSec\": 240, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"90s récupération footing\", \"descriptionEn\": \"90s recovery jog\", \"durationSec\": 90, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"3min à allure 10K\", \"descriptionEn\": \"3min at 10K pace\", \"durationSec\": 180, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"90s récupération footing\", \"descriptionEn\": \"90s recovery jog\", \"durationSec\": 90, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"2min à allure 5K\", \"descriptionEn\": \"2min at 5K pace\", \"durationSec\": 120, \"zone\": \"Z5\", \"intensityType\": \"I\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"90s récupération footing\", \"descriptionEn\": \"90s recovery jog\", \"durationSec\": 90, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"1min à effort maximal\", \"descriptionEn\": \"1min at near max effort\", \"durationSec\": 60, \"zone\": \"Z5\", \"intensityType\": \"I\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "FAR-012",
+        "sessionType": "fartlek",
+        "isKeySession": true,
+        "estimatedDurationMin": 61,
+        "notes": "Allure VMA : 5:04 - 5:20/km",
+        "notesEn": "VO2max pace: 5:04 - 5:20/km",
+        "targetDurationMin": 61,
+        "loadScore": 104,
+        "paceNotes": [
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          },
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          },
+          {
+            "zone": "I",
+            "paceMinKm": 5.06,
+            "paceMaxKm": 5.33,
+            "description": "Allure VMA",
+            "descriptionEn": "VO2max pace"
+          }
+        ],
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "FAR-012",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-04",
+      "kind": "run",
+      "name": "VO2max fartlek",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3180,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "VO2max pace: 5:04 - 5:20/km\n6 repetitions\nStructured fartlek with VO2max intensity efforts. More playful than track work.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 8, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"1min VMA\", \"descriptionEn\": \"1min VO2max\", \"durationSec\": 60, \"zone\": \"Z5\", \"role\": \"effort\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"2min footing Z2\", \"descriptionEn\": \"2min jog Z2\", \"durationSec\": 120, \"zone\": \"Z2\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "VMA-015",
+        "sessionType": "vo2max",
+        "isKeySession": true,
+        "estimatedDurationMin": 53,
+        "notes": "Allure VMA : 5:04 - 5:20/km\n6 répétitions",
+        "notesEn": "VO2max pace: 5:04 - 5:20/km\n6 repetitions",
+        "targetDurationMin": 53,
+        "loadScore": 90,
+        "paceNotes": [
+          {
+            "zone": "I",
+            "paceMinKm": 5.06,
+            "paceMaxKm": 5.33,
+            "description": "Allure VMA",
+            "descriptionEn": "VO2max pace"
+          }
+        ],
+        "scaledRepetitions": 6,
+        "targetDistanceKm": 8
+      },
+      "sourceTemplateId": "VMA-015",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "Progressive Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 6000,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Marathon pace: 6:27 - 6:42/km\nLong run: 10 km (~72 min)\nLong run with progressive finish. First half in Z2, accelerating to Z3 in the second half.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début très lent\", \"descriptionEn\": \"Very slow start\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course en Z2 confortable\", \"descriptionEn\": \"Comfortable Z2 running\", \"durationSec\": 3000, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Accélération progressive vers Z3\", \"descriptionEn\": \"Progressive acceleration to Z3\", \"durationSec\": 1800, \"zone\": \"Z2-Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour au calme\", \"descriptionEn\": \"Cool down\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-001",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 100,
+        "notes": "Allure marathon : 6:27 - 6:42/km\nSortie longue : 10 km (~72 min)",
+        "notesEn": "Marathon pace: 6:27 - 6:42/km\nLong run: 10 km (~72 min)",
+        "targetDurationMin": 72,
+        "loadScore": 70,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "SL-001",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-07",
+      "kind": "run",
+      "name": "Light Aerobic Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3900,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\n40-minute steady Z2 jog for taper and recovery periods. Maintains acquired aerobic adaptations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing lent\", \"descriptionEn\": \"Slow jog\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course continue Z2 stable\", \"descriptionEn\": \"Steady continuous Z2 run\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour en Z1 et étirements\", \"descriptionEn\": \"Return in Z1 and stretching\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-014",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 65,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 65,
+        "loadScore": 47.3,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "END-014",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-09",
+      "kind": "run",
+      "name": "Classic 30/30",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3660,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "VO2max pace: 5:04 - 5:20/km\n10 repetitions\nVO2max session with short intervals: 30 seconds fast / 30 seconds slow. Foundational format for developing VO2max.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes et 4x accélérations progressives\", \"descriptionEn\": \"Drills and 4x progressive accelerations\", \"durationSec\": 300, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 2, \"unit\": \"sets\", \"steps\": [{\"kind\": \"repeat\", \"count\": 12, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"30s VMA\", \"descriptionEn\": \"30s VO2max\", \"durationSec\": 30, \"zone\": \"Z5\", \"role\": \"effort\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"30s footing Z1\", \"descriptionEn\": \"30s jog Z1\", \"durationSec\": 30, \"zone\": \"Z1\", \"role\": \"recovery\"}]}], \"between\": [{\"kind\": \"segment\", \"description\": \"3min footing Z1\", \"descriptionEn\": \"3min jog Z1\", \"durationSec\": 180, \"zone\": \"Z1\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "VMA-001",
+        "sessionType": "vo2max",
+        "isKeySession": true,
+        "estimatedDurationMin": 61,
+        "notes": "Allure VMA : 5:04 - 5:20/km\n10 répétitions",
+        "notesEn": "VO2max pace: 5:04 - 5:20/km\n10 repetitions",
+        "targetDurationMin": 64,
+        "loadScore": 108.1,
+        "paceNotes": [
+          {
+            "zone": "I",
+            "paceMinKm": 5.06,
+            "paceMaxKm": 5.33,
+            "description": "Allure VMA",
+            "descriptionEn": "VO2max pace"
+          }
+        ],
+        "scaledRepetitions": 10,
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "VMA-001",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-11",
+      "kind": "run",
+      "name": "Threshold Pyramid",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4260,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Threshold pace: 5:37 - 5:53/km\nThreshold intervals in pyramid: 4-6-8-6-4 minutes.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"4min seuil\", \"descriptionEn\": \"4min threshold\", \"durationSec\": 240, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Récup\", \"descriptionEn\": \"Recovery\", \"durationSec\": 120, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"6min seuil\", \"descriptionEn\": \"6min threshold\", \"durationSec\": 360, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Récup\", \"descriptionEn\": \"Recovery\", \"durationSec\": 120, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"8min seuil\", \"descriptionEn\": \"8min threshold\", \"durationSec\": 480, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Récup\", \"descriptionEn\": \"Recovery\", \"durationSec\": 120, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"6min seuil\", \"descriptionEn\": \"6min threshold\", \"durationSec\": 360, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Récup\", \"descriptionEn\": \"Recovery\", \"durationSec\": 120, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"4min seuil\", \"descriptionEn\": \"4min threshold\", \"durationSec\": 240, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "THR-005",
+        "sessionType": "threshold",
+        "isKeySession": true,
+        "estimatedDurationMin": 71,
+        "notes": "Allure seuil : 5:37 - 5:53/km",
+        "notesEn": "Threshold pace: 5:37 - 5:53/km",
+        "targetDurationMin": 75,
+        "loadScore": 96.9,
+        "paceNotes": [
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          },
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 11
+      },
+      "sourceTemplateId": "THR-005",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "Progressive Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 5640,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Marathon pace: 6:27 - 6:42/km\nLong run: 8.5 km (~61 min)\nLong run with progressive finish. First half in Z2, accelerating to Z3 in the second half.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début très lent\", \"descriptionEn\": \"Very slow start\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course en Z2 confortable\", \"descriptionEn\": \"Comfortable Z2 running\", \"durationSec\": 3000, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Accélération progressive vers Z3\", \"descriptionEn\": \"Progressive acceleration to Z3\", \"durationSec\": 1800, \"zone\": \"Z2-Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour au calme\", \"descriptionEn\": \"Cool down\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-001",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 94,
+        "notes": "Allure marathon : 6:27 - 6:42/km\nSortie longue : 8.5 km (~61 min)",
+        "notesEn": "Marathon pace: 6:27 - 6:42/km\nLong run: 8.5 km (~61 min)",
+        "targetDurationMin": 61,
+        "loadScore": 65.8,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          }
+        ],
+        "targetDistanceKm": 8.5
+      },
+      "sourceTemplateId": "SL-001",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-14",
+      "kind": "run",
+      "name": "Light Aerobic Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3900,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\n40-minute steady Z2 jog for taper and recovery periods. Maintains acquired aerobic adaptations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing lent\", \"descriptionEn\": \"Slow jog\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course continue Z2 stable\", \"descriptionEn\": \"Steady continuous Z2 run\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour en Z1 et étirements\", \"descriptionEn\": \"Return in Z1 and stretching\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-014",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 65,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 65,
+        "loadScore": 47.3,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "END-014",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-16",
+      "kind": "run",
+      "name": "Interval Threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3840,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Threshold pace: 5:37 - 5:53/km\n3 repetitions\nLong threshold intervals with short recovery. Format 3x8min or 4x6min.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes et accélérations\", \"descriptionEn\": \"Drills and accelerations\", \"durationSec\": 300, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 3, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"8min seuil\", \"descriptionEn\": \"8min threshold\", \"durationSec\": 480, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"2min footing Z1\", \"descriptionEn\": \"2min jog Z1\", \"durationSec\": 120, \"zone\": \"Z1\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "THR-002",
+        "sessionType": "threshold",
+        "isKeySession": true,
+        "estimatedDurationMin": 64,
+        "notes": "Allure seuil : 5:37 - 5:53/km\n3 répétitions",
+        "notesEn": "Threshold pace: 5:37 - 5:53/km\n3 repetitions",
+        "targetDurationMin": 64,
+        "loadScore": 82.6,
+        "paceNotes": [
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          }
+        ],
+        "scaledRepetitions": 3,
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "THR-002",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-18",
+      "kind": "run",
+      "name": "Structured Fartlek",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 2940,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Threshold pace: 5:37 - 5:53/km\nFartlek with defined structure: 1-2-3-2-1 minute pyramid.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"1min rapide\", \"descriptionEn\": \"1min fast\", \"durationSec\": 60, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"1min récup\", \"descriptionEn\": \"1min recovery\", \"durationSec\": 60, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"2min rapide\", \"descriptionEn\": \"2min fast\", \"durationSec\": 120, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"2min récup\", \"descriptionEn\": \"2min recovery\", \"durationSec\": 120, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"3min rapide\", \"descriptionEn\": \"3min fast\", \"durationSec\": 180, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"3min récup\", \"descriptionEn\": \"3min recovery\", \"durationSec\": 180, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"2min rapide\", \"descriptionEn\": \"2min fast\", \"durationSec\": 120, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"2min récup\", \"descriptionEn\": \"2min recovery\", \"durationSec\": 120, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"1min rapide\", \"descriptionEn\": \"1min fast\", \"durationSec\": 60, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "FAR-003",
+        "sessionType": "fartlek",
+        "isKeySession": true,
+        "estimatedDurationMin": 49,
+        "notes": "Allure seuil : 5:37 - 5:53/km",
+        "notesEn": "Threshold pace: 5:37 - 5:53/km",
+        "targetDurationMin": 49,
+        "loadScore": 83.3,
+        "paceNotes": [
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          },
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 7
+      },
+      "sourceTemplateId": "FAR-003",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "Progressive Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 6000,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Marathon pace: 6:27 - 6:42/km\nLong run: 11 km (~79 min)\nLong run with progressive finish. First half in Z2, accelerating to Z3 in the second half.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début très lent\", \"descriptionEn\": \"Very slow start\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course en Z2 confortable\", \"descriptionEn\": \"Comfortable Z2 running\", \"durationSec\": 3000, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Accélération progressive vers Z3\", \"descriptionEn\": \"Progressive acceleration to Z3\", \"durationSec\": 1800, \"zone\": \"Z2-Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour au calme\", \"descriptionEn\": \"Cool down\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-001",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 100,
+        "notes": "Allure marathon : 6:27 - 6:42/km\nSortie longue : 11 km (~79 min)",
+        "notesEn": "Marathon pace: 6:27 - 6:42/km\nLong run: 11 km (~79 min)",
+        "targetDurationMin": 79,
+        "loadScore": 70,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          }
+        ],
+        "targetDistanceKm": 11
+      },
+      "sourceTemplateId": "SL-001",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-21",
+      "kind": "run",
+      "name": "Endurance with Drills",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 2820,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nJogging interspersed with technical drills. Improves running economy while developing endurance.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2\", \"descriptionEn\": \"Z2 jog\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes techniques (talons-fesses, montées genoux, pas chassés)\", \"descriptionEn\": \"Technical drills (butt kicks, high knees, lateral shuffles)\", \"durationSec\": 300, \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Footing Z2\", \"descriptionEn\": \"Z2 jog\", \"durationSec\": 600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing lent\", \"descriptionEn\": \"Slow jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-005",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 47,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 47,
+        "loadScore": 37.9,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 6.5
+      },
+      "sourceTemplateId": "END-005",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-23",
+      "kind": "run",
+      "name": "Hilly Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3240,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nEndurance run on hilly terrain. Develops strength and adaptation to terrain variations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing plat\", \"descriptionEn\": \"Flat jog\", \"durationSec\": 600, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course sur terrain vallonné, effort constant\", \"descriptionEn\": \"Run on hilly terrain, constant effort\", \"durationSec\": 2400, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 130, \"gradientPercent\": 4, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour sur le plat\", \"descriptionEn\": \"Return on flat terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "END-004",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 54,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 54,
+        "loadScore": 45,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 7.5
+      },
+      "sourceTemplateId": "END-004",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-25",
+      "kind": "run",
+      "name": "Mental Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 2820,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nRun in challenging conditions (rain, cold, wind) to build mental toughness. The goal is as much psychological as physical.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Adaptation aux conditions\", \"descriptionEn\": \"Adapting to conditions\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2 malgré les conditions\", \"descriptionEn\": \"Z2 jog despite conditions\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour et réchauffement rapide\", \"descriptionEn\": \"Return and quick warm-up indoors\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "END-012",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 47,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 47,
+        "loadScore": 37.9,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 6.5
+      },
+      "sourceTemplateId": "END-012",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "Progressive Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 5040,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Marathon pace: 6:27 - 6:42/km\nLong run: 9 km (~65 min)\nLong run with progressive finish. First half in Z2, accelerating to Z3 in the second half.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début très lent\", \"descriptionEn\": \"Very slow start\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course en Z2 confortable\", \"descriptionEn\": \"Comfortable Z2 running\", \"durationSec\": 3000, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Accélération progressive vers Z3\", \"descriptionEn\": \"Progressive acceleration to Z3\", \"durationSec\": 1800, \"zone\": \"Z2-Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour au calme\", \"descriptionEn\": \"Cool down\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-001",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 84,
+        "notes": "Allure marathon : 6:27 - 6:42/km\nSortie longue : 9 km (~65 min)",
+        "notesEn": "Marathon pace: 6:27 - 6:42/km\nLong run: 9 km (~65 min)",
+        "targetDurationMin": 65,
+        "loadScore": 58.8,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          }
+        ],
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "SL-001",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-28",
+      "kind": "run",
+      "name": "Light Aerobic Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3900,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\n40-minute steady Z2 jog for taper and recovery periods. Maintains acquired aerobic adaptations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing lent\", \"descriptionEn\": \"Slow jog\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course continue Z2 stable\", \"descriptionEn\": \"Steady continuous Z2 run\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour en Z1 et étirements\", \"descriptionEn\": \"Return in Z1 and stretching\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-014",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 65,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 65,
+        "loadScore": 47.3,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "END-014",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2026-12-30",
+      "kind": "run",
+      "name": "Partner VO2max",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3600,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "VO2max pace: 5:04 - 5:20/km\n6 repetitions\nVO2max session with a partner using relay format.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing ensemble\", \"descriptionEn\": \"Jog together\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes\", \"descriptionEn\": \"Drills\", \"durationSec\": 300, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 10, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"400m en relais (un court, un récupère)\", \"descriptionEn\": \"400m relay (one runs, one recovers)\", \"distanceM\": 400, \"zone\": \"Z5\", \"intensityType\": \"I\", \"role\": \"effort\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"Temps du partenaire\", \"descriptionEn\": \"Partner's time\", \"zone\": \"Z1\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération ensemble\", \"descriptionEn\": \"Recovery jog together\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "VMA-019",
+        "sessionType": "vo2max",
+        "isKeySession": true,
+        "estimatedDurationMin": 60,
+        "notes": "Allure VMA : 5:04 - 5:20/km\n6 répétitions",
+        "notesEn": "VO2max pace: 5:04 - 5:20/km\n6 repetitions",
+        "targetDurationMin": 60,
+        "loadScore": 102,
+        "paceNotes": [
+          {
+            "zone": "I",
+            "paceMinKm": 5.06,
+            "paceMaxKm": 5.33,
+            "description": "Allure VMA",
+            "descriptionEn": "VO2max pace"
+          }
+        ],
+        "scaledRepetitions": 6,
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "VMA-019",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-01",
+      "kind": "run",
+      "name": "5K Pace Introduction",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 2460,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "VO2max pace: 5:04 - 5:20/km\nIntroduction to 5K pace. Three short repetitions to get familiar with race-specific intensity without overloading.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing lent progressif\", \"descriptionEn\": \"Slow progressive jog\", \"durationSec\": 600, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Étirements dynamiques et 3x accélérations progressives\", \"descriptionEn\": \"Dynamic stretches and 3x progressive accelerations\", \"durationSec\": 300, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 3, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"3min à allure 5K\", \"descriptionEn\": \"3min at 5K pace\", \"durationSec\": 180, \"zone\": \"Z4-Z5\", \"intensityType\": \"I\", \"role\": \"effort\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"3min footing Z1-Z2\", \"descriptionEn\": \"3min jog Z1-Z2\", \"durationSec\": 180, \"zone\": \"Z1-Z2\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération et étirements\", \"descriptionEn\": \"Recovery jog and stretching\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "RP-017",
+        "sessionType": "race_specific",
+        "isKeySession": true,
+        "estimatedDurationMin": 41,
+        "notes": "Allure VMA : 5:04 - 5:20/km",
+        "notesEn": "VO2max pace: 5:04 - 5:20/km",
+        "targetDurationMin": 41,
+        "loadScore": 69.4,
+        "paceNotes": [
+          {
+            "zone": "I",
+            "paceMinKm": 5.06,
+            "paceMaxKm": 5.33,
+            "description": "Allure VMA",
+            "descriptionEn": "VO2max pace"
+          }
+        ],
+        "targetDistanceKm": 6
+      },
+      "sourceTemplateId": "RP-017",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "Half-Marathon Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 5400,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Threshold pace: 5:37 - 5:53/km\nLong run: 10 km (~72 min)\nLong run with half-marathon pace blocks. Half-marathon specific preparation.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course Z2\", \"descriptionEn\": \"Z2 running\", \"durationSec\": 1500, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Bloc allure semi\", \"descriptionEn\": \"Half-marathon pace block\", \"durationSec\": 1500, \"zone\": \"Z3-Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Retour Z2\", \"descriptionEn\": \"Return to Z2\", \"durationSec\": 900, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-004",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 90,
+        "notes": "Allure seuil : 5:37 - 5:53/km\nSortie longue : 10 km (~72 min)",
+        "notesEn": "Threshold pace: 5:37 - 5:53/km\nLong run: 10 km (~72 min)",
+        "targetDurationMin": 72,
+        "loadScore": 63,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          }
+        ],
+        "targetDistanceKm": 10
+      },
+      "sourceTemplateId": "SL-004",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-04",
+      "kind": "run",
+      "name": "Mental Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3660,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nRun in challenging conditions (rain, cold, wind) to build mental toughness. The goal is as much psychological as physical.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Adaptation aux conditions\", \"descriptionEn\": \"Adapting to conditions\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing Z2 malgré les conditions\", \"descriptionEn\": \"Z2 jog despite conditions\", \"durationSec\": 2100, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour et réchauffement rapide\", \"descriptionEn\": \"Return and quick warm-up indoors\", \"durationSec\": 300, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-012",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 61,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 61,
+        "loadScore": 45.8,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 8.5
+      },
+      "sourceTemplateId": "END-012",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-06",
+      "kind": "run",
+      "name": "5K Pace Introduction",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 1980,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "VO2max pace: 5:04 - 5:20/km\nIntroduction to 5K pace. Three short repetitions to get familiar with race-specific intensity without overloading.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing lent progressif\", \"descriptionEn\": \"Slow progressive jog\", \"durationSec\": 600, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Étirements dynamiques et 3x accélérations progressives\", \"descriptionEn\": \"Dynamic stretches and 3x progressive accelerations\", \"durationSec\": 300, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 3, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"3min à allure 5K\", \"descriptionEn\": \"3min at 5K pace\", \"durationSec\": 180, \"zone\": \"Z4-Z5\", \"intensityType\": \"I\", \"role\": \"effort\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"3min footing Z1-Z2\", \"descriptionEn\": \"3min jog Z1-Z2\", \"durationSec\": 180, \"zone\": \"Z1-Z2\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération et étirements\", \"descriptionEn\": \"Recovery jog and stretching\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "RP-017",
+        "sessionType": "race_specific",
+        "isKeySession": true,
+        "estimatedDurationMin": 33,
+        "notes": "Allure VMA : 5:04 - 5:20/km",
+        "notesEn": "VO2max pace: 5:04 - 5:20/km",
+        "targetDurationMin": 34,
+        "loadScore": 57.8,
+        "paceNotes": [
+          {
+            "zone": "I",
+            "paceMinKm": 5.06,
+            "paceMaxKm": 5.33,
+            "description": "Allure VMA",
+            "descriptionEn": "VO2max pace"
+          }
+        ],
+        "targetDistanceKm": 5
+      },
+      "sourceTemplateId": "RP-017",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-08",
+      "kind": "run",
+      "name": "Critical Velocity Intervals (Tinman)",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4200,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Threshold pace: 5:37 - 5:53/km\n5-6 repetitions of 1,000m at critical velocity pace (roughly 30-minute race pace) with 60-90 seconds jog recovery. Specifically develops Type IIa muscle fibers.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes et 3× accélérations progressives\", \"descriptionEn\": \"Drills and 3× progressive accelerations\", \"durationSec\": 300, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 6, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"1 000 m à l'allure CV (allure course ~30min)\", \"descriptionEn\": \"1,000m at CV pace (~30min race pace), 60-90s jog recovery\", \"distanceM\": 1000, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"60-90s trot léger\", \"descriptionEn\": \"60-90s light jog\", \"durationSec\": 60, \"zone\": \"Z1\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "THR-020",
+        "sessionType": "threshold",
+        "isKeySession": true,
+        "estimatedDurationMin": 70,
+        "notes": "Allure seuil : 5:37 - 5:53/km",
+        "notesEn": "Threshold pace: 5:37 - 5:53/km",
+        "targetDurationMin": 74,
+        "loadScore": 96.2,
+        "paceNotes": [
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          }
+        ],
+        "targetDistanceKm": 11
+      },
+      "sourceTemplateId": "THR-020",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "Long Run with Tempo Finish",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 5640,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Marathon pace: 6:27 - 6:42/km\nLong run: 12.5 km (~90 min)\nLong run finishing with 20 minutes at tempo pace.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Début très progressif\", \"descriptionEn\": \"Very gradual start\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course Z2\", \"descriptionEn\": \"Z2 running\", \"durationSec\": 3600, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Tempo final\", \"descriptionEn\": \"Final tempo\", \"durationSec\": 1200, \"zone\": \"Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour au calme\", \"descriptionEn\": \"Cool down\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-007",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 94,
+        "notes": "Allure marathon : 6:27 - 6:42/km\nSortie longue : 12.5 km (~90 min)",
+        "notesEn": "Marathon pace: 6:27 - 6:42/km\nLong run: 12.5 km (~90 min)",
+        "targetDurationMin": 90,
+        "loadScore": 65.8,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          }
+        ],
+        "targetDistanceKm": 12.5
+      },
+      "sourceTemplateId": "SL-007",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-11",
+      "kind": "run",
+      "name": "Hilly Endurance",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 4560,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy pace: 6:40 - 7:47/km\nEndurance run on hilly terrain. Develops strength and adaptation to terrain variations.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing plat\", \"descriptionEn\": \"Flat jog\", \"durationSec\": 600, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course sur terrain vallonné, effort constant\", \"descriptionEn\": \"Run on hilly terrain, constant effort\", \"durationSec\": 2400, \"zone\": \"Z2\", \"intensityType\": \"E\", \"elevationGainM\": 130, \"gradientPercent\": 4, \"terrainType\": \"trail_runnable\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Retour sur le plat\", \"descriptionEn\": \"Return on flat terrain\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "END-004",
+        "sessionType": "endurance",
+        "isKeySession": false,
+        "estimatedDurationMin": 76,
+        "notes": "Allure endurance : 6:40 - 7:47/km",
+        "notesEn": "Easy pace: 6:40 - 7:47/km",
+        "targetDurationMin": 76,
+        "loadScore": 51.9,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 10.5
+      },
+      "sourceTemplateId": "END-004",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-13",
+      "kind": "run",
+      "name": "Descending Threshold",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3540,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Threshold pace: 5:37 - 5:53/km\nThreshold intervals getting shorter: 10-8-6-4 min.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif\", \"descriptionEn\": \"Progressive jog\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"10min seuil\", \"descriptionEn\": \"10min threshold\", \"durationSec\": 600, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Récup\", \"descriptionEn\": \"Recovery\", \"durationSec\": 120, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"8min seuil\", \"descriptionEn\": \"8min threshold\", \"durationSec\": 480, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Récup\", \"descriptionEn\": \"Recovery\", \"durationSec\": 120, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"6min seuil\", \"descriptionEn\": \"6min threshold\", \"durationSec\": 360, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Récup\", \"descriptionEn\": \"Recovery\", \"durationSec\": 120, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"4min seuil\", \"descriptionEn\": \"4min threshold\", \"durationSec\": 240, \"zone\": \"Z4\", \"intensityType\": \"T\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 2,
+        "workoutId": "THR-013",
+        "sessionType": "threshold",
+        "isKeySession": true,
+        "estimatedDurationMin": 59,
+        "notes": "Allure seuil : 5:37 - 5:53/km",
+        "notesEn": "Threshold pace: 5:37 - 5:53/km",
+        "targetDurationMin": 59,
+        "loadScore": 76.7,
+        "paceNotes": [
+          {
+            "zone": "T",
+            "paceMinKm": 5.62,
+            "paceMaxKm": 5.88,
+            "description": "Allure seuil",
+            "descriptionEn": "Threshold pace"
+          },
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          }
+        ],
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "THR-013",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-15",
+      "kind": "run",
+      "name": "Diagonal Sprints",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3480,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Repetition pace: 4:41 - 4:52/km\n15 repetitions\nDiagonal sprints across a football pitch. French classic for working on cadence, direction changes and speed.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing progressif autour du terrain\", \"descriptionEn\": \"Progressive jog around the pitch\", \"durationSec\": 900, \"zone\": \"Z1-Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Gammes dynamiques\", \"descriptionEn\": \"Dynamic drills\", \"durationSec\": 600, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"repeat\", \"count\": 12, \"unit\": \"reps\", \"steps\": [{\"kind\": \"segment\", \"description\": \"Diagonale sprint (coin à coin)\", \"descriptionEn\": \"Diagonal sprint (corner to corner)\", \"zone\": \"Z5-Z6\", \"role\": \"effort\", \"intensityType\": \"R\"}], \"between\": [{\"kind\": \"segment\", \"description\": \"Trot sur le petit côté (~30s)\", \"descriptionEn\": \"Jog on the short side (~30s)\", \"durationSec\": 30, \"zone\": \"Z1\", \"role\": \"recovery\"}]}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "VMA-026",
+        "sessionType": "vo2max",
+        "isKeySession": true,
+        "estimatedDurationMin": 58,
+        "notes": "Allure vitesse : 4:41 - 4:52/km\n15 répétitions",
+        "notesEn": "Repetition pace: 4:41 - 4:52/km\n15 repetitions",
+        "targetDurationMin": 58,
+        "loadScore": 98.6,
+        "paceNotes": [
+          {
+            "zone": "R",
+            "paceMinKm": 4.69,
+            "paceMaxKm": 4.87,
+            "description": "Allure vitesse",
+            "descriptionEn": "Repetition pace"
+          }
+        ],
+        "scaledRepetitions": 15,
+        "targetDistanceKm": 9
+      },
+      "sourceTemplateId": "VMA-026",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "Race-Specific Long Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 6600,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Marathon pace: 6:27 - 6:42/km\nLong run: 12.5 km (~90 min)\nLong run with marathon pace blocks. Develops race-specific endurance.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Footing tranquille\", \"descriptionEn\": \"Easy jog\", \"durationSec\": 1200, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Course Z2\", \"descriptionEn\": \"Z2 running\", \"durationSec\": 1800, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Bloc allure marathon\", \"descriptionEn\": \"Marathon pace block\", \"durationSec\": 1800, \"zone\": \"Z3\", \"intensityType\": \"M\", \"role\": \"effort\"}, {\"kind\": \"segment\", \"description\": \"Retour en Z2\", \"descriptionEn\": \"Return to Z2\", \"durationSec\": 1200, \"zone\": \"Z2\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Footing de récupération\", \"descriptionEn\": \"Recovery jog\", \"durationSec\": 600, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "SL-002",
+        "sessionType": "long_run",
+        "isKeySession": false,
+        "estimatedDurationMin": 110,
+        "notes": "Allure marathon : 6:27 - 6:42/km\nSortie longue : 12.5 km (~90 min)",
+        "notesEn": "Marathon pace: 6:27 - 6:42/km\nLong run: 12.5 km (~90 min)",
+        "targetDurationMin": 90,
+        "loadScore": 77,
+        "paceNotes": [
+          {
+            "zone": "E",
+            "paceMinKm": 6.66,
+            "paceMaxKm": 7.78,
+            "description": "Allure endurance",
+            "descriptionEn": "Easy pace"
+          },
+          {
+            "zone": "M",
+            "paceMinKm": 6.45,
+            "paceMaxKm": 6.7,
+            "description": "Allure marathon",
+            "descriptionEn": "Marathon pace"
+          }
+        ],
+        "targetDistanceKm": 12.5
+      },
+      "sourceTemplateId": "SL-002",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-18",
+      "kind": "run",
+      "name": "Recovery Jog",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3600,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy jog - race week\nVery slow jog in Zone 1 to promote active recovery. Easy conversational pace, nasal breathing should be possible.\nwarmup: []\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing très lent en Z1\", \"descriptionEn\": \"Very slow jog in Z1\", \"durationSec\": 1800, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: []",
+      "sourceSession": {
+        "dayOfWeek": 0,
+        "workoutId": "REC-001",
+        "sessionType": "recovery",
+        "isKeySession": false,
+        "estimatedDurationMin": 60,
+        "notes": "Footing léger - semaine de course",
+        "notesEn": "Easy jog - race week",
+        "targetDistanceKm": 8.5,
+        "loadScore": 42
+      },
+      "sourceTemplateId": "REC-001",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "Walk-Run Recovery",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 3600,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Easy jog - race week\nAlternating brisk walking and very light jogging. Ideal for beginners or after a race/competition.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Marche rapide\", \"descriptionEn\": \"Brisk walking\", \"durationSec\": 300, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Alternance 3min footing Z1 / 2min marche\", \"descriptionEn\": \"Alternating 3min Z1 jog / 2min walk\", \"durationSec\": 1200, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Marche tranquille\", \"descriptionEn\": \"Easy walking\", \"durationSec\": 300, \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 1,
+        "workoutId": "REC-002",
+        "sessionType": "recovery",
+        "isKeySession": false,
+        "estimatedDurationMin": 60,
+        "notes": "Footing léger - semaine de course",
+        "notesEn": "Easy jog - race week",
+        "targetDistanceKm": 8.5,
+        "loadScore": 42
+      },
+      "sourceTemplateId": "REC-002",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-22",
+      "kind": "run",
+      "name": "Shakeout Run",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "time",
+          "v": 1500,
+          "tg": {},
+          "d": "Общее время дня; полная структура в исходном описании"
+        }
+      ],
+      "desc": "Pre-race activation: easy jog + a few strides\nVery easy 20-minute Z1 jog the day before a race. Pre-race routine to keep legs feeling light.\nwarmup: [{\"kind\": \"segment\", \"description\": \"Marche rapide 2-3 minutes\", \"descriptionEn\": \"Brisk walk 2-3 minutes\", \"durationSec\": 180, \"role\": \"effort\"}]\nmainSet: [{\"kind\": \"segment\", \"description\": \"Footing très facile en Z1\", \"descriptionEn\": \"Very easy jog in Z1\", \"durationSec\": 1020, \"zone\": \"Z1\", \"intensityType\": \"E\", \"role\": \"effort\"}]\ncooldown: [{\"kind\": \"segment\", \"description\": \"Marche et étirements légers\", \"descriptionEn\": \"Walk and light stretching\", \"durationSec\": 300, \"role\": \"effort\"}]",
+      "sourceSession": {
+        "dayOfWeek": 4,
+        "workoutId": "REC-011",
+        "sessionType": "recovery",
+        "isKeySession": false,
+        "estimatedDurationMin": 25,
+        "notes": "Activation pré-course : footing léger + quelques accélérations",
+        "notesEn": "Pre-race activation: easy jog + a few strides",
+        "targetDistanceKm": 3.5,
+        "loadScore": 17.5
+      },
+      "sourceTemplateId": "REC-011",
+      "conversionDetail": "duration-summary"
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "Старт 5 км",
+      "steps": [
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {},
+          "d": "Дистанция старта из вводных; источник не задаёт длительность"
+        }
+      ],
+      "desc": "Race day - 5K\n\nwarmup: []\nmainSet: []\ncooldown: []",
+      "sourceSession": {
+        "dayOfWeek": 6,
+        "workoutId": "__race_day__",
+        "sessionType": "race_specific",
+        "isKeySession": true,
+        "estimatedDurationMin": 0,
+        "notes": "Jour de course - 5K",
+        "notesEn": "Race day - 5K"
+      },
+      "sourceTemplateId": "__race_day__",
+      "conversionDetail": "duration-summary"
+    }
+  ]
+}

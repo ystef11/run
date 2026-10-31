@@ -1,0 +1,2270 @@
+{
+  "meta": {
+    "tag": "[RUNNING-PLAN-ENGINE]",
+    "schema": 1,
+    "name": "running-plan-engine · 21.0975 км · 40 км/нед · ПАНО 5:45",
+    "generated": "2026-10-29",
+    "marathon": "2027-02-21",
+    "source": {
+      "url": "https://github.com/GeoffreyDjof/running-plan-engine",
+      "retrieved": "2026-10-29",
+      "raw": "raw/running-plan-engine-half-40-t545.source.json",
+      "commit": "ed8a5f2",
+      "engine": "engines/running-plan-engine/source.zip",
+      "file": "src/plan_engine/planner.py",
+      "permalink": "https://github.com/GeoffreyDjof/running-plan-engine/blob/ed8a5f2/src/plan_engine/planner.py"
+    },
+    "profile": {
+      "id": "40-t545",
+      "km": 40,
+      "t": 345,
+      "level": "intermediate",
+      "days": 4,
+      "long": 14,
+      "vdot": 34.056702733267706,
+      "benchmark": {
+        "distance": 10000,
+        "time": 3441
+      }
+    },
+    "generatorInput": {
+      "athlete": {
+        "id": "40-t545",
+        "age": 35,
+        "sex": "male",
+        "experience_years": 3,
+        "level": "intermediate",
+        "recent_weekly_km": [
+          40,
+          40,
+          40,
+          40
+        ],
+        "longest_run_km_last_4w": 14,
+        "availability": [
+          {
+            "weekday": "tue",
+            "max_minutes": 150
+          },
+          {
+            "weekday": "thu",
+            "max_minutes": 150
+          },
+          {
+            "weekday": "sat",
+            "max_minutes": 150
+          },
+          {
+            "weekday": "sun",
+            "max_minutes": 300
+          }
+        ],
+        "constraints": {
+          "injuries": [],
+          "no_track": false,
+          "prefers_time_based": false
+        }
+      },
+      "benchmark": {
+        "distance_km": 10,
+        "time_sec": 3441,
+        "date": "2026-10-25",
+        "is_estimate": true
+      },
+      "goal": {
+        "distance_km": 21.0975,
+        "race_date": "2027-02-21",
+        "target_time_sec": null
+      },
+      "options": {
+        "sessions_per_week": 4,
+        "include_strength": false,
+        "units": "metric",
+        "language": "fr",
+        "as_of_date": "2026-10-29"
+      }
+    },
+    "conversion": {
+      "detail": "structured",
+      "notes": [
+        "Оригинальный generate_plan с Pydantic-валидацией. Для advanced и intermediate поддерживаются четыре тренировки; для beginner — три.",
+        "Марафон движок пока отклоняет, отказы сохранены отдельно.",
+        "Структура блоков и диапазоны темпа перенесены из результата. Если блок содержит и время, и км, сохранена дистанция; оба исходных значения доступны в raw.",
+        "Предположения для образца: мужчина, 35 лет; условный стаж 8 / 3 / 1 год; заданный пробег стабилен последние 4 недели."
+      ],
+      "thresholdAssumption": "ПАНО — темп условной часовой гонки; результат 10 км рассчитан по Daniels–Gilbert и не является наблюдением.",
+      "zoneMapping": "Численные HR и LTHR не заданы. Пульсовые зоны не приравниваются к темповым."
+    },
+    "cfg": {
+      "startISO": "2026-12-01",
+      "goalISO": "2027-02-21",
+      "goalDist": 21098,
+      "planMode": "goal",
+      "tag": "[RUNNING-PLAN-ENGINE]"
+    }
+  },
+  "workouts": [
+    {
+      "date": "2026-12-01",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7800,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 7.8,
+      "sourceMinutes": 71.3,
+      "sourceWeek": 1
+    },
+    {
+      "date": "2026-12-03",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7800,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 7.8,
+      "sourceMinutes": 71.3,
+      "sourceWeek": 1
+    },
+    {
+      "date": "2026-12-05",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 7.9,
+      "sourceMinutes": 72.0,
+      "sourceWeek": 1
+    },
+    {
+      "date": "2026-12-06",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10000,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 10.0,
+      "sourceMinutes": 87.2,
+      "sourceWeek": 1
+    },
+    {
+      "date": "2026-12-08",
+      "kind": "run",
+      "name": "Tempo / seuil",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 6200,
+          "tg": {
+            "pace": [
+              "5:40",
+              "5:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Effort contrôlé au seuil (zone T).",
+      "sourceKm": 6.2,
+      "sourceMinutes": 50.2,
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-12-10",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9700,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 9.7,
+      "sourceMinutes": 85.0,
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-12-12",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 9.6,
+      "sourceMinutes": 84.3,
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-12-13",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 10.9,
+      "sourceMinutes": 93.7,
+      "sourceWeek": 2
+    },
+    {
+      "date": "2026-12-15",
+      "kind": "run",
+      "name": "Fractionné VMA (I)",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5900,
+          "tg": {
+            "pace": [
+              "5:10",
+              "5:20"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Répétitions zone I ; récupération jogging entre les séries.",
+      "sourceKm": 5.9,
+      "sourceMinutes": 45.8,
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-12-17",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 10.9,
+      "sourceMinutes": 93.7,
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-12-19",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 10.9,
+      "sourceMinutes": 93.7,
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-12-20",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 11.9,
+      "sourceMinutes": 100.9,
+      "sourceWeek": 3
+    },
+    {
+      "date": "2026-12-22",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7100,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 7.1,
+      "sourceMinutes": 66.2,
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-12-24",
+      "kind": "run",
+      "name": "Récupération",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7100,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Très souple, jambes légères.",
+      "sourceKm": 7.1,
+      "sourceMinutes": 66.2,
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-12-26",
+      "kind": "run",
+      "name": "Récupération",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7200,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Très souple, jambes légères.",
+      "sourceKm": 7.2,
+      "sourceMinutes": 67.0,
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-12-27",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 8.3,
+      "sourceMinutes": 74.9,
+      "sourceWeek": 4
+    },
+    {
+      "date": "2026-12-29",
+      "kind": "run",
+      "name": "Tempo / seuil",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7300,
+          "tg": {
+            "pace": [
+              "5:40",
+              "5:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Effort contrôlé au seuil (zone T).",
+      "sourceKm": 7.3,
+      "sourceMinutes": 56.5,
+      "sourceWeek": 5
+    },
+    {
+      "date": "2026-12-31",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11500,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 11.5,
+      "sourceMinutes": 98.0,
+      "sourceWeek": 5
+    },
+    {
+      "date": "2027-01-02",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 11400,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 11.4,
+      "sourceMinutes": 97.3,
+      "sourceWeek": 5
+    },
+    {
+      "date": "2027-01-03",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 12.9,
+      "sourceMinutes": 108.1,
+      "sourceWeek": 5
+    },
+    {
+      "date": "2027-01-05",
+      "kind": "run",
+      "name": "Fractionné VMA (I)",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7000,
+          "tg": {
+            "pace": [
+              "5:10",
+              "5:20"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Répétitions zone I ; récupération jogging entre les séries.",
+      "sourceKm": 7.0,
+      "sourceMinutes": 51.5,
+      "sourceWeek": 6
+    },
+    {
+      "date": "2027-01-07",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12800,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 12.8,
+      "sourceMinutes": 107.4,
+      "sourceWeek": 6
+    },
+    {
+      "date": "2027-01-09",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 12700,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 12.7,
+      "sourceMinutes": 106.7,
+      "sourceWeek": 6
+    },
+    {
+      "date": "2027-01-10",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 13.9,
+      "sourceMinutes": 115.3,
+      "sourceWeek": 6
+    },
+    {
+      "date": "2027-01-12",
+      "kind": "run",
+      "name": "Tempo / seuil",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8400,
+          "tg": {
+            "pace": [
+              "5:40",
+              "5:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Effort contrôlé au seuil (zone T).",
+      "sourceKm": 8.4,
+      "sourceMinutes": 62.7,
+      "sourceWeek": 7
+    },
+    {
+      "date": "2027-01-14",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13200,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 13.2,
+      "sourceMinutes": 110.3,
+      "sourceWeek": 7
+    },
+    {
+      "date": "2027-01-16",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 13200,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 13.2,
+      "sourceMinutes": 110.3,
+      "sourceWeek": 7
+    },
+    {
+      "date": "2027-01-17",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 14.9,
+      "sourceMinutes": 122.5,
+      "sourceWeek": 7
+    },
+    {
+      "date": "2027-01-19",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 9.0,
+      "sourceMinutes": 80.0,
+      "sourceWeek": 8
+    },
+    {
+      "date": "2027-01-21",
+      "kind": "run",
+      "name": "Récupération",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9000,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Très souple, jambes légères.",
+      "sourceKm": 9.0,
+      "sourceMinutes": 80.0,
+      "sourceWeek": 8
+    },
+    {
+      "date": "2027-01-23",
+      "kind": "run",
+      "name": "Récupération",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8900,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Très souple, jambes légères.",
+      "sourceKm": 8.9,
+      "sourceMinutes": 79.2,
+      "sourceWeek": 8
+    },
+    {
+      "date": "2027-01-24",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 10400,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 10.4,
+      "sourceMinutes": 90.1,
+      "sourceWeek": 8
+    },
+    {
+      "date": "2027-01-26",
+      "kind": "run",
+      "name": "Fractionné VMA (I)",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 7800,
+          "tg": {
+            "pace": [
+              "5:10",
+              "5:20"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Répétitions zone I ; récupération jogging entre les séries.",
+      "sourceKm": 7.8,
+      "sourceMinutes": 55.7,
+      "sourceWeek": 9
+    },
+    {
+      "date": "2027-01-28",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14200,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 14.2,
+      "sourceMinutes": 117.5,
+      "sourceWeek": 9
+    },
+    {
+      "date": "2027-01-30",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 14.3,
+      "sourceMinutes": 118.2,
+      "sourceWeek": 9
+    },
+    {
+      "date": "2027-01-31",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 15500,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 15.5,
+      "sourceMinutes": 126.9,
+      "sourceWeek": 9
+    },
+    {
+      "date": "2027-02-02",
+      "kind": "run",
+      "name": "Tempo / seuil",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 9200,
+          "tg": {
+            "pace": [
+              "5:40",
+              "5:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Effort contrôlé au seuil (zone T).",
+      "sourceKm": 9.2,
+      "sourceMinutes": 67.3,
+      "sourceWeek": 10
+    },
+    {
+      "date": "2027-02-04",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 14.3,
+      "sourceMinutes": 118.2,
+      "sourceWeek": 10
+    },
+    {
+      "date": "2027-02-06",
+      "kind": "run",
+      "name": "Footing easy",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 14300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 14.3,
+      "sourceMinutes": 118.2,
+      "sourceWeek": 10
+    },
+    {
+      "date": "2027-02-07",
+      "kind": "run",
+      "name": "Sortie longue",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 16200,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Endurance fondamentale ; rester en zone E.",
+      "sourceKm": 16.2,
+      "sourceMinutes": 131.9,
+      "sourceWeek": 10
+    },
+    {
+      "date": "2027-02-09",
+      "kind": "run",
+      "name": "Allure spécifique course",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {
+            "pace": [
+              "5:40",
+              "5:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure objectif 10k ; rester lucide sur l'effort.",
+      "sourceKm": 5.0,
+      "sourceMinutes": 43.4,
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-02-11",
+      "kind": "run",
+      "name": "Récupération",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8200,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Très souple, jambes légères.",
+      "sourceKm": 8.2,
+      "sourceMinutes": 74.2,
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-02-13",
+      "kind": "run",
+      "name": "Récupération",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8200,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Très souple, jambes légères.",
+      "sourceKm": 8.2,
+      "sourceMinutes": 74.2,
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-02-14",
+      "kind": "run",
+      "name": "Footing long souple",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 8300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 8.3,
+      "sourceMinutes": 74.9,
+      "sourceWeek": 11
+    },
+    {
+      "date": "2027-02-20",
+      "kind": "run",
+      "name": "Footing pré-course",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 5000,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure confortable, conversation possible.",
+      "sourceKm": 5.0,
+      "sourceMinutes": 51.1,
+      "sourceWeek": 12
+    },
+    {
+      "date": "2027-02-21",
+      "kind": "run",
+      "name": "Course 21.0975 km",
+      "steps": [
+        {
+          "t": "warmup",
+          "end": "time",
+          "v": 600,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "warmup"
+        },
+        {
+          "t": "interval",
+          "end": "distance",
+          "v": 21098,
+          "tg": {
+            "pace": [
+              "5:40",
+              "5:50"
+            ]
+          },
+          "d": "main"
+        },
+        {
+          "t": "cooldown",
+          "end": "time",
+          "v": 300,
+          "tg": {
+            "pace": [
+              "7:00",
+              "7:50"
+            ]
+          },
+          "d": "cooldown"
+        }
+      ],
+      "desc": "Allure objectif 10k ; rester lucide sur l'effort.",
+      "sourceKm": 21.1,
+      "sourceMinutes": 134.9,
+      "sourceWeek": 12
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+function c(){const o=()=>typeof window<"u"&&typeof window.gtag=="function";function e(t,n={}){if(o())try{window.gtag("event",t,n)}catch{}}function i(t,n,u){e("youtube_engagement",{yt_kind:t,yt_detail:n,yt_context:u,link_domain:"youtube.com"})}return{trackEvent:e,trackYouTube:i}}export{c as u};

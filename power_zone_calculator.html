@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Беговые зоны мощности</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1b1e22;--paper:#f5f4f0;--card:#ffffff;--muted:#6b6f76;--line:#e2ded5;--accent:#df4a2e;
+    --z-rec:#7f95a3;--z-easy:#5b8c5a;--z-mp:#df4a2e;--z-thr:#d98a1f;--z-vo2:#7d5bd6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:720px;margin:0 auto;padding:28px 18px 60px;}
+
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:22px;}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.02;margin:7px 0 4px;font-weight:800;letter-spacing:-.01em;}
+  .sub{font-size:14px;color:var(--muted);}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;}
+  .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px;}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+  select{width:100%;height:48px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:16px;padding:0 12px;margin-bottom:12px;}
+  select:focus,.field input:focus{outline:2px solid var(--accent);outline-offset:-2px;}
+
+  .triofields{display:flex;gap:10px;flex-wrap:wrap;}
+  .field{flex:1;min-width:80px;}
+  .field .fl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .field .box{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .field input{flex:1;width:100%;border:none;height:52px;text-align:center;font-size:22px;font-weight:800;background:#fff;color:var(--ink);font-family:ui-monospace,monospace;-moz-appearance:textfield;min-width:0;}
+  .field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field .arrows{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .field .arrows button{border:none;background:#f0eee9;color:var(--ink);width:26px;height:26px;cursor:pointer;padding:0;font-size:10px;line-height:1;}
+  .field .arrows button:first-child{border-bottom:1px solid var(--line);}
+  .field .arrows button:active{background:var(--accent);color:#fff;}
+  .colon{align-self:flex-end;font-size:22px;font-weight:800;color:var(--muted);padding-bottom:14px;}
+
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-top:6px;}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);}
+  .btn:hover{border-color:var(--accent);color:var(--accent);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .btn.primary:hover{color:#fff;opacity:.9;}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  .goalcard{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .goalcard .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .goalcard .v{font-size:22px;font-weight:800;margin-top:2px;}
+  .goalcard .f{font-size:13px;color:var(--muted);}
+  .badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;border:1px solid var(--line);border-radius:6px;padding:3px 9px;color:var(--muted);}
+  .badge.saved{color:var(--z-easy);border-color:var(--z-easy);}
+
+  .outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .out{background:var(--card);padding:15px;}
+  .out .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .out .v{font-size:22px;font-weight:800;margin-top:3px;}
+  .out .v small{font-size:13px;font-weight:600;color:var(--muted);}
+  .out.hl{background:#fbeee9;}
+  .out.hl .v{color:var(--accent);}
+
+  .tablewrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  th.r,td.r{text-align:right;}
+  td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:14.5px;}
+  tr:last-child td{border-bottom:none;}
+  .zdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:middle;}
+  .zname{font-weight:700;}
+  .zsub{font-size:12px;color:var(--muted);display:block;margin-top:1px;}
+  .grp{border-left:5px solid var(--gc,var(--line));}
+  .subh{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:14px 0 2px;}
+  .subh:first-of-type{margin-top:2px;}
+  td small{color:var(--muted);}
+  .saved-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .saved-item:last-child{border-bottom:none;}
+  .saved-item button{border:none;background:none;color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;padding:2px 6px;}
+  .hidden{display:none !important;}
+
+  .note{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;margin-top:16px;}
+  .note b{color:var(--ink);}
+  .note p{margin:6px 0;}
+  footer{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;}
+  @media(max-width:480px){.outs{grid-template-columns:1fr;}}
+
+  .opts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+  .numrow{display:flex;gap:12px;flex-wrap:wrap;}
+  .numrow .field{min-width:120px;}
+  .numrow input.plain{width:100%;height:48px;border:1px solid var(--line);border-radius:8px;text-align:center;font-size:20px;font-weight:800;font-family:ui-monospace,monospace;background:#fff;color:var(--ink);-moz-appearance:textfield;}
+  .numrow input.plain::-webkit-outer-spin-button,.numrow input.plain::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .verdict{font-size:24px;font-weight:800;margin:2px 0 6px;}
+  .verdict.ok{color:var(--z-easy);} .verdict.near{color:var(--z-thr);} .verdict.far{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Мощность · зоны · rFTPw</div>
+    <h1>Беговые зоны мощности</h1>
+    <div class="sub">Тренировочные зоны мощности по критической мощности</div>
+  </header>
+
+  <div class="panel">
+    <div class="label">Критическая мощность (rFTPw)</div>
+    <div class="numrow">
+      <div class="field"><div class="fl">rFTPw, Вт</div><input id="cp" class="plain" type="number" value="250" min="1" inputmode="numeric"></div>
+      <div class="field"><div class="fl">Вес, кг (необязательно)</div><input id="kg" class="plain" type="number" min="30" step="0.1" placeholder="—" inputmode="decimal"></div>
+    </div>
+    <div class="hint">Ваша беговая пороговая мощность в ваттах (функциональная пороговая мощность на бегу). Вес нужен только для Вт/кг.</div>
+  </div>
+  <div class="panel"><div class="label">Зоны мощности</div>
+    <div class="tablewrap"><table><thead><tr><th>Зона</th><th class="r">% от rFTPw</th><th class="r">Мощность, Вт</th><th class="r kgc hidden">Вт/кг</th></tr></thead><tbody id="zones"></tbody></table></div></div>
+  <div class="note"><p><b>Как считается.</b> Каждая зона — доля критической мощности; границы округляются до ватта. Тип тренировки сопоставлен с процентным диапазоном: восстановление — 75–80%, лёгкие и длинные — 80–85%, устойчивый бег — 85–90%, темповые — 95–105%, темповые интервалы — 105–110%, круизные — 110–115%, скоростные — 115–125%, спринты — 125–140%.</p></div>
+  <footer>Зоны — доли критической мощности (rFTPw)</footer>
+</div>
+<script>
+
+  const $=id=>document.getElementById(id);
+  const Z=[['Восстановительные пробежки',75,80,'var(--z-rec)'],['Длинные',80,85,'var(--z-easy)'],['Лёгкие',80,85,'var(--z-easy)'],['Устойчивый бег',85,90,'var(--z-mp)'],
+    ['Темповые',95,105,'var(--z-thr)'],['Темповые интервалы',105,110,'var(--z-thr)'],['Круизные интервалы',110,115,'var(--z-vo2)'],['Скоростные',115,125,'var(--z-vo2)'],['Спринты',125,140,'var(--z-vo2)']];
+  function render(){
+    const cp=parseFloat($('cp').value),kg=parseFloat($('kg').value);
+    document.querySelectorAll('.kgc').forEach(e=>e.classList.toggle('hidden',!(kg>0)));
+    if(!(cp>0)){$('zones').innerHTML='<tr><td colspan="4" style="color:var(--muted)">Введите критическую мощность</td></tr>';return;}
+    $('zones').innerHTML=Z.map(z=>{const lo=Math.round(cp*z[1]/100),hi=Math.round(cp*z[2]/100);
+      const w=kg>0?`<td class="r mono">${(lo/kg).toFixed(1)}–${(hi/kg).toFixed(1)}</td>`:'';
+      return `<tr><td><span class="zdot" style="background:${z[3]}"></span><span class="zname">${z[0]}</span></td><td class="r mono">${z[1]}–${z[2]}%</td><td class="r mono"><b>${lo}–${hi}</b></td>${w}</tr>`;}).join('');
+  }
+  ['cp','kg'].forEach(id=>$(id).addEventListener('input',render));render();
+
+</script>
+</body>
+</html>

@@ -177,6 +177,9 @@
   .btn:disabled{background:var(--z-rest);cursor:default;box-shadow:none;}
   .errbox{background:#fdeeee;border:1px solid #e5b5b5;border-left:5px solid #c0392b;border-radius:4px;
     padding:12px 16px;margin:14px 0;color:#7a2318;font-weight:600;display:none;}
+  .goal-equivalent{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:0 8px;}
+  .goal-vdot{font-size:11px;color:var(--muted);white-space:nowrap;}
+  .vcard .goal-equivalent{flex-direction:column;align-items:flex-start;gap:0;}
   .verdicts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:16px 0 8px;}
   .vcard{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 16px;border-top:4px solid var(--z-rest);}
   .vcard.ok{border-top-color:var(--z-easy);} .vcard.amb{border-top-color:var(--z-thr);} .vcard.bad{border-top-color:#c0392b;}
@@ -284,7 +287,7 @@
       <div class="fld goalOnly" style="grid-column:1/-1"><label>Текущие результаты (недавние гонки/прикидки)</label>
         <div id="resList"></div>
         <button type="button" class="btn sec" id="addResBtn" style="padding:5px 12px;font-size:12px;margin-top:4px">+ добавить результат</button>
-        <div class="hint">добавьте что есть: 5 / 10 км, 21,1 / 42,2 км. По всем результатам строится профиль формы по дистанциям (VDOT каждого результата, лучший — верхняя граница). Нет результатов — укажите темп ПАНО: форма оценится по нему, без данных о выносливости на разных дистанциях.</div></div>
+        <div class="hint">добавьте что есть: 5 / 10 км, 21,1 / 42,2 км. VDOT рассчитывается для каждого результата. Между дистанциями — интерполяция профиля, за его границами — экстраполяция. Нет результатов — укажите темп ПАНО: форма оценится по нему, без данных о выносливости на разных дистанциях.</div></div>
       <div class="fld"><label>Возраст</label><input type="number" id="age" value="38" min="16" max="80"></div>
             <div class="fld goalOnly"><label>ПАНО: пульс, уд/мин</label><input type="number" id="lthr" value="178" min="120" max="210"><div class="hint">пусто — зоны Garmin Z1–Z5</div></div>
       <div class="fld"><label>ПАНО: темп, мин/км</label><input type="text" id="ltpace" placeholder="м:сс"><div class="hint" id="ltpaceHint">подставлен из результатов — можно изменить</div></div>
@@ -419,7 +422,7 @@
   <div id="out"></div>
 
 
-  <footer>Модель: профиль результатов (Riegel) и VDOT (Дэниелс) · рост скорости 0,4%/нед., не выше лучшего VDOT · рост объёма — ACWR ≤1,3 и +30% беговых км за 2 недели · недели восстановления и откат длинной · зоны пульса от ПАНО (Friel). Не является медицинской рекомендацией.</footer>
+  <footer>Модель: профиль результатов (Riegel) и VDOT (Дэниелс) · прогноз роста скорости 0,4%/нед. · рост объёма — ACWR ≤1,3 и +30% беговых км за 2 недели · недели восстановления и откат длинной · зоны пульса от ПАНО (Friel). Не является медицинской рекомендацией.</footer>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
@@ -508,21 +511,23 @@ function paceAtPct(vd,pct){
 // ---- Дополнительные темпы 1:1 с mcmillan_pace_calculator.html (paceSet/SPEED_*/SPRINT_*) ----
 // Существующие зоны плана (rec/easy/long/thr/vo2/rep/mp…) не затрагиваются: это отдельный набор R.mcm для
 // расчётов дистанции/времени любых тренировок (steady, темповые, круизные, бэккен, скоростные и спринтерские отрезки).
-// Диапазоны — [быстрый, медленный], сек/км. vdLT — VDOT для порога/CV, vdV — VDOT для МПК и коротких отрезков.
+// Диапазоны — [быстрый, медленный], сек/км. Опоры: vdLT — час, vdV — 11 мин, vdR — миля, vdCV — 30 мин.
 const vFromVo2=x=>(-0.182258+Math.sqrt(0.182258*0.182258+4*0.000104*(x+4.60)))/(2*0.000104);
 const SPEED_END={400:[1.00,1.07],600:[0.99,1.05],800:[0.97,1.03],1000:[0.96,1.01],1200:[0.95,1.00],1600:[0.92,0.97]};
 const SPEED_SPD={400:[1.05,1.12],600:[1.03,1.10],800:[1.00,1.07],1000:[0.98,1.03],1200:[0.97,1.02],1600:[0.95,1.00]};
 const SPRINT_END={100:[1.12,1.24],200:[1.10,1.22],300:[1.08,1.18],400:[1.06,1.16],600:[1.02,1.10]};
 const SPRINT_SPD={100:[1.18,1.30],200:[1.15,1.27],300:[1.12,1.23],400:[1.10,1.20],600:[1.06,1.14]};
-function mcmPaces(vdLT,vdV){
+function mcmPaces(vdLT,vdV,vdR,vdCV){
   if(vdV==null)vdV=vdLT;
+  if(vdR==null)vdR=vdV;
+  if(vdCV==null)vdCV=vdLT;
   const pv=v=>60000/v, spd=(v,a,b)=>[pv(v*b),pv(v*a)]; // a,b — доли скорости [медленнее, быстрее] как в McMillan; результат [быстрый, медленный] по темпу
-  const vLT=vFromVo2(0.88*vdLT), v100=vFromVo2(vdV);
-  const M={lt:pv(vLT),cv:pv(vFromVo2(vdLT*pctAt(30))),vo2:pv(v100),
+  const vLT=vFromVo2(0.88*vdLT), v100=vFromVo2(vdV), vR=vFromVo2(vdR);
+  const M={lt:pv(vLT),cv:pv(vFromVo2(vdCV*pctAt(30))),vo2:pv(v100),
     bak:spd(vLT,0.97,0.99),steady:spd(vLT,0.92,0.97),tempo:spd(vLT,0.99,1.02),tint:spd(vLT,1.02,1.05),cruise:spd(vLT,1.04,1.07),
     speedEnd:{},speedSpd:{},sprintEnd:{},sprintSpd:{}};
   for(const k in SPEED_END){M.speedEnd[k]=spd(v100,SPEED_END[k][0],SPEED_END[k][1]);M.speedSpd[k]=spd(v100,SPEED_SPD[k][0],SPEED_SPD[k][1]);}
-  for(const k in SPRINT_END){M.sprintEnd[k]=spd(v100,SPRINT_END[k][0],SPRINT_END[k][1]);M.sprintSpd[k]=spd(v100,SPRINT_SPD[k][0],SPRINT_SPD[k][1]);}
+  for(const k in SPRINT_END){M.sprintEnd[k]=spd(vR,SPRINT_END[k][0],SPRINT_END[k][1]);M.sprintSpd[k]=spd(vR,SPRINT_SPD[k][0],SPRINT_SPD[k][1]);}
   return M;}
 const PW={race:[-0.008,0.0125],thr:[-0.016,0.016],rep:[-0.0125,0.0125],ultra:[-0.025,0.035],ultraRace:[-0.015,0.045]};
 const win=(p,w)=>[p*(1+w[0]),p*(1+w[1])];
@@ -595,11 +600,12 @@ function normalizeCfg(cfg){
   if(c.cross)c.cross=c.cross.map(x=>Object.assign({},x));
   return c;}
 function bestVdot(results){const v=(results||[]).filter(r=>r&&r.sec>0&&r.dist>0).map(r=>vdot(r.dist,r.sec));return v.length?Math.max(...v):null;}
-// ---------- шаг 1: профиль результатов (3.1) ----------
+// ---------- шаг 1: профиль результатов (5.1) ----------
 // время и VDOT на дистанции: до марафона — Дэниелс–Гилберт; ультра — от марафонского эквивалента по Ригелю (экстраполяция)
 const timeAtV=(D,V)=>D>42195?riegel(timeFor(42195,V),D):timeFor(D,V);
 const vOfT=(D,T)=>D>42195?vdot(42195,riegelInv(T,D)):vdot(D,T);
 const vdForGoalTime=(D,T)=>vOfT(D,T);
+const formCell=(d,sec,strong=false,vd=vOfT(d,sec))=>`<div class="goal-equivalent"><span>${strong?`<b>${fmtT(sec)}</b>`:fmtT(sec)}</span><span class="goal-vdot">VDOT ${vd.toFixed(1)}</span></div>`;
 const R_WEEK=0.004; // рост скорости 0,4% в неделю [практ.] (3.4)
 function profileOf(results,ltPace){
   const by={};(results||[]).filter(r=>r&&r.sec>0&&r.dist>0).forEach(r=>{if(!by[r.dist]||r.sec<by[r.dist].T)by[r.dist]={D:+r.dist,T:+r.sec};});
@@ -611,21 +617,27 @@ function profileOf(results,ltPace){
   let a=null,b=null;
   if(pts.length>=2){const xs=pts.map(p=>Math.log(p.D)),ys=pts.map(p=>Math.log(p.T)),n=pts.length,mx=xs.reduce((s,x)=>s+x,0)/n,my=ys.reduce((s,y)=>s+y,0)/n;
     let sxy=0,sxx=0;for(let k=0;k<n;k++){sxy+=(xs[k]-mx)*(ys[k]-my);sxx+=(xs[k]-mx)**2;}b=sxy/sxx;a=my-b*mx;}
-  // T0 — исходная оценка (степенная форма Riegel по всем результатам), не быстрее лучшего VDOT
-  const T0=D=>{const tb=timeAtV(D,Vbest);return b!=null?Math.max(Math.exp(a)*Math.pow(D,b),tb):tb;};
-  const V0=D=>vOfT(D,T0(D));
+  // Текущий профиль проходит через все результаты; интерполяция и экстраполяция ограничены лучшим исходным VDOT.
+  // Единственный результат даёт вычисленный эквивалент Дэниелса, а не известный профиль выносливости.
+  const T0=D=>{
+    if(pts.length<2)return timeAtV(D,Vbest);
+    let j=1;while(j<pts.length-1&&D>pts[j].D)j++;
+    const p=pts[j-1],q=pts[j],k=Math.log(q.T/p.T)/Math.log(q.D/p.D);
+    return Math.max(p.T*Math.pow(D/p.D,k),timeAtV(D,Vbest));
+  };
+  const V0=D=>Math.min(Vbest,vOfT(D,T0(D)));
   // дистанция, которую профиль пробегает за t минут
   const distAt=tMin=>{let lo=500,hi=250000;for(let k=0;k<60;k++){const m=(lo+hi)/2;(T0(m)<tMin*60)?lo=m:hi=m;}return (lo+hi)/2;};
-  return {pts,Vbest,Db,a,b,src,T0,V0,distAt,D60:distAt(60),D11:distAt(11)};
+  return {pts,Vbest,Db,a,b,src,T0,V0,distAt,D60:distAt(60),D30:distAt(30),D11:distAt(11)};
 }
-// траектория формы (3.4): v(D,w)=min(v0(D)·(1+r)^w, v_Vbest(D)); ручная цель — сдвиг Δ (Δ≥0) или меньшая скорость роста r' (Δ<0)
+// Траектория (5.3): v(D,w)=v0(D)·(1+r)^w; ручная цель меняет уклон всех дистанций.
 function trajectoryOf(pf,B,goalDist,tgtClean){
-  const base=(r)=>(D,w)=>{const ww=clamp(w,0,B),v0=D/pf.T0(D),vb=D/timeAtV(D,pf.Vbest);return vOfT(D,D/Math.min(v0*Math.pow(1+r,ww),Math.max(vb,v0)));};
+  const base=r=>(D,w)=>vOfT(D,pf.T0(D)/Math.pow(1+r,clamp(w,0,B)));
   const m1=base(R_WEEK);
   const res={m1,V:m1,r:R_WEEK,delta:0,Vc:null,out:false,slow:false};
   if(tgtClean==null)return res;
   const Vc=vOfT(goalDist,tgtClean), VB=m1(goalDist,B);res.Vc=Vc;res.delta=Vc-VB;
-  if(Vc>=VB){const d=Vc-VB;res.V=(D,w)=>m1(D,w)+d*(B>0?Math.min(clamp(w,0,B),B)/B:1);res.out=Vc>pf.Vbest+0.03;}
+  if(Vc>=VB){const d=Vc-VB;res.V=(D,w)=>m1(D,w)+d*(B>0?Math.min(clamp(w,0,B),B)/B:1);res.out=Vc>VB+0.03;}
   else if(Vc<=pf.V0(goalDist)){res.r=0;res.V=base(0);res.slow=true;}
   else{let lo=0,hi=R_WEEK;for(let k=0;k<40;k++){const m=(lo+hi)/2;(base(m)(goalDist,B)<Vc)?lo=m:hi=m;}res.r=(lo+hi)/2;res.V=base(res.r);}
   return res;
@@ -641,7 +653,8 @@ function paceAt(pf,Vf,w,goalDist,ltPace){
   const R={mp:win(pD(42195),PW.race),thr:win(thrP,PW.thr),vo2:[paceAtPct(vI,1.00),paceAtPct(vI,0.95)],
     rep,str:rep.slice(),easy,rec:[(easy[0]+easy[1])/2,easy[1]],longp:easy.slice(),
     hm:win(pD(21097),PW.race),race10:win(pD(10000),PW.race),race5:win(pD(5000),PW.race),t10:win(pD(10000),PW.race),
-    goal:pD(goalDist),_vd:vT,mcm:mcmPaces(vT,vI)};
+    goal:pD(goalDist),_vd:vT,_vds:{thr:vT,vo2:vI,easy:vE,rep:V(1609.34),cv:V(pf.D30)},
+    mcm:mcmPaces(vT,vI,V(1609.34),V(pf.D30))};
   if(goalDist>42195)R.ultra=win(R.goal,PW.ultra);
   return R;}
 
@@ -733,7 +746,7 @@ const acwrCap=h3=>ACWR_MAX*h3/(4-ACWR_MAX);
 const recoveryDaysAfter=dist=>Math.round(Math.min(dist,42195)/3000);// Дэниелс: 1 лёгкий день на 3 км (15 км → 5, полумарафон → 7)
 // цель относительно модели 1 (3.4): вне диапазона — только предупреждение
 function goalVerdict(Vc,V0g,Vbest,Vreal){
-  if(Vc>Vbest+0.03&&!(Vreal!=null&&Vc<=Vreal+0.03))return 'вне диапазона';
+  if(Vc>(Vreal!=null?Vreal:Vbest)+0.03)return 'вне диапазона';
   if(Vc<=V0g+0.03&&!(Vreal!=null&&Vc>=Vreal-0.03))return 'поддержание';
   return 'в диапазоне';}
 const zonePacesR=(R,goalDist)=>[mid(R.easy),goalDist>42195?(mid(R.thr)+mid(R.ultra))/2:goalDist>=42195?(mid(R.mp)+mid(R.thr))/2:goalDist>=21097?(mid(R.hm)+mid(R.thr))/2:mid(R.thr),mid(R.vo2)];
@@ -755,16 +768,16 @@ function planBasics(cfgIn){
   if(!pf)return {error:'Добавьте текущий результат (дистанция + время) или темп ПАНО.'};
   const ltVd=cfg.ltPace>0?vdot(3600/cfg.ltPace*1000,3600):null;
   if(pf.src==='lt')notes.push(`Результатов нет — форма по темпу ПАНО ${fmtP(cfg.ltPace)} (VDOT ${pf.Vbest.toFixed(1)}): выносливость на разных дистанциях неизвестна, профиль плоский.`);
-  else if(pf.pts.length===1)notes.push('Один результат: профиль выносливости неизвестен, на других дистанциях — эквивалент Дэниелса; форма по умолчанию не растёт, рост задаёт только введённая цель.');
+  else if(pf.pts.length===1)notes.push('Один результат: исходный VDOT рассчитан по нему; на других дистанциях — эквивалент Дэниелса, профиль выносливости неизвестен. Прогноз роста применяется ко всем дистанциям.');
   if(pf.b!=null&&(pf.b<1.0495||pf.b>1.0805))notes.push(`Показатель профиля результатов b = ${pf.b.toFixed(3)} вне диапазона Riegel 1,05–1,08: экстраполяция ненадёжна.`);
-  if(ltVd!=null&&pf.src!=='lt'&&Math.abs(ltVd-pf.Vbest)>2)
-    notes.push(`Темп ПАНО ${fmtP(cfg.ltPace)} соответствует VDOT ${ltVd.toFixed(1)}, результаты — ${pf.Vbest.toFixed(1)}. Форма — по результатам, пороговый темп — по введённому ПАНО.`);
+  if(ltVd!=null&&pf.src!=='lt'&&Math.abs(ltVd-pf.V0(pf.D60))>2)
+    notes.push(`Темп ПАНО ${fmtP(cfg.ltPace)} соответствует VDOT ${ltVd.toFixed(1)}, часовой профиль — ${pf.V0(pf.D60).toFixed(1)}. Форма — по результатам, пороговый темп — по введённому ПАНО.`);
   // акцент (3.5): разрыв w(D) = ln(v_Vbest/v0)/ln(1+r) недель на опорных дистанциях темпов и Dц; сторона — длиннее или короче лучшего результата
   const accDists=[1609.34,pf.D11,pf.D60,5000,10000,21097,42195,goalDist];
-  // вне диапазона результатов профиль — эквивалент Дэниелса от ближайшего результата (экстраполяция даёт ложный дефицит); лучшие результаты: границы групп — крайние дистанции
+  // Акцент — по наблюдаемому диапазону: экстраполяция не создаёт дополнительного дефицита.
   const pts=pf.pts, Dmin=pts.length?pts[0].D:pf.Db, Dmax=pts.length?pts[pts.length-1].D:pf.Db;
   const bestPts=pts.filter(q=>q.V>=pf.Vbest-1e-9), Dhi=bestPts.length?Math.max(...bestPts.map(q=>q.D)):pf.Db, Dlo=bestPts.length?Math.min(...bestPts.map(q=>q.D)):pf.Db;
-  const T0g=D=>{if(pts.length<2||(D>=Dmin&&D<=Dmax))return pf.T0(D);const q=D<Dmin?pts[0]:pts[pts.length-1];return Math.max(timeAtV(D,q.V),timeAtV(D,pf.Vbest));};
+  const T0g=D=>D<Dmin?timeAtV(D,pts.length?pts[0].V:pf.Vbest):D>Dmax?timeAtV(D,pts.length?pts[pts.length-1].V:pf.Vbest):pf.T0(D);
   const gaps=accDists.map(D=>({D,w:Math.max(0,Math.log((D/timeAtV(D,pf.Vbest))/(D/T0g(D)))/Math.log(1+R_WEEK))}));
   const wE=gaps.reduce((m,g)=>g.D>Dhi+1?Math.max(m,g.w):m,0), wS=gaps.reduce((m,g)=>g.D<Dlo-1?Math.max(m,g.w):m,0);
   const W_MIN=2; // порог выраженного дефицита, недель (≈0,8% скорости) [практ.]
@@ -780,7 +793,7 @@ function planBasics(cfgIn){
   let B=N-1;for(let i=0;i<N;i++)if(tsh[i]<0.9999){B=i;break;}
   const exp=KEXP[cfg.exp]!=null?cfg.exp:'inter';
   // уровень 80/20 и пик — по исходной форме 4.1 (V0), текущему объёму и истории; км → мин по распределению по умолчанию для дистанции (принцип 2.3)
-  const kpm=kmPerMin(planShares(goalDist,tidDefault(goalDist),exp),zonePacesR(paceAt(pf,D=>pf.V0(D),0,goalDist,cfg.ltPace),goalDist));
+  const kpm=kmPerMin(planShares(goalDist,tidDefault(goalDist),exp),zonePacesR(paceAt(pf,D=>pf.V0(D),0,goalDist,cfg.ltPaceManual===false?null:cfg.ltPace),goalDist));
   const toMin=(v,unit)=>!(v>0)?0:(unit==='h'?v*60:v/kpm);
   const curMin=cfg.curMin>0?+cfg.curMin:toMin(cfg.curVol,cfg.volUnit);
   const lvl=levelFor(goalDist,curMin);
@@ -791,10 +804,10 @@ function planBasics(cfgIn){
   const tgtClean=cfg.tgtGoal>0?ca.toClean(cfg.tgtGoal):null;
   const tr1=trajectoryOf(pf,B,goalDist,null), tr=tgtClean!=null?trajectoryOf(pf,B,goalDist,tgtClean):tr1;
   const V0g=pf.V0(goalDist), Vreal=tr1.m1(goalDist,B);
-  const curClean=Math.round(pf.T0(goalDist)), realClean=Math.round(timeAtV(goalDist,Vreal)), ambClean=Math.round(timeAtV(goalDist,Math.max(pf.Vbest,Vreal)));
+  const curClean=Math.round(pf.T0(goalDist)), realClean=Math.round(timeAtV(goalDist,Vreal)), ambClean=Math.round(timeAtV(goalDist,Vreal));
   const needVd=tgtClean!=null?tr.Vc:Vreal;
   const vG=tgtClean!=null?goalVerdict(needVd,V0g,pf.Vbest,Vreal):'—';
-  const R0=paceAt(pf,tr.V,0,goalDist,cfg.ltPace);
+  const R0=paceAt(pf,tr.V,0,goalDist,cfg.ltPaceManual===false?null:cfg.ltPace);
   // ---------- 4.4.1 распределение интенсивности: ползунок рекомендуется по акценту ----------
   // по умолчанию — модель дистанции; дефицит выносливости смещает к пирамидальному, скорости — к поляризованному;
   // степень смещения — доля срока подготовки, нужная для закрытия разрыва (md не задаёт формулу) [практ.]
@@ -807,16 +820,16 @@ function planBasics(cfgIn){
   if(cfg.slider==null&&Math.abs(sRec-sBase)>0.005)notes.push(`Распределение интенсивности смещено по акценту (${accent.side==='end'?'дефицит выносливости — к пирамидальному':'дефицит скорости — к поляризованному'}): ползунок ${Math.round(sRec*100)}%; можно изменить.`);
   const stdDists=[5000,10000,21097,42195,60000,80000,100000,120000,160000];
   const maxDist=Math.max(goalDist,...cfg.results.map(r=>r.dist||0));
-  const eq=stdDists.filter(d=>d<goalDist||d===maxDist).map(d=>({dist:d,sec:Math.round(timeAtV(d,tr1.m1(d,B))),curSec:Math.round(pf.T0(d)),
-    tgtSec:tgtClean!=null?Math.round(timeAtV(d,tr.V(d,B))):null}));
+  const eq=[...new Set([...stdDists.filter(d=>d<=maxDist),goalDist,...cfg.results.map(r=>r.dist)])].sort((a,b)=>a-b).map(d=>({dist:d,sec:Math.round(timeAtV(d,tr1.m1(d,B))),curSec:Math.round(pf.T0(d)),
+    tgtSec:tgtClean!=null?Math.round(timeAtV(d,tr.V(d,B))):null,curVd:pf.V0(d),vd:tr1.m1(d,B),tgtVd:tgtClean!=null?tr.V(d,B):null}));
   if(pf.T0(goalDist)>230*60)notes.push(`Исходная оценка на ${GM.short} дольше 230 мин — степенная модель здесь оптимистична (у Riegel кривая рекордов загибается вверх).`);
   if(isUltra)notes.push('Время на ультра — экстраполяция профиля для равнинной трассы; на рельефе и грунте закладывайте больше.');
   if(ca.elev>=300)notes.push(`Набор ~${ca.elev} м учтён во времени (+~${Math.round(ca.elev*0.6/60)} мин); в плане есть горочная работа.`);
   if(ca.heat)notes.push('Жаркий старт: к времени добавлено ~3%. Темпы тренировок не меняются, в жару держите пульс, а не темп.');
   if(ca.altPct>0)notes.push(`Высота ~${ca.alt} м: к времени добавлено ~${Math.round(ca.altPct*100)}%; нужна акклиматизация.`);
   return {cfg,goalDist,GM,isUltra,notes,pf,anchorVd:V0g,ltVd,start,raceD,N,taper,tsh,B,s,exp,shares,sRec,kpm,curMin,lvl,peakMin,peakManual,
-    tr,tr1,fc:{real:Vreal,amb:Math.max(pf.Vbest,Vreal)},ca,tgtClean,needVd,vG,curClean,realClean,ambClean,eq,accent,gaps,R0,
-    paceAt:w=>paceAt(pf,tr.V,w,goalDist,cfg.ltPace)};
+    tr,tr1,fc:{real:Vreal,amb:Vreal},ca,tgtClean,needVd,vG,curClean,realClean,ambClean,eq,accent,gaps,R0,
+    paceAt:w=>paceAt(pf,tr.V,w,goalDist,cfg.ltPaceManual===false?null:cfg.ltPace)};
 }
 // форма и план — один расчёт: всё, что показывает форма, берётся из построенного плана
 function forecastFor(cfgIn){
@@ -881,7 +894,7 @@ function buildPlan(cfgIn){
   const goalPace=endGoal/(goalDist/1000);
   if(tgtClean!=null){
     const nm=`${GM.name} ${fmtT(cfg.tgtGoal)}`;
-    if(vG==='вне диапазона')notes.push(`⚠ ${nm} быстрее верхней границы модели 1 (лучший VDOT ${pf.Vbest.toFixed(1)}, ≈${fmtT(ca.toDisp(b.ambClean))}; ориентир ≈${fmtT(ca.toDisp(b.realClean))}). План построен под вашу цель: все темпы подняты единым приростом VDOT.`);
+    if(vG==='вне диапазона')notes.push(`⚠ ${nm} быстрее автоматического прогноза ≈${fmtT(ca.toDisp(b.realClean))}. План построен под вашу цель: уклон прогрессии VDOT изменён для всех дистанций и темпов.`);
     else if(vG==='поддержание')notes.push(`${nm} не быстрее текущей оценки (≈${fmtT(ca.toDisp(b.curClean))}): рост формы не планируется, темпы — по текущей форме.`);
   }
 
@@ -1087,7 +1100,8 @@ function buildPlan(cfgIn){
     const useCarry=type===''||type==='A';
     const poolMid=tMid+(useCarry?prog.carryMid:0), poolUp=tUp+(useCarry?prog.carryUp:0);
     const fixedRunN=runCount();
-    const qBud=ph==='I'?0:(rw<=3||o.q1?1:rw>=7?3:2);
+    const qRuns=Math.min(rw,days.filter(d=>!['before','after','prerest'].includes(d.role)).length+(o.dbl||0));
+    const qBud=ph==='I'?0:(qRuns<=3||o.q1?1:qRuns>=7?3:2);
     // ---- длинная ----
     const capL=longCapFor(lead>0?Wt:W,R,ph);
     const capLkm=longKmCap(lead>0?Wt:W,R,ph);
@@ -1630,7 +1644,7 @@ function buildPlan(cfgIn){
     anchorVd:+b.anchorVd.toFixed(1),achGoalVd:+Vend.toFixed(1),forecastVd:+b.fc.real.toFixed(1),ambVd:+b.fc.amb.toFixed(1),bestVd:+pf.Vbest.toFixed(1),
     forecastGoal:ca.toDisp(b.realClean),vdTarget:tgtClean!=null?+b.needVd.toFixed(1):null,vG,
     curGoalTime:ca.toDisp(b.curClean),endGoal,tgtGoal:cfg.tgtGoal||null,
-    equiv:b.eq.map(e=>({dist:e.dist,name:distName(e.dist),sec:e.sec,curSec:e.curSec})),
+    equiv:b.eq.map(e=>({...e,name:distName(e.dist)})),
     results:pf.pts.map(p=>({dist:p.D,sec:p.T,vd:+p.V.toFixed(1)})),profileB:pf.b,accent:b.accent,
     forecastUnreliable:qWeeks>0&&qMissW*3>=qWeeks,qMissWeeks:qMissW,qWorkWeeks:qWeeks,
     recRuns,targetPeakMin:Math.round(targetPeak),tanda,
@@ -2110,12 +2124,12 @@ function fillForm(cfg){
   cfg=cfg||{};
   const gd=cfg.goalDist||42195;
   $('goalDist').value=gd; $('goalD').value=cfg.goalISO||cfg.marathonISO||'';
-  $('tgtGoal').value=fmtT(cfg.tgtGoal||(gd===10000?cfg.tgt10:gd===21097?cfg.tgt21:cfg.tgtMar)||0); tgtTouched=true;
+  $('tgtGoal').value=fmtT(cfg.tgtGoal||(gd===10000?cfg.tgt10:gd===21097?cfg.tgt21:cfg.tgtMar)||0); tgtTouched=cfg.tgtGoalManual!==false;
   let res=(cfg.results&&cfg.results.length)?cfg.results:[];
   if(!res.length){ if(cfg.cur10)res.push({dist:10000,sec:cfg.cur10}); if(cfg.curMar)res.push({dist:42195,sec:cfg.curMar}); }
   if(res.length)setResRows(res);
   $('age').value=cfg.age||38;
-  $('lthr').value=cfg.lthr||''; $('ltpace').value=cfg.ltPace?fmtP(cfg.ltPace):''; ltpaceTouched=!!cfg.ltPace;
+  $('lthr').value=cfg.lthr||''; $('ltpace').value=cfg.ltPace?fmtP(cfg.ltPace):''; ltpaceTouched=cfg.ltPaceManual!==false&&!!cfg.ltPace;
   if(cfg.startISO)$('startD').value=cfg.startISO;
   $('curVol').value=cfg.curVol||Math.round((cfg.peakVol||80)*0.8);
   $('curLong').value=cfg.curLong?String(cfg.curLong):'';
@@ -2553,7 +2567,7 @@ function recalcEstimateNow(){
     const gd=+$('goalDist').value; const tg=$('tgtGoal'); if(tg)tg.placeholder=phShort(gd);
     const results=readResRows();
     if(!$('goalD').value||!$('startD').value){el.innerHTML='добавьте даты — покажу прогноз';return;}
-    const anchorReal=bestVdot(results);
+    const inputProfile=profileOf(results,null), anchorReal=inputProfile?inputProfile.V0(inputProfile.D60):null;
     if(!anchorReal&&!ltpaceTouched&&$('ltpace').value){$('ltpace').value='';}
     if(anchorReal&&!ltpaceTouched){$('ltpace').value=fmtP(paceAtDuration(anchorReal,60)); if($('ltpaceHint'))$('ltpaceHint').textContent='подставлен из результатов — можно изменить';}
     let cfgF;
@@ -2586,17 +2600,15 @@ function recalcEstimateNow(){
     if(!tagTouched)$('tag').value='['+genTag(gd,tgtSec,$('startD').value)+']';
     const tgtClean=ca.toClean(tgtSec), vdNeed=vdForGoalTime(gd,tgtClean);
     const vG=goalVerdict(vdNeed,fcR.anchorVd,fcR.pf.Vbest,fcR.fc.real);
-    if($('tgtRange'))$('tgtRange').innerHTML=`ориентир <b>≈${fmtT(realistic)}</b> · диапазон ${fmtT(upper)}–${fmtT(now)} (от лучшего VDOT до текущей оценки)`;
-    const vtxt={'в диапазоне':'в диапазоне модели','вне диапазона':'⚠ быстрее верхней границы модели 1 (план строится, все темпы поднимаются к цели)','поддержание':'не быстрее текущей оценки — рост формы не планируется'}[vG]||'';
+    if($('tgtRange'))$('tgtRange').innerHTML=`ориентир <b>≈${fmtT(realistic)}</b> · диапазон ${fmtT(upper)}–${fmtT(now)} (от прогноза до текущей формы)`;
+    const vtxt={'в диапазоне':'в диапазоне модели','вне диапазона':'⚠ быстрее автоматического прогноза (план строится, прогрессии темпов скорректированы к цели)','поддержание':'не быстрее текущей оценки — рост формы не планируется'}[vG]||'';
     let html=`<div style="color:var(--muted)">Цель ${($('tgtGoal').value||'').trim()} = <b>${fmtHuman(tgtSec)}</b>${tgtTouched?'':' <span style="opacity:.7">(ориентир модели)</span>'}${vtxt?' — '+vtxt:''}</div>`;
-    html+=`<div style="margin-top:2px">Прогноз к старту (ориентир): <b>≈${fmtT(realistic)}</b> · VDOT на ${distName(gd)} ${fcR.anchorVd.toFixed(1)} → ${fcR.fc.real.toFixed(1)}, верхняя граница — лучший VDOT ${fcR.pf.Vbest.toFixed(1)} (рост скорости 0,4%/нед. за ${fcR.B} нед. до подводки, не выше лучшего VDOT)</div>`;
-    if(fcR.pf.pts.length)html+=`<div style="margin-top:2px">Результаты: ${fcR.pf.pts.map(p=>`${distName(p.D)} ${fmtT(p.T)} — VDOT ${p.V.toFixed(1)}`).join('; ')}${fcR.pf.b!=null?` · профиль b = ${fcR.pf.b.toFixed(3)}${fcR.pf.b<1.05||fcR.pf.b>1.08?' (вне 1,05–1,08: экстраполяция ненадёжна)':''}`:''}</div>`;
-    const showTgt=Math.abs(vdNeed-fcR.fc.real)>0.15;
+    const showTgt=tgtTouched&&Math.abs(vdNeed-fcR.fc.real)>0.15;
     const tgtEq=showTgt?planBasics(Object.assign({},cfgF,{tgtGoal:tgtSec})):null;
     const eqAt=d=>{const e=tgtEq&&!tgtEq.error&&tgtEq.eq.find(x=>x.dist===d);return e&&e.tgtSec!=null?e.tgtSec:null;};
-    if(fcR.eq.length)html+=`<table style="margin:4px 0 0;border-collapse:collapse;font-size:12.5px">`+
+    if(fcR.eq.length)html+=`<table class="goal-equivalents" style="margin:4px 0 0;border-collapse:collapse;font-size:12.5px">`+
       `<tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Дистанция</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 10px 2px 0;color:var(--muted)">Прогноз к старту</td>${showTgt?'<td style="padding:2px 0;color:var(--muted)">Под вашу цель</td>':''}</tr>`+
-      fcR.eq.map(e=>`<tr><td style="padding:1px 10px 1px 0">${distName(e.dist)}</td><td style="padding:1px 10px">${fmtT(e.curSec)}</td><td style="padding:1px 10px 1px 0"><b>${fmtT(e.sec)}</b></td>${showTgt?`<td style="padding:1px 0"><b>${e.dist===gd?fmtT(tgtClean):(eqAt(e.dist)!=null?fmtT(eqAt(e.dist)):'—')}</b></td>`:''}</tr>`).join('')+`</table>`;
+      fcR.eq.map(e=>{const target=e.dist===gd?tgtClean:eqAt(e.dist);return `<tr><td style="padding:1px 10px 1px 0">${distName(e.dist)}</td><td style="padding:1px 10px">${formCell(e.dist,e.curSec,false,e.curVd)}</td><td style="padding:1px 10px 1px 0">${formCell(e.dist,e.sec,true,e.vd)}</td>${showTgt?`<td style="padding:1px 0">${target!=null?formCell(e.dist,target,true):'—'}</td>`:''}</tr>`;}).join('')+`</table>`;
     const sh=fcR.shares.map(x=>Math.round(x*100)).join('/');
     html+=`<div style="margin-top:6px;color:var(--muted)">Объём сейчас ≈${hm(fcR.curMin)} ч/нед — уровень ${lv.idx} по 80/20${lv.below?' (ниже уровня 0)':''}. Распределение Z1+Z2 / Z3+Z4 / Z5 ≈ ${sh}% — ${recommendAccent(fcR).reason}${sliderTouched?' <span style="opacity:.7">(ползунок задан вручную)</span>':''}.</div>`;
     if((peakTouched?fcU:fcR).forecastUnreliable)html+=`<div style="margin-top:6px;color:#c0392b">⚠ В трети рабочих недель фаз II–IV не все качественные помещаются (лимиты Дэниелса, бюджет зон, дни): прогноз эту нехватку не учитывает. Увеличьте объём или частоту.</div>`;
@@ -2627,10 +2639,12 @@ function readCfg(opts){
   const cross=readCross();
   const cfg={startISO:$('startD').value,goalISO:$('goalD').value,goalDist:+$('goalDist').value,
     tuneRaces:readTuneRows(),results,
+    tgtGoalManual:tgtTouched,
     tgtGoal:opts.forecast?(parseT($('tgtGoal').value)||null):req('tgtGoal','цель'),
     runsAuto:(typeof runsTouched==='undefined')?false:!runsTouched,
     age:+$('age').value||35,
     lthr:$('lthr').value?+$('lthr').value:null,
+    ltPaceManual:ltpaceTouched,
     ltPace:$('ltpace').value?(()=>{const p=$('ltpace').value.trim().split(':').map(Number);
       if(p.length!==2||p.some(isNaN))throw 'Темп ПАНО — в формате м:сс, например 4:10.';return p[0]*60+p[1];})():null,
     peakVol:(typeof peakTouched!=='undefined'&&!peakTouched)?null:+$('peakVol').value,volUnit:$('volUnit').value,runs:+$('runs').value,curVol:+$('curVol').value||null,
@@ -2671,12 +2685,12 @@ function readCfg(opts){
   if(results.length>1){
     const vds=results.filter(r=>r.sec>0&&r.dist>0).map(r=>vdot(r.dist,r.sec));
     const spread=Math.max(...vds)-Math.min(...vds);
-    if(spread>4)WARN.push(`Введённые результаты дают очень разный уровень (VDOT ${Math.min(...vds).toFixed(1)}…${Math.max(...vds).toFixed(1)}). Форма берётся по лучшему — если один из результатов старый или с опечаткой, уберите его.`);
+    if(spread>4)WARN.push(`Введённые результаты дают очень разный уровень (VDOT ${Math.min(...vds).toFixed(1)}…${Math.max(...vds).toFixed(1)}). Каждый результат задаёт свою точку профиля; проверьте сопоставимость условий и актуальность результатов.`);
   }
   if(cfg.ltPace&&results.length){
-    const bestVd=bestVdot(results);
-    if(bestVd!=null){
-      const expThr=paceAtDuration(bestVd,60);
+    const resultProfile=profileOf(results,null);
+    if(resultProfile){
+      const expThr=paceAtDuration(resultProfile.V0(resultProfile.D60),60);
       const dv=expThr/cfg.ltPace-1;
       if(dv>0.03)
         WARN.push(`Темп ПАНО ${fmtP(cfg.ltPace)} быстрее ожидаемого по вашим результатам (~${fmtP(expThr)}/км — темп, устойчивый примерно 60 минут при вашей текущей форме). Если это значение с часов Garmin, оно могло быть определено по гонке/прикидке короче часа — это гоночный темп, а не часовой порог, и он завысит прогноз формы и целевые темпы плана. Проверьте по факту: на этом темпе пульс должен выходить на плато при непрерывном беге ~20–30+ минут, а не расти всё время.`);
@@ -2747,21 +2761,22 @@ function keyPrinciplesHtml(p){
 function render(p){
   if(p&&p.cfg&&p.cfg.planMode==='offseason')return renderOffseason(p);
   const a=p.analysis,cfg=p.cfg;
+  const showTgt=cfg.tgtGoalManual!==false&&a.vdTarget!=null&&Math.abs(a.vdTarget-a.forecastVd)>0.15;
   const vcls=v=>v==='в диапазоне'||v==='поддержание'||v==='—'?'ok':'amb';
-  const vTxt=v=>({'в диапазоне':'В диапазоне модели','вне диапазона':'Быстрее верхней границы модели','поддержание':'Не быстрее текущей формы','—':'Цель = ориентир модели'}[v]||'—');
+  const vTxt=v=>({'в диапазоне':'В диапазоне модели','вне диапазона':'Быстрее автоматического прогноза','поддержание':'Не быстрее текущей формы','—':'Цель = ориентир модели'}[v]||'—');
   const verdicts=`
   <h2>Оценка достижимости</h2>
   <div class="verdicts">
     <div class="vcard ${vcls(a.vG)}"><div class="t">${a.goalName} · цель ${a.tgtGoal?fmtT(a.tgtGoal):'—'}</div>
       <div class="big">${vTxt(a.vG)}</div>
-      <div class="sm">сейчас ≈${fmtT(a.curGoalTime)} → ориентир к старту ≈<b>${fmtT(a.forecastGoal||a.endGoal)}</b> (верхняя граница — лучший VDOT ${a.bestVd})${a.forecastGoal&&a.tgtGoal&&Math.abs(a.forecastGoal-a.tgtGoal)>30?` · план построен под цель <b>${fmtT(a.tgtGoal)}</b>`:''}.<br>Эквивалент формы:<table style="margin:3px 0 0;border-collapse:collapse;font-size:12.5px">
-        <tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Дистанция</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Прогноз к старту</td></tr>
-        ${a.equiv.map(e=>`<tr><td style="padding:1px 10px 1px 0">${e.name}</td><td style="padding:1px 10px">${e.curSec!=null?fmtT(e.curSec):'—'}</td><td style="padding:1px 0"><b>${fmtT(e.sec)}</b></td></tr>`).join('')}
+      <div class="sm">сейчас ≈${fmtT(a.curGoalTime)} → ориентир к старту ≈<b>${fmtT(a.forecastGoal||a.endGoal)}</b>${a.forecastGoal&&a.tgtGoal&&Math.abs(a.forecastGoal-a.tgtGoal)>30?` · план построен под цель <b>${fmtT(a.tgtGoal)}</b>`:''}.<br>Эквивалент формы:<table style="margin:3px 0 0;border-collapse:collapse;font-size:12.5px">
+        <tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Дистанция</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Прогноз к старту</td>${showTgt?'<td style="padding:2px 0;color:var(--muted)">Под вашу цель</td>':''}</tr>
+        ${a.equiv.map(e=>`<tr><td style="padding:1px 10px 1px 0">${e.name}</td><td style="padding:1px 10px">${e.curSec!=null?formCell(e.dist,e.curSec,false,e.curVd):'—'}</td><td style="padding:1px 0">${formCell(e.dist,e.sec,true,e.vd)}</td>${showTgt?`<td style="padding:1px 0">${e.tgtSec!=null?formCell(e.dist,e.tgtSec,true,e.tgtVd):'—'}</td>`:''}</tr>`).join('')}
         </table>
         ${a.results&&a.results.length?`<div style="margin-top:6px">Результаты: ${a.results.map(r=>`${distName(r.dist)} ${fmtT(r.sec)} — VDOT ${r.vd}`).join('; ')}${a.profileB!=null?` · профиль b = ${a.profileB.toFixed(3)}`:''}</div>`:''}
         <table style="margin:6px 0 0;border-collapse:collapse;font-size:12.5px">
         <tr><td style="padding:2px 10px 2px 0;color:var(--muted)">Показатель</td><td style="padding:2px 10px;color:var(--muted)">Текущая форма</td><td style="padding:2px 0;color:var(--muted)">Прогноз к старту</td></tr>
-        <tr><td style="padding:1px 10px 1px 0">VDOT (≈VO₂max, мл/кг/мин)</td><td style="padding:1px 10px">${a.anchorVd}</td><td style="padding:1px 0"><b>${a.forecastVd!=null?a.forecastVd:a.achGoalVd}</b>${a.forecastVd!=null&&Math.abs(a.forecastVd-a.achGoalVd)>0.1?` <span style="color:var(--muted)">(темпы плана — под ${a.achGoalVd})</span>`:''}</td></tr>
+        <tr><td style="padding:1px 10px 1px 0">VDOT на целевой дистанции</td><td style="padding:1px 10px">${a.anchorVd}</td><td style="padding:1px 0"><b>${a.forecastVd!=null?a.forecastVd:a.achGoalVd}</b>${a.forecastVd!=null&&Math.abs(a.forecastVd-a.achGoalVd)>0.1?` <span style="color:var(--muted)">(темпы плана — под ${a.achGoalVd})</span>`:''}</td></tr>
         </table></div></div>
     <div class="vcard"><div class="t">Восстановление и подводка</div>
       <div class="big">недели восстановления: ${a.deloadName}</div>
@@ -2782,7 +2797,7 @@ function render(p){
   </div>`;
 
   const zrows=[['easy','Лёгкий / длинная (E)',2],['mp','Марафонский (MP)',3],
-    ['thr','Пороговый (T)',4],['vo2','МПК / темп 10 км',5],['rep','Повторы / ускорения',null]];
+    ['thr','Пороговый (T)',4],['vo2','МПК / интервалы (I)',5],['rep','Повторы / ускорения',null]];
   const zones=`
   <h2>Зоны: темп сейчас → к старту${a.lthr?` · пульс от ПАНО ${a.lthr}`:''}</h2>
   ${a.lthr?`<div class="h2note">Уд/мин — справочно от вашего ПАНО; в Garmin уходят цели по зонам Z1–Z5 (настройте зоны на часах от ПАНО ${a.lthr}).</div>`:''}

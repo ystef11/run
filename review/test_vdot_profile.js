@@ -25,7 +25,20 @@ for(const input of [results,[{dist:10000,sec:3000},{dist:42195,sec:12360}],
     near(C.vOfT(d,profile.T0(d)),profile.V0(d));
   }
   for(const point of profile.pts)near(profile.T0(point.D),point.T);
+  for(let i=0;i<profile.pts.length;i++)near(profile.pts[i].V,Math.max(...profile.rawPts.slice(i).map(p=>p.V)));
 }
+// Слабый полумарафон получает VDOT марафона до расчёта промежуточных дистанций и темпов.
+const neighbors=[{dist:10000,sec:2414},{dist:21097,sec:6869},{dist:42195,sec:12360}];
+const pn=C.profileOf(neighbors,null),vm=C.vdot(42195,12360);
+near(pn.V0(21097),vm);near(pn.T0(21097),C.timeAtV(21097,vm));
+near(pn.V0(30000),vm);near(pn.V0(42195),vm);
+near(pn.rawPts[1].T,6869);near(pn.rawPts[1].V,C.vdot(21097,6869));
+assert.deepEqual(neighbors,[{dist:10000,sec:2414},{dist:21097,sec:6869},{dist:42195,sec:12360}]);
+assert.ok(pn.V0(15000)>=vm&&pn.V0(15000)<=pn.Vbest);
+// Повышение передаётся через несколько соседей, независимо от порядка ввода.
+const chain=C.profileOf([{dist:21097,sec:8000},{dist:5000,sec:1800},{dist:42195,sec:12360},{dist:10000,sec:4000}],null);
+for(const d of [5000,7500,10000,15000,21097,30000,42195])near(chain.V0(d),vm);
+for(const point of chain.rawPts)near(point.V,C.vOfT(point.D,point.T));
 // Ограничение исходного профиля не отменяет дальнейший рост и ручную цель.
 assert.ok(C.trajectoryOf(pf,12,42195,null).V(5000,12)>pf.Vbest);
 assert.ok(pf.V0(80000)<pf.V0(42195));
@@ -76,6 +89,11 @@ const maintain=C.trajectoryOf(pf,B,42195,pf.T0(42195)*1.05);
 for(const d of Ds)near(maintain.V(d,B),pf.V0(d));
 near(C.mid(C.paceAt(pf,auto.V,0,42195,270).thr),270);
 const cfg={startISO:'2026-11-09',goalISO:'2027-02-28',goalDist:42195,results,curVol:70,volUnit:'km',runs:6,exp:'inter',age:38,sex:'m',strength:0,ltPace:200,ltPaceManual:false};
+const adjustedPlan=C.buildPlan({...cfg,results:neighbors});
+assert.ok(!adjustedPlan.error,adjustedPlan.error);
+near(adjustedPlan.basics.pf.V0(21097),vm);
+near(adjustedPlan.analysis.results.find(p=>p.dist===21097).sec,6869);
+near(adjustedPlan.analysis.equiv.find(p=>p.dist===21097).curVd,vm);
 const base=C.planBasics(cfg);
 near(C.mid(base.paceAt(0).thr),C.paceAtDuration(pf.V0(pf.D60),60));
 // Полная сборка, прогноз формы и данные экспорта используют один профиль и одну траекторию.

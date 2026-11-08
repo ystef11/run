@@ -464,13 +464,17 @@ def apply_grade_adjustment(activities, intervals):
 # откалиброваны отдельно, см. apply_treadmill_calibration выше). Если охвата данных недостаточно
 # (< min_span_days или < min_points уличных точек) — коррекция не применяется (applied=False).
 
-def seasonal_detrend_ef(dates, values, is_outdoor, min_span_days=300, min_points=20):
+def seasonal_detrend_ef(dates, values, is_outdoor, min_span_days=300, min_points=20, reference=None):
     values = np.asarray(values, dtype=float)
     is_outdoor = np.asarray(is_outdoor, dtype=bool)
     dates = pd.to_datetime(pd.Series(dates)).dt.to_pydatetime()
 
-    dates_out = [d for d, o in zip(dates, is_outdoor) if o]
-    values_out = values[is_outdoor]
+    # Для EF интервалов модель учится на тех же лёгких пробежках, что и в отчёте.
+    fit_dates, fit_values, fit_outdoor = (dates, values, is_outdoor) if reference is None else reference
+    fit_dates = pd.to_datetime(pd.Series(fit_dates)).dt.to_pydatetime()
+    fit_outdoor = np.asarray(fit_outdoor, dtype=bool)
+    dates_out = [d for d, o in zip(fit_dates, fit_outdoor) if o]
+    values_out = np.asarray(fit_values, dtype=float)[fit_outdoor]
     span = (max(dates_out) - min(dates_out)).days if len(dates_out) else 0
     if span < min_span_days or len(values_out) < min_points:
         return values, {
@@ -767,6 +771,30 @@ def compute_easy_ef(activities):
     easy["ef"] = easy["speed"] / easy["avg_hr"] * 1000
     easy, seasonal_info = add_seasonally_adjusted_ef(easy)
     return easy, seasonal_info
+
+
+def compute_interval_ef(activities, intervals):
+    """EF каждого лапа; входы уже после GPS, калибровки дорожки и GAP.
+
+    Сезонная модель та же, что в compute_easy_ef: обучение только по лёгким пробежкам >2 км.
+    Отбор зон выполняется вызывающим кодом ПОСЛЕ коррекции; интервальные тренировки целиком
+    не исключаются, иначе потеряются разминки, восстановления и рабочие отрезки Z3–Z5.
+    """
+    laps = intervals.merge(activities[["activity_id", "date", "sport"]], on="activity_id", how="inner")
+    for col in ("avg_hr", "distance_m", "avg_pace_s_per_km"):
+        laps[col] = pd.to_numeric(laps[col], errors="coerce")
+    laps = laps[
+        np.isfinite(laps["avg_hr"]) & (laps["avg_hr"] > 0) &
+        np.isfinite(laps["distance_m"]) & (laps["distance_m"] > 0) &
+        np.isfinite(laps["avg_pace_s_per_km"]) & (laps["avg_pace_s_per_km"] > 0)
+    ].copy()
+    laps["ef"] = 1_000_000.0 / laps["avg_pace_s_per_km"] / laps["avg_hr"]
+    easy, _ = compute_easy_ef(activities)
+    laps["ef_seasadj"], info = seasonal_detrend_ef(
+        laps["date"], laps["ef"], laps["sport"] != TREADMILL_SPORT,
+        reference=(easy["date"], easy["ef"], easy["sport"] != TREADMILL_SPORT)
+    )
+    return laps, info
 
 
 def weekly_ef(easy):

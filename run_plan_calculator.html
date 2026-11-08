@@ -609,7 +609,12 @@ const formCell=(d,sec,strong=false,vd=vOfT(d,sec))=>`<div class="goal-equivalent
 const R_WEEK=0.004; // рост скорости 0,4% в неделю [практ.] (3.4)
 function profileOf(results,ltPace){
   const by={};(results||[]).filter(r=>r&&r.sec>0&&r.dist>0).forEach(r=>{if(!by[r.dist]||r.sec<by[r.dist].T)by[r.dist]={D:+r.dist,T:+r.sec};});
-  const pts=Object.values(by).map(p=>Object.assign(p,{V:vOfT(p.D,p.T)})).sort((a,b)=>a.D-b.D);
+  const rawPts=Object.values(by).map(p=>Object.assign(p,{V:vOfT(p.D,p.T)})).sort((a,b)=>a.D-b.D);
+  const pts=rawPts.map(p=>({...p}));
+  // До интерполяции переносим лучший VDOT с более длинной дистанции на короткую.
+  for(let j=pts.length-2;j>=0;j--)if(pts[j].V<pts[j+1].V){
+    pts[j].V=pts[j+1].V;pts[j].T=timeAtV(pts[j].D,pts[j].V);
+  }
   let Vbest=null,Db=null,src='results';
   if(pts.length){const bp=pts.reduce((a,p)=>p.V>a.V?p:a,pts[0]);Vbest=bp.V;Db=bp.D;}
   else if(ltPace>0){const D=3600/ltPace*1000;Vbest=vdot(D,3600);Db=D;src='lt';}
@@ -617,18 +622,20 @@ function profileOf(results,ltPace){
   let a=null,b=null;
   if(pts.length>=2){const xs=pts.map(p=>Math.log(p.D)),ys=pts.map(p=>Math.log(p.T)),n=pts.length,mx=xs.reduce((s,x)=>s+x,0)/n,my=ys.reduce((s,y)=>s+y,0)/n;
     let sxy=0,sxx=0;for(let k=0;k<n;k++){sxy+=(xs[k]-mx)*(ys[k]-my);sxx+=(xs[k]-mx)**2;}b=sxy/sxx;a=my-b*mx;}
-  // Текущий профиль проходит через все результаты; интерполяция и экстраполяция ограничены лучшим исходным VDOT.
+  // Текущий профиль проходит через нормализованные точки и ограничен лучшим исходным VDOT.
   // Единственный результат даёт вычисленный эквивалент Дэниелса, а не известный профиль выносливости.
   const T0=D=>{
     if(pts.length<2)return timeAtV(D,Vbest);
     let j=1;while(j<pts.length-1&&D>pts[j].D)j++;
-    const p=pts[j-1],q=pts[j],k=Math.log(q.T/p.T)/Math.log(q.D/p.D);
+    const p=pts[j-1],q=pts[j];
+    if(Math.abs(p.V-q.V)<1e-9)return timeAtV(D,p.V);
+    const k=Math.log(q.T/p.T)/Math.log(q.D/p.D);
     return Math.max(p.T*Math.pow(D/p.D,k),timeAtV(D,Vbest));
   };
   const V0=D=>Math.min(Vbest,vOfT(D,T0(D)));
   // дистанция, которую профиль пробегает за t минут
   const distAt=tMin=>{let lo=500,hi=250000;for(let k=0;k<60;k++){const m=(lo+hi)/2;(T0(m)<tMin*60)?lo=m:hi=m;}return (lo+hi)/2;};
-  return {pts,Vbest,Db,a,b,src,T0,V0,distAt,D60:distAt(60),D30:distAt(30),D11:distAt(11)};
+  return {pts,rawPts,Vbest,Db,a,b,src,T0,V0,distAt,D60:distAt(60),D30:distAt(30),D11:distAt(11)};
 }
 // Траектория (5.3): v(D,w)=v0(D)·(1+r)^w; ручная цель меняет уклон всех дистанций.
 function trajectoryOf(pf,B,goalDist,tgtClean){
@@ -1645,7 +1652,7 @@ function buildPlan(cfgIn){
     forecastGoal:ca.toDisp(b.realClean),vdTarget:tgtClean!=null?+b.needVd.toFixed(1):null,vG,
     curGoalTime:ca.toDisp(b.curClean),endGoal,tgtGoal:cfg.tgtGoal||null,
     equiv:b.eq.map(e=>({...e,name:distName(e.dist)})),
-    results:pf.pts.map(p=>({dist:p.D,sec:p.T,vd:+p.V.toFixed(1)})),profileB:pf.b,accent:b.accent,
+    results:pf.rawPts.map(p=>({dist:p.D,sec:p.T,vd:+p.V.toFixed(1)})),profileB:pf.b,accent:b.accent,
     forecastUnreliable:qWeeks>0&&qMissW*3>=qWeeks,qMissWeeks:qMissW,qWorkWeeks:qWeeks,
     recRuns,targetPeakMin:Math.round(targetPeak),tanda,
     deload,deloadName:DELOAD_NAMES[deload],taperW:N-1-B,taperShare:tsh,notes,N,

@@ -97,8 +97,8 @@
   .vol{text-align:right;}
   .vol .num{font-family:ui-monospace,monospace;font-size:19px;font-weight:800;}
   .vol .num small{font-size:12px;font-weight:600;color:var(--muted);}
-  .kmref{color:var(--muted);font-size:12px;font-family:ui-monospace,monospace;}
-  .fuel{color:#0f8a6e;font-size:12px;font-weight:700;white-space:nowrap;}
+
+
   .vol .lbl{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
 
   table{width:100%;border-collapse:collapse;table-layout:fixed;}
@@ -187,9 +187,9 @@
   .vcard .big{font-size:22px;font-weight:800;margin:4px 0 2px;}
   .vcard .sm{font-size:12.5px;color:var(--muted);}
   .fuel{display:inline-block;font-size:10.5px;font-weight:700;color:#7a4a12;background:#fbf0dc;
-    border:1px solid #ecd9b0;border-radius:3px;padding:1px 6px;margin-left:6px;}
+    border:1px solid #ecd9b0;border-radius:3px;padding:1px 6px;margin-left:6px;white-space:nowrap;}
   .kmref{display:inline-block;font-size:10.5px;font-weight:700;color:var(--muted);
-    border:1px solid var(--line);border-radius:3px;padding:1px 5px;margin-left:6px;}
+    border:1px solid var(--line);border-radius:3px;padding:1px 5px;margin-left:6px;font-family:ui-monospace,monospace;}
   .topbar{position:sticky;top:0;z-index:30;background:rgba(245,244,240,.93);backdrop-filter:blur(6px);
     -webkit-backdrop-filter:blur(6px);padding:10px 0;margin:-8px 0 8px;border-bottom:1px solid var(--line);}
   .jumpbtn{appearance:none;border:none;cursor:pointer;background:var(--accent);color:#fff;font-weight:700;
@@ -300,7 +300,7 @@
       <div class="fld goalOnly"><label>Дистанция старта</label>
         <select id="goalDist"><option value="5000">5 км</option><option value="10000">10 км</option><option value="21097">21,1 км</option><option value="42195" selected>Марафон 42,2</option><option value="60000">Ультра 60 км</option><option value="80000">Ультра 80 км</option><option value="100000">Ультра 100 км</option><option value="120000">Ультра 120 км</option><option value="160000">Ультра 160 км</option></select></div>
       <div class="fld goalOnly"><label>Длительность плана</label><select id="planWeeks"></select><div class="hint">недель; меняет дату старта</div></div>
-      <div class="fld goalOnly"><label>Дата старта</label><input type="date" id="goalD"><div class="hint">меняет длительность</div></div>
+      <div class="fld goalOnly"><label>Дата старта</label><div style="display:flex;gap:8px;align-items:stretch"><input type="date" id="goalD" style="flex:1;min-width:0"><button type="button" class="btn sec" id="goalDAutoBtn" disabled style="padding:6px 12px;font-size:12px;white-space:nowrap" title="Вернуть автозаполнение: дата по рекомендованной длительности плана">↻ Авто</button></div><div class="hint" id="goalDHint">авто: по рекомендованной длительности; правка вручную фиксирует дату и меняет длительность</div></div>
       <div class="fld offOnly"><label>Длительность межсезонья</label><input type="number" id="owWeeks" min="2" max="8" step="1"><div class="hint" id="owWeeksRec">рекомендовано по опыту и текущему объёму</div></div>
       <div class="fld goalOnly" style="grid-column:1/-1"><label>Промежуточные старты</label>
         <div id="tuneList"></div>
@@ -365,7 +365,7 @@
         <label style="font-size:13px">🎯 Целевое время на дистанции</label>
         <div style="display:flex;gap:8px;align-items:stretch">
           <input type="text" id="tgtGoal" value="3:15" placeholder="ч:мм[:сс] или мм:сс" style="font-size:16px;font-weight:700;flex:1">
-          <button type="button" class="btn sec" id="tgtAutoBtn" style="padding:8px 14px;font-size:13px;white-space:nowrap" title="Подставить ориентир модели и снять ручной ввод">↻ Авто</button>
+          <button type="button" class="btn sec" id="tgtAutoBtn" disabled style="padding:8px 14px;font-size:13px;white-space:nowrap" title="Подставить ориентир модели и снять ручной ввод">↻ Авто</button>
         </div>
         <div class="hint" id="tgtRange">рекомендуемый диапазон появится после ввода результатов</div>
         <div id="goalEstimate" style="font-size:12.5px;line-height:1.4;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--accent)">—</div></div>
@@ -551,7 +551,7 @@ const HRZ=z=>({hr:z});
 // HRmax: 208 − 0,7·возраст (м, Tanaka 2001), 206 − 0,88·возраст (ж, Gulati 2010)
 function hrmaxOf(c){return c.sex==='f'?Math.round(206-0.88*(c.age||35)):Math.round(208-0.7*(c.age||35));}
 function zbpm(z,lt,hrmax){const r={1:[0.65,0.84],2:[0.85,0.89],3:[0.90,0.94],4:[0.95,0.99],5:[1.00,1.06]}[z];
-  const cap=hrmax>lt?hrmax:Math.round(lt*1.08);
+  const cap=Math.round(lt*1.08); // верх Z5 — от введённого ПАНО; оценка HRmax по возрасту ограничителем не служит
   const lo=Math.max(90,Math.round(r[0]*lt)), hi=Math.min(cap,Math.round(r[1]*lt));
   return [Math.min(lo,hi),Math.max(lo,hi)];}
 const rp=(n,steps)=>({t:'repeat',n,steps});
@@ -1807,10 +1807,12 @@ function buildOffseasonPlan(cfgIn){
 }
 
 
+// «СТАРТ» — только заглавными и отдельным словом: «старт снят на возврат» / «перед стартом» гонкой не считаются
+function isRaceName(n){n=String(n||'');return /МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ/i.test(n)||/(^|[^А-Яа-яЁё])СТАРТ([^А-Яа-яЁё]|$)/.test(n);}
 function classifyRec(w){ if(w.kind==='cross')return 'cross';
   if(w.kind==='str')return 'str';
   var n=w.name||'';
-  if(/МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ|(^|[^А-Яа-яЁё])СТАРТ([^А-Яа-яЁё]|$)/i.test(n))return 'race';
+  if(isRaceName(n))return 'race';
   if(/Длинн/i.test(n))return 'long';
   if(w.dbl2||/Восст\s*утро|2-я\s*трен|2-я\s*тренировка/i.test(n))return 'am';
   if(/Восстанов/i.test(n))return 'rec';
@@ -1906,7 +1908,7 @@ function stepMinNoR(s){
   if(s.end==='time')return s.v/60;
   if(s.tg&&s.tg.pace){const p=(paceSecs(s.tg.pace[0])+paceSecs(s.tg.pace[1]))/2;return (s.v/1000)*p/60;}
   if(s.tg&&s.tg.hr)return (s.v/1000)*ZPACE[s.tg.hr]/60;
-  return 0;
+  return (s.v/1000)*ZPACE[2]/60; // дистанция без цели — по лёгкому темпу, а не 0 минут
 }
 function stepKmNoR(s){
   if(s.t==='repeat')return s.steps.reduce((a,x)=>a+stepKmNoR(x),0)*s.n;
@@ -2040,7 +2042,7 @@ function stepRowHtml(s,path,nested){
     </select>
     ${s.end==='time'
       ?`<input type="text" class="sdur" value="${fmtDurMMSS(s.v)}" placeholder="мм:сс" onchange="setDurMMSS('${path}',this.value)"><span class="unit">мм:сс</span>`
-      :`<input type="number" class="sdist" value="${s.v}" min="50" step="50" onchange="setDistM('${path}',this.value)"><span class="unit">метров</span>`}
+      :`<input type="number" class="sdist" value="${esc(s.v)}" min="50" step="50" onchange="setDistM('${path}',this.value)"><span class="unit">метров</span>`}
     <select class="stgt" onchange="setStepTarget('${path}',this.value)">
       <option value="none" ${tgType==='none'?'selected':''}>без цели</option>
       <option value="zone" ${tgType==='zone'?'selected':''}>зона</option>
@@ -2048,9 +2050,9 @@ function stepRowHtml(s,path,nested){
     </select>
     ${tgType==='zone'?`<select class="szone" onchange="setStepZone('${path}',this.value)">
       ${[1,2,3,4,5].map(z=>`<option value="${z}" ${s.tg.hr===z?'selected':''}>Z${z}</option>`).join('')}</select>`:''}
-    ${tgType==='pace'?`<input type="text" class="szone" value="${s.tg.pace[0]}" placeholder="м:сс" onchange="setStepPace('${path}',0,this.value)">
+    ${tgType==='pace'?`<input type="text" class="szone" value="${esc(s.tg.pace[0])}" placeholder="м:сс" onchange="setStepPace('${path}',0,this.value)">
       <span class="space">–</span>
-      <input type="text" class="szone" value="${s.tg.pace[1]}" placeholder="м:сс" onchange="setStepPace('${path}',1,this.value)"><span class="unit">/км</span>`:''}
+      <input type="text" class="szone" value="${esc(s.tg.pace[1])}" placeholder="м:сс" onchange="setStepPace('${path}',1,this.value)"><span class="unit">/км</span>`:''}
     <input type="text" class="slabel" value="${esc(s.d||'')}" placeholder="метка (необязательно)" onchange="setStepField('${path}','d',this.value)">
     <button type="button" class="edbtn del tiny" onclick="removeStep('${path}')" title="Удалить шаг">✕</button>
   </div>`;
@@ -2078,7 +2080,7 @@ function fuelForWorkout(w,cfgRef){
   if(!w.steps)return null;
   const long21=isRaceEffort(w.steps);
   if(zoneOfW(w)==='race'&&!long21)return null;
-  return fuelFor(sesMinNoR(w.steps),long21);
+  return fuelFor(sesMinNoR(w.steps));
 }
 function updateNotePreview(){
   const cfgRef=(LAST&&LAST.cfg)||(META&&META.cfg)||null;
@@ -2152,7 +2154,7 @@ function fillForm(cfg){
   if($('transPeakVol'))$('transPeakVol').value=cfg.transPeakVol||'';
   if($('transWeeksAgo'))$('transWeeksAgo').value=(cfg.transWeeksAgo==null?1:cfg.transWeeksAgo);
   if(typeof updatePreCtxUI==='function')updatePreCtxUI();
-  if(cfg.startISO&&$('goalD').value){setPlanWeeks(Math.max(1,weeksTo(cfg.startISO,$('goalD').value)));$('planWeeks').dataset.touched='1';}
+  if(cfg.startISO&&$('goalD').value){setPlanWeeks(Math.max(1,weeksTo(cfg.startISO,$('goalD').value)));durTouched=true;updateAutoBtns();}
   setTuneRows(cfg.tuneRaces||[]);
   $('peakVol').value=cfg.peakVol||80; $('volUnit').value=cfg.volUnit||'km'; $('runs').value=cfg.runs||6; peakTouched=true; runsTouched=true; strTouched=true;
   $('tag').value=cfg.tag||'[GEN]'; tagTouched=true; $('strength').value=(cfg.strength==null?2:cfg.strength);
@@ -2177,7 +2179,7 @@ function reconstructFromWorkouts(data){
     if(/полумар/i.test(n))return 21097; if(/марафон/i.test(n))return 42195;
     const m=n.match(/(\d+(?:[.,]\d+)?)\s*КМ/i), v=m?parseFloat(m[1].replace(',','.')):0;
     return [5,10,60,80,100,120,160].includes(v)?v*1000:Math.abs(v-21.1)<.2?21097:Math.abs(v-42.2)<.2?42195:10000;};
-  const raceWs=ws.filter(w=>/ГЛАВНЫЙ|МАРАФОН|ПОЛУМАРАФОН|(^|[^А-Яа-яЁё])СТАРТ|КОНТРОЛ/i.test(w.name||''));
+  const raceWs=ws.filter(w=>/ГЛАВНЫЙ/i.test(w.name||'')||isRaceName(w.name));
   const goalW=raceWs.filter(w=>/ГЛАВНЫЙ/i.test(w.name))[0]
             ||raceWs[raceWs.length-1]||ws[ws.length-1];
   const goalISO=(data.meta&&(data.meta.goalISO||data.meta.marathon))||goalW.date;
@@ -2190,10 +2192,12 @@ function fillDatesTunes(pr){
   if(pr.goalISO)$('goalD').value=pr.goalISO;
   if(pr.goalDist&&$('goalDist'))$('goalDist').value=pr.goalDist;
   setTuneRows(pr.tuneRaces||[]);
+  durTouched=true;
   if(typeof syncFromGoalDate==='function')try{syncFromGoalDate();}catch(e){}
+  updateAutoBtns();
 }
-function zoneOfW(w){ if(w.kind==='str')return 'str'; if(w.kind==='cross')return 'cross'; const n=w.name||'';
-  if(/МАРАФОН|ПОЛУМАРАФОН|КОНТРОЛ|(^|[^А-Яа-яЁё])СТАРТ([^А-Яа-яЁё]|$)/i.test(n))return 'race';
+function zoneOfW(w){ if(w.kind==='str')return 'str'; if(w.kind==='cross')return 'cross'; if(w.kind==='rest')return 'rest'; const n=w.name||'';
+  if(isRaceName(n))return 'race';
   if(/Длинн/i.test(n))return 'long';
   if(/(^|[^А-Яа-яЁё])МР([^А-Яа-яЁё]|$)|Марафонск|Ультра-темп|Стэди/i.test(n))return 'mp';
   if(/Порог|Темп(?!10к)|Стабильн/i.test(n))return 'thr';
@@ -2220,7 +2224,7 @@ function acwrChartHtml(){
   const nd=Math.floor(dDiff(last,start))+1, nw=Math.ceil(nd/7);
   const day=new Array(nw*7).fill(0);
   ws.forEach(w=>{const i=Math.floor(dDiff(dParse(w.date),start)); if(i<0||i>=day.length)return;
-    const mins=w.kind==='run'?sesMinNoR(w.steps||[]):(+w.mins||0);
+    const mins=w.kind==='run'?sesMinNoR(w.steps||[]):(w.kind==='rest'?0:(+w.mins||0));
     day[i]+=mins*acwrLoadPerMin(zoneOfW(w));});
   const sa=window.START_ACWR, real=!!(sa&&!sa.assumed&&sa.series&&sa.series.length>=28&&sa.end&&window.LPM&&window.LPM.easy);
   let ser=null, r=null, assumed=!sa||!!sa.assumed, realUsed=false;
@@ -2303,6 +2307,7 @@ function renderStaticFromEdit(cfgRef,forExport){
 let sliderTouched=false;
 let ltpaceTouched=false, peakTouched=false, runsTouched=false, strTouched=false, tagTouched=false, tgtTouched=false;
 let owWeeksTouched=false;
+let durTouched=false; // дата старта / длительность плана заданы вручную (иначе — авто по дистанции)
 function updatePlanModeUI(){
   const mode=($('planMode')&&$('planMode').value)||'goal';
   const isOff=mode==='offseason';
@@ -2323,11 +2328,11 @@ function resetPlanParamsTouched(){peakTouched=false; runsTouched=false; strTouch
   ['goalDist','age','curVol','volUnit','lthr','curLong','sex','exp','maxVolEver','maxLongCap','elevGain','localHills','altitude','heat','deload'].forEach(id=>{const e=$(id);if(e){e.addEventListener('input',recalcEstimate);e.addEventListener('change',recalcEstimate);}});
   $('tgtGoal').addEventListener('input',()=>{tgtTouched=true;recalcEstimate();});
   { const ab=$('tgtAutoBtn'); if(ab)ab.addEventListener('click',()=>{tgtTouched=false;recalcEstimate();}); }
-  $('planWeeks').addEventListener('change',syncFromDuration);
-  $('goalD').addEventListener('change',syncFromGoalDate);
-  $('startD').addEventListener('change',syncFromGoalDate);
-  $('goalDist').addEventListener('change',()=>{ if(!$('planWeeks').dataset.touched){ setPlanWeeks(recommendDuration(+$('goalDist').value||42195)); syncFromDuration(); } });
-  $('planWeeks').addEventListener('change',()=>{$('planWeeks').dataset.touched='1';});
+  $('planWeeks').addEventListener('change',()=>{durTouched=true;syncFromDuration();updateAutoBtns();});
+  $('goalD').addEventListener('change',()=>{durTouched=true;syncFromGoalDate();updateAutoBtns();});
+  $('startD').addEventListener('change',()=>{if(durTouched)syncFromGoalDate();else{applyAutoDuration();recalcEstimate();}});
+  $('goalDist').addEventListener('change',()=>{if(!durTouched){applyAutoDuration();recalcEstimate();}});
+  {const gb=$('goalDAutoBtn');if(gb)gb.addEventListener('click',()=>{durTouched=false;applyAutoDuration();resetPlanParamsTouched();updateAutoBtns();recalcEstimate();});}
   $('ltpace').addEventListener('input',()=>{ltpaceTouched=true; if($('ltpaceHint'))$('ltpaceHint').textContent='задано вручную'; recalcEstimate();});
   $('peakVol').addEventListener('input',()=>{peakTouched=true; recalcEstimate();});
   $('runs').addEventListener('change',()=>{runsTouched=true; recalcEstimate();});
@@ -2433,7 +2438,7 @@ $('slider').oninput();
 function tuneRowHtml(iso,dist){
   const d=+dist||10000;
   return `<div class="volrow tunerow" style="margin-bottom:6px">
-    <input type="date" class="t-date" value="${iso||''}">
+    <input type="date" class="t-date" value="${esc(iso||'')}">
     <select class="t-dist">
       <option value="5000"${d===5000?' selected':''}>5 км</option>
       <option value="10000"${d===10000?' selected':''}>10 км</option>
@@ -2515,6 +2520,14 @@ function syncFromDuration(){ const w=+$('planWeeks').value; if(!$('startD').valu
   $('goalD').value=goalByWeeks($('startD').value,w); recalcEstimate(); }
 function syncFromGoalDate(){ if(!$('startD').value||!$('goalD').value)return;
   setPlanWeeks(Math.max(1,weeksTo($('startD').value,$('goalD').value))); recalcEstimate(); }
+function applyAutoDuration(){ if(!$('startD').value)return;
+  const dur=recommendDuration(+$('goalDist').value||42195); setPlanWeeks(dur); $('goalD').value=goalByWeeks($('startD').value,dur); }
+// кнопки «Авто» активны только когда поле заполнено вручную
+function updateAutoBtns(){
+  const g=$('goalDAutoBtn'); if(g)g.disabled=!durTouched;
+  const h=$('goalDHint'); if(h)h.textContent=durTouched?'задано вручную — «↻ Авто» вернёт рекомендованную длительность':'авто: по рекомендованной длительности; правка вручную фиксирует дату и меняет длительность';
+  const t=$('tgtAutoBtn'); if(t)t.disabled=!tgtTouched;
+}
 function recommendAccent(fc){
   const goalDist=fc.goalDist;
   let reason=goalDist<=10000?'для 5–10 км по умолчанию поляризованное':'для полумарафона и длиннее по умолчанию пирамидальное';
@@ -2529,7 +2542,7 @@ function resRowHtml(dist,timeStr){const d=+dist||10000;
       <option value="10000"${d===10000?' selected':''}>10 км</option>
       <option value="21097"${d===21097?' selected':''}>21,1 км</option>
       <option value="42195"${d===42195?' selected':''}>42,2 км</option></select>
-    <input type="text" class="r-time" value="${timeStr||''}" placeholder="${phShort(d)}">
+    <input type="text" class="r-time" value="${esc(timeStr||'')}" placeholder="${phShort(d)}">
     <span class="tparse" style="font-size:11px;color:var(--muted);white-space:nowrap;min-width:92px"></span>
     <button type="button" class="edbtn del" title="Удалить" onclick="this.closest('.resrow').remove();recalcEstimate();">×</button>
   </div>`;}
@@ -2545,6 +2558,10 @@ function readResRows(){return Array.from(document.querySelectorAll('#resList .re
 function setResRows(list){$('resList').innerHTML='';
   const arr=(list&&list.length?list:[{dist:10000,time:'41:30'}]);
   arr.forEach(r=>addResRow(r.dist,r.time||(r.sec?fmtT(r.sec):'')));}
+// набор вариантов «пробежек в неделю»: в межсезонье допустимо 1–2, в плане под цель — от 3
+function syncRunsOptions(min){const s=$('runs');if(!s||(s.options.length&&+s.options[0].value===min))return;
+  const cur=+s.value;s.innerHTML='';for(let v=min;v<=12;v++){const o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o);}
+  s.value=String(cur>=min?cur:Math.max(min,3));}
 function recalcOffseasonEstimate(){
   try{
     const curVol=+($('curVol')&&$('curVol').value)||0, volUnit=($('volUnit')&&$('volUnit').value)||'km';
@@ -2557,20 +2574,23 @@ function recalcOffseasonEstimate(){
     if($('owWeeksRec'))$('owWeeksRec').textContent='рекомендовано ≈'+recW+' нед.'+(owWeeksTouched?' · задано вручную':'');
     if($('peakVol')&&!peakTouched)$('peakVol').value=recV;
     if($('peakRec'))$('peakRec').textContent='рекомендовано ≈'+recV+' км/нед'+(volUnit==='h'?' (оценочно из ч/нед)':'')+(peakTouched?' · задано вручную':'');
+    syncRunsOptions(1);
     const recRuns=offseasonRunsPerWeek(exp,curVolKm);
     if($('runs')&&!runsTouched)$('runs').value=recRuns;
     if($('runsRec'))$('runsRec').textContent='рекомендовано '+recRuns+(runsTouched?' · задано вручную':'');
     const recStr=offseasonStrengthPerWeek(exp);
     if($('strength')&&!strTouched)$('strength').value=recStr;
+    if($('tag')&&!tagTouched)$('tag').value='[OFF'+startISOtoSuffix($('startD').value)+']';
     if($('strRec'))$('strRec').textContent='рекомендовано '+recStr+(strTouched?' · задано вручную':'');
   }catch(e){}
 }
 var _rcT=null;
-function recalcEstimate(){clearTimeout(_rcT);_rcT=setTimeout(()=>{_rcT=null;recalcEstimateNow();},150);}
+function recalcEstimate(){updateAutoBtns();clearTimeout(_rcT);_rcT=setTimeout(()=>{_rcT=null;recalcEstimateNow();},150);}
 function recalcEstimateNow(){
   if((($('planMode')&&$('planMode').value)||'goal')==='offseason'){recalcOffseasonEstimate();return;}
   const el=$('goalEstimate'); if(!el)return;
   try{
+    syncRunsOptions(3);
     const gd=+$('goalDist').value; const tg=$('tgtGoal'); if(tg)tg.placeholder=phShort(gd);
     const results=readResRows();
     if(!$('goalD').value||!$('startD').value){el.innerHTML='добавьте даты — покажу прогноз';return;}
@@ -2672,9 +2692,7 @@ function readCfg(opts){
     tag:(($('tag').value||'').trim()||('[GEN'+Date.now().toString(36).slice(-4).toUpperCase()+']')),planMode:'goal'};
   if(cfg.ltPace&&cfg.ltPace>600)throw 'Темп ПАНО выглядит странно (медленнее 10:00/км) — проверьте формат м:сс.';
   if(dParse(cfg.goalISO)<=dParse(cfg.startISO))throw 'Дата старта должна быть позже начала плана.';
-  const hrmaxEst=hrmaxOf(cfg);
-  if(cfg.lthr&&cfg.lthr>hrmaxEst)
-    throw `Пульс ПАНО ${cfg.lthr} выше расчётного максимального (${hrmaxEst} для вашего возраста и пола). Проверьте значение: обычно ПАНО на 15–30 уд ниже максимума.`;
+  // введённый вручную ПАНО точнее расчётного HRmax по возрасту — с оценкой его не сверяем
   if(cfg.lthr&&cfg.lthr<110)throw `Пульс ПАНО ${cfg.lthr} слишком низкий — проверьте значение.`;
   {
     const t=new Date();t.setHours(0,0,0,0);
@@ -2736,7 +2754,7 @@ function readOffseasonCfg(){
 
 const ZC={rec:'--z-rec',easy:'--z-easy',mp:'--z-mp',thr:'--z-thr',vo2:'--z-vo2',long:'--z-long',race:'--z-race',rest:'--z-rest',str:'--z-rep',cross:'--z-rec'};
 const ZLAB={rec:'Восст.',easy:'Лёгкий',mp:'Марафон. темп',thr:'Порог',vo2:'МПК/10к',long:'Длинная',race:'Старт',rest:'Отдых',str:'Силовая',cross:'Кросс'};
-const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
 function keyPrinciplesHtml(p){
   const a=p.analysis,cfg=p.cfg;
@@ -2787,7 +2805,7 @@ function render(p){
         </table></div></div>
     <div class="vcard"><div class="t">Восстановление и подводка</div>
       <div class="big">недели восстановления: ${a.deloadName}</div>
-      <div class="sm">HRmax ≈${a.hrmax} · подводка ${a.taperW+1} нед. с гонкой (${a.goalDist>=42195?'72/58/22':'88/40'}% пика) · откат длинной после длинной ≥142 мин · после старта 1 лёгкий день на 3 км · ACWR в плане ≤${a.maxAcwr}</div></div>
+      <div class="sm">HRmax (оценка по возрасту) ≈${a.hrmax} · подводка ${a.taperW+1} нед. с гонкой (${a.goalDist>=42195?'72/58/22':'88/40'}% пика) · откат длинной после длинной ≥142 мин · после старта 1 лёгкий день на 3 км · ACWR в плане ≤${a.maxAcwr}</div></div>
   </div>
   ${a.notes.length?`<div class="notes"><h3>Примечания модели</h3>${a.notes.map(n=>`<p>· ${esc(n)}</p>`).join('')}</div>`:''}`;
 
@@ -2811,10 +2829,10 @@ function render(p){
   <div class="zones">${zrows.map(([k,nm,z])=>{
     const s0=p.P0[k],s1=p.P1[k];
     const hr=z==null?'по ощущению':(a.zbpm?`${a.zbpm[z][0]}–${a.zbpm[z][1]} уд`:`Z${z}`);
-    return `<div class="zone"><i style="background:var(${ZC[k==='rep'?'str':k]||'--z-rep'})"></i><div>
-      <div class="zn">${nm}</div>
-      <div class="zp mono">${fmtP(s0[0])}–${fmtP(s0[1])} → <b>${fmtP(s1[0])}–${fmtP(s1[1])}</b> /км</div>
-      <div class="zh">${hr}</div></div></div>`;}).join('')}</div>`;
+    return `<div class="zone" style="--zc:var(${ZC[k==='rep'?'str':k]||'--z-rep'})"><div>
+      <div class="name">${nm}</div>
+      <div class="pace mono">${fmtP(s0[0])}–${fmtP(s0[1])} → <b>${fmtP(s1[0])}–${fmtP(s1[1])}</b> /км</div>
+      <div class="hr">${hr}</div></div></div>`;}).join('')}</div>`;
 
   const strSec=cfg.strength>0?(()=>{
     const card=(s,when)=>`<div class="strcard"${s.id?` id="${s.id}"`:''}><div class="when">${when}</div><h3>${esc(s.name)} · ${s.mins} мин</h3>
@@ -2930,7 +2948,7 @@ $('importInput').onchange=(e)=>{
         refreshView();
         note.innerHTML=badNote+'Восстановлено из JSON: достижимость и зоны — по входным параметрам; графики и таблица — из фактического загруженного плана. Наведите на тренировку и нажмите ✎ для правки.';
       }catch(err){
-        note.innerHTML='Параметры из JSON заполнены, но аналитику собрать не удалось: '+err+'. Проверьте поля и нажмите «Построить план».';
+        note.innerHTML='Параметры из JSON заполнены, но аналитику собрать не удалось: '+esc(String(err&&err.message||err))+'. Проверьте поля и нажмите «Построить план».';
       }
     } else {
       const pr=reconstructFromWorkouts(data);

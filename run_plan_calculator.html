@@ -377,7 +377,9 @@
         <div class="hint" id="peakRec">в тех же единицах, что текущий объём</div><div class="hint" id="peakWarn" style="color:#c00"></div></div>
       <div class="fld"><label>Силовых / ОФП в нед.</label>
         <select id="strength"><option value="0">0 — без силовых</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select>
-        <div class="hint" id="strRec"></div></div>
+        <div class="hint" id="strRec"></div>
+        <label style="display:flex;gap:6px;align-items:center;margin-top:6px;font-weight:normal"><input type="checkbox" id="hardHard" checked> «Тяжёлые дни тяжёлыми»</label>
+        <div class="hint">вкл — силовые в дни качественных; выкл — в лёгкие и свободные дни, качественные — только если других мест нет</div></div>
       <div class="fld wide goalOnly"><label>Распределение интенсивности</label>
         <div class="sliderbox"><span class="sl">Поляризованное</span>
           <input type="range" id="slider" min="0" max="100" value="50">
@@ -1452,8 +1454,10 @@ function buildPlan(cfgIn){
       const isE=di=>runOf(days[di]).length>0&&!isQd(di)&&!runOf(days[di]).some(x=>x.z==='long');
       const distH=di=>{let m=9;for(let h=0;h<7;h++)if(hardD(h))m=Math.min(m,Math.abs(h-di));return m;};
       const all=[0,1,2,3,4,5,6];
-      pool.forEach(s=>{const d=[...all.filter(di=>isQd(di)&&!hardD(di+1)),...all.filter(di=>isE(di)&&!hardD(di+1)).sort((a,c)=>distH(c)-distH(a)),
-        ...all.filter(isQd),...all.filter(isE).sort((a,c)=>distH(c)-distH(a)),...all.filter(di=>!runOf(days[di]).length)].find(okD);
+      const hh=cfg.hardHard!==false, byFar=(a,c)=>distH(c)-distH(a), qSafe=all.filter(di=>isQd(di)&&!hardD(di+1)), eSafe=all.filter(di=>isE(di)&&!hardD(di+1)).sort(byFar), restD=all.filter(di=>!runOf(days[di]).length);
+      // hh вкл: Q → E → любой Q → любой E → выходной; выкл: E → выходной (не накануне тяжёлого) → любой E → любой выходной → Q (запасной вариант)
+      pool.forEach(s=>{const d=(hh?[...qSafe,...eSafe,
+        ...all.filter(isQd),...all.filter(isE).sort(byFar),...restD]:[...eSafe,...restD.filter(di=>!hardD(di+1)),...all.filter(isE).sort(byFar),...restD,...qSafe,...all.filter(isQd)]).find(okD);
         if(d!=null)days[d].items.push(Object.assign({kind:'str'},isRec(days[d])?STR_COR:s));});
     } else if(strN>0&&isRaceWeek){const d=days.find(d=>(!d.role||d.role==='easy')&&dDiff(raceD,d.date)>=5);if(d)d.items.push(Object.assign({kind:'str'},STR_COR));}
     let wKm=0,wMin=0,load=0,runLoadSum=0,crossLoad=0;const zm=[0,0,0,0,0];
@@ -2157,7 +2161,7 @@ function fillForm(cfg){
   if(cfg.startISO&&$('goalD').value){setPlanWeeks(Math.max(1,weeksTo(cfg.startISO,$('goalD').value)));durTouched=true;updateAutoBtns();}
   setTuneRows(cfg.tuneRaces||[]);
   $('peakVol').value=cfg.peakVol||80; $('volUnit').value=cfg.volUnit||'km'; $('runs').value=cfg.runs||6; peakTouched=true; runsTouched=true; strTouched=true;
-  $('tag').value=cfg.tag||'[GEN]'; tagTouched=true; $('strength').value=(cfg.strength==null?2:cfg.strength);
+  $('tag').value=cfg.tag||'[GEN]'; tagTouched=true; $('strength').value=(cfg.strength==null?2:cfg.strength); if($('hardHard'))$('hardHard').checked=cfg.hardHard!==false;
   sliderTouched=cfg.slider!=null; $('slider').value=Math.round((cfg.slider==null?tidDefault(gd):cfg.slider)*100); $('slider').oninput();
   if($('deload'))$('deload').value=cfg.deload||'need';
   recalcEstimate();
@@ -2681,7 +2685,7 @@ function readCfg(opts){
     maxLongCap:(function(){var v=(($('maxLongCap')&&$('maxLongCap').value)||'').trim();if(!v)return null;var sec=parseT(v);return sec?Math.round(sec/60):null;})(),
     elevGain:+($('elevGain')&&$('elevGain').value)||0,localHills:!!($('localHills')&&$('localHills').checked),altitude:+($('altitude')&&$('altitude').value)||0,heat:!!($('heat')&&$('heat').checked),
     longDow:($('longDow')&&$('longDow').value!=='')?+$('longDow').value:null,cross:cross,
-    strength:+$('strength').value,slider:sliderTouched?(+$('slider').value)/100:null,
+    strength:+$('strength').value,hardHard:!$('hardHard')||$('hardHard').checked,slider:sliderTouched?(+$('slider').value)/100:null,
     preCtx:($('preCtx')&&$('preCtx').value)||'none',
     preRaceDist:+(($('preRaceDist')&&$('preRaceDist').value)||10000),
     preRaceDate:($('preRaceDate')&&$('preRaceDate').value)||null,
@@ -2837,7 +2841,7 @@ function render(p){
   const strSec=cfg.strength>0?(()=>{
     const card=(s,when)=>`<div class="strcard"${s.id?` id="${s.id}"`:''}><div class="when">${when}</div><h3>${esc(s.name)} · ${s.mins} мин</h3>
       <ul>${esc(s.desc).split('. ').slice(1).join('. ').split(';').map(x=>x.trim()).filter(Boolean).map(x=>`<li>${x.replace(/\.$/,'')}</li>`).join('')}</ul></div>`;
-    let h=`<h2>Силовые тренировки</h2><div class="h2note">${cfg.strength} в неделю — в дни качественных («тяжёлые дни тяжёлыми») или в лёгкие не накануне нагрузки; не в день длинной; в подводку и неделю старта — короткий «Кор».</div><div class="strgrid">`;
+    let h=`<h2>Силовые тренировки</h2><div class="h2note">${cfg.strength} в неделю — ${cfg.hardHard===false?'в лёгкие и свободные дни, не накануне нагрузки; в качественные — только если других мест нет':'в дни качественных («тяжёлые дни тяжёлыми») или в лёгкие не накануне нагрузки'}; не в день длинной; в подводку и неделю старта — короткий «Кор».</div><div class="strgrid">`;
     h+=card(STR_A,'Силовая A');
     if(cfg.strength>=2)h+=card(STR_B,'Силовая B');
     if(cfg.strength>=3)h+=card(STR_C,'Силовая C');
